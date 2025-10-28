@@ -6,13 +6,168 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct UserDetails: View {
+    let userId: String
+
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+
+    @State private var showingEdit = false
+    @State private var showingDeleteConfirm = false
+
+    @Query private var fetched: [User]
+
+    // Related entities queries - these model types must exist in the project
+    @Query private var patients: [Patient]
+//    @Query private var surgeries: [Surgery]
+//    @Query private var anesthesia: [Anesthesia]
+//    @Query private var preAnesthesia: [PreAnesthesia]
+
+    init(userId: String) {
+        self.userId = userId
+        self._fetched = Query(filter: #Predicate<User> { $0.userId == userId })
+        self._patients = Query(
+              filter: #Predicate<Patient> { $0.createdBy.userId == userId },
+              sort: [SortDescriptor(\Patient.name, order: .forward)]
+          )
+//        self._surgeries = Query(filter: #Predicate<Surgery> { $0.createdBy.userId == userId })
+//        self._anesthesia = Query(filter: #Predicate<Anesthesia> { $0.createdBy.userId == userId })
+//        self._preAnesthesia = Query(filter: #Predicate<PreAnesthesia> { $0.createdBy.userId == userId })
+    }
+
+    private var dateFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateStyle = .medium
+        df.timeStyle = .short
+        return df
+    }
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        if let user = fetched.first {
+            List {
+                Section("Atividades") {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            CountCard(title: "Pacientes", count: patients.count, systemImage: "person.2")
+//                            CountCard(title: "Cirurgias", count: surgeries.count, systemImage: "scalpel")
+//                            CountCard(title: "Anestesias", count: anesthesia.count, systemImage: "stethoscope")
+//                            CountCard(title: "Pré-anest.", count: preAnesthesia.count, systemImage: "doc.text.magnifyingglass")
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+                Section("Informações") {
+                    LabeledValueRow(title: "User ID", value: user.userId)
+                    LabeledValueRow(title: "Nome", value: user.name)
+                    LabeledValueRow(title: "CRM", value: user.crm)
+                    LabeledValueRow(title: "RQE", value: user.rqe ?? "Cadastro pendente")
+                    LabeledValueRow(title: "Telefone", value: user.phone ?? "Cadastro Pendente")
+                    LabeledValueRow(title: "E-mail", value: user.emailAddress)
+                }
+                Section("Metadados") {
+                    LabeledValueRow(title: "Criado em", value: dateFormatter.string(from: user.createdAt))
+                    LabeledValueRow(title: "Atualizado em", value: user.updatedAt.map { dateFormatter.string(from: $0) } ?? "Nunca foi atualizado")
+                }
+            }
+            .navigationTitle(user.name.isEmpty ? "Detalhes do Usuário" : user.name)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Editar", systemImage: "pencil") { showingEdit = true }
+                }
+                ToolbarItem(placement: .destructiveAction) {
+                    Button("Excluir", systemImage: "trash") { showingDeleteConfirm = true }
+                }
+            }
+            .sheet(isPresented: $showingEdit) {
+                NavigationStack {
+                    UserFormView(user: user, repository: SwiftDataUserRepository(context: modelContext))
+                }
+            }
+            .confirmationDialog(
+                "Excluir usuário?",
+                isPresented: $showingDeleteConfirm,
+                titleVisibility: .visible
+            ) {
+                Button("Excluir", role: .destructive) {
+                    modelContext.delete(user)
+                    try? modelContext.save()
+                    dismiss()
+                }
+                Button("Cancelar", role: .cancel) { }
+            } message: {
+                Text("Esta ação não pode ser desfeita.")
+            }
+        } else {
+            ContentUnavailableView("Usuário não encontrado", systemImage: "person.crop.circle.badge.exclam")
+        }
     }
 }
 
-#Preview {
-    UserDetails()
+private struct LabeledValueRow: View {
+    let title: String
+    let value: String
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(title)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Spacer(minLength: 16)
+            Text(value)
+                .font(.body)
+                .multilineTextAlignment(.trailing)
+        }
+        .textSelection(.enabled)
+    }
+}
+
+private struct CountCard: View {
+    let title: String
+    let count: Int
+    let systemImage: String
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: systemImage)
+                    .foregroundStyle(.blue)
+                Spacer()
+                Text("\(count)")
+                    .font(.title2).bold()
+            }
+            Text(title)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+        .padding(12)
+        .frame(minWidth: 140)
+        .background(RoundedRectangle(cornerRadius: 12).fill(.thinMaterial))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .strokeBorder(.quaternary, lineWidth: 0.5)
+        )
+    }
+}
+
+#Preview("User Details") {
+    // Create an in-memory model container and a sample user for preview
+    let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: User.self, configurations: configuration)
+    let context = ModelContext(container)
+
+    let sample = User(userId: UUID().uuidString,
+                      name: "Dra. Ana Silva",
+                      crm: "12345-SP",
+                      rqe: "98765",
+                      phone: "(11) 99999-0000",
+                      emailAddress: "ana.silva@example.com",
+                      createdAt: .now.addingTimeInterval(-86400 * 20),
+                      updatedAt: .now)
+    context.insert(sample)
+    try? context.save()
+
+    return NavigationStack { UserDetails(userId: sample.userId) }
+        .modelContainer(container)
 }

@@ -1,21 +1,37 @@
+//
+//  RootView.swift
+//  FichasAnestésicas
+//
+//  Created by Renan Wrobel on 23/10/25.
+//
+
+
 import SwiftUI
 import SwiftData
 
 struct RootView: View {
+    
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) var context
 
     var body: some View {
         Group {
-            if session.currentUser == nil {
-                UserSelectionView()
+            if let user = session.currentUser {
+                DashboardView(userId: user.userId)
             } else {
-                MainAppView() // sua tela principal
+                UserSelectionView()
             }
         }
         .task {
-            // Carrega o usuário salvo (por userId) ao iniciar o app
             session.loadCurrentUser(using: context)
         }
     }
 }
+
+#Preview("RootView") {
+    let session = SessionManager()
+    return RootView()
+        .environment(session)
+        .modelContainer(for: [User.self])
+}
+

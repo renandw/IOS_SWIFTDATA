@@ -37,11 +37,13 @@ final class SwiftDataUserRepository: UserRepository {
 
     public func create(_ user: User) throws {
         context.insert(user)
+        user.createdAt = .now
         try context.save()
     }
 
     public func update(_ user: User) throws {
         // Assuming the user instance is already managed by the context
+        user.updatedAt = .now
         try context.save()
     }
 

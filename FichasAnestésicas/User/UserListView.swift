@@ -11,14 +11,14 @@ import SwiftData
 
 struct UserListView: View {
     @Environment(\.modelContext) var userModelContext
-    @Query(sort: \User.crm) var users: [User]
+    @Query(sort: \User.updatedAt) var users: [User]
     @State private var showingCreate = false
     
     var body: some View {
         NavigationStack {
             List {
                 ForEach(users) { user in
-                    NavigationLink(destination: UserFormView(user: user, repository: SwiftDataUserRepository(context: userModelContext))) {
+                    NavigationLink(destination: UserDetails(userId: user.userId)) {
                         VStack(alignment: .leading) {
                             Text(user.name)
                                 .font(.headline)

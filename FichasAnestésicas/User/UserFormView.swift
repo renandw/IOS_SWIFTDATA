@@ -37,15 +37,41 @@ struct UserFormView: View {
                 TextField("CRM", text: $viewModel.crm)
                     .textInputAutocapitalization(.characters)
                     .onChange(of: viewModel.crm) { _, newValue in
-                        let formatted = formatCRM(newValue)
-                        if formatted != viewModel.crm {
-                            viewModel.crm = formatted
+                        // Allow user to type freely, but normalize lightweight aspects only
+                        // 1) Uppercase letters
+                        var normalized = newValue.uppercased()
+                        // 2) Keep only letters, digits, and hyphen
+                        normalized = normalized.filter { $0.isNumber || ($0 >= "A" && $0 <= "Z") || $0 == "-" }
+                        // 3) Ensure at most a single hyphen (keep first, drop the rest)
+                        if normalized.filter({ $0 == "-" }).count > 1 {
+                            var seenHyphen = false
+                            normalized = normalized.reduce(into: "") { acc, ch in
+                                if ch == "-" {
+                                    if !seenHyphen { acc.append(ch); seenHyphen = true }
+                                } else {
+                                    acc.append(ch)
+                                }
+                            }
+                        }
+                        // Do not force split/merge around the hyphen while typing; let the user position the cursor
+                        if normalized != viewModel.crm {
+                            viewModel.crm = normalized
+                        }
+                        // Validate current value without forcing a rewrite
+                        viewModel.crmError = viewModel.validateCRM(viewModel.crm) ? nil : "Formato: numeros-UF (ex: 12345-SP)"
+                    }
+                    .onSubmit {
+                        // On submit, apply the stricter formatting numbers-UF with up to 2 letters
+                        let finalized = formatCRM(viewModel.crm)
+                        if finalized != viewModel.crm {
+                            viewModel.crm = finalized
                         }
                         viewModel.crmError = viewModel.validateCRM(viewModel.crm) ? nil : "Formato: numeros-UF (ex: 12345-SP)"
                     }
                 if let crmError = viewModel.crmError {
                     Text(crmError).font(.footnote).foregroundStyle(.red)
                 }
+                TextField("RQE", text: $viewModel.rqe)
                 TextField("Email", text: $viewModel.emailAddress)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
@@ -68,17 +94,17 @@ struct UserFormView: View {
                 if let emailError = viewModel.emailError {
                     Text(emailError).font(.footnote).foregroundStyle(.red)
                 }
-                TextField("Telefone", text: $viewModel.telefone)
+                TextField("Telefone", text: $viewModel.phone)
                     .keyboardType(.numberPad)
-                    .onChange(of: viewModel.telefone) { _, newValue in
+                    .onChange(of: viewModel.phone) { _, newValue in
                         let formatted = formatPhone(newValue)
-                        if formatted != viewModel.telefone {
-                            viewModel.telefone = formatted
+                        if formatted != viewModel.phone {
+                            viewModel.phone = formatted
                         }
-                        viewModel.telefoneError = viewModel.validatePhone(viewModel.telefone) ? nil : "Formato: (XX) XXXXX-XXXX"
+                        viewModel.phoneError = viewModel.validatePhone(viewModel.phone) ? nil : "Formato: (XX) XXXXX-XXXX"
                     }
-                if let telefoneError = viewModel.telefoneError {
-                    Text(telefoneError).font(.footnote).foregroundStyle(.red)
+                if let phoneError = viewModel.phoneError {
+                    Text(phoneError).font(.footnote).foregroundStyle(.red)
                 }
             }
             .navigationTitle(userToEdit == nil ? "Novo Usuário" : "Editar Usuário")
@@ -152,7 +178,8 @@ struct UserFormView: View {
     let sampleUser = User(userId: UUID().uuidString,
                           name: "Maria Souza",
                           crm: "1234-AB",
-                          telefone: "(69) 98132-8798",
+                          rqe: "2345",
+                          phone: "(69) 98132-8798",
                           emailAddress: "maria@example.com",
                           createdAt: .now)
     let context = ModelContext(container)

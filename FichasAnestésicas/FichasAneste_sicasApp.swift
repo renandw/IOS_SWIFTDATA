@@ -1,17 +1,23 @@
 //
 //  FichasAneste_sicasApp.swift
-//  FichasAnestésicas
+//  FichasAnestésicas
 //
 //  Created by Renan Wrobel on 20/10/25.
 //
 
 import SwiftUI
+import SwiftData
 
 @main
-struct FichasAneste_sicasApp: App {
+struct FichasAnestesicasApp: App {
+    @State private var session = SessionManager()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
+        .environment(session)
+        .modelContainer(for: [User.self, Patient.self])
     }
 }
+ 

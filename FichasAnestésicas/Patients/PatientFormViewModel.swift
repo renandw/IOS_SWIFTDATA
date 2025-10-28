@@ -16,10 +16,22 @@ final class PatientFormViewModel: ObservableObject {
     @Published var birthDate: Date = .now
     @Published var sex: Sex = .male
 
+    // MARK: - Duplicate Detection State
+    @Published var duplicateStatus: DuplicateStatus?
+    @Published var foundPatients: [Patient] = []
+    @Published var showDuplicateSheet = false
+    
+    // MARK: - Success/Error State
+    @Published var saveSuccess = false
+    @Published var errorMessage: String?
+
     // MARK: - Dependencies
     private let repository: PatientRepository
     private let currentUser: User
     private var editingPatient: Patient?
+    
+    // Armazena o paciente temporário durante verificação
+    private var pendingPatient: Patient?
 
     // MARK: - Init
     init(repository: PatientRepository, currentUser: User, editingPatient: Patient? = nil) {
@@ -37,31 +49,129 @@ final class PatientFormViewModel: ObservableObject {
 
     // MARK: - Actions
     func save() throws {
-        if var patient = editingPatient {
-            // Edit existing
-            patient.name = name
-            patient.cns = cns
-            patient.birthDate = birthDate
-            patient.sex = sex
-            patient.updatedBy = currentUser
-            try repository.update(patient)
+        if editingPatient != nil {
+            // Update não checa duplicatas
+            try performUpdate()
         } else {
-            // Create new
-            let newPatient = Patient(
-                patientId: UUID().uuidString,
-                cns: cns,
-                name: name,
-                birthDate: birthDate,
-                sex: sex,
-                createdBy: currentUser
-            )
-            try repository.create(newPatient)
+            // Create novo - checa duplicatas
+            try checkAndCreate()
         }
+    }
+    
+    private func performUpdate() throws {
+        guard var patient = editingPatient else { return }
+        patient.name = name
+        patient.cns = cns
+        patient.birthDate = birthDate
+        patient.sex = sex
+        try repository.update(patient)
+        saveSuccess = true
+    }
+    
+    private func checkAndCreate() throws {
+        let patient = createPatientObject()
+        pendingPatient = patient
+        
+        let status = try repository.checkForDuplicates(patient)
+        duplicateStatus = status
+        
+        switch status {
+        case .none:
+            try repository.create(patient)
+            saveSuccess = true
+            
+        case .exact(let patients):
+            foundPatients = patients
+            showDuplicateSheet = true
+            
+        case .similar(let patients):
+            foundPatients = patients
+            showDuplicateSheet = true
+            
+        case .homonym(let patients):
+            foundPatients = patients
+            showDuplicateSheet = true
+        }
+    }
+
+    // MARK: - User Actions from Duplicate Sheet
+    
+    /// Opção 1: Criar novo paciente mesmo assim (ignora duplicatas)
+    func forceCreateNew() throws {
+        guard let patient = pendingPatient else { return }
+        try repository.create(patient)
+        saveSuccess = true
+        closeDuplicateSheet()
+    }
+    
+    /// Opção 2: Selecionar paciente existente (apenas navega/fecha)
+    func selectExisting(_ patient: Patient) {
+        // A View decide o que fazer (navegar, fechar, etc)
+        // Apenas fecha o sheet e limpa o form
+        closeDuplicateSheet()
+        clearForm()
+    }
+    
+    /// Opção 3: Atualizar paciente existente com os novos dados
+    func updateExisting(_ existingPatient: Patient) throws {
+        var patient = existingPatient
+        patient.name = name
+        patient.cns = cns
+        patient.birthDate = birthDate
+        patient.sex = sex
+        try repository.update(patient)
+        saveSuccess = true
+        closeDuplicateSheet()
+    }
+    
+    // MARK: - Helpers
+    
+    private func createPatientObject() -> Patient {
+        Patient(
+            patientId: UUID().uuidString,
+            cns: cns,
+            name: name,
+            birthDate: birthDate,
+            sex: sex,
+            createdBy: currentUser
+        )
+    }
+    
+    private func closeDuplicateSheet() {
+        showDuplicateSheet = false
+        foundPatients = []
+        duplicateStatus = nil
+        pendingPatient = nil
+    }
+    
+    private func clearForm() {
+        name = ""
+        cns = ""
+        birthDate = .now
+        sex = .male
     }
 
     // MARK: - Validation
     var isValid: Bool {
         !name.isEmpty && !cns.isEmpty
-        // TODO: validar formato CNS, name e muitas outras validações.
+    }
+
+    // MARK: - Derived state
+    var isEditing: Bool { editingPatient != nil }
+    
+    /// Mensagem contextual para o sheet baseado no tipo de duplicata
+    var duplicateMessage: String {
+        guard let status = duplicateStatus else { return "" }
+        
+        switch status {
+        case .exact:
+            return "Paciente idêntico já cadastrado"
+        case .similar:
+            return "Paciente semelhante encontrado (possível erro de digitação)"
+        case .homonym:
+            return "Paciente com mesmo nome mas dados diferentes encontrado"
+        case .none:
+            return ""
+        }
     }
 }
