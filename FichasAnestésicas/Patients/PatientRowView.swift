@@ -90,8 +90,6 @@ struct PatientRowView: View {
                 }
 
             }
-            //.padding()
-            .background(Color(.secondarySystemGroupedBackground))
             .cornerRadius(12)
         }
     }

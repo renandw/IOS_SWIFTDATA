@@ -18,8 +18,6 @@ struct PatientDetailsView: View {
 
     init(userId: String, patientId: String, context: ModelContext) throws {
         try self.init(patientId: patientId, context: context)
-        // Optional: validate ownership/creator if needed
-        // assert(self.patient.createdBy.userId == userId)
     }
     
     private let dateStyle: Date.FormatStyle = .dateTime.year().month().day()

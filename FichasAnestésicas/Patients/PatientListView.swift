@@ -25,13 +25,9 @@ struct PatientListView: View {
                 List(patients, id: \.patientId) { patient in
                     NavigationLink(destination: try? PatientDetailsView(patientId: patient.patientId, context: patientContext)) {
                         PatientRowView(patient: patient, numberCnsContext: .notNeeded, ageContext: .outSurgery)
+                            .contentShape(Rectangle()) // Garante que toda a área seja clicável
                     }
-                    .contextMenu {
-                        Button("Editar") {
-                            editingPatient = patient
-                            showingForm = true
-                        }
-                    }
+                    .buttonStyle(.plain)
                     .swipeActions(edge: .trailing) {
                         Button("Editar") {
                             editingPatient = patient
