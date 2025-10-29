@@ -59,16 +59,22 @@ struct PatientRowView: View {
                         
                         Text(patient.sex.sexStringDescription)
                             .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.secondary)
                         
                         Text("•")
                         
                         Text(patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits))
                             .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.secondary)
                         
                         Text("•")
                         
                         Text(ageContext.ageString(from: patient.birthDate))
                             .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.secondary)
                         
                     }
                     

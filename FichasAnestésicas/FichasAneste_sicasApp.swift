@@ -17,7 +17,7 @@ struct FichasAnestesicasApp: App {
             RootView()
         }
         .environment(session)
-        .modelContainer(for: [User.self, Patient.self])
+        .modelContainer(for: [User.self, Patient.self, Surgery.self, CbhpmProcedure.self, Financial.self])
     }
 }
  

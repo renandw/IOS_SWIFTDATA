@@ -4,7 +4,6 @@ import SwiftData
 struct PatientDetailsView: View {
     let patient: Patient
 
-    // Convenience init: fetch Patient by patientId
     init(patientId: String, context: ModelContext) throws {
         let descriptor = FetchDescriptor<Patient>(
             predicate: #Predicate { $0.patientId == patientId },
@@ -17,7 +16,6 @@ struct PatientDetailsView: View {
         }
     }
 
-    // Convenience init: ensure createdBy user matches provided userId (optional guard)
     init(userId: String, patientId: String, context: ModelContext) throws {
         try self.init(patientId: patientId, context: context)
         // Optional: validate ownership/creator if needed

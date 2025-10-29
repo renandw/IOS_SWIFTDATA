@@ -32,8 +32,9 @@ final class Patient {
     var updatedAt: Date?
     @Relationship var updatedBy: User?
     var lastActivityAt: Date
-
-    // Inicializador principal aceitando Sex e Users para criador/atualizador
+    @Relationship(deleteRule: .cascade) var surgeries: [Surgery]?
+    
+    
     init(
         patientId: String,
         cns: String,
@@ -56,6 +57,7 @@ final class Patient {
         self.updatedAt = updatedAt
         self.updatedBy = updatedBy
         self.lastActivityAt = lastActivityAt
+        self.surgeries = nil
     }
 
     init(
@@ -80,5 +82,7 @@ final class Patient {
         self.updatedAt = updatedAt
         self.updatedBy = updatedBy
         self.lastActivityAt = lastActivityAt
+        self.surgeries = nil
     }
 }
+
