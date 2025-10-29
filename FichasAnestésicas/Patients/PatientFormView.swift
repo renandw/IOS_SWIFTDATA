@@ -158,37 +158,7 @@ struct PatientDuplicateCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Nome do paciente
-            Text(patient.name)
-                .font(.headline)
-            
-            // Informações
-            VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    Image(systemName: "calendar")
-                        .foregroundStyle(.secondary)
-                        .frame(width: 20)
-                    Text(patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits))
-                }
-                
-                HStack {
-                    Image(systemName: patient.sex.sexImage)
-                        .foregroundStyle(.secondary)
-                        .frame(width: 20)
-                    Text(patient.sex.sexStringDescription)
-                        .font(.subheadline)
-                }
-                
-                HStack {
-                    Image(systemName: "number")
-                        .foregroundStyle(.secondary)
-                        .frame(width: 20)
-                    Text(patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))
-                        .font(.subheadline)
-                        .foregroundStyle(patient.cns == "00000000000000" ? .orange : .primary)
-                }
-            }
-            .foregroundStyle(.secondary)
+            PatientRowView(patient: patient, ageContext: .outSurgery)
             
             // Botões de ação
             HStack(spacing: 12) {

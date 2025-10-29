@@ -24,17 +24,7 @@ struct PatientListView: View {
             NavigationStack {
                 List(patients, id: \.patientId) { patient in
                     NavigationLink(destination: try? PatientDetailsView(patientId: patient.patientId, context: patientContext)) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(patient.name)
-                                .font(.headline)
-                            HStack(spacing: 6) {
-                                Image(systemName: "person.text.rectangle")
-                                    .foregroundStyle(.secondary)
-                                Text(patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
+                        PatientRowView(patient: patient, ageContext: .outSurgery)
                     }
                     .contextMenu {
                         Button("Editar") {
