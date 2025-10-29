@@ -158,7 +158,7 @@ struct PatientDuplicateCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            PatientRowView(patient: patient, ageContext: .outSurgery)
+            PatientRowView(patient: patient, numberCnsContext: .needed, ageContext: .outSurgery)
             
             // Botões de ação
             HStack(spacing: 12) {

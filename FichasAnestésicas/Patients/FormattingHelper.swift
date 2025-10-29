@@ -108,3 +108,8 @@ enum AgeContext {
         }
     }
 }
+
+enum numberCnsContex {
+    case needed
+    case notNeeded
+}

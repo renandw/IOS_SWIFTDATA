@@ -20,11 +20,11 @@ struct PatientListView: View {
     }
 
     var body: some View {
-        if let user = session.currentUser {
+        if session.currentUser != nil {
             NavigationStack {
                 List(patients, id: \.patientId) { patient in
                     NavigationLink(destination: try? PatientDetailsView(patientId: patient.patientId, context: patientContext)) {
-                        PatientRowView(patient: patient, ageContext: .outSurgery)
+                        PatientRowView(patient: patient, numberCnsContext: .notNeeded, ageContext: .outSurgery)
                     }
                     .contextMenu {
                         Button("Editar") {
@@ -79,4 +79,3 @@ struct PatientListView: View {
         }
     }
 }
-

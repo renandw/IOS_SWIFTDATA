@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PatientRowView: View {
     let patient: Patient
+    let numberCnsContext: numberCnsContex
     let ageContext: AgeContext
     //let surgery: Surgery? // será implementado quando tivermos o @model Surgery
     
@@ -67,17 +68,18 @@ struct PatientRowView: View {
                         Text("•")
                         
                         Text(ageContext.ageString(from: patient.birthDate))
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .font(.caption)
                         
                     }
                     
-                    HStack {
-                        Text("Cns:")
-                            .font(.caption)
-                        Text(patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))
-                            .font(.caption)
-                            .foregroundStyle(patient.cns == "00000000000000" ? .orange : .primary)
+                    if numberCnsContext == .needed {
+                        HStack {
+                            Text("Cns:")
+                                .font(.caption)
+                            Text(patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))
+                                .font(.caption)
+                                .foregroundStyle(patient.cns == "00000000000000" ? .orange : .primary)
+                        }
                     }
                 }
 
