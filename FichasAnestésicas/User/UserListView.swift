@@ -10,8 +10,11 @@ import SwiftData
 
 
 struct UserListView: View {
+    @Environment(SessionManager.self) var session
     @Environment(\.modelContext) var userModelContext
+    
     @Query(sort: \User.updatedAt) var users: [User]
+    
     @State private var showingCreate = false
     
     var body: some View {
@@ -53,6 +56,10 @@ struct UserListView: View {
     private func deleteUsers(at offsets: IndexSet) {
         for index in offsets {
             let user = users[index]
+            // Se o usuário deletado é o usuário logado, faz logout
+            if user.userId == session.currentUser?.userId {
+                session.logout()
+            }
             userModelContext.delete(user)
         }
         try? userModelContext.save()
@@ -60,6 +67,8 @@ struct UserListView: View {
 }
 
 #Preview {
+    let session = SessionManager()
     UserListView()
         .modelContainer(for: [User.self])
+        .environment(session)
 }

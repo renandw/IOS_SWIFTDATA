@@ -11,7 +11,7 @@ import SwiftData
 
 struct UserSelectionView: View {
     @Environment(SessionManager.self) var session
-    @Environment(\.modelContext) var context
+    @Environment(\.modelContext) var userModelContext
     @Query<User>(sort: [SortDescriptor(\.name)]) var users: [User]
 
     var body: some View {
@@ -21,19 +21,10 @@ struct UserSelectionView: View {
                     ContentUnavailableView(
                         "Nenhum usuário",
                         systemImage: "person.crop.circle.badge.exclam",
-                        description: Text("Crie o primeiro usuário para começar.")
+                        description: Text("Crie um usuário para começar.")
                     )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .listRowInsets(EdgeInsets())
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .overlay(
-                        NavigationLink(destination: UserFormView()) {
-                            Text("Criar primeiro usuário")
-                                .font(.headline)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .padding()
-                        , alignment: .bottom
-                    )
                 } else {
                     Section("Selecione um usuário") {
                         ForEach(users, id: \.userId) { user in
@@ -52,11 +43,18 @@ struct UserSelectionView: View {
                     }
 
                     Section {
-                        NavigationLink("Criar novo usuário", destination: UserFormView())
+                        NavigationLink("Criar novo usuário", destination: UserFormView(repository: SwiftDataUserRepository(context: userModelContext)))
                     }
                 }
             }
             .navigationTitle("Selecionar Usuário")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink(destination: UserFormView(repository: SwiftDataUserRepository(context: userModelContext))) {
+                        Label("Criar", systemImage: "plus")
+                    }
+                }
+            }
         }
     }
 }

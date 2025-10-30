@@ -4,7 +4,7 @@ import SwiftData
 
 struct PatientDetailsView: View {
     @Bindable var patient: Patient
-    //let userId: String
+
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
 
@@ -14,7 +14,7 @@ struct PatientDetailsView: View {
     var body: some View {
         List {
             Section("Dados do Paciente") {
-                VStack(alignment: .leading) {
+                HStack {
                     Text("Name")
                         .font(.caption)
                         .foregroundStyle(.secondary)

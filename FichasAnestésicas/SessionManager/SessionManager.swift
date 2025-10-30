@@ -33,4 +33,12 @@ class SessionManager {
             storedUserID = nil
         }
     }
+
+    /// Faz logout do usuário atual, limpando memória e UserDefaults
+    func logout() {
+        // Limpa o usuário em memória
+        currentUser = nil
+        // Remove o ID persistido
+        storedUserID = nil
+    }
 }
