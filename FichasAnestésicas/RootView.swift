@@ -34,4 +34,3 @@ struct RootView: View {
         .environment(session)
         .modelContainer(for: [User.self])
 }
-

@@ -35,7 +35,7 @@ struct DashboardView: View {
                           .buttonStyle(.glassProminent)
                           Text ("Paciente: \(patients.count)")
                           NavigationLink("Navegar para Lista de Pacientes") {
-                              PatientListView(userId: user.userId)
+                              PatientListView(session: session)
                           }
                           .buttonStyle(.borderedProminent)
                           NavigationLink("Navegar para Lista de Usuários") {
