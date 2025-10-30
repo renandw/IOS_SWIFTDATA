@@ -13,6 +13,7 @@ struct SurgeryDetailsView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("Tipo: \(surgery.type)")
+            Text("Criado por: \(surgery.createdBy.name)")
             Text("Data: \(surgery.date.formatted(date: .abbreviated, time: .omitted))")
             
             Spacer()

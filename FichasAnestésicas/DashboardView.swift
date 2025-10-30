@@ -8,10 +8,14 @@
 import SwiftUI
 import SwiftData
 
+import SwiftUI
+import SwiftData
+
 struct DashboardView: View {
     let userId: String
       @Environment(SessionManager.self) var session
     @Query(sort:\Patient.name) var patients: [Patient]
+    @Query(sort: \Surgery.date, order: .reverse) var surgeries: [Surgery]
     @Environment(\.modelContext) private var patientContext
     
     init(userId: String) {
@@ -19,6 +23,10 @@ struct DashboardView: View {
         _patients = Query(
             filter: #Predicate<Patient> { $0.createdBy.userId == userId },
             sort: [SortDescriptor(\.name)]
+        )
+        _surgeries = Query(
+            filter: #Predicate<Surgery> { $0.createdBy.userId == userId },
+            sort: [SortDescriptor(\.date, order: .reverse)]
         )
     }
 
@@ -33,7 +41,10 @@ struct DashboardView: View {
                               session.currentUser = nil
                           }
                           .buttonStyle(.glassProminent)
+                          
                           Text ("Paciente: \(patients.count)")
+                          Text ("Cirurgias? \(surgeries.count)")
+                          
                           NavigationLink("Navegar para Lista de Pacientes") {
                               PatientListView(session: session)
                           }

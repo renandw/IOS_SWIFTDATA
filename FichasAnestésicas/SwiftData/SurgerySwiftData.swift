@@ -28,10 +28,10 @@ public enum SurgeryType: String, Codable, CaseIterable {
 final class Surgery {
     @Attribute(.unique) var surgeryId: String
     var date: Date
-    var createdBy: String
+    var createdBy: User
     var createdAt: Date
     var updatedAt: Date?
-    var updatedBy: String?
+    var updatedBy: User?
     var lastActivityAt: Date
     var insuranceName: String
     var insuranceNumber: String
@@ -58,7 +58,7 @@ final class Surgery {
     @Relationship(inverse: \Patient.surgeries) var patient: Patient
     @Relationship(deleteRule: .cascade, inverse: \Financial.surgery) var financial: Financial?
     
-    init(surgeryId: String, date: Date, createdBy: String, createdAt: Date, updatedAt: Date? = nil, updatedBy: String? = nil, lastActivityAt: Date, insuranceName: String, insuranceNumber: String, start: Date? = nil, end: Date? = nil, auxiliarySurgeons: [String]? = nil, mainSurgeon: String, hospital: String, weight: Double, proposedProcedure: String, completeProcedure: String? = nil, statusRaw: String, typeRaw: String, cbhpmProcedures: [CbhpmProcedure]? = nil, patient: Patient, financial: Financial? = nil) {
+    init(surgeryId: String, date: Date, createdBy: User, createdAt: Date, updatedAt: Date? = nil, updatedBy: User? = nil, lastActivityAt: Date, insuranceName: String, insuranceNumber: String, start: Date? = nil, end: Date? = nil, auxiliarySurgeons: [String]? = nil, mainSurgeon: String, hospital: String, weight: Double, proposedProcedure: String, completeProcedure: String? = nil, statusRaw: String, typeRaw: String, cbhpmProcedures: [CbhpmProcedure]? = nil, patient: Patient, financial: Financial? = nil) {
         self.surgeryId = surgeryId
         self.date = date
         self.createdBy = createdBy

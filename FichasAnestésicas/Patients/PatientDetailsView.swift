@@ -4,7 +4,8 @@ import SwiftData
 
 struct PatientDetailsView: View {
     @Bindable var patient: Patient
-    
+    //let userId: String
+    @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
 
     
@@ -13,7 +14,7 @@ struct PatientDetailsView: View {
     var body: some View {
         List {
             Section("Dados do Paciente") {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading) {
                     Text("Name")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -21,7 +22,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading) {
                     Text("CNS")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -29,7 +30,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading) {
                     Text("Birth Date")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -37,7 +38,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading) {
                     Text("CreatedAt")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -45,7 +46,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading) {
                     Text("CreatedBy")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -54,7 +55,7 @@ struct PatientDetailsView: View {
                         .fontWeight(.semibold)
                 }
                 if let updatedBy = patient.updatedBy {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading) {
                         Text("UpdatedBy")
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -64,7 +65,7 @@ struct PatientDetailsView: View {
                     }
                 }
                 if let updatedAt = patient.updatedAt {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading) {
                         Text("UpdatedAt")
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -73,7 +74,7 @@ struct PatientDetailsView: View {
                             .fontWeight(.semibold)
                     }
                 }
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading) {
                     Text("Last Activity")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -81,7 +82,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading) {
                     Text("PatientId")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -89,7 +90,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading) {
                     Text("Sex")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -105,7 +106,7 @@ struct PatientDetailsView: View {
             .padding()
             Section("Lista de Cirurgias") {
                 ForEach(patient.surgeries ?? []) { surgery in
-                    NavigationLink(surgery.surgeryId) {
+                    NavigationLink(surgery.proposedProcedure) {
                         SurgeryDetailsView(surgery: surgery)
                     }
                 }
@@ -119,5 +120,30 @@ struct PatientDetailsView: View {
         }
     }
     
-    private func addSurgery() { let now = Date(); let surgery = Surgery( surgeryId: UUID().uuidString, date: now, createdBy: "Renan Dantas Wrobel", createdAt: now, lastActivityAt: now, insuranceName: "Unimed", insuranceNumber: "1234123412341234", mainSurgeon: "Dr. Eliakim", hospital: "Hospital 9 de Julho", weight: 75, proposedProcedure: "Colecistectomia VLP", statusRaw: "Concluída", typeRaw: "convenio", patient: patient ); modelContext.insert(surgery) }
+    private func addSurgery() {
+        guard let currentUser = session.currentUser else {
+            // Handle missing user appropriately (e.g., show an alert or return)
+            return
+        }
+        let now = Date()
+        let surgery = Surgery(
+            surgeryId: UUID().uuidString,
+            date: now,
+            createdBy: currentUser,
+            createdAt: now,
+            lastActivityAt: now,
+            insuranceName: "Unimed",
+            insuranceNumber: "1234123412341234",
+            mainSurgeon: "Dr. Eliakim",
+            hospital: "Hospital 9 de Julho",
+            weight: 75,
+            proposedProcedure: "Colecistectomia VLP",
+            statusRaw: Status.finished.rawValue,
+            typeRaw: SurgeryType.convenio.rawValue,
+            patient: patient
+        )
+        modelContext.insert(surgery)
+        try? modelContext.save()
+    }
 }
+

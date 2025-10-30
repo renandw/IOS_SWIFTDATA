@@ -14,13 +14,18 @@ struct UserFormView: View {
         _viewModel = StateObject(wrappedValue: UserFormViewModel(repository: repository, user: user))
     }
     
-    init(user: User? = nil) {
+    #if DEBUG
+    init(previewUser user: User? = nil) {
         self.userToEdit = user
-        // Fallback repository for previews or if not injected
-        let container = try! ModelContainer(for: User.self)
+        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: User.self, configurations: configuration)
         let context = ModelContext(container)
-        _viewModel = StateObject(wrappedValue: UserFormViewModel(repository: SwiftDataUserRepository(context: context), user: user))
+        _viewModel = StateObject(wrappedValue: UserFormViewModel(
+            repository: SwiftDataUserRepository(context: context),
+            user: user
+        ))
     }
+    #endif
     
     var body: some View {
         NavigationStack {
