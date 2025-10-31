@@ -7,6 +7,9 @@ struct PatientDetailsView: View {
 
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
+    
+    @State private var showingSurgeryForm = false
+    @State private var selectedSurgery: Surgery?
 
     
     private let dateStyle: Date.FormatStyle = .dateTime.year().month().day()
@@ -109,14 +112,31 @@ struct PatientDetailsView: View {
                     NavigationLink(surgery.proposedProcedure) {
                         SurgeryDetailsView(surgery: surgery)
                     }
+                    .swipeActions {
+                        Button("Editar") {
+                            selectedSurgery = surgery
+                            showingSurgeryForm = true
+                        }
+                    }
+                }
+                .sheet(isPresented: $showingSurgeryForm) {
+                    if let surgery = selectedSurgery {
+                        let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
+                        let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository)
+                        SurgeryFormView(viewModel: viewModel)
+                    }
                 }
             }
         }
         .toolbar {
             Button("Adicionar Cirurgia", systemImage: "plus") {
-                addSurgery()
-                
+                showingSurgeryForm = true
             }
+        }
+        .sheet(isPresented: $showingSurgeryForm) {
+            let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
+            let viewModel = SurgeryFormViewModel(patient: patient, repository: repository)
+            SurgeryFormView(viewModel: viewModel)
         }
     }
     

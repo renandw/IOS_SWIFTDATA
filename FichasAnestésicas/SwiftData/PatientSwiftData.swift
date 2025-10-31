@@ -32,7 +32,7 @@ final class Patient {
     var updatedAt: Date?
     @Relationship var updatedBy: User?
     var lastActivityAt: Date
-    @Relationship(deleteRule: .cascade) var surgeries: [Surgery]?
+    @Relationship(deleteRule: .cascade, inverse: \Surgery.patient) var surgeries: [Surgery]?
     
     
     init(

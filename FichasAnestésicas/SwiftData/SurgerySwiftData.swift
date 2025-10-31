@@ -1,10 +1,3 @@
-//
-//  SurgerySwiftData.swift
-//  FichasAnestésicas
-//
-//  Created by Renan Wrobel on 29/10/25.
-//
-
 import Foundation
 import SwiftData
 
@@ -55,10 +48,10 @@ final class Surgery {
         }
     
     @Relationship(deleteRule: .cascade, inverse: \CbhpmProcedure.surgery) var cbhpmProcedures: [CbhpmProcedure]?
-    @Relationship(inverse: \Patient.surgeries) var patient: Patient
+    @Relationship var patient: Patient
     @Relationship(deleteRule: .cascade, inverse: \Financial.surgery) var financial: Financial?
     
-    init(surgeryId: String, date: Date, createdBy: User, createdAt: Date, updatedAt: Date? = nil, updatedBy: User? = nil, lastActivityAt: Date, insuranceName: String, insuranceNumber: String, start: Date? = nil, end: Date? = nil, auxiliarySurgeons: [String]? = nil, mainSurgeon: String, hospital: String, weight: Double, proposedProcedure: String, completeProcedure: String? = nil, statusRaw: String, typeRaw: String, cbhpmProcedures: [CbhpmProcedure]? = nil, patient: Patient, financial: Financial? = nil) {
+    init(surgeryId: String, date: Date, createdBy: User, createdAt: Date, updatedAt: Date? = nil, updatedBy: User? = nil, lastActivityAt: Date, insuranceName: String, insuranceNumber: String, start: Date? = nil, end: Date? = nil, auxiliarySurgeons: [String]? = nil, mainSurgeon: String, hospital: String, weight: Double, proposedProcedure: String, completeProcedure: String? = nil, statusRaw: String = "scheduled", typeRaw: String, cbhpmProcedures: [CbhpmProcedure]? = nil, patient: Patient, financial: Financial? = nil) {
         self.surgeryId = surgeryId
         self.date = date
         self.createdBy = createdBy
@@ -84,15 +77,25 @@ final class Surgery {
     }
 }
 
+struct CbhpmCode: Codable, Identifiable {
+    let codigo: String
+    let procedimento: String
+    let porte_anestesico: String
+    
+    var id: String { codigo }
+}
+
 
 @Model
 final class CbhpmProcedure {
+    @Attribute(.unique) var cbhpmId: String
     @Relationship var surgery: Surgery
     var code: String
     var procedure: String
     var port: String
 
-    init(surgery: Surgery, code: String, procedure: String, port: String) {
+    init(cbhpmId: String = UUID().uuidString, surgery: Surgery, code: String, procedure: String, port: String) {
+        self.cbhpmId = cbhpmId
         self.surgery = surgery
         self.code = code
         self.procedure = procedure
