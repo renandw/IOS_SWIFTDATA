@@ -21,6 +21,7 @@ final class SurgeryFormViewModel {
     let patient: Patient
     private let surgery: Surgery?
     private let repository: SurgeryRepository
+    private let financialRepository: FinancialRepository
     
     var isEditing: Bool { surgery != nil }
     var saveSuccess = false
@@ -45,6 +46,9 @@ final class SurgeryFormViewModel {
     // Procedures
     var selectedProcedures: [CbhpmCode] = []
     
+    // Financial
+    var valueAnesthesia: Double?
+    
     // MARK: - Validation
     var isValid: Bool {
         !insuranceName.isEmpty &&
@@ -56,10 +60,11 @@ final class SurgeryFormViewModel {
     }
     
     // MARK: - Init
-    init(patient: Patient, surgery: Surgery? = nil, repository: SurgeryRepository) {
+    init(patient: Patient, surgery: Surgery? = nil, repository: SurgeryRepository, financialRepository: FinancialRepository) {
         self.patient = patient
         self.surgery = surgery
         self.repository = repository
+        self.financialRepository = financialRepository
         
         if let surgery = surgery {
             // Edição - popula com dados existentes
@@ -83,6 +88,10 @@ final class SurgeryFormViewModel {
                     CbhpmCode(codigo: $0.code, procedimento: $0.procedure, porte_anestesico: $0.port)
                 }
             }
+            
+            // Carrega financial existente
+            let existing = try? financialRepository.get(for: surgery)
+            self.valueAnesthesia = existing?.valueAnesthesia
         } else {
             // Criação - valores padrão
             self.date = Date()
@@ -143,11 +152,25 @@ final class SurgeryFormViewModel {
             }
             newSurgery.cbhpmProcedures = cbhpmProcedures
         }
+        
+        if insuranceName.lowercased() == "particular", let value = valueAnesthesia {
+            let financial = Financial(
+                surgery: newSurgery,
+                valueAnesthesia: value,
+                paid: false
+            )
+            try financialRepository.create(financial)
+            newSurgery.financial = financial
+        }
     }
     
     private func updateExisting() throws {
-        guard let surgery = surgery else { return }
-        
+        print("🔴 Entrando no updateExisting")
+        guard let surgery = surgery else {
+            print("❌ surgery é nil!")
+            return
+        }
+        print("🔴 Surgery encontrada: \(surgery.surgeryId)")
         surgery.date = date
         surgery.insuranceName = insuranceName
         surgery.insuranceNumber = insuranceNumber
@@ -172,7 +195,27 @@ final class SurgeryFormViewModel {
             )
         }
         
+        if insuranceName.lowercased() == "particular" {
+            let existingFinancial = try financialRepository.get(for: surgery)
+            if let value = valueAnesthesia {
+                
+                if let financial = existingFinancial {
+                    financial.valueAnesthesia = value
+                    try financialRepository.update(financial)
+                } else {
+                    let financial = Financial(surgery: surgery, valueAnesthesia: value, paid: false)
+                    try financialRepository.create(financial)
+                    surgery.financial = financial
+                }
+            } else if let financial = existingFinancial {
+                // Manter o registro e apenas limpar o valor se preferir não deletar
+                financial.valueAnesthesia = nil
+                try financialRepository.update(financial)
+            }
+        }
+        print("🔴 Campos atualizados, vai chamar repository.update")
         try repository.update(surgery)
+        print("🔴 Repository.update executado")
     }
 }
 

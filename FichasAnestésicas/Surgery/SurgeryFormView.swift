@@ -35,6 +35,11 @@ struct SurgeryFormView: View {
                     TextField("Número do Convênio", text: $viewModel.insuranceNumber)
                         .keyboardType(.numberPad)
                 }
+                if viewModel.insuranceName.lowercased() == "particular" {
+                    Section("Dados Financeiros"){
+                        TextField("Valor", value: $viewModel.valueAnesthesia, format: .currency(code: "BRL"))
+                    }
+                }
                 
                 // MARK: - Dados da Cirurgia
                 Section("Dados da Cirurgia") {
@@ -118,7 +123,12 @@ struct SurgeryFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Salvar", systemImage: "checkmark") {
                         Task {
-                            guard let currentUser = session.currentUser else { return }
+                            print("🔵 Botão clicado")
+                            guard let currentUser = session.currentUser else {
+                                print("❌ currentUser é nil")
+                                return
+                            }
+                            print("✅ currentUser: \(currentUser.name)")
                             isSaving = true
                             try? viewModel.save(currentUser: currentUser)
                             isSaving = false
