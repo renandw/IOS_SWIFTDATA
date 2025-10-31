@@ -56,8 +56,23 @@ struct SurgeryFormView: View {
                 
                 // MARK: - Procedimentos CBHPM
                 Section("Procedimentos CBHPM") {
-                    CbhpmSearchView(selectedProcedures: $viewModel.selectedProcedures)
-                        .frame(height: 300)
+                    NavigationLink {
+                        CbhpmSearchView(selectedProcedures: $viewModel.selectedProcedures)
+                            .navigationTitle("Selecionar Procedimentos")
+                            .navigationBarTitleDisplayMode(.inline)
+                    } label: {
+                        HStack {
+                            Text("Procedimentos")
+                            Spacer()
+                            // Um resumo rápido do que já foi selecionado
+                            if viewModel.selectedProcedures.isEmpty {
+                                Text("Nenhum").foregroundStyle(.secondary)
+                            } else {
+                                Text("\(viewModel.selectedProcedures.count) selecionado(s)")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
                 }
                 
                 // MARK: - Campos Opcionais
@@ -98,10 +113,10 @@ struct SurgeryFormView: View {
             .navigationTitle(viewModel.isEditing ? "Editar Cirurgia" : "Nova Cirurgia")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
+                    Button("Cancelar", systemImage: "xmark") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Salvar") {
+                    Button("Salvar", systemImage: "checkmark") {
                         Task {
                             guard let currentUser = session.currentUser else { return }
                             isSaving = true

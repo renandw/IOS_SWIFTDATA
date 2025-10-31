@@ -115,16 +115,13 @@ struct PatientDetailsView: View {
                     .swipeActions {
                         Button("Editar") {
                             selectedSurgery = surgery
-                            showingSurgeryForm = true
                         }
                     }
                 }
-                .sheet(isPresented: $showingSurgeryForm) {
-                    if let surgery = selectedSurgery {
-                        let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
-                        let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository)
-                        SurgeryFormView(viewModel: viewModel)
-                    }
+                .sheet(item: $selectedSurgery) { surgery in
+                    let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
+                    let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository)
+                    SurgeryFormView(viewModel: viewModel)
                 }
             }
         }
