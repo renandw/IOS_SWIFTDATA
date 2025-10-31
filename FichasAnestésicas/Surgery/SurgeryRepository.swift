@@ -103,6 +103,6 @@ final class SwiftDataSurgeryRepository: SurgeryRepository {
         let base36 = String(value, radix: 36, uppercase: true)
         let padded = String(repeating: "0", count: max(0, 5 - base36.count)) + base36
         let code = String(padded.suffix(5))
-        return "C-\(year)-\(code)"
+        return "C\(year)-\(code)"
     }
 }

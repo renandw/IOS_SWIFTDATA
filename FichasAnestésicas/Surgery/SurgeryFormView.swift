@@ -123,12 +123,9 @@ struct SurgeryFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Salvar", systemImage: "checkmark") {
                         Task {
-                            print("🔵 Botão clicado")
                             guard let currentUser = session.currentUser else {
-                                print("❌ currentUser é nil")
                                 return
                             }
-                            print("✅ currentUser: \(currentUser.name)")
                             isSaving = true
                             try? viewModel.save(currentUser: currentUser)
                             isSaving = false

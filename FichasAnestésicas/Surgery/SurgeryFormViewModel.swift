@@ -19,9 +19,13 @@ import SwiftData
 final class SurgeryFormViewModel {
     // MARK: - Properties
     let patient: Patient
+    private let modelContext: ModelContext
     private let surgery: Surgery?
     private let repository: SurgeryRepository
     private let financialRepository: FinancialRepository
+    
+    private let procedureRepository: CbhpmProcedureRepository
+
     
     var isEditing: Bool { surgery != nil }
     var saveSuccess = false
@@ -60,11 +64,13 @@ final class SurgeryFormViewModel {
     }
     
     // MARK: - Init
-    init(patient: Patient, surgery: Surgery? = nil, repository: SurgeryRepository, financialRepository: FinancialRepository) {
+    init(patient: Patient, surgery: Surgery? = nil, repository: SurgeryRepository, financialRepository: FinancialRepository, procedureRepository: CbhpmProcedureRepository, modelContext: ModelContext) {
         self.patient = patient
         self.surgery = surgery
         self.repository = repository
         self.financialRepository = financialRepository
+        self.procedureRepository = procedureRepository
+        self.modelContext = modelContext
         
         if let surgery = surgery {
             // Edição - popula com dados existentes
@@ -165,12 +171,10 @@ final class SurgeryFormViewModel {
     }
     
     private func updateExisting() throws {
-        print("🔴 Entrando no updateExisting")
         guard let surgery = surgery else {
-            print("❌ surgery é nil!")
             return
         }
-        print("🔴 Surgery encontrada: \(surgery.surgeryId)")
+        
         surgery.date = date
         surgery.insuranceName = insuranceName
         surgery.insuranceNumber = insuranceNumber
@@ -185,20 +189,17 @@ final class SurgeryFormViewModel {
         surgery.status = status
         surgery.type = type
         
-        // Atualiza procedures
-        surgery.cbhpmProcedures = selectedProcedures.map {
-            CbhpmProcedure(
-                surgery: surgery,
-                code: $0.codigo,
-                procedure: $0.procedimento,
-                port: $0.porte_anestesico
-            )
-        }
+        try procedureRepository.replaceAll(for: surgery, with: selectedProcedures)
+        
+        
+        try repository.update(surgery)
+        
         
         if insuranceName.lowercased() == "particular" {
+            
             let existingFinancial = try financialRepository.get(for: surgery)
+            
             if let value = valueAnesthesia {
-                
                 if let financial = existingFinancial {
                     financial.valueAnesthesia = value
                     try financialRepository.update(financial)
@@ -208,14 +209,10 @@ final class SurgeryFormViewModel {
                     surgery.financial = financial
                 }
             } else if let financial = existingFinancial {
-                // Manter o registro e apenas limpar o valor se preferir não deletar
                 financial.valueAnesthesia = nil
                 try financialRepository.update(financial)
             }
         }
-        print("🔴 Campos atualizados, vai chamar repository.update")
-        try repository.update(surgery)
-        print("🔴 Repository.update executado")
     }
 }
 
