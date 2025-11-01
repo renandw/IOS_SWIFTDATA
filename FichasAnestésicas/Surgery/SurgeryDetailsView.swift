@@ -53,6 +53,30 @@ struct SurgeryDetailsView: View {
             }
             
             Spacer()
+
+            VStack(alignment: .leading, spacing: 8) {
+                if let anesthesia = surgery.anesthesia {
+                    // Exibe um único item navegável para a anestesia
+                    List {
+                        NavigationLink(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "Anestesia") {
+                            AnesthesiaDetailsView(anesthesia: anesthesia)
+                        }
+                    }
+                } else {
+                    Text("Nenhuma anestesia cadastrada")
+                        .foregroundStyle(.secondary)
+                        .font(.subheadline)
+                }
+                Button("Criar Anestesia", systemImage: "plus") {
+                    //Here comes the logic to show anesthesiaformview
+                }
+                .buttonStyle(.glassProminent)
+            }
+            
+
+            
+            Spacer()
+            
         }
         .toolbar {
             Button("Adicionar Financeiro", systemImage: "plus") {
