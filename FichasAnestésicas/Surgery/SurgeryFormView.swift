@@ -29,11 +29,17 @@ struct SurgeryFormView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                
                     
-                    TextField("Convênio", text: $viewModel.insuranceName)
-                    
-                    TextField("Número do Convênio", text: $viewModel.insuranceNumber)
-                        .keyboardType(.numberPad)
+                    if viewModel.type == .sus {
+                        TextField("Convênio", text: $viewModel.insuranceName)
+                        TextField("Prontuário", text: $viewModel.insuranceNumber)
+                            .keyboardType(.numberPad)
+                    } else if viewModel.type == .convenio {
+                        TextField("Convênio", text: $viewModel.insuranceName)
+                        TextField("Carteirinha", text: $viewModel.insuranceNumber)
+                            .keyboardType(.numberPad)
+                    }
                 }
                 if viewModel.insuranceName.lowercased() == "particular" {
                     Section("Dados Financeiros"){
@@ -115,7 +121,16 @@ struct SurgeryFormView: View {
                               ))
                 }
             }
+            .onChange(of: viewModel.type) { oldValue, newValue in
+                if newValue == .sus {
+                    viewModel.insuranceName = "SUS"
+                } else if oldValue == .sus && viewModel.insuranceName == "SUS" {
+                    // Clear the auto-filled value when leaving SUS to avoid unintended carryover
+                    viewModel.insuranceName = ""
+                }
+            }
             .navigationTitle(viewModel.isEditing ? "Editar Cirurgia" : "Nova Cirurgia")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancelar", systemImage: "xmark") { dismiss() }
@@ -141,3 +156,4 @@ struct SurgeryFormView: View {
         }
     }
 }
+
