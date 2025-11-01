@@ -61,11 +61,15 @@ struct PatientListView: View {
             }
         }
         .toolbar {
-            Button("Adicionar Paciente", systemImage: "plus") {
-                editingPatient = nil
-                showingForm = true
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    editingPatient = nil
+                    showingForm = true
+                } label: {
+                    Label("Adicionar Paciente", systemImage: "plus")
+                }
+                .buttonStyle(.glassProminent)
             }
-            .buttonStyle(.glassProminent)
         }
     }
 }

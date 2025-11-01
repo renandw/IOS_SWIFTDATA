@@ -122,11 +122,16 @@ struct PatientDetailsView: View {
         .navigationTitle(patient.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            Button("Adicionar Cirurgia", systemImage: "plus") {
-                showingSurgeryForm = true
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showingSurgeryForm = true
+                } label: {
+                    Label("Adicionar Cirurgia", systemImage: "plus")
+                }
+                .tint(.blue)
+            
             }
-        }
-        .sheet(isPresented: $showingSurgeryForm) {
+        }        .sheet(isPresented: $showingSurgeryForm) {
             let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
             let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
             let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
@@ -140,32 +145,6 @@ struct PatientDetailsView: View {
             let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
             SurgeryFormView(viewModel: viewModel)
         }
-    }
-    
-    private func addSurgery() {
-        guard let currentUser = session.currentUser else {
-            // Handle missing user appropriately (e.g., show an alert or return)
-            return
-        }
-        let now = Date()
-        let surgery = Surgery(
-            surgeryId: UUID().uuidString,
-            date: now,
-            createdBy: currentUser,
-            createdAt: now,
-            lastActivityAt: now,
-            insuranceName: "Unimed",
-            insuranceNumber: "1234123412341234",
-            mainSurgeon: "Dr. Eliakim",
-            hospital: "Hospital 9 de Julho",
-            weight: 75,
-            proposedProcedure: "Colecistectomia VLP",
-            statusRaw: Status.finished.rawValue,
-            typeRaw: SurgeryType.convenio.rawValue,
-            patient: patient
-        )
-        modelContext.insert(surgery)
-        try? modelContext.save()
     }
 }
 
