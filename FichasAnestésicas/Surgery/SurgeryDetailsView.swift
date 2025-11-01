@@ -46,6 +46,11 @@ struct SurgeryDetailsView: View {
                     .foregroundStyle(.secondary)
             }
             Text("Data: \(surgery.date.formatted(date: .abbreviated, time: .omitted))")
+            HStack(spacing: 8) {
+                Text("Status: \(surgery.status.displayName)")
+                    .fontWeight(.semibold)
+                
+            }
             
             Spacer()
         }

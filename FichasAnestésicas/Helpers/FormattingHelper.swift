@@ -113,3 +113,39 @@ enum numberCnsContex {
     case needed
     case notNeeded
 }
+
+
+// MARK: - Status UI Helpers
+public extension Status {
+    var displayName: String {
+        switch self {
+        case .scheduled: return "Agendada"
+        case .inProgress: return "Em andamento"
+        case .finished: return "Concluída"
+        case .cancelled: return "Cancelada"
+        case .notNecessary: return "Não Necessária"
+        }
+    }
+
+    var tintColor: Color {
+        switch self {
+        case .scheduled: return .blue
+        case .inProgress: return .orange
+        case .finished: return .green
+        case .cancelled: return .red
+        case .notNecessary: return .gray
+        }
+    }
+
+    var badgeLabel: String { "Status: \(displayName)" }
+
+    @ViewBuilder
+    var badgeView: some View {
+        Text(displayName)
+            .foregroundStyle(tintColor)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(tintColor.opacity(0.15))
+            .clipShape(Capsule())
+    }
+}

@@ -42,6 +42,7 @@ final class SwiftDataSurgeryRepository: SurgeryRepository {
             surgery.lastActivityAt = now
             surgery.patient.lastActivityAt = now
             surgery.updatedBy = currentUser
+            surgery.status = .scheduled
             
             context.insert(surgery)
             

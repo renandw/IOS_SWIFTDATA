@@ -118,13 +118,6 @@ struct PatientDetailsView: View {
                         }
                     }
                 }
-                .sheet(item: $selectedSurgery) { surgery in
-                    let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
-                    let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
-                    let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
-                    let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
-                    SurgeryFormView(viewModel: viewModel)
-                }
             }
         }
         .toolbar {
@@ -137,6 +130,13 @@ struct PatientDetailsView: View {
             let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
             let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
             let viewModel = SurgeryFormViewModel(patient: patient, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
+            SurgeryFormView(viewModel: viewModel)
+        }
+        .sheet(item: $selectedSurgery) { surgery in
+            let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
+            let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
+            let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
+            let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
             SurgeryFormView(viewModel: viewModel)
         }
     }
