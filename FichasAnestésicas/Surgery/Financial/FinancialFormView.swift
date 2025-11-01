@@ -46,8 +46,7 @@ struct FinancialFormView: View {
                     HStack {
                         Text("Valor Final")
                         Spacer()
-                        TextField("Valor", value: $viewModel.finalSurgeryValue, format: .currency(code: "BRL"))
-                            .keyboardType(.decimalPad)
+                        Text(viewModel.calculatedFinalValue, format: .currency(code: "BRL"))
                             .multilineTextAlignment(.trailing)
                     }
                 }
@@ -215,3 +214,4 @@ struct FinancialFormView: View {
 //    FinancialFormView(viewModel: viewModel)
 //        .modelContainer(container)
 //}
+

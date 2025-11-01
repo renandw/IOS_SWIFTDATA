@@ -23,7 +23,7 @@ struct SurgeryDetailsView: View {
                     .font(.headline)
                 if let procedures = surgery.cbhpmProcedures, !procedures.isEmpty {
                     ForEach(procedures) { p in
-                        Text("\(p.code) - \(p.procedure) (\(p.port))")
+                        Text("\(p.code) - \(p.procedure) - Porte: \(p.port)")
                             .font(.subheadline)
                     }
                 } else {

@@ -26,6 +26,7 @@ final class SwiftDataFinancialRepository: FinancialRepository {
     }
 
     func create(_ financial: Financial) throws {
+        financial.finalSurgeryValue = calculateFinalValue(financial)
         let now = Date.now
         financial.surgery.updatedAt = now
         financial.surgery.lastActivityAt = now
@@ -37,6 +38,7 @@ final class SwiftDataFinancialRepository: FinancialRepository {
     }
 
     func update(_ financial: Financial) throws {
+        financial.finalSurgeryValue = calculateFinalValue(financial)
         let now = Date.now
         financial.surgery.updatedAt = now
         financial.surgery.lastActivityAt = now
@@ -62,5 +64,11 @@ final class SwiftDataFinancialRepository: FinancialRepository {
                 predicate: #Predicate { $0.surgery.surgeryId == surgeryId }
             )
         ).first
+    }
+    
+    private func calculateFinalValue(_ financial: Financial) -> Double {
+        let aValue = (financial.valueAnesthesia ?? 0) - (financial.glosedAnesthesiaValue ?? 0)
+        let preValue = (financial.valuePreAnesthesia ?? 0) - (financial.glosedPreAnesthesiaValue ?? 0)
+        return aValue + preValue - (financial.taxedValue ?? 0)
     }
 }

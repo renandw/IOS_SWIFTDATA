@@ -117,4 +117,11 @@ final class FinancialFormViewModel {
         
         try repository.update(financial)
     }
+    
+    var calculatedFinalValue: Double {
+        let anesthesia = (valueAnesthesia ?? 0) - (glosedAnesthesiaValue ?? 0)
+        let preAnesthesia = (valuePreAnesthesia ?? 0) - (glosedPreAnesthesiaValue ?? 0)
+        let taxed = taxedValue ?? 0
+        return anesthesia + preAnesthesia - taxed
+    }
 }
