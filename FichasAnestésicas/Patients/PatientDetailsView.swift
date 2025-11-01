@@ -25,7 +25,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading) {
+                HStack {
                     Text("CNS")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -33,7 +33,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading) {
+                HStack {
                     Text("Birth Date")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -41,7 +41,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading) {
+                HStack {
                     Text("CreatedAt")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -49,7 +49,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading) {
+                HStack {
                     Text("CreatedBy")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -58,7 +58,7 @@ struct PatientDetailsView: View {
                         .fontWeight(.semibold)
                 }
                 if let updatedBy = patient.updatedBy {
-                    VStack(alignment: .leading) {
+                    HStack {
                         Text("UpdatedBy")
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -68,7 +68,7 @@ struct PatientDetailsView: View {
                     }
                 }
                 if let updatedAt = patient.updatedAt {
-                    VStack(alignment: .leading) {
+                    HStack {
                         Text("UpdatedAt")
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -77,7 +77,7 @@ struct PatientDetailsView: View {
                             .fontWeight(.semibold)
                     }
                 }
-                VStack(alignment: .leading) {
+                HStack {
                     Text("Last Activity")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -85,7 +85,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading) {
+                HStack {
                     Text("PatientId")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -93,7 +93,7 @@ struct PatientDetailsView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                 }
-                VStack(alignment: .leading) {
+                HStack {
                     Text("Sex")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -106,7 +106,6 @@ struct PatientDetailsView: View {
                     }
                 }
             }
-            .padding()
             Section("Lista de Cirurgias") {
                 ForEach(patient.surgeries ?? []) { surgery in
                     NavigationLink(surgery.proposedProcedure) {
@@ -120,6 +119,8 @@ struct PatientDetailsView: View {
                 }
             }
         }
+        .navigationTitle(patient.name)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             Button("Adicionar Cirurgia", systemImage: "plus") {
                 showingSurgeryForm = true
