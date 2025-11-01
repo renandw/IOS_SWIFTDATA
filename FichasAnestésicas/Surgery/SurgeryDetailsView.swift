@@ -13,6 +13,7 @@ struct SurgeryDetailsView: View {
     @Environment(\.modelContext) private var modelContext
     
     @State private var showingFinancialForm = false
+    @State private var showingAnesthesiaForm = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -68,7 +69,7 @@ struct SurgeryDetailsView: View {
                         .font(.subheadline)
                 }
                 Button("Criar Anestesia", systemImage: "plus") {
-                    //Here comes the logic to show anesthesiaformview
+                    showingAnesthesiaForm = true
                 }
                 .buttonStyle(.glassProminent)
             }
@@ -92,6 +93,16 @@ struct SurgeryDetailsView: View {
                     repository: repository
                 )
                 FinancialFormView(viewModel: viewModel)
+            }
+        }
+        .sheet(isPresented: $showingAnesthesiaForm) {
+            if let currentUser = session.currentUser {
+                let viewModel = AnesthesiaFormViewModel(
+                    surgery: surgery,
+                    user: currentUser,
+                    context: modelContext,
+                )
+                AnesthesiaFormView(viewModel: viewModel)
             }
         }
         .padding()

@@ -82,7 +82,7 @@ public enum ASAClassification: String, Codable, CaseIterable {
 
 @Model
 final class Anesthesia {
-
+    @Attribute(.unique) var anesthesiaId: String
     @Relationship var surgery: Surgery
     
     @Relationship(deleteRule: .cascade, inverse: \AnesthesiaDescription.anesthesia) var anesthesiaDescriptions: [AnesthesiaDescription]
@@ -103,8 +103,15 @@ final class Anesthesia {
         get { statusRaw.flatMap(Status.init(rawValue:)) }
         set { statusRaw = newValue?.rawValue }
     }
-
-    init(surgery: Surgery, anesthesiaDescriptions: [AnesthesiaDescription], anesthesiaTechniqueRaw: [String], medications: [MedicationEntry], vitalSigns: [VitalSignEntry], start: Date? = nil, end: Date? = nil, statusRaw: String? = nil) {
+    
+    var createdBy: User
+    var updatedBy: User?
+    var createdAt: Date
+    var updatedAt: Date?
+    var position: String?
+    
+    init(anesthesiaId: String, surgery: Surgery, anesthesiaDescriptions: [AnesthesiaDescription], anesthesiaTechniqueRaw: [String], medications: [MedicationEntry], vitalSigns: [VitalSignEntry], start: Date? = nil, end: Date? = nil, statusRaw: String? = nil, createdBy: User, updatedBy: User? = nil, createdAt: Date, updatedAt: Date? = nil) {
+        self.anesthesiaId = anesthesiaId
         self.surgery = surgery
         self.anesthesiaDescriptions = anesthesiaDescriptions
         self.anesthesiaTechniqueRaw = anesthesiaTechniqueRaw
@@ -113,6 +120,10 @@ final class Anesthesia {
         self.start = start
         self.end = end
         self.statusRaw = statusRaw
+        self.createdBy = createdBy
+        self.updatedBy = updatedBy
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
 }
 
