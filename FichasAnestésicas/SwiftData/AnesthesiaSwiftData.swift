@@ -85,6 +85,7 @@ public enum ASAClassification: String, Codable, CaseIterable {
     case III
     case IV
     case V
+    case VI
     case Ie
     case IIe
     case IIIe
@@ -127,6 +128,8 @@ final class Anesthesia {
     var createdAt: Date
     var updatedAt: Date?
     var positionRaw: [String]
+    
+    @Relationship var shared: SharedPreAndAnesthesia?
     
     init(anesthesiaId: String, surgery: Surgery, anesthesiaDescriptions: [AnesthesiaDescription], anesthesiaTechniqueRaw: [String], medications: [MedicationEntry], vitalSigns: [VitalSignEntry], start: Date? = nil, end: Date? = nil, statusRaw: String? = nil, createdBy: User, updatedBy: User? = nil, createdAt: Date, updatedAt: Date? = nil, positionRaw: [String]) {
         self.anesthesiaId = anesthesiaId
@@ -331,3 +334,27 @@ final class VitalSignEntry {
         self.timestamp = timestamp
     }
 }
+
+@Model
+final class SharedPreAndAnesthesia {
+    var techniqueRaw: [String]
+    var asaRaw: String?
+    // computed
+    var techniques: [AnesthesiaTechniqueKind] {
+        get { techniqueRaw.compactMap(AnesthesiaTechniqueKind.init(rawValue:)) }
+        set { techniqueRaw = newValue.map(\.rawValue) }
+    }
+    
+    var asa: ASAClassification? {
+        get { asaRaw.flatMap(ASAClassification.init(rawValue:)) }
+        set { asaRaw = newValue?.rawValue }
+    }
+    
+    @Relationship(inverse: \Surgery.shared) var surgery: Surgery?
+    
+    init(techniquesRaw: [String], asaRaw: String? = nil) {
+        self.techniqueRaw = techniquesRaw
+        self.asaRaw = asaRaw
+    }
+}
+

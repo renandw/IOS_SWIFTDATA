@@ -35,8 +35,14 @@ final class SwiftDataAnesthesiaRepository: AnesthesiaRepository {
         anesthesia.status = .inProgress
         
         surgery.anesthesia = anesthesia
+        anesthesia.surgery = surgery
+
         context.insert(anesthesia)
-        try context.save()
+        print("Before save - surgery.status:", surgery.status)
+       print("Before save - anesthesia.status:", anesthesia.status)
+       try context.save()
+       print("After save - surgery.status:", surgery.status)
+       print("After save - anesthesia.status:", anesthesia.status)
     }
 
     func update(anesthesia: Anesthesia, for surgery: Surgery, by user: User) throws {
@@ -51,6 +57,9 @@ final class SwiftDataAnesthesiaRepository: AnesthesiaRepository {
     func delete(anesthesia: Anesthesia, from surgery: Surgery) throws {
         surgery.lastActivityAt = Date()
         surgery.anesthesia = nil
+        surgery.start = nil
+        surgery.end = nil
+        surgery.status = .scheduled
         context.delete(anesthesia)
         try context.save()
     }

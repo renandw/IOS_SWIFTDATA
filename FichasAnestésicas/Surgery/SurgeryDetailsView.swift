@@ -54,6 +54,8 @@ struct SurgeryDetailsView: View {
             }
             Text("Início: \(surgery.start?.formatted(date: .abbreviated, time: .shortened))")
             
+            Text("Técnicas: \(surgery.shared?.techniques)")
+            
             Spacer()
 
             VStack(alignment: .leading, spacing: 8) {

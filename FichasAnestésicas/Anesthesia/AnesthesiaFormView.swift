@@ -141,6 +141,21 @@ struct AnesthesiaFormView: View {
                     }
                 }
 
+                // ASA (classificação)
+                Section("ASA") {
+                    NavigationLink {
+                        ASAPickerView(selection: $viewModel.asa)
+                    } label: {
+                        HStack {
+                            Text("Classificação ASA")
+                            Spacer()
+                            Text(viewModel.asa?.rawValue ?? "Nenhuma")
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.trailing)
+                        }
+                    }
+                }
+
                 // Posição (navegação para multi-seleção com checkmarks)
                 Section("Posição") {
                     NavigationLink {
@@ -281,5 +296,48 @@ struct PositionPickerView: View {
         } else {
             selection.append(pos)
         }
+    }
+}
+
+struct ASAPickerView: View {
+    @Binding var selection: ASAClassification?
+
+    private var allASA: [ASAClassification] {
+        ASAClassification.allCases
+    }
+
+    var body: some View {
+        List {
+            // Option to clear selection
+            Button {
+                selection = nil
+            } label: {
+                HStack {
+                    Text("Nenhuma")
+                    Spacer()
+                    if selection == nil {
+                        Image(systemName: "checkmark")
+                    }
+                }
+            }
+            .foregroundStyle(.primary)
+
+            ForEach(allASA, id: \.self) { asa in
+                Button {
+                    selection = asa
+                } label: {
+                    HStack {
+                        Text(asa.rawValue)
+                        Spacer()
+                        if selection == asa {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+        }
+        .navigationTitle("ASA")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
