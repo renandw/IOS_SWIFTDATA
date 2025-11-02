@@ -46,12 +46,34 @@ final class AnesthesiaFormViewModel: ObservableObject {
         }
     }
 
-    func save() {
-        guard let anesthesia = anesthesia else {
-            errorMessage = "Anesthesia inválida."
-            return
+    func save() -> Bool {
+        // Se não existir, cria uma nova Anesthesia pronta para salvar
+        if anesthesia == nil {
+            let new = Anesthesia(
+                anesthesiaId: UUID().uuidString,
+                surgery: surgery,
+                anesthesiaDescriptions: [],
+                anesthesiaTechniqueRaw: techniques.map { $0.rawValue },
+                medications: [],
+                vitalSigns: [],
+                start: start,
+                end: end,
+                statusRaw: nil,
+                createdBy: user,
+                updatedBy: nil,
+                createdAt: Date(),
+                updatedAt: nil
+            )
+            new.position = position
+            self.anesthesia = new
         }
 
+        guard let anesthesia = anesthesia else {
+            errorMessage = "Anesthesia inválida."
+            return false
+        }
+
+        // Sincroniza campos editáveis com o modelo antes de persistir
         anesthesia.start = start
         anesthesia.end = end
         anesthesia.techniques = techniques
@@ -64,8 +86,10 @@ final class AnesthesiaFormViewModel: ObservableObject {
                 try repository.create(anesthesia: anesthesia, for: surgery, by: user)
             }
             loadAnesthesia()
+            return true
         } catch {
             errorMessage = "Erro ao salvar anestesia: \(error.localizedDescription)"
+            return false
         }
     }
 
