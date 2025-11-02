@@ -31,6 +31,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
     @Published var surgeryEndError: String?
     @Published var techniquesError: String?
     @Published var asaError: String?
+    @Published var positionError: String?
 
     private let repository: AnesthesiaRepository
     private let sharedRepo: SharedPreAndAnesthesiaRepository
@@ -169,6 +170,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
         validateAnesthesiaEnd()
         validateAnesthesiaTechnique()
         validateASA()
+        validatePosition()
     }
     
     ///Validações
@@ -181,13 +183,14 @@ final class AnesthesiaFormViewModel: ObservableObject {
             surgeryStartError,
             surgeryEndError,
             techniquesError,
-            asaError
+            asaError,
+            positionError,
         ].allSatisfy { $0 == nil }
 
         if isNew {
             // Em criação: início de anestesia e início de cirurgia obrigatórios,
             // técnica e ASA obrigatórios segundo comentários.
-            let requiredPresent = (start != nil) && (surgeryStart != nil) && !techniques.isEmpty && (asa != nil)
+            let requiredPresent = (start != nil) && (surgeryStart != nil) && !techniques.isEmpty && (asa != nil) && (!position.isEmpty)
             return noErrors && requiredPresent
         } else {
             // Em edição: fim de cirurgia e fim de anestesia passam a ser obrigatórios
@@ -292,6 +295,15 @@ final class AnesthesiaFormViewModel: ObservableObject {
         }
     }
     
+    func validatePosition() {
+        //para criar, Position precisa estar selecionado
+        //obrigatório para criação
+        positionError = nil
+        if isNew && position.isEmpty {
+            positionError = "Selecione ao menos uma posição cirúrgica."
+        }
+    }
+    
     private func clearErrors() {
         anesthesiaStartError = nil
         anesthesiaEndError = nil
@@ -299,6 +311,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
         surgeryEndError = nil
         techniquesError = nil
         asaError = nil
+        positionError = nil
     }
     
 }

@@ -181,6 +181,7 @@ struct AnesthesiaFormView: View {
                                 .multilineTextAlignment(.trailing)
                         }
                     }
+                    if let e = viewModel.positionError { Text(e).foregroundStyle(.red) }
                 }
 
                 // Erros
@@ -200,6 +201,7 @@ struct AnesthesiaFormView: View {
             .onChange(of: viewModel.surgeryEnd) { _ in viewModel.runValidations() }
             .onChange(of: viewModel.techniques) { _ in viewModel.runValidations() }
             .onChange(of: viewModel.asa) { _ in viewModel.runValidations() }
+            .onChange(of: viewModel.position) { _ in viewModel.runValidations() }
             .navigationTitle("Ficha de Anestesia")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
