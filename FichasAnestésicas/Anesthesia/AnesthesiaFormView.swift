@@ -217,9 +217,10 @@ struct AnesthesiaTechniquePickerView: View {
             }
         }
         .navigationTitle("Técnicas Anestésicas")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Menu("Opções") {
+                Menu("Opções", systemImage: "gear") {
                     Button("Selecionar tudo") { selection = allTechniques }
                     Button("Limpar seleção", role: .destructive) { selection.removeAll() }
                 }
@@ -263,9 +264,10 @@ struct PositionPickerView: View {
             }
         }
         .navigationTitle("Posições")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Menu("Opções") {
+                Menu("Opções", systemImage: "gear") {
                     Button("Selecionar tudo") { selection = allPositions }
                     Button("Limpar seleção", role: .destructive) { selection.removeAll() }
                 }
