@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AnesthesiaFormView: View {
-    @StateObject var viewModel: AnesthesiaFormViewModel
+    @ObservedObject var viewModel: AnesthesiaFormViewModel
     @Environment(\.dismiss) private var dismiss
 
     // Controles locais pra ligar/desligar datas opcionais
@@ -101,6 +101,9 @@ struct AnesthesiaFormView: View {
                             displayedComponents: [.date, .hourAndMinute]
                         )
                     }
+                    // Inline validation errors
+                    if let e = viewModel.surgeryStartError { Text(e).foregroundStyle(.red) }
+                    if let e = viewModel.surgeryEndError { Text(e).foregroundStyle(.red) }
                 }
 
                 // Período da Anestesia
@@ -122,6 +125,9 @@ struct AnesthesiaFormView: View {
                             displayedComponents: [.date, .hourAndMinute]
                         )
                     }
+                    // Inline validation errors
+                    if let e = viewModel.anesthesiaStartError { Text(e).foregroundStyle(.red) }
+                    if let e = viewModel.anesthesiaEndError { Text(e).foregroundStyle(.red) }
                 }
 
                 // Técnicas (navegação para seleção com checkmarks)
@@ -139,6 +145,8 @@ struct AnesthesiaFormView: View {
                                 .multilineTextAlignment(.trailing)
                         }
                     }
+                    // Inline validation error
+                    if let e = viewModel.techniquesError { Text(e).foregroundStyle(.red) }
                 }
 
                 // ASA (classificação)
@@ -154,6 +162,8 @@ struct AnesthesiaFormView: View {
                                 .multilineTextAlignment(.trailing)
                         }
                     }
+                    // Inline validation error
+                    if let e = viewModel.asaError { Text(e).foregroundStyle(.red) }
                 }
 
                 // Posição (navegação para multi-seleção com checkmarks)
@@ -184,6 +194,12 @@ struct AnesthesiaFormView: View {
                 hasSurgeryStart = viewModel.surgeryStart != nil
                 hasSurgeryEnd = viewModel.surgeryEnd != nil
             }
+            .onChange(of: viewModel.start) { _ in viewModel.runValidations() }
+            .onChange(of: viewModel.end) { _ in viewModel.runValidations() }
+            .onChange(of: viewModel.surgeryStart) { _ in viewModel.runValidations() }
+            .onChange(of: viewModel.surgeryEnd) { _ in viewModel.runValidations() }
+            .onChange(of: viewModel.techniques) { _ in viewModel.runValidations() }
+            .onChange(of: viewModel.asa) { _ in viewModel.runValidations() }
             .navigationTitle("Ficha de Anestesia")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -199,6 +215,7 @@ struct AnesthesiaFormView: View {
                             dismiss()
                         }
                     }
+                    .disabled(!viewModel.isFormValid)
                 }
             }
         }
@@ -308,23 +325,9 @@ struct ASAPickerView: View {
 
     var body: some View {
         List {
-            // Option to clear selection
-            Button {
-                selection = nil
-            } label: {
-                HStack {
-                    Text("Nenhuma")
-                    Spacer()
-                    if selection == nil {
-                        Image(systemName: "checkmark")
-                    }
-                }
-            }
-            .foregroundStyle(.primary)
-
             ForEach(allASA, id: \.self) { asa in
                 Button {
-                    selection = asa
+                    toggle(asa)
                 } label: {
                     HStack {
                         Text(asa.rawValue)
@@ -339,5 +342,14 @@ struct ASAPickerView: View {
         }
         .navigationTitle("ASA")
         .navigationBarTitleDisplayMode(.inline)
+        
+    }
+
+    private func toggle(_ asa: ASAClassification) {
+        if selection == asa {
+            selection = nil
+        } else {
+            selection = asa
+        }
     }
 }

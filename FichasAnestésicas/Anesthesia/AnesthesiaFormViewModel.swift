@@ -86,14 +86,9 @@ final class AnesthesiaFormViewModel: ObservableObject {
     }
 
     func save() -> Bool {
-        // Validação do formulário antes de persistir
-        validateAnesthesiaStart()
-        validateSurgeryStart()
-        validateSurgeryEnd()
-        validateAnesthesiaEnd()
-        validateAnesthesiaTechnique()
-        validateASA()
-        guard canSave else {
+        // Validação do formulário antes de persistir (com side-effects)
+        runValidations()
+        guard isFormValid else {
             // Mensagens específicas já estão nos campos de erro
             return false
         }
@@ -165,19 +160,21 @@ final class AnesthesiaFormViewModel: ObservableObject {
         }
     }
     
-    
-    ///Validações
-
-    var canSave: Bool {
-        // Sem erros e requisitos mínimos atendidos
-        // Revalida campos essenciais para refletir o estado atual
+    func runValidations() {
+        // Atualiza mensagens de erro (efeitos colaterais)
+        clearErrors()
         validateAnesthesiaStart()
         validateSurgeryStart()
         validateSurgeryEnd()
         validateAnesthesiaEnd()
         validateAnesthesiaTechnique()
         validateASA()
-        // Para criação, alguns campos são obrigatórios; para edição, regras específicas
+    }
+    
+    ///Validações
+
+    var isFormValid: Bool {
+        // Checagem pura: apenas lê erros e presença de campos obrigatórios
         let noErrors = [
             anesthesiaStartError,
             anesthesiaEndError,
@@ -293,6 +290,15 @@ final class AnesthesiaFormViewModel: ObservableObject {
         if isNew && asa == nil {
             asaError = "Selecione uma classificação ASA."
         }
+    }
+    
+    private func clearErrors() {
+        anesthesiaStartError = nil
+        anesthesiaEndError = nil
+        surgeryStartError = nil
+        surgeryEndError = nil
+        techniquesError = nil
+        asaError = nil
     }
     
 }
