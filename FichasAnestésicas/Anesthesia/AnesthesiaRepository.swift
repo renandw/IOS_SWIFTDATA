@@ -38,11 +38,9 @@ final class SwiftDataAnesthesiaRepository: AnesthesiaRepository {
         anesthesia.surgery = surgery
 
         context.insert(anesthesia)
-        print("Before save - surgery.status:", surgery.status)
-       print("Before save - anesthesia.status:", anesthesia.status)
-       try context.save()
-       print("After save - surgery.status:", surgery.status)
-       print("After save - anesthesia.status:", anesthesia.status)
+
+        try context.save()
+
     }
 
     func update(anesthesia: Anesthesia, for surgery: Surgery, by user: User) throws {

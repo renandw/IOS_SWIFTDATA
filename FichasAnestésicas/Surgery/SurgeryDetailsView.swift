@@ -61,11 +61,9 @@ struct SurgeryDetailsView: View {
             VStack(alignment: .leading, spacing: 8) {
                 if let anesthesia = surgery.anesthesia {
                     // Exibe um único item navegável para a anestesia
-                    List {
                         NavigationLink(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "Anestesia") {
                             AnesthesiaDetailsView(anesthesia: anesthesia)
                         }
-                    }
                 } else {
                     Text("Nenhuma anestesia cadastrada")
                         .foregroundStyle(.secondary)
