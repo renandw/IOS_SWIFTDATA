@@ -41,7 +41,6 @@ final class AnesthesiaFormViewModel: ObservableObject {
     private let surgeryDate: Date
     
     
-    
 
     init(surgery: Surgery, user: User, context: ModelContext) {
         self.surgery = surgery
@@ -87,6 +86,18 @@ final class AnesthesiaFormViewModel: ObservableObject {
     }
 
     func save() -> Bool {
+        // Validação do formulário antes de persistir
+        validateAnesthesiaStart()
+        validateSurgeryStart()
+        validateSurgeryEnd()
+        validateAnesthesiaEnd()
+        validateAnesthesiaTechnique()
+        validateASA()
+        guard canSave else {
+            // Mensagens específicas já estão nos campos de erro
+            return false
+        }
+
         if anesthesia == nil {
             let new = Anesthesia(
                 anesthesiaId: UUID().uuidString,
@@ -156,45 +167,136 @@ final class AnesthesiaFormViewModel: ObservableObject {
     
     
     ///Validações
-    
+
     var canSave: Bool {
         // Sem erros e requisitos mínimos atendidos
+        // Revalida campos essenciais para refletir o estado atual
+        validateAnesthesiaStart()
+        validateSurgeryStart()
+        validateSurgeryEnd()
+        validateAnesthesiaEnd()
+        validateAnesthesiaTechnique()
+        validateASA()
+        // Para criação, alguns campos são obrigatórios; para edição, regras específicas
+        let noErrors = [
+            anesthesiaStartError,
+            anesthesiaEndError,
+            surgeryStartError,
+            surgeryEndError,
+            techniquesError,
+            asaError
+        ].allSatisfy { $0 == nil }
+
+        if isNew {
+            // Em criação: início de anestesia e início de cirurgia obrigatórios,
+            // técnica e ASA obrigatórios segundo comentários.
+            let requiredPresent = (start != nil) && (surgeryStart != nil) && !techniques.isEmpty && (asa != nil)
+            return noErrors && requiredPresent
+        } else {
+            // Em edição: fim de cirurgia e fim de anestesia passam a ser obrigatórios
+            let requiredPresent = (surgeryEnd != nil) && (end != nil)
+            return noErrors && requiredPresent
+        }
     }
-    
-    
+
+
     func validateAnesthesiaStart() {
         //não pode ser antes de surgeryDate
         //obrigatório para criação
+        anesthesiaStartError = nil
+        if isNew && start == nil {
+            anesthesiaStartError = "Informe o início da anestesia."
+            return
+        }
+        if let start {
+            if start < surgeryDate {
+                anesthesiaStartError = "Início da anestesia não pode ser antes da data da cirurgia."
+            } else if let end, start > end {
+                anesthesiaStartError = "Início da anestesia não pode ser após o término."
+            }
+        }
     }
-    
+
     func validateSurgeryStart() {
         //não pode ser antes de anesthesia.start
         //obrigatório para criação
+        surgeryStartError = nil
+        if isNew && surgeryStart == nil {
+            surgeryStartError = "Informe o início da cirurgia."
+            return
+        }
+        if let surgeryStart {
+            if let start, surgeryStart < start {
+                surgeryStartError = "Cirurgia não pode iniciar antes da anestesia."
+            }
+            if surgeryStart < surgeryDate {
+                // Regra adicional natural ao modelo (data mínima)
+                surgeryStartError = "Início da cirurgia não pode ser antes da data da cirurgia."
+            }
+        }
     }
-    
+
     func validateSurgeryEnd() {
         // não pode ser antes de surgery.start
         // não obrigatório para criação
-        //obrigatório para edição
+        // obrigatório para edição
+        surgeryEndError = nil
+        if !isNew && surgeryEnd == nil {
+            surgeryEndError = "Informe o término da cirurgia."
+            return
+        }
+        if let surgeryEnd {
+            if let surgeryStart, surgeryEnd < surgeryStart {
+                surgeryEndError = "Término da cirurgia não pode ser antes do início."
+            }
+            if surgeryEnd < surgeryDate {
+                surgeryEndError = "Término da cirurgia não pode ser antes da data da cirurgia."
+            }
+        }
     }
-    
+
     func validateAnesthesiaEnd() {
         //não pode ser antes de surgery.end
         //não obrigatório para criação
         //obrigatório para edição
+        anesthesiaEndError = nil
+        if !isNew && end == nil {
+            anesthesiaEndError = "Informe o término da anestesia."
+            return
+        }
+        if let end {
+            if let start, end < start {
+                anesthesiaEndError = "Término da anestesia não pode ser antes do início."
+            }
+            if let surgeryEnd, end < surgeryEnd {
+                anesthesiaEndError = "Término da anestesia não pode ser antes do término da cirurgia."
+            }
+            if end < surgeryDate {
+                anesthesiaEndError = "Término da anestesia não pode ser antes da data da cirurgia."
+            }
+        }
     }
-    
+
     func validateAnesthesiaTechnique() {
         //para criar, pelo menos uma technique precisa ser selecionada
         //obrigatório para criação
+        techniquesError = nil
+        if isNew && techniques.isEmpty {
+            techniquesError = "Selecione ao menos uma técnica."
+        }
     }
-    
+
     func validateASA() {
         //para criar, ASA precisa estar selecionado
         //obrigatório para criação
+        asaError = nil
+        if isNew && asa == nil {
+            asaError = "Selecione uma classificação ASA."
+        }
     }
     
 }
 
 
 //todo: validations for every field.
+
