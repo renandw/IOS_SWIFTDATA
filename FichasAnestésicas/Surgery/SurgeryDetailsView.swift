@@ -52,6 +52,7 @@ struct SurgeryDetailsView: View {
                     .fontWeight(.semibold)
                 
             }
+            Text("Início: \(surgery.start?.formatted(date: .abbreviated, time: .shortened))")
             
             Spacer()
 
@@ -68,7 +69,7 @@ struct SurgeryDetailsView: View {
                         .foregroundStyle(.secondary)
                         .font(.subheadline)
                 }
-                Button("Criar Anestesia", systemImage: "plus") {
+                Button(surgery.anesthesia == nil ? "Criar Anestesia" : "Editar Anestesia", systemImage: "plus") {
                     showingAnesthesiaForm = true
                 }
                 .buttonStyle(.glassProminent)
@@ -109,3 +110,4 @@ struct SurgeryDetailsView: View {
         .navigationTitle("Detalhes da Cirurgia")
     }
 }
+

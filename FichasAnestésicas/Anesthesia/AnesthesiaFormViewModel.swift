@@ -20,7 +20,9 @@ final class AnesthesiaFormViewModel: ObservableObject {
     @Published var start: Date?
     @Published var end: Date?
     @Published var techniques: [AnesthesiaTechniqueKind] = []
-    @Published var position: String?
+    @Published var position: [Positioning] = []
+    @Published var surgeryStart: Date?
+    @Published var surgeryEnd: Date?
 
     private let repository: AnesthesiaRepository
     private let user: User
@@ -32,6 +34,9 @@ final class AnesthesiaFormViewModel: ObservableObject {
         self.user = user
         self.context = context
         self.repository = SwiftDataAnesthesiaRepository(context: context)
+        // Dados da cirurgia
+        self.surgeryStart = surgery.start
+        self.surgeryEnd = surgery.end
         loadAnesthesia()
     }
 
@@ -44,10 +49,12 @@ final class AnesthesiaFormViewModel: ObservableObject {
             self.techniques = anesthesia.techniques
             self.position = anesthesia.position
         }
+        // Garante que os campos da cirurgia reflitam o estado atual
+        self.surgeryStart = surgery.start
+        self.surgeryEnd = surgery.end
     }
 
     func save() -> Bool {
-        // Se não existir, cria uma nova Anesthesia pronta para salvar
         if anesthesia == nil {
             let new = Anesthesia(
                 anesthesiaId: UUID().uuidString,
@@ -62,9 +69,9 @@ final class AnesthesiaFormViewModel: ObservableObject {
                 createdBy: user,
                 updatedBy: nil,
                 createdAt: Date(),
-                updatedAt: nil
+                updatedAt: nil,
+                positionRaw: position.map {$0.rawValue}
             )
-            new.position = position
             self.anesthesia = new
         }
 
@@ -78,6 +85,10 @@ final class AnesthesiaFormViewModel: ObservableObject {
         anesthesia.end = end
         anesthesia.techniques = techniques
         anesthesia.position = position
+
+        // Atualiza os horários da cirurgia de forma independente da anestesia
+        surgery.start = surgeryStart
+        surgery.end = surgeryEnd
 
         do {
             if repository.get(by: anesthesia.anesthesiaId) != nil {

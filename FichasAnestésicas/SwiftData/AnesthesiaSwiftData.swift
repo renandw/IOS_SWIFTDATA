@@ -17,7 +17,20 @@ public enum AnesthesiaTechniqueKind: String, Codable, CaseIterable {
     case peridural = "Peridural"
     case sedacao = "Sedação"
     case bloqueioPeriferico = "Bloqueio Periférico"
-    case anestesiaLocal = "Anestesia Local"
+    case anestesiaLocal = "Local"
+}
+
+public enum Positioning: String, Codable, CaseIterable {
+    case decubitoDorsal = "Decúbito Dorsal"
+    case decubitoVentral = "Decúbito Ventral"
+    case decubitoLateralDireito = "Decúbito Lateral Direito"
+    case decubitoLateralEsquerdo = "Decúbito Lateral Esquerdo"
+    case trendelenburg = "Trendelenburg"
+    case proclive = "Proclive"
+    case canivete = "Canivete"
+    case litotomia = "Litotomia"
+    case cadeiraDePraia = "Cadeira de Praia"
+
 }
 
 public enum AirwayKind: String, Codable, CaseIterable {
@@ -104,13 +117,18 @@ final class Anesthesia {
         set { statusRaw = newValue?.rawValue }
     }
     
+    var position: [Positioning] {
+        get { positionRaw.compactMap(Positioning.init(rawValue:)) }
+        set { positionRaw = newValue.map(\.rawValue)}
+    }
+    
     var createdBy: User
     var updatedBy: User?
     var createdAt: Date
     var updatedAt: Date?
-    var position: String?
+    var positionRaw: [String]
     
-    init(anesthesiaId: String, surgery: Surgery, anesthesiaDescriptions: [AnesthesiaDescription], anesthesiaTechniqueRaw: [String], medications: [MedicationEntry], vitalSigns: [VitalSignEntry], start: Date? = nil, end: Date? = nil, statusRaw: String? = nil, createdBy: User, updatedBy: User? = nil, createdAt: Date, updatedAt: Date? = nil) {
+    init(anesthesiaId: String, surgery: Surgery, anesthesiaDescriptions: [AnesthesiaDescription], anesthesiaTechniqueRaw: [String], medications: [MedicationEntry], vitalSigns: [VitalSignEntry], start: Date? = nil, end: Date? = nil, statusRaw: String? = nil, createdBy: User, updatedBy: User? = nil, createdAt: Date, updatedAt: Date? = nil, positionRaw: [String]) {
         self.anesthesiaId = anesthesiaId
         self.surgery = surgery
         self.anesthesiaDescriptions = anesthesiaDescriptions
@@ -124,6 +142,7 @@ final class Anesthesia {
         self.updatedBy = updatedBy
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.positionRaw = positionRaw
     }
 }
 
