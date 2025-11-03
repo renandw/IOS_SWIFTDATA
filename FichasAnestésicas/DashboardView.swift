@@ -13,7 +13,8 @@ import SwiftData
 
 struct DashboardView: View {
     let userId: String
-      @Environment(SessionManager.self) var session
+    
+    @Environment(SessionManager.self) var session
     @Query(sort:\Patient.name) var patients: [Patient]
     @Query(sort: \Surgery.date, order: .reverse) var surgeries: [Surgery]
     @Environment(\.modelContext) private var patientContext
