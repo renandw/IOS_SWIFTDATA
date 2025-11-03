@@ -91,7 +91,7 @@ struct AnesthesiaFormView: View {
                 } header: {
                     VStack(alignment: .leading){
                         Text("Início do Procedimento")
-                        VStack {
+                        VStack(alignment: .leading) {
                             if let e = viewModel.anesthesiaStartError {
                                 Text(e)
                                     .font(.footnote)
@@ -160,7 +160,7 @@ struct AnesthesiaFormView: View {
                         } header: {
                             VStack(alignment: .leading) {
                                 Text("Fim do Procedimento")
-                                VStack {
+                                VStack(alignment: .leading) {
                                     if let e = viewModel.surgeryEndError {
                                         Text(e)
                                             .font(.footnote)
@@ -448,9 +448,11 @@ private struct DateTimePickerSheetButton: View {
     var compactInRow: Bool = true
     var onConfirm: (() -> Void)? = nil
     @State private var showPicker = false
+    @State private var tempDate: Date? = nil
 
     var body: some View {
         Button {
+            tempDate = date
             showPicker = true
         } label: {
             Group {
@@ -485,7 +487,10 @@ private struct DateTimePickerSheetButton: View {
                 VStack {
                     DatePicker(
                         "",
-                        selection: $date,
+                        selection: Binding<Date>(
+                            get: { tempDate ?? date },
+                            set: { tempDate = $0 }
+                        ),
                         in: (minDate ?? .distantPast)...(maxDate ?? .distantFuture),
                         displayedComponents: [.date, .hourAndMinute]
                     )
@@ -502,6 +507,9 @@ private struct DateTimePickerSheetButton: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("OK") {
+                            if let confirmed = tempDate {
+                                date = confirmed
+                            }
                             onConfirm?()
                             showPicker = false
                         }
