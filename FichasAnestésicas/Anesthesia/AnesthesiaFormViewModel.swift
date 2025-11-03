@@ -62,7 +62,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
     private let surgery: Surgery
     private let context: ModelContext
     private var isNew = false
-    private let surgeryDate: Date
+    let surgeryDate: Date
     
     
 

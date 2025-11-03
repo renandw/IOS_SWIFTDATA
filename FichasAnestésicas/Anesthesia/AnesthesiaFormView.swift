@@ -11,16 +11,18 @@ struct AnesthesiaFormView: View {
     @State private var hasSurgeryEnd = false
 
     // MARK: - Bindings
+    private var surgeryDate: Date { viewModel.surgeryDate }
+
     private var startBinding: Binding<Date> {
         Binding<Date>(
-            get: { viewModel.start ?? Date() },
+            get: { viewModel.start ?? surgeryDate },
             set: { viewModel.start = $0 }
         )
     }
 
     private var endBinding: Binding<Date> {
         Binding<Date>(
-            get: { viewModel.end ?? Date() },
+            get: { viewModel.end ?? surgeryDate },
             set: { viewModel.end = $0 }
         )
     }
@@ -47,14 +49,14 @@ struct AnesthesiaFormView: View {
 
     private var surgeryStartBinding: Binding<Date> {
         Binding<Date>(
-            get: { viewModel.surgeryStart ?? Date() },
+            get: { viewModel.surgeryStart ?? surgeryDate },
             set: { viewModel.surgeryStart = $0 }
         )
     }
 
     private var surgeryEndBinding: Binding<Date> {
         Binding<Date>(
-            get: { viewModel.surgeryEnd ?? Date() },
+            get: { viewModel.surgeryEnd ?? surgeryDate },
             set: { viewModel.surgeryEnd = $0 }
         )
     }
