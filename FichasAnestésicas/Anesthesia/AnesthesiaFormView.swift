@@ -4,12 +4,6 @@ struct AnesthesiaFormView: View {
     @ObservedObject var viewModel: AnesthesiaFormViewModel
     @Environment(\.dismiss) private var dismiss
 
-    // Controles locais pra ligar/desligar datas opcionais
-    @State private var hasStart = false
-    @State private var hasEnd = false
-    @State private var hasSurgeryStart = false
-    @State private var hasSurgeryEnd = false
-
     // MARK: - Bindings
     private var surgeryDate: Date { viewModel.surgeryDate }
 
@@ -27,26 +21,6 @@ struct AnesthesiaFormView: View {
         )
     }
 
-    private var hasStartBinding: Binding<Bool> {
-        Binding<Bool>(
-            get: { hasStart },
-            set: { newValue in
-                hasStart = newValue
-                viewModel.start = newValue ? (viewModel.start ?? Date()) : nil
-            }
-        )
-    }
-
-    private var hasEndBinding: Binding<Bool> {
-        Binding<Bool>(
-            get: { hasEnd },
-            set: { newValue in
-                hasEnd = newValue
-                viewModel.end = newValue ? (viewModel.end ?? Date()) : nil
-            }
-        )
-    }
-
     private var surgeryStartBinding: Binding<Date> {
         Binding<Date>(
             get: { viewModel.surgeryStart ?? surgeryDate },
@@ -61,58 +35,69 @@ struct AnesthesiaFormView: View {
         )
     }
 
-    private var hasSurgeryStartBinding: Binding<Bool> {
-        Binding<Bool>(
-            get: { hasSurgeryStart },
-            set: { newValue in
-                hasSurgeryStart = newValue
-                viewModel.surgeryStart = newValue ? (viewModel.surgeryStart ?? Date()) : nil
-            }
-        )
-    }
-
-    private var hasSurgeryEndBinding: Binding<Bool> {
-        Binding<Bool>(
-            get: { hasSurgeryEnd },
-            set: { newValue in
-                hasSurgeryEnd = newValue
-                viewModel.surgeryEnd = newValue ? (viewModel.surgeryEnd ?? Date()) : nil
-            }
-        )
-    }
-
     var body: some View {
         NavigationStack {
             Form {
                 // Período da Cirurgia (independente da anestesia)
                 Section{
-                    Toggle("Definir início da cirurgia", isOn: hasSurgeryStartBinding)
-                    if hasSurgeryStart {
-                        DatePicker(
-                            "Início da cirurgia",
-                            selection: surgeryStartBinding,
-                            displayedComponents: [.date, .hourAndMinute]
-                        )
+                    HStack {
+                        Text("Anestesia")
+                        Spacer()
+                        HStack{
+                            DateTimePickerSheetButton(
+                                date: startBinding,
+                                title: "Início da anestesia",
+                                onConfirm: {
+                                    if viewModel.start == nil { viewModel.start = surgeryDate }
+                                }
+                            )
+                            if viewModel.start != nil {
+                                Button(role: .destructive) {
+                                    viewModel.start = nil
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("Limpar início da anestesia")
+                            }
+                        }
                     }
 
-                    Toggle("Definir fim da cirurgia", isOn: hasSurgeryEndBinding)
-                    if hasSurgeryEnd {
-                        DatePicker(
-                            "Fim da cirurgia",
-                            selection: surgeryEndBinding,
-                            displayedComponents: [.date, .hourAndMinute]
-                        )
+                    HStack {
+                        Text("Cirurgia")
+                        
+                        Spacer()
+                    
+                        HStack{
+                            DateTimePickerSheetButton(
+                                date: surgeryStartBinding,
+                                title: "Início da cirurgia",
+                                onConfirm: {
+                                    if viewModel.surgeryStart == nil { viewModel.surgeryStart = surgeryDate }
+                                }
+                            )
+                            
+                            if viewModel.surgeryStart != nil {
+                                Button(role: .destructive) {
+                                    viewModel.surgeryStart = nil
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("Limpar início da cirurgia")
+                            }
+                        }
                     }
                 } header: {
                     VStack(alignment: .leading){
-                        Text("Período da Cirurgia")
+                        Text("Início do Procedimento")
                         VStack {
-                            if let e = viewModel.surgeryStartError {
+                            if let e = viewModel.anesthesiaStartError {
                                 Text(e)
                                     .font(.footnote)
                                     .foregroundStyle(.red)
                             }
-                            if let e = viewModel.surgeryEndError {
+                            if let e = viewModel.surgeryStartError {
                                 Text(e)
                                     .font(.footnote)
                                     .foregroundStyle(.red)
@@ -121,39 +106,72 @@ struct AnesthesiaFormView: View {
                     }
                 }
 
-                // Período da Anestesia
-                Section {
-                    Toggle("Definir início da anestesia", isOn: hasStartBinding)
-                    if hasStart {
-                        DatePicker(
-                            "Início da anestesia",
-                            selection: startBinding,
-                            displayedComponents: [.date, .hourAndMinute]
-                        )
-                    }
-
-                    Toggle("Definir fim da anestesia", isOn: hasEndBinding)
-                    if hasEnd {
-                        DatePicker(
-                            "Fim da anestesia",
-                            selection: endBinding,
-                            displayedComponents: [.date, .hourAndMinute]
-                        )
-                    }
-                } header: {
-                    VStack(alignment: .leading) {
-                        Text("Período da Anestesia")
-                        VStack {
-                            if let e = viewModel.anesthesiaStartError {
-                                Text(e)
-                                    .font(.footnote)
-                                    .foregroundStyle(.red)
+            
+                if viewModel.anesthesia != nil {
+                    Section {
+                        HStack {
+                            Text("Cirurgia")
+                            Spacer()
+                            HStack {
+                                DateTimePickerSheetButton(
+                                    date: surgeryEndBinding,
+                                    title: "Fim da cirurgia",
+                                    onConfirm: {
+                                        if viewModel.surgeryEnd == nil { viewModel.surgeryEnd = surgeryDate }
+                                    }
+                                )
+                                
+                                if viewModel.surgeryEnd != nil {
+                                    Button(role: .destructive) {
+                                        viewModel.surgeryEnd = nil
+                                    } label: {
+                                        Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .accessibilityLabel("Limpar fim da cirurgia")
+                                }
                             }
-                            if let e = viewModel.anesthesiaEndError {
-                                Text(e)
-                                    .font(.footnote)
-                                    .foregroundStyle(.red)
+                        }
+                        
+                        
+                            HStack {
+                                Text("Anestesia")
+                                Spacer()
+                                HStack {
+                                    DateTimePickerSheetButton(
+                                        date: endBinding,
+                                        title: "Fim da anestesia",
+                                        onConfirm: {
+                                            if viewModel.end == nil { viewModel.end = surgeryDate }
+                                        }
+                                    )
+                                    
+                                    if viewModel.end != nil {
+                                        Button(role: .destructive) {
+                                            viewModel.end = nil
+                                        } label: {
+                                            Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .accessibilityLabel("Limpar fim da anestesia")
+                                    }
+                                }
                             }
+                        } header: {
+                            VStack(alignment: .leading) {
+                                Text("Fim do Procedimento")
+                                VStack {
+                                    if let e = viewModel.surgeryEndError {
+                                        Text(e)
+                                            .font(.footnote)
+                                            .foregroundStyle(.red)
+                                    }
+                                    if let e = viewModel.anesthesiaEndError {
+                                        Text(e)
+                                            .font(.footnote)
+                                            .foregroundStyle(.red)
+                                    }
+                                }
                         }
                     }
                 }
@@ -237,12 +255,6 @@ struct AnesthesiaFormView: View {
                 if let error = viewModel.errorMessage {
                     Section { Text(error).foregroundStyle(.red) }
                 }
-            }
-            .onAppear {
-                hasStart = viewModel.start != nil
-                hasEnd = viewModel.end != nil
-                hasSurgeryStart = viewModel.surgeryStart != nil
-                hasSurgeryEnd = viewModel.surgeryEnd != nil
             }
             .onChange(of: viewModel.start) { _, _ in
                 viewModel.touched["anesthesiaStart"] = true
@@ -425,5 +437,97 @@ struct ASAPickerView: View {
             selection = asa
         }
     }
+}
+
+
+private struct DateTimePickerSheetButton: View {
+    @Binding var date: Date
+    var title: String
+    var minDate: Date? = nil
+    var maxDate: Date? = nil
+    var compactInRow: Bool = true
+    var onConfirm: (() -> Void)? = nil
+    @State private var showPicker = false
+
+    var body: some View {
+        Button {
+            showPicker = true
+        } label: {
+            Group {
+                if compactInRow {
+                    HStack(spacing: 6) {
+                        Image(systemName: "clock")
+                            .foregroundStyle(.secondary)
+                        Text(Self.inlineFormatter.string(from: date))
+                            .foregroundStyle(.tint)
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .contentShape(Rectangle())
+                } else {
+                    HStack {
+                        Text(title)
+                        Spacer()
+                        Text(Self.inlineFormatter.string(from: date))
+                            .foregroundStyle(.tint)
+                            .monospacedDigit()
+                            .fontWeight(.semibold)
+                    }
+                    .font(.body)
+                    .padding(.vertical, 6)
+                    .contentShape(Rectangle())
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .sheet(isPresented: $showPicker) {
+            NavigationStack {
+                VStack {
+                    DatePicker(
+                        "",
+                        selection: $date,
+                        in: (minDate ?? .distantPast)...(maxDate ?? .distantFuture),
+                        displayedComponents: [.date, .hourAndMinute]
+                    )
+                    .datePickerStyle(.wheel)
+                    .labelsHidden()
+                    .environment(\.locale, Locale(identifier: "pt_BR"))
+                }
+                .navigationTitle(title.isEmpty ? "Selecionar" : title)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancelar") { showPicker = false }
+                            .tint(.red)
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("OK") {
+                            onConfirm?()
+                            showPicker = false
+                        }
+                        .tint(.blue)
+                    }
+                }
+                .padding()
+            }
+            .presentationDetents([.fraction(0.35)])
+            .presentationDragIndicator(.visible)
+        }
+    }
+
+    static let displayFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "pt_BR")
+        f.dateStyle = .medium
+        f.timeStyle = .short
+        return f
+    }()
+
+    static let inlineFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "pt_BR")
+        f.dateFormat = "dd/MM/yyyy HH:mm"
+        return f
+    }()
 }
 
