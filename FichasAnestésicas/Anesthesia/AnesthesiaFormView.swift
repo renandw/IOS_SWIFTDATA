@@ -83,7 +83,7 @@ struct AnesthesiaFormView: View {
         NavigationStack {
             Form {
                 // Período da Cirurgia (independente da anestesia)
-                Section("Período da Cirurgia") {
+                Section{
                     Toggle("Definir início da cirurgia", isOn: hasSurgeryStartBinding)
                     if hasSurgeryStart {
                         DatePicker(
@@ -101,13 +101,26 @@ struct AnesthesiaFormView: View {
                             displayedComponents: [.date, .hourAndMinute]
                         )
                     }
-                    // Inline validation errors
-                    if let e = viewModel.surgeryStartError { Text(e).foregroundStyle(.red) }
-                    if let e = viewModel.surgeryEndError { Text(e).foregroundStyle(.red) }
+                } header: {
+                    VStack(alignment: .leading){
+                        Text("Período da Cirurgia")
+                        VStack {
+                            if let e = viewModel.surgeryStartError {
+                                Text(e)
+                                    .font(.footnote)
+                                    .foregroundStyle(.red)
+                            }
+                            if let e = viewModel.surgeryEndError {
+                                Text(e)
+                                    .font(.footnote)
+                                    .foregroundStyle(.red)
+                            }
+                        }
+                    }
                 }
 
                 // Período da Anestesia
-                Section("Período da Anestesia") {
+                Section {
                     Toggle("Definir início da anestesia", isOn: hasStartBinding)
                     if hasStart {
                         DatePicker(
@@ -125,13 +138,26 @@ struct AnesthesiaFormView: View {
                             displayedComponents: [.date, .hourAndMinute]
                         )
                     }
-                    // Inline validation errors
-                    if let e = viewModel.anesthesiaStartError { Text(e).foregroundStyle(.red) }
-                    if let e = viewModel.anesthesiaEndError { Text(e).foregroundStyle(.red) }
+                } header: {
+                    VStack(alignment: .leading) {
+                        Text("Período da Anestesia")
+                        VStack {
+                            if let e = viewModel.anesthesiaStartError {
+                                Text(e)
+                                    .font(.footnote)
+                                    .foregroundStyle(.red)
+                            }
+                            if let e = viewModel.anesthesiaEndError {
+                                Text(e)
+                                    .font(.footnote)
+                                    .foregroundStyle(.red)
+                            }
+                        }
+                    }
                 }
 
                 // Técnicas (navegação para seleção com checkmarks)
-                Section("Técnicas") {
+                Section {
                     NavigationLink {
                         AnesthesiaTechniquePickerView(selection: $viewModel.techniques)
                     } label: {
@@ -145,12 +171,19 @@ struct AnesthesiaFormView: View {
                                 .multilineTextAlignment(.trailing)
                         }
                     }
-                    // Inline validation error
-                    if let e = viewModel.techniquesError { Text(e).foregroundStyle(.red) }
+                } header: {
+                    HStack {
+                        Text("Técnicas")
+                        if let e = viewModel.techniquesError {
+                            Text(e)
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                        }
+                    }
                 }
 
                 // ASA (classificação)
-                Section("ASA") {
+                Section {
                     NavigationLink {
                         ASAPickerView(selection: $viewModel.asa)
                     } label: {
@@ -162,12 +195,19 @@ struct AnesthesiaFormView: View {
                                 .multilineTextAlignment(.trailing)
                         }
                     }
-                    // Inline validation error
-                    if let e = viewModel.asaError { Text(e).foregroundStyle(.red) }
+                } header: {
+                    HStack {
+                        Text("ASA")
+                        if let e = viewModel.asaError {
+                            Text(e)
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                        }
+                    }
                 }
 
                 // Posição (navegação para multi-seleção com checkmarks)
-                Section("Posição") {
+                Section {
                     NavigationLink {
                         PositionPickerView(selection: $viewModel.position)
                     } label: {
@@ -181,9 +221,16 @@ struct AnesthesiaFormView: View {
                                 .multilineTextAlignment(.trailing)
                         }
                     }
-                    if let e = viewModel.positionError { Text(e).foregroundStyle(.red) }
+                } header: {
+                    HStack {
+                        Text("Posição")
+                        if let e = viewModel.positionError {
+                            Text(e)
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                        }
+                    }
                 }
-
                 // Erros
                 if let error = viewModel.errorMessage {
                     Section { Text(error).foregroundStyle(.red) }

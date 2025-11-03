@@ -10,6 +10,20 @@ import SwiftData
 import SwiftUI
 import Combine
 
+private struct Validator {
+    static func required<T>(_ value: T?, _ message: String) -> String? {
+        value == nil ? message : nil
+    }
+    static func after(_ a: Date?, _ b: Date?, _ message: String) -> String? {
+        guard let a, let b, a > b else { return nil }
+        return message
+    }
+    static func before(_ a: Date?, _ b: Date?, _ message: String) -> String? {
+        guard let a, let b, a < b else { return nil }
+        return message
+    }
+}
+
 @MainActor
 final class AnesthesiaFormViewModel: ObservableObject {
     @Published var anesthesia: Anesthesia?
@@ -227,17 +241,18 @@ final class AnesthesiaFormViewModel: ObservableObject {
         //obrigatório para criação
         guard touched["anesthesiaStart"] == true else { return }
         anesthesiaStartError = nil
-        if isNew && start == nil {
-            anesthesiaStartError = "Informe o início da anestesia."
-            return
-        }
-        if let start {
-            if start < surgeryDate {
-                anesthesiaStartError = "Início da anestesia não pode ser antes da data da cirurgia - \(surgeryDate)."
-            } else if let end, start > end {
-                anesthesiaStartError = "Início da anestesia não pode ser após o término."
+        if isNew {
+            if let msg = Validator.required(start, "Informe o início da anestesia.") {
+                anesthesiaStartError = msg
+                return
             }
         }
+        // Regras de ordem temporal
+        anesthesiaStartError =
+            Validator.before(start, surgeryDate, "Início da anestesia não pode ser antes da data da cirurgia - \(surgeryDate).") ??
+            Validator.after(start, end, "Início da anestesia não pode ser após o seu término.") ??
+            Validator.after(start, surgeryStart, "Não pode ser após o início da cirurgia.") ??
+            Validator.after(start, surgeryEnd, "Não pode ser após o fim da cirurgia.")
     }
 
     func validateSurgeryStart() {
@@ -250,13 +265,11 @@ final class AnesthesiaFormViewModel: ObservableObject {
             return
         }
         if let surgeryStart {
-            if let start, surgeryStart < start {
-                surgeryStartError = "Cirurgia não pode iniciar antes da anestesia."
-            }
-            if surgeryStart < surgeryDate {
-                // Regra adicional natural ao modelo (data mínima)
-                surgeryStartError = "Início da cirurgia não pode ser antes da data da cirurgia - \(surgeryDate)."
-            }
+            surgeryStartError =
+                (Validator.after(surgeryStart, end, "Cirurgia não pode iniciar após da fim da anestesia.")) ??
+                (Validator.after(surgeryStart, surgeryEnd, "Cirurgia não pode iniciar após da fim da cirurgia.")) ??
+                (Validator.before(surgeryStart, start, "Cirurgia não pode iniciar antes da anestesia.")) ??
+                (Validator.before(surgeryStart, surgeryDate, "Início da cirurgia não pode ser antes da data da cirurgia - \(surgeryDate)."))
         }
     }
 
@@ -271,12 +284,11 @@ final class AnesthesiaFormViewModel: ObservableObject {
             return
         }
         if let surgeryEnd {
-            if let surgeryStart, surgeryEnd < surgeryStart {
-                surgeryEndError = "Término da cirurgia não pode ser antes do início."
-            }
-            if surgeryEnd < surgeryDate {
-                surgeryEndError = "Término da cirurgia não pode ser antes da data da cirurgia - \(surgeryDate)."
-            }
+            surgeryEndError =
+                (Validator.before(surgeryEnd, surgeryStart, "Término da cirurgia não pode ser antes do seu início.")) ??
+                (Validator.after(surgeryEnd, end, "Término da cirurgia não pode ser após fim da anestesia.")) ??
+                (Validator.before(surgeryEnd, start, "Término da cirurgia não pode ser antes do início da anestesia.")) ??
+                (Validator.before(surgeryEnd, surgeryDate, "Término da cirurgia não pode ser antes da data da cirurgia - \(surgeryDate)."))
         }
     }
 
@@ -291,15 +303,10 @@ final class AnesthesiaFormViewModel: ObservableObject {
             return
         }
         if let end {
-            if let start, end < start {
-                anesthesiaEndError = "Término da anestesia não pode ser antes do início."
-            }
-            if let surgeryEnd, end < surgeryEnd {
-                anesthesiaEndError = "Término da anestesia não pode ser antes do término da cirurgia."
-            }
-            if end < surgeryDate {
-                anesthesiaEndError = "Término da anestesia não pode ser antes da data da cirurgia - \(surgeryDate)."
-            }
+            anesthesiaEndError =
+                (Validator.before(end, start, "Término da anestesia não pode ser antes do início.")) ??
+                (Validator.before(end, surgeryEnd, "Término da anestesia não pode ser antes do término da cirurgia.")) ??
+                (Validator.before(end, surgeryDate, "Término da anestesia não pode ser antes da data da cirurgia - \(surgeryDate)."))
         }
     }
 
