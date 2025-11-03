@@ -29,9 +29,43 @@ final class AnesthesiaFormViewModel: ObservableObject {
     @Published var anesthesia: Anesthesia?
     @Published var isEditing = false
     @Published var errorMessage: String?
+    
+    // Sugestões automáticas de horário
+    @Published var suggestedSurgeryStart: Date?
+    @Published var suggestedSurgeryEnd: Date?
 
-    @Published var start: Date?
-    @Published var end: Date?
+    @Published var start: Date? {
+        didSet {
+            // Ao mudar início da anestesia, sugerir início da cirurgia = início da anestesia + 5min
+            guard oldValue != start else { return }
+            guard let start else { return }
+            let suggestion = Calendar.current.date(byAdding: .minute, value: 5, to: start)
+            suggestedSurgeryStart = suggestion
+            // Só aplica automaticamente se o usuário não tocou manualmente no campo de início da cirurgia
+            if touched["surgeryStart"] != true {
+                surgeryStart = suggestion
+            }
+            // Revalidar campos relacionados
+            validateAnesthesiaStart()
+            validateSurgeryStart()
+        }
+    }
+    @Published var end: Date? {
+        didSet {
+            // Ao mudar término da anestesia, sugerir término da cirurgia = término da anestesia - 5min
+            guard oldValue != end else { return }
+            guard let end else { return }
+            let suggestion = Calendar.current.date(byAdding: .minute, value: -5, to: end)
+            suggestedSurgeryEnd = suggestion
+            // Só aplica automaticamente se o usuário não tocou manualmente no campo de término da cirurgia
+            if touched["surgeryEnd"] != true {
+                surgeryEnd = suggestion
+            }
+            // Revalidar campos relacionados
+            validateAnesthesiaEnd()
+            validateSurgeryEnd()
+        }
+    }
     @Published var techniques: [AnesthesiaTechniqueKind] = []
     @Published var asa: ASAClassification? = nil
     @Published var position: [Positioning] = []
@@ -107,6 +141,10 @@ final class AnesthesiaFormViewModel: ObservableObject {
         
         self.surgeryStart = surgery.start
         self.surgeryEnd = surgery.end
+        
+        // Reset sugestões ao carregar do modelo
+        self.suggestedSurgeryStart = nil
+        self.suggestedSurgeryEnd = nil
     }
 
     func save() -> Bool {
@@ -350,8 +388,20 @@ final class AnesthesiaFormViewModel: ObservableObject {
         positionError = nil
     }
     
+    // Ações para aceitar/limpar sugestões (opcional para o UI)
+    func acceptSurgeryStartSuggestion() {
+        if let suggestedSurgeryStart { surgeryStart = suggestedSurgeryStart }
+        suggestedSurgeryStart = nil
+    }
+
+    func acceptSurgeryEndSuggestion() {
+        if let suggestedSurgeryEnd { surgeryEnd = suggestedSurgeryEnd }
+        suggestedSurgeryEnd = nil
+    }
+
+    func clearSuggestions() {
+        suggestedSurgeryStart = nil
+        suggestedSurgeryEnd = nil
+    }
+    
 }
-
-
-//todo: validations for every field.
-
