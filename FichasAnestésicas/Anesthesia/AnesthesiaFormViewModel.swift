@@ -32,6 +32,15 @@ final class AnesthesiaFormViewModel: ObservableObject {
     @Published var techniquesError: String?
     @Published var asaError: String?
     @Published var positionError: String?
+    @Published var touched: [String: Bool] = [
+        "anesthesiaStart": false,
+        "anesthesiaEnd": false,
+        "surgeryStart": false,
+        "surgeryEnd": false,
+        "techniques": false,
+        "asa": false,
+        "position": false
+    ]
 
     private let repository: AnesthesiaRepository
     private let sharedRepo: SharedPreAndAnesthesiaRepository
@@ -188,13 +197,26 @@ final class AnesthesiaFormViewModel: ObservableObject {
         ].allSatisfy { $0 == nil }
 
         if isNew {
-            // Em criação: início de anestesia e início de cirurgia obrigatórios,
-            // técnica e ASA obrigatórios segundo comentários.
-            let requiredPresent = (start != nil) && (surgeryStart != nil) && !techniques.isEmpty && (asa != nil) && (!position.isEmpty)
+            // Em criação: obrigatório início de anestesia, início de cirurgia,
+            // ao menos uma técnica, ASA e ao menos uma posição.
+            let requiredPresent =
+                (start != nil) &&
+                (surgeryStart != nil) &&
+                !techniques.isEmpty &&
+                (asa != nil) &&
+                !position.isEmpty
             return noErrors && requiredPresent
         } else {
-            // Em edição: fim de cirurgia e fim de anestesia passam a ser obrigatórios
-            let requiredPresent = (surgeryEnd != nil) && (end != nil)
+            // Em edição: tudo que era obrigatório na criação CONTINUA obrigatório
+            // + também são obrigatórios o término da cirurgia e da anestesia.
+            let requiredPresent =
+                (start != nil) &&
+                (surgeryStart != nil) &&
+                !techniques.isEmpty &&
+                (asa != nil) &&
+                !position.isEmpty &&
+                (surgeryEnd != nil) &&
+                (end != nil)
             return noErrors && requiredPresent
         }
     }
@@ -203,6 +225,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
     func validateAnesthesiaStart() {
         //não pode ser antes de surgeryDate
         //obrigatório para criação
+        guard touched["anesthesiaStart"] == true else { return }
         anesthesiaStartError = nil
         if isNew && start == nil {
             anesthesiaStartError = "Informe o início da anestesia."
@@ -210,7 +233,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
         }
         if let start {
             if start < surgeryDate {
-                anesthesiaStartError = "Início da anestesia não pode ser antes da data da cirurgia."
+                anesthesiaStartError = "Início da anestesia não pode ser antes da data da cirurgia - \(surgeryDate)."
             } else if let end, start > end {
                 anesthesiaStartError = "Início da anestesia não pode ser após o término."
             }
@@ -220,6 +243,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
     func validateSurgeryStart() {
         //não pode ser antes de anesthesia.start
         //obrigatório para criação
+        guard touched["surgeryStart"] == true else { return }
         surgeryStartError = nil
         if isNew && surgeryStart == nil {
             surgeryStartError = "Informe o início da cirurgia."
@@ -231,7 +255,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
             }
             if surgeryStart < surgeryDate {
                 // Regra adicional natural ao modelo (data mínima)
-                surgeryStartError = "Início da cirurgia não pode ser antes da data da cirurgia."
+                surgeryStartError = "Início da cirurgia não pode ser antes da data da cirurgia - \(surgeryDate)."
             }
         }
     }
@@ -240,6 +264,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
         // não pode ser antes de surgery.start
         // não obrigatório para criação
         // obrigatório para edição
+        guard touched["surgeryEnd"] == true else { return }
         surgeryEndError = nil
         if !isNew && surgeryEnd == nil {
             surgeryEndError = "Informe o término da cirurgia."
@@ -250,7 +275,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
                 surgeryEndError = "Término da cirurgia não pode ser antes do início."
             }
             if surgeryEnd < surgeryDate {
-                surgeryEndError = "Término da cirurgia não pode ser antes da data da cirurgia."
+                surgeryEndError = "Término da cirurgia não pode ser antes da data da cirurgia - \(surgeryDate)."
             }
         }
     }
@@ -259,6 +284,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
         //não pode ser antes de surgery.end
         //não obrigatório para criação
         //obrigatório para edição
+        guard touched["anesthesiaEnd"] == true else { return }
         anesthesiaEndError = nil
         if !isNew && end == nil {
             anesthesiaEndError = "Informe o término da anestesia."
@@ -272,7 +298,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
                 anesthesiaEndError = "Término da anestesia não pode ser antes do término da cirurgia."
             }
             if end < surgeryDate {
-                anesthesiaEndError = "Término da anestesia não pode ser antes da data da cirurgia."
+                anesthesiaEndError = "Término da anestesia não pode ser antes da data da cirurgia - \(surgeryDate)."
             }
         }
     }
@@ -280,6 +306,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
     func validateAnesthesiaTechnique() {
         //para criar, pelo menos uma technique precisa ser selecionada
         //obrigatório para criação
+        guard touched["techniques"] == true else { return }
         techniquesError = nil
         if isNew && techniques.isEmpty {
             techniquesError = "Selecione ao menos uma técnica."
@@ -289,6 +316,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
     func validateASA() {
         //para criar, ASA precisa estar selecionado
         //obrigatório para criação
+        guard touched["asa"] == true else { return }
         asaError = nil
         if isNew && asa == nil {
             asaError = "Selecione uma classificação ASA."
@@ -298,6 +326,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
     func validatePosition() {
         //para criar, Position precisa estar selecionado
         //obrigatório para criação
+        guard touched["position"] == true else { return }
         positionError = nil
         if isNew && position.isEmpty {
             positionError = "Selecione ao menos uma posição cirúrgica."

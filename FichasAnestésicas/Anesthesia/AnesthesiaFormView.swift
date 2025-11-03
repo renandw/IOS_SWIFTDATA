@@ -195,14 +195,36 @@ struct AnesthesiaFormView: View {
                 hasSurgeryStart = viewModel.surgeryStart != nil
                 hasSurgeryEnd = viewModel.surgeryEnd != nil
             }
-            .onChange(of: viewModel.start) { _ in viewModel.runValidations() }
-            .onChange(of: viewModel.end) { _ in viewModel.runValidations() }
-            .onChange(of: viewModel.surgeryStart) { _ in viewModel.runValidations() }
-            .onChange(of: viewModel.surgeryEnd) { _ in viewModel.runValidations() }
-            .onChange(of: viewModel.techniques) { _ in viewModel.runValidations() }
-            .onChange(of: viewModel.asa) { _ in viewModel.runValidations() }
-            .onChange(of: viewModel.position) { _ in viewModel.runValidations() }
-            .navigationTitle("Ficha de Anestesia")
+            .onChange(of: viewModel.start) { _, _ in
+                viewModel.touched["anesthesiaStart"] = true
+                viewModel.validateAnesthesiaStart()
+            }
+            .onChange(of: viewModel.end) { _, _ in
+                viewModel.touched["anesthesiaEnd"] = true
+                viewModel.validateAnesthesiaEnd()
+            }
+            .onChange(of: viewModel.surgeryStart) { _, _ in
+                viewModel.touched["surgeryStart"] = true
+                viewModel.validateSurgeryStart()
+            }
+            .onChange(of: viewModel.surgeryEnd) { _, _ in
+                viewModel.touched["surgeryEnd"] = true
+                viewModel.validateSurgeryEnd()
+            }
+            .onChange(of: viewModel.techniques) { _, _ in
+                viewModel.touched["techniques"] = true
+                viewModel.validateAnesthesiaTechnique()
+            }
+            .onChange(of: viewModel.asa) { _, _ in
+                viewModel.touched["asa"] = true
+                viewModel.validateASA()
+            }
+            .onChange(of: viewModel.position) { _, _ in
+                viewModel.touched["position"] = true
+                viewModel.validatePosition()
+            }
+            .navigationTitle(viewModel.anesthesia == nil ? "Nova Anestesia" : "Editar Anestesia")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Excluir", role: .destructive) {
@@ -355,3 +377,4 @@ struct ASAPickerView: View {
         }
     }
 }
+
