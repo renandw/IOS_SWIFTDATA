@@ -78,11 +78,15 @@ struct AnesthesiaDetailsView: View {
 
             if let button = customTitleBarButton {
                 button
-           }
+            } else {
+                Color.clear
+                    .frame(width: 1, height: 1) // placeholder mínimo
+            }
         }
-        .padding(.top, 8)
+        .frame(minHeight: 44, alignment: .center) // ajuste esse valor à sua UI
         .padding(.horizontal, 16)
     }
+
     
     private var headerSection: some View {
             VStack(spacing: 16) {

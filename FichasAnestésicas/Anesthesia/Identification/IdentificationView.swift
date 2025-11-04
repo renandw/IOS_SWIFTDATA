@@ -33,31 +33,40 @@ struct IdentificationView: View {
                     HStack {
                         Text("\(anesthesia.surgery.patient.name),")
                         Text("\(ageContext.ageString(from: anesthesia.surgery.patient.birthDate)),")
-                        Text("\(anesthesia.surgery.weight, specifier: "%.1f") Kg")
+                        Text(patient.sex.sexStringDescription)
                     }
                     HStack {
                         Text("Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
-                        Text(patient.sex.sexStringDescription)
+
                     }
                     
                     Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
                 }
                 
-                VStack(alignment: .leading) {
-                    Text("Cirurgia")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                    HStack {
-                        Text("Procedimento")
-                        Text("\(anesthesia.surgery.proposedProcedure)")
+                VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading) {
+                        Text("Cirurgia")
+                            .font(.title3)
                             .fontWeight(.semibold)
-                    }
-                    HStack {
-                        Text("Status:")
-                        Text("\(anesthesia.surgery.status.displayName),")
-                            .fontWeight(.semibold)
-                        Text("Data:")
-                        Text("\(anesthesia.surgery.date, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                        HStack {
+                            Text("Procedimento")
+                            Text("\(anesthesia.surgery.proposedProcedure)")
+                                .fontWeight(.semibold)
+                        }
+                        HStack {
+                            Text("Convênio:")
+                            Text("\(anesthesia.surgery.insuranceName)")
+                            Text("-")
+                            Text("\(anesthesia.surgery.insuranceNumber)")
+                        }
+                        HStack {
+                            Text("Status:")
+                            Text("\(anesthesia.surgery.status.displayName),")
+                                .fontWeight(.semibold)
+                            Text("Data:")
+                            Text("\(anesthesia.surgery.date, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                        }
+                        Text("Peso na cirurgia: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text("CBHPM")
@@ -73,31 +82,33 @@ struct IdentificationView: View {
                                 .font(.subheadline)
                         }
                     }
-                    HStack {
-                        Text("Convênio:")
-                        Text("\(anesthesia.surgery.insuranceName)")
-                        Text("-")
-                        Text("\(anesthesia.surgery.insuranceNumber)")
-                    }
-                    HStack {
-                        Text("Hospital:")
-                        Text("\(anesthesia.surgery.hospital)")
-                        
-                    }
-                    HStack {
-                        Text("Cirurgião Principal:")
-                        Text("\(anesthesia.surgery.mainSurgeon)")
-                    }
-                    
-                    if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
+                    VStack(alignment: .leading) {
                         HStack {
-                            Text("Cirurgiões Auxiliares:")
-                            Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
+                            Text("Hospital:")
+                            Text("\(anesthesia.surgery.hospital)")
+                            
                         }
                     }
+                    VStack(alignment: .leading) {
+                        Text("Equipe Cirúrgica:")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        HStack {
+                            Text("Principal:")
+                            Text("\(anesthesia.surgery.mainSurgeon)")
+                        }
+                        
+                        if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
+                            HStack {
+                                Text("Auxiliares:")
+                                Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
+                            }
+                        }
+                        Text("Início Cirurgia: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                        Text("Fim da Cirurgia: \(anesthesia.surgery.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                    }
                     
-                    Text("Início Cirurgia: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-                    Text("Fim da Cirurgia: \(anesthesia.surgery.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+
                 }
                 VStack(alignment: .leading) {
                     Text("Anestesia")
