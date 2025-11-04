@@ -112,7 +112,7 @@ struct SectionContent: View {
     var body: some View {
         switch section {
         case .identificationSection:
-            IdentificationView(anesthesia: anesthesia, patient: patient, surgery: surgery)
+            IdentificationView(anesthesia: anesthesia, patient: patient, surgery: surgery, ageContext: .inSurgery(surgery))
         case .apaSection:
             ContentUnavailableView("APA To be implemented", image: "plus")
         case .medicationsSection:

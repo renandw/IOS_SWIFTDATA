@@ -54,18 +54,17 @@ public extension Sex {
 }
 
 // Esqueleto para cálculo de idade com e sem contexto de cirurgia
-// TODO: Quando @model Surgery estiver pronto, trocar o caso `.inSurgery(date:)` para `.inSurgery(Surgery)` e usar a data da cirurgia do modelo
 enum AgeContext {
     case outSurgery
-    case inSurgery(date: Date) // placeholder até termos o @model Surgery
+    case inSurgery(Surgery)
 
     /// Retorna a idade em anos (inteiro) com base no contexto
     func ageInYears(from birthDate: Date) -> Int {
         switch self {
         case .outSurgery:
             return Calendar.current.dateComponents([.year], from: birthDate, to: .now).year ?? 0
-        case .inSurgery(let surgeryDate):
-            return Calendar.current.dateComponents([.year], from: birthDate, to: surgeryDate).year ?? 0
+        case .inSurgery(let surgery):
+            return Calendar.current.dateComponents([.year], from: birthDate, to: surgery.date).year ?? 0
         }
     }
 
@@ -79,8 +78,8 @@ enum AgeContext {
             switch self {
             case .outSurgery:
                 return .now
-            case .inSurgery(let surgeryDate):
-                return surgeryDate
+            case .inSurgery(let surgery):
+                return surgery.date
             }
         }()
 
