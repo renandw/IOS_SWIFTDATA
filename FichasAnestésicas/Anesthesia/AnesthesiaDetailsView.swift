@@ -48,7 +48,6 @@ struct AnesthesiaDetailsView: View {
             headerSection
             contentSectionView
         }
-        .padding()
         .navigationTitle("Detalhes da Anestesia")
     }
     
@@ -73,10 +72,11 @@ struct AnesthesiaDetailsView: View {
                 .accessibilityAddTraits(.isHeader)
             Spacer()
 // to be implemented with PreferenceKey
-//            if let button = customTopBarButton {
+//            if let button = customTitleBarButton {
 //                button
 //            }
         }
+        .padding(.top, 8)
         .padding(.horizontal, 16)
     }
     
@@ -85,8 +85,8 @@ struct AnesthesiaDetailsView: View {
                 pickerSection
                 titleSection
             }
-            .padding(.top, 8)
-            .padding(.bottom, 16)
+            .padding(.top, 4)
+            .padding(.bottom, 8)
         }
     
     private var contentSectionView: some View {

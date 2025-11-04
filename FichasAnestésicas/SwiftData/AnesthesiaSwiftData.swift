@@ -18,6 +18,8 @@ public enum AnesthesiaTechniqueKind: String, Codable, CaseIterable {
     case sedacao = "Sedação"
     case bloqueioPeriferico = "Bloqueio Periférico"
     case anestesiaLocal = "Local"
+    
+    var displayName: String { rawValue }
 }
 
 public enum Positioning: String, Codable, CaseIterable {

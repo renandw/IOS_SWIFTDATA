@@ -24,80 +24,162 @@ struct IdentificationView: View {
     
     var body: some View {
         
-        
-        VStack(alignment: .leading) {
-            Text("Paciente: \(anesthesia.surgery.patient.name)")
-            Text("Idade: \(ageContext.ageString(from: anesthesia.surgery.patient.birthDate))")
-            if let asa = anesthesia.shared?.asa {
-                Text("ASA: \(asa.rawValue)")
-            } else {
-                Text("ASA: não definido")
-                    .foregroundStyle(.secondary)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading) {
+                    Text("Paciente")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                    HStack {
+                        Text("\(anesthesia.surgery.patient.name),")
+                        Text("\(ageContext.ageString(from: anesthesia.surgery.patient.birthDate)),")
+                        Text("\(anesthesia.surgery.weight, specifier: "%.1f") Kg")
+                    }
+                    HStack {
+                        Text("Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                        Text(patient.sex.sexStringDescription)
+                    }
+                    
+                    Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("Cirurgia")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                    HStack {
+                        Text("Procedimento")
+                        Text("\(anesthesia.surgery.proposedProcedure)")
+                            .fontWeight(.semibold)
+                    }
+                    HStack {
+                        Text("Status:")
+                        Text("\(anesthesia.surgery.status.displayName),")
+                            .fontWeight(.semibold)
+                        Text("Data:")
+                        Text("\(anesthesia.surgery.date, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("CBHPM")
+                            .font(.headline)
+                        if let procedures = anesthesia.surgery.cbhpmProcedures, !procedures.isEmpty {
+                            ForEach(procedures) { p in
+                                Text("\(p.code) - \(p.procedure) - Porte: \(p.port)")
+                                    .font(.subheadline)
+                            }
+                        } else {
+                            Text("Nenhum procedimento selecionado")
+                                .foregroundStyle(.secondary)
+                                .font(.subheadline)
+                        }
+                    }
+                    HStack {
+                        Text("Convênio:")
+                        Text("\(anesthesia.surgery.insuranceName)")
+                        Text("-")
+                        Text("\(anesthesia.surgery.insuranceNumber)")
+                    }
+                    HStack {
+                        Text("Hospital:")
+                        Text("\(anesthesia.surgery.hospital)")
+                        
+                    }
+                    HStack {
+                        Text("Cirurgião Principal:")
+                        Text("\(anesthesia.surgery.mainSurgeon)")
+                    }
+                    
+                    if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
+                        HStack {
+                            Text("Cirurgiões Auxiliares:")
+                            Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
+                        }
+                    }
+                    
+                    Text("Início Cirurgia: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                    Text("Fim da Cirurgia: \(anesthesia.surgery.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                }
+                VStack(alignment: .leading) {
+                    Text("Anestesia")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Posicionamento: \(anesthesia.position.map(\.rawValue).joined(separator: ", "))")
+                            if let asa = anesthesia.shared?.asa {
+                                Text("ASA \(asa.rawValue)")
+                            } else {
+                                Text("ASA não definido")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        Text("Início da Anestesia: \(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                        Text("Fim da Anestesia: \(anesthesia.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                        HStack {
+                            Text("Status")
+                            Text("\(anesthesia.status?.displayName ?? "-" )")
+                                .fontWeight(.semibold)
+                        }
+                    }
+                }
+
+                
+                //Botões necessitarão ser movidos para customTitleBarButton
+                Button(surgery.anesthesia == nil ? "Criar Anestesia" : "Editar Anestesia", systemImage: surgery.anesthesia == nil ? "plus" : "pencil") {
+                    showingAnesthesiaForm = true
+                }
+                .buttonStyle(.glassProminent)
+                
+                Button("Editar", systemImage: "pencil") {
+                    selectedSurgery = surgery
+                }
+                
+                Button {
+                    editingPatient = patient
+                    showingForm = true
+                } label: {
+                    Label("Editar Paciente", systemImage: "pencil")
+                }
+                .buttonStyle(.glassProminent)
+                
+                //fim Botões necessitarão ser movidos para customTitleBarButton
+                
             }
-            Text("Data de Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits))")
-            Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
-            Text("lastactivity: \(anesthesia.surgery.patient.lastActivityAt.formatted(date: .abbreviated, time: .shortened))")
-            Text("Surgerylastactivity: \(anesthesia.surgery.lastActivityAt.formatted(date: .abbreviated, time: .shortened))")
-            Text("Status: \(anesthesia.status?.displayName ?? "-" )")
-            Text("Start: \(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-            Text("End: \(anesthesia.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-            Text("Position: \(anesthesia.position)")
-            Text("SurgeryStart: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-            Text("SurgeryEnd: \(anesthesia.surgery.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-            
-            
-            Button(surgery.anesthesia == nil ? "Criar Anestesia" : "Editar Anestesia", systemImage: surgery.anesthesia == nil ? "plus" : "pencil") {
-                showingAnesthesiaForm = true
-            }
-            .buttonStyle(.glassProminent)
-            
-            Button("Editar", systemImage: "pencil") {
-                selectedSurgery = surgery
+            .sheet(isPresented: $showingAnesthesiaForm) {
+                if let currentUser = session.currentUser {
+                    let viewModel = AnesthesiaFormViewModel(
+                        surgery: surgery,
+                        user: currentUser,
+                        context: modelContext,
+                    )
+                    AnesthesiaFormView(viewModel: viewModel)
+                }
             }
             
-            Button {
-                editingPatient = patient
-                showingForm = true
-            } label: {
-                Label("Editar Paciente", systemImage: "pencil")
+            .sheet(item: $selectedSurgery) { surgery in
+                let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
+                let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
+                let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
+                let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
+                SurgeryFormView(viewModel: viewModel)
             }
-            .buttonStyle(.glassProminent)
             
-        }
-        .sheet(isPresented: $showingAnesthesiaForm) {
-            if let currentUser = session.currentUser {
-                let viewModel = AnesthesiaFormViewModel(
-                    surgery: surgery,
-                    user: currentUser,
-                    context: modelContext,
-                )
-                AnesthesiaFormView(viewModel: viewModel)
-            }
-        }
-        
-        .sheet(item: $selectedSurgery) { surgery in
-            let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
-            let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
-            let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
-            let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
-            SurgeryFormView(viewModel: viewModel)
-        }
-        
-        .sheet(isPresented: $showingForm) {
-            if let user = session.currentUser {
-                let repository = SwiftDataPatientRepository(context: modelContext, currentUser: user)
-                PatientFormView(
-                    viewModel: PatientFormViewModel(
-                        repository: repository,
-                        currentUser: user,
-                        editingPatient: patient
-                    ),
-                    selectedPatient: $selectedPatient
-                )
-            } else {
-                ContentUnavailableView("Sem usuário", systemImage: "person.crop.circle.badge.exclam")
+            .sheet(isPresented: $showingForm) {
+                if let user = session.currentUser {
+                    let repository = SwiftDataPatientRepository(context: modelContext, currentUser: user)
+                    PatientFormView(
+                        viewModel: PatientFormViewModel(
+                            repository: repository,
+                            currentUser: user,
+                            editingPatient: patient
+                        ),
+                        selectedPatient: $selectedPatient
+                    )
+                } else {
+                    ContentUnavailableView("Sem usuário", systemImage: "person.crop.circle.badge.exclam")
+                }
             }
         }
     }
+    
 }
-
