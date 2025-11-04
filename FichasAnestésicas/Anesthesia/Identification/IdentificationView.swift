@@ -122,28 +122,6 @@ struct IdentificationView: View {
                         }
                     }
                 }
-
-                
-                //Botões necessitarão ser movidos para customTitleBarButton
-                Button(surgery.anesthesia == nil ? "Criar Anestesia" : "Editar Anestesia", systemImage: surgery.anesthesia == nil ? "plus" : "pencil") {
-                    showingAnesthesiaForm = true
-                }
-                .buttonStyle(.glassProminent)
-                
-                Button("Editar", systemImage: "pencil") {
-                    selectedSurgery = surgery
-                }
-                
-                Button {
-                    editingPatient = patient
-                    showingForm = true
-                } label: {
-                    Label("Editar Paciente", systemImage: "pencil")
-                }
-                .buttonStyle(.glassProminent)
-                
-                //fim Botões necessitarão ser movidos para customTitleBarButton
-                
             }
             .sheet(isPresented: $showingAnesthesiaForm) {
                 if let currentUser = session.currentUser {
@@ -180,6 +158,47 @@ struct IdentificationView: View {
                 }
             }
         }
+        .preference(
+            key: CustomTopBarButtonPreferenceKey.self,
+            value: CustomTopBarButtonPreference(
+                id: "IdentificationView.topbar.buttons",
+                view: AnyView(topBarButtons),
+                token: "IdentificationView.topbar.buttons.v1"
+            )
+        )
+        
+        
     }
     
+    private var topBarButtons: some View {
+        HStack(spacing: 8) {
+            Button(action: {
+                editingPatient = patient
+                showingForm = true
+            }) {
+                Image(systemName: "person.fill")
+            }
+            .accessibilityLabel("Editar Paciente")
+            .buttonStyle(.glass)
+            .tint(.blue)
+
+            Button(action: {
+                selectedSurgery = surgery
+            }) {
+                Image(systemName: "stethoscope")
+            }
+            .accessibilityLabel("Editar Cirurgia")
+            .buttonStyle(.glass)
+            .tint(.green)
+
+            Button(action: {
+                showingAnesthesiaForm = true
+            }) {
+                Image(systemName: surgery.anesthesia == nil ? "plus" : "syringe.fill")
+            }
+            .accessibilityLabel(surgery.anesthesia == nil ? "Criar Anestesia" : "Editar Anestesia")
+            .buttonStyle(.glass)
+            .tint(.purple)
+        }
+    }
 }

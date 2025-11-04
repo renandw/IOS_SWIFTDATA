@@ -42,6 +42,7 @@ struct AnesthesiaDetailsView: View {
     @Environment(SessionManager.self) var session
     
     @State private var activeSection: anesthesiaDetailsSection = .identificationSection
+    @State private var customTitleBarButton: AnyView? = nil
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -49,6 +50,9 @@ struct AnesthesiaDetailsView: View {
             contentSectionView
         }
         .navigationTitle("Detalhes da Anestesia")
+        .onPreferenceChange(CustomTopBarButtonPreferenceKey.self) { pref in
+            customTitleBarButton = pref?.view
+        }
     }
     
     
@@ -71,10 +75,10 @@ struct AnesthesiaDetailsView: View {
                 .font(.title2).bold()
                 .accessibilityAddTraits(.isHeader)
             Spacer()
-// to be implemented with PreferenceKey
-//            if let button = customTitleBarButton {
-//                button
-//            }
+
+            if let button = customTitleBarButton {
+                button
+           }
         }
         .padding(.top, 8)
         .padding(.horizontal, 16)
@@ -100,6 +104,24 @@ struct AnesthesiaDetailsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .id(activeSection)
         
+    }
+}
+struct CustomTopBarButtonPreference: Equatable {
+    let id: AnyHashable
+    let view: AnyView
+    let token: AnyHashable
+    
+    static func == (lhs: CustomTopBarButtonPreference, rhs: CustomTopBarButtonPreference) -> Bool {
+        lhs.id == rhs.id && lhs.token == rhs.token
+    }
+}
+
+struct CustomTopBarButtonPreferenceKey: PreferenceKey {
+    static var defaultValue: CustomTopBarButtonPreference? = nil
+    static func reduce(value: inout CustomTopBarButtonPreference?, nextValue: () -> CustomTopBarButtonPreference?) {
+        if let next = nextValue() {
+            value = next
+        }
     }
 }
 
