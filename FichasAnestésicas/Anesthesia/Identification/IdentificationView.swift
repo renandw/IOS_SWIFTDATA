@@ -25,7 +25,7 @@ struct IdentificationView: View {
     var body: some View {
         
         ScrollView {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 22) {
                 VStack(alignment: .leading) {
                     Text("Paciente")
                         .font(.title3)
@@ -43,11 +43,14 @@ struct IdentificationView: View {
                     Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
                 }
                 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 6) {
                     VStack(alignment: .leading) {
-                        Text("Cirurgia")
-                            .font(.title3)
-                            .fontWeight(.semibold)
+                        HStack{
+                            Text("Cirurgia - \(anesthesia.surgery.surgeryId)")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                            
+                        }
                         HStack {
                             Text("Procedimento")
                             Text("\(anesthesia.surgery.proposedProcedure)")
@@ -68,7 +71,7 @@ struct IdentificationView: View {
                         }
                         Text("Peso na cirurgia: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
                     }
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading) {
                         Text("CBHPM")
                             .font(.headline)
                         if let procedures = anesthesia.surgery.cbhpmProcedures, !procedures.isEmpty {
@@ -131,6 +134,14 @@ struct IdentificationView: View {
                             Text("\(anesthesia.status?.displayName ?? "-" )")
                                 .fontWeight(.semibold)
                         }
+                        Text({
+                            if let shared = anesthesia.shared {
+                                let list = shared.techniques
+                                return "Técnicas: " + (list.isEmpty ? "-" : list.map(\.displayName).joined(separator: ", "))
+                            } else {
+                                return "Técnicas: -"
+                            }
+                        }())
                     }
                 }
             }

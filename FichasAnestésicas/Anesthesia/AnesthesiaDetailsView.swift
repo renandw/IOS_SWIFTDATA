@@ -94,7 +94,7 @@ struct AnesthesiaDetailsView: View {
                 titleSection
             }
             .padding(.top, 4)
-            .padding(.bottom, 8)
+            //.padding(.bottom, 8)
         }
     
     private var contentSectionView: some View {
@@ -148,7 +148,8 @@ struct SectionContent: View {
         case .descriptionSection:
             ContentUnavailableView("Description To be implemented", image: "plus")
         case .previewSection:
-            ContentUnavailableView("Preview To be implemented", image: "plus")
+            ContentView()
+            //ContentUnavailableView("Preview To be implemented", image: "plus")
         }
     }
 }
