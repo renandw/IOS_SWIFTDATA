@@ -28,18 +28,23 @@ struct IdentificationView: View {
         VStack(alignment: .leading) {
             Text("Paciente: \(anesthesia.surgery.patient.name)")
             Text("Idade: \(ageContext.ageString(from: anesthesia.surgery.patient.birthDate))")
-            Text("Asa: \(anesthesia.shared?.asa)")
-            Text("lastactivity: \(anesthesia.surgery.patient.lastActivityAt)")
-            Text("Surgerylastactivity: \(anesthesia.surgery.lastActivityAt)")
-            Text("Status: \(anesthesia.status?.displayName)")
-            Text("Start: \(anesthesia.start)")
-            Text("End: \(anesthesia.end)")
+            if let asa = anesthesia.shared?.asa {
+                Text("ASA: \(asa.rawValue)")
+            } else {
+                Text("ASA: não definido")
+                    .foregroundStyle(.secondary)
+            }
+            Text("lastactivity: \(anesthesia.surgery.patient.lastActivityAt.formatted(date: .abbreviated, time: .shortened))")
+            Text("Surgerylastactivity: \(anesthesia.surgery.lastActivityAt.formatted(date: .abbreviated, time: .shortened))")
+            Text("Status: \(anesthesia.status?.displayName ?? "-" )")
+            Text("Start: \(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+            Text("End: \(anesthesia.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
             Text("Position: \(anesthesia.position)")
-            Text("SurgeryStart: \(anesthesia.surgery.start)")
-            Text("SurgeryEnd: \(anesthesia.surgery.end)")
+            Text("SurgeryStart: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+            Text("SurgeryEnd: \(anesthesia.surgery.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
             
             
-            Button(surgery.anesthesia == nil ? "Criar Anestesia" : "Editar Anestesia", systemImage: surgery.anesthesia == nil ? "plus" : "pencil",) {
+            Button(surgery.anesthesia == nil ? "Criar Anestesia" : "Editar Anestesia", systemImage: surgery.anesthesia == nil ? "plus" : "pencil") {
                 showingAnesthesiaForm = true
             }
             .buttonStyle(.glassProminent)
@@ -52,7 +57,7 @@ struct IdentificationView: View {
                 editingPatient = patient
                 showingForm = true
             } label: {
-                Label("Adicionar Paciente", systemImage: "plus")
+                Label("Editar Paciente", systemImage: "pencil")
             }
             .buttonStyle(.glassProminent)
             
@@ -93,3 +98,4 @@ struct IdentificationView: View {
         }
     }
 }
+
