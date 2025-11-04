@@ -47,7 +47,7 @@ struct AnesthesiaDetailsView: View {
     var body: some View {
         VStack(alignment: .leading) {
             headerSection
-            contentSectionView
+            contentSectionView.padding(.horizontal)
         }
         .navigationTitle("Detalhes da Anestesia")
         .onPreferenceChange(CustomTopBarButtonPreferenceKey.self) { pref in
@@ -152,6 +152,7 @@ struct SectionContent: View {
             //ContentUnavailableView("Preview To be implemented", image: "plus")
         }
     }
+    
 }
 
 //to-do : se anesthesia == nil -> navegar para dashboardview -> proteger subviews em sectioncontent

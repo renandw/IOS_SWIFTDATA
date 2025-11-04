@@ -1,36 +1,37 @@
 import SwiftUI
 
-struct PDFPreviewView: View {
-    let content: AnyView
+struct PDFPreviewView<Content: View>: View {
+    let content: Content
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
     
     var body: some View {
         ScrollView([.horizontal, .vertical], showsIndicators: true) {
-            content
-                .scaleEffect(scale)
+            ZStack {
+                // background do "canvas"
+                Color(.tertiarySystemGroupedBackground)
+
+                content
+                    .scaleEffect(scale, anchor: .center)
+                    .gesture(
+                        MagnificationGesture()
+                            .onChanged { value in
+                                let newScale = lastScale * value
+                                scale = min(max(newScale, 0.5), 4.0)
+                            }
+                            .onEnded { _ in
+                                lastScale = scale
+                            }
+                    )
+                    .clipped()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .gesture(
-            MagnificationGesture()
-                .onChanged { value in
-                    scale = lastScale * value
-                }
-                .onEnded { _ in
-                    lastScale = scale
-                    // Limitar o zoom
-                    if scale < 0.5 { scale = 0.5; lastScale = 0.5 }
-                    if scale > 4.0 { scale = 4.0; lastScale = 4.0 }
-                }
-        )
         .onTapGesture(count: 2) {
             withAnimation(.spring()) {
-                if scale > 1.0 {
-                    scale = 1.0
-                    lastScale = 1.0
-                } else {
-                    scale = 2.0
-                    lastScale = 2.0
-                }
+                let target = scale > 1.0 ? 1.0 : 2.0
+                scale = target
+                lastScale = target
             }
         }
         .toolbar {
@@ -76,7 +77,7 @@ struct PDFPreviewView: View {
 struct ContentView: View {
     var body: some View {
         NavigationStack {
-            PDFPreviewView(content: AnyView(documentContent))
+            PDFPreviewView(content: documentContent)
                 .navigationTitle("Documento")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -104,10 +105,12 @@ struct ContentView: View {
             Text("Meu Documento")
                 .font(.largeTitle)
                 .bold()
+                .foregroundStyle(.primary)
             
             Text("Este é um exemplo de documento que pode ser visualizado com zoom e depois exportado como PDF.")
                 .multilineTextAlignment(.center)
                 .padding()
+                .foregroundStyle(.primary)
             
             Rectangle()
                 .fill(Color.blue.gradient)
@@ -120,10 +123,11 @@ struct ContentView: View {
             
             Text("Mais conteúdo aqui...")
                 .padding()
+                .foregroundStyle(.primary)
         }
         .padding(40)
         .frame(width: 595, height: 842) // Tamanho A4
-        .background(Color.white)
+        .background(Color.pink)
     }
     
     func render() -> URL {
@@ -148,6 +152,4 @@ struct ContentView: View {
         return url
     }
 }
-
-
 

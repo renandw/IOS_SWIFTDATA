@@ -93,6 +93,8 @@ public enum ASAClassification: String, Codable, CaseIterable {
     case IIIe
     case IVe
     case Ve
+    
+    
 
 }
 

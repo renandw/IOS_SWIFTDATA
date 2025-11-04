@@ -37,18 +37,21 @@ struct IdentificationView: View {
                     }
                     HStack {
                         Text("Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
-
+                        
                     }
-                    
-                    Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
+                    if anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true) != "000 0000 0000 0000"{
+                        Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
+                    }
                 }
                 
                 VStack(alignment: .leading, spacing: 6) {
                     VStack(alignment: .leading) {
                         HStack{
-                            Text("Cirurgia - \(anesthesia.surgery.surgeryId)")
+                            Text("Cirurgia")
                                 .font(.title3)
                                 .fontWeight(.semibold)
+                            Spacer()
+                            anesthesia.surgery.status.badgeView
                             
                         }
                         HStack {
@@ -59,17 +62,16 @@ struct IdentificationView: View {
                         HStack {
                             Text("Convênio:")
                             Text("\(anesthesia.surgery.insuranceName)")
-                            Text("-")
-                            Text("\(anesthesia.surgery.insuranceNumber)")
+                            if anesthesia.surgery.insuranceName.lowercased() != "particular" {
+                                Text("-")
+                                Text("\(anesthesia.surgery.insuranceNumber)")
+                            }
                         }
                         HStack {
-                            Text("Status:")
-                            Text("\(anesthesia.surgery.status.displayName),")
-                                .fontWeight(.semibold)
-                            Text("Data:")
-                            Text("\(anesthesia.surgery.date, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                            Text("Data: \(anesthesia.surgery.date, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                            Text("Peso: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
                         }
-                        Text("Peso na cirurgia: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
+                        
                     }
                     VStack(alignment: .leading) {
                         Text("CBHPM")
@@ -97,13 +99,13 @@ struct IdentificationView: View {
                             .font(.headline)
                             .fontWeight(.semibold)
                         HStack {
-                            Text("Principal:")
+                            Text("Cirurgião:")
                             Text("\(anesthesia.surgery.mainSurgeon)")
                         }
                         
                         if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
                             HStack {
-                                Text("Auxiliares:")
+                                Text(anesthesia.surgery.auxiliarySurgeons?.count == 1 ? "Auxiliar:" :"Auxiliares:")
                                 Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
                             }
                         }
@@ -114,9 +116,18 @@ struct IdentificationView: View {
 
                 }
                 VStack(alignment: .leading) {
-                    Text("Anestesia")
-                        .font(.title3)
-                        .fontWeight(.semibold)
+                    HStack {
+                        Text("Anestesia")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                        if let asa = anesthesia.shared?.asa {
+                            asa.badgeView
+                        }
+                        Spacer()
+                        if let status = anesthesia.status {
+                            status.badgeView
+                        }
+                    }
                     VStack(alignment: .leading) {
                         HStack {
                             Text("Posicionamento: \(anesthesia.position.map(\.rawValue).joined(separator: ", "))")
@@ -129,11 +140,6 @@ struct IdentificationView: View {
                         }
                         Text("Início da Anestesia: \(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
                         Text("Fim da Anestesia: \(anesthesia.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-                        HStack {
-                            Text("Status")
-                            Text("\(anesthesia.status?.displayName ?? "-" )")
-                                .fontWeight(.semibold)
-                        }
                         Text({
                             if let shared = anesthesia.shared {
                                 let list = shared.techniques
@@ -224,3 +230,4 @@ struct IdentificationView: View {
         }
     }
 }
+
