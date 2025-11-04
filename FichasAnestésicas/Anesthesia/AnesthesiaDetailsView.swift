@@ -126,3 +126,5 @@ struct SectionContent: View {
         }
     }
 }
+
+//to-do : se anesthesia == nil -> navegar para dashboardview -> proteger subviews em sectioncontent

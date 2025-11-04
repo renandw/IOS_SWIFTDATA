@@ -34,6 +34,8 @@ struct IdentificationView: View {
                 Text("ASA: não definido")
                     .foregroundStyle(.secondary)
             }
+            Text("Data de Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits))")
+            Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
             Text("lastactivity: \(anesthesia.surgery.patient.lastActivityAt.formatted(date: .abbreviated, time: .shortened))")
             Text("Surgerylastactivity: \(anesthesia.surgery.lastActivityAt.formatted(date: .abbreviated, time: .shortened))")
             Text("Status: \(anesthesia.status?.displayName ?? "-" )")
