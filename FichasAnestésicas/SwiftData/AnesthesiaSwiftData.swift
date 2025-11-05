@@ -111,12 +111,6 @@ final class Anesthesia {
     var start: Date?
     var end: Date?
     var statusRaw: String?
-
-    var techniques: [AnesthesiaTechniqueKind] {
-        get { anesthesiaTechniqueRaw.compactMap(AnesthesiaTechniqueKind.init(rawValue:)) }
-        set { anesthesiaTechniqueRaw = newValue.map(\.rawValue) }
-    }
-
     var status: Status? {
         get { statusRaw.flatMap(Status.init(rawValue:)) }
         set { statusRaw = newValue?.rawValue }

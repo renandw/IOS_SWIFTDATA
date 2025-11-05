@@ -126,8 +126,6 @@ final class AnesthesiaFormViewModel: ObservableObject {
             let shared = sharedRepo.get(for: surgery) ?? anesthesia.shared
               if let shared {
                   self.techniques = shared.techniques
-              } else {
-                  self.techniques = anesthesia.techniques
               }
 
               if let shared {
