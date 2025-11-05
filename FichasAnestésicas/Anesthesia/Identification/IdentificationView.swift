@@ -100,7 +100,7 @@ struct IdentificationView: View {
                         }
                         
                         if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
-                            HStack {
+                            HStack(alignment: .top) {
                                 Text(anesthesia.surgery.auxiliarySurgeons?.count == 1 ? "Auxiliar:" :"Auxiliares:")
                                 Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
                             }
@@ -124,22 +124,22 @@ struct IdentificationView: View {
                     }
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("Posicionamento: \(anesthesia.position.map(\.rawValue).joined(separator: ", "))")
-                            if let asa = anesthesia.shared?.asa {
-                                Text("ASA \(asa.rawValue)")
-                            } else {
-                                Text("ASA não definido")
-                                    .foregroundStyle(.secondary)
-                            }
+                            Text("Posicionamento:")
+                                .fontWeight(.semibold)
+                            Text("\(anesthesia.position.map(\.rawValue).joined(separator: ", "))")
                         }
-                        Text({
-                            if let shared = anesthesia.shared {
-                                let list = shared.techniques
-                                return "Técnicas: " + (list.isEmpty ? "-" : list.map(\.displayName).joined(separator: ", "))
-                            } else {
-                                return ""
-                            }
-                        }())
+                        HStack(alignment: .top) {
+                            Text("Técnicas:")
+                                .fontWeight(.semibold)
+                            Text({
+                                if let shared = anesthesia.shared {
+                                    let list = shared.techniques
+                                    return (list.isEmpty ? "-" : list.map(\.displayName).joined(separator: ", "))
+                                } else {
+                                    return ""
+                                }
+                            }())
+                        }
                     }
                 }
                 

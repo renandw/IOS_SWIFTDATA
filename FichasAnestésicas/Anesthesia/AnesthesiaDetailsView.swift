@@ -48,7 +48,7 @@ struct AnesthesiaDetailsView: View {
         contentSectionView
             .safeAreaInset(edge: .top) {
                 headerSection
-                    .glassEffect(in: .rect(cornerRadius: 16.0))
+                    .background(.ultraThinMaterial)
             }
             .navigationTitle("Detalhes da Anestesia")
         .onPreferenceChange(CustomTopBarButtonPreferenceKey.self) { pref in
