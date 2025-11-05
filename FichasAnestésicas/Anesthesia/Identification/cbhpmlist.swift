@@ -35,20 +35,25 @@ public struct CBHPMProceduresList<Procedure: CBHPMProcedureDisplayable>: View {
             }
             VStack(alignment: .leading, spacing: 8) {
                 ForEach(sorted, id: \.code) { p in
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Text("Código: \(p.code)")
-                        }
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        HStack {
-                            Text(p.procedure)
-                                .font(.subheadline)
-                                .fixedSize(horizontal: false, vertical: true) // permite quebrar em múltiplas linhas
-                                .lineLimit(nil)
-                            Text("Porte Anestésico: \(p.portString)")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
+                    HStack {
+                        Text("•")
+                        VStack(alignment: .leading, spacing: 4) {
+                            Divider()
+                            VStack (alignment: .leading) {
+                                Text("Código: \(p.code)")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                
+                                Text(p.procedure)
+                                    .font(.subheadline)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .lineLimit(nil)
+                                Text("Porte Anestésico: \(p.portString)")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                            }
+                            Divider()
+                            
                         }
                     }
                 }
@@ -81,8 +86,11 @@ extension CbhpmCode: CBHPMProcedureDisplayable {
     ]
 
     return VStack(alignment: .leading, spacing: 12) {
-        Text("CBHPM")
-            .font(.headline)
+        HStack{
+            Image(systemName: "list.bullet")
+            Text("CBHPM")
+                .font(.headline)
+        }
         CBHPMProceduresList(samples)
             .padding(.vertical, 8)
     }

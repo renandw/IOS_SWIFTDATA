@@ -88,8 +88,11 @@ struct IdentificationView: View {
                         }
                     }
                     VStack(alignment: .leading) {
-                        Text("CBHPM")
-                            .font(.headline)
+                        HStack {
+                            Image(systemName: "list.bullet")
+                            Text("CBHPM")
+                                .font(.headline)
+                        }
                         if let procedures = anesthesia.surgery.cbhpmProcedures {
                             CBHPMProceduresList(procedures)
                         } else {
@@ -112,13 +115,16 @@ struct IdentificationView: View {
                             .font(.headline)
                             .fontWeight(.semibold)
                         HStack {
-                            Text("Cirurgião:")
+                            Image(systemName: "facemask")
                             Text("\(anesthesia.surgery.mainSurgeon)")
                         }
                         
                         if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
                             HStack(alignment: .top) {
-                                Text(anesthesia.surgery.auxiliarySurgeons?.count == 1 ? "Auxiliar:" :"Auxiliares:")
+                                if let count = anesthesia.surgery.auxiliarySurgeons?.count, count > 0 {
+                                    Image(systemName: count == 1 ? "person.2" : "person.3")
+                                    // Text(count == 1 ? "Auxiliar:" :"Auxiliares:")
+                                }
                                 Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
                             }
                         }
