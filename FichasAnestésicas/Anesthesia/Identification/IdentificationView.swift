@@ -68,7 +68,7 @@ struct IdentificationView: View {
                             }
                         }
                         HStack {
-                            Text("Data: \(anesthesia.surgery.date, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                            
                             Text("Peso: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
                         }
                         
@@ -109,8 +109,6 @@ struct IdentificationView: View {
                                 Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
                             }
                         }
-                        Text("Início Cirurgia: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-                        Text("Fim da Cirurgia: \(anesthesia.surgery.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
                     }
                     
 
@@ -138,16 +136,52 @@ struct IdentificationView: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
-                        Text("Início da Anestesia: \(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-                        Text("Fim da Anestesia: \(anesthesia.end?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
                         Text({
                             if let shared = anesthesia.shared {
                                 let list = shared.techniques
                                 return "Técnicas: " + (list.isEmpty ? "-" : list.map(\.displayName).joined(separator: ", "))
                             } else {
-                                return "Técnicas: -"
+                                return ""
                             }
                         }())
+                    }
+                }
+                VStack(alignment: .leading,) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("Data")
+                                    .font(.title3)
+                                    .fontWeight(.semibold)
+                                
+                                Text("\(anesthesia.surgery.date, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                                    .font(.title3)
+                            }
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text("Início")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                            Text("Anestesia: \(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                            Text("Cirurgia: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                            
+                        }
+                        if let anesthesiaEnd = anesthesia.end, let surgeryEnd = surgery.end {
+                            VStack(alignment: .leading) {
+                                Text("Fim")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                Text("Cirurgia: \(surgeryEnd.formatted(date: .abbreviated, time: .shortened))")
+                                Text("Anestesia: \(anesthesiaEnd.formatted(date: .abbreviated, time: .shortened))")
+                            }
+                        } else {
+                            VStack(alignment: .leading) {
+                                Text("Edite a anestesia para cadastrar horários de finalização.")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                            }
+                        }
                     }
                 }
             }
