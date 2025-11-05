@@ -194,3 +194,24 @@ public extension ASAClassification {
 }
 
 
+func isSameDay(surgeryDate: Date, anesthesiaStart: Date?, anesthesiaEnd: Date?, surgeryStart: Date?, surgeryEnd: Date?) -> Bool {
+    let calendar = Calendar.current
+    
+    // Extrai os componentes de dia/mês/ano da data de referência (surgeryDate)
+    let referenceDateComponents = calendar.dateComponents([.year, .month, .day], from: surgeryDate)
+    
+    // Array com todas as datas opcionais a serem verificadas
+    let datesToCheck: [Date?] = [anesthesiaStart, anesthesiaEnd, surgeryStart, surgeryEnd]
+    
+    // Verifica se todas as datas não-nulas são no mesmo dia que surgeryDate
+    for date in datesToCheck {
+        if let date = date {
+            let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+            if dateComponents != referenceDateComponents {
+                return false
+            }
+        }
+    }
+    
+    return true
+}

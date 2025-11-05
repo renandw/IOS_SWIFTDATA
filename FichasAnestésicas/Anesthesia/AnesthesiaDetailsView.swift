@@ -45,11 +45,12 @@ struct AnesthesiaDetailsView: View {
     @State private var customTitleBarButton: AnyView? = nil
 
     var body: some View {
-        VStack(alignment: .leading) {
-            headerSection
-            contentSectionView.padding(.horizontal)
-        }
-        .navigationTitle("Detalhes da Anestesia")
+        contentSectionView
+            .safeAreaInset(edge: .top) {
+                headerSection
+                    .glassEffect(in: .rect(cornerRadius: 16.0))
+            }
+            .navigationTitle("Detalhes da Anestesia")
         .onPreferenceChange(CustomTopBarButtonPreferenceKey.self) { pref in
             customTitleBarButton = pref?.view
         }
@@ -66,6 +67,7 @@ struct AnesthesiaDetailsView: View {
         }
         .pickerStyle(.segmented)
         .tint(.indigo)
+        .padding(.top, 8)
         .padding(.horizontal, 6)
     }
     
@@ -93,8 +95,8 @@ struct AnesthesiaDetailsView: View {
                 pickerSection
                 titleSection
             }
-            .padding(.top, 4)
-            //.padding(.bottom, 8)
+            .padding(.top, 8)
+            .padding(.bottom, 8)
         }
     
     private var contentSectionView: some View {
@@ -105,6 +107,7 @@ struct AnesthesiaDetailsView: View {
             section: activeSection
 
         )
+        .padding(.horizontal)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .id(activeSection)
         
@@ -156,3 +159,4 @@ struct SectionContent: View {
 }
 
 //to-do : se anesthesia == nil -> navegar para dashboardview -> proteger subviews em sectioncontent
+

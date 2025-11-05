@@ -38,16 +38,18 @@ public struct CBHPMProceduresList<Procedure: CBHPMProcedureDisplayable>: View {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack {
                             Text("Código: \(p.code)")
-                            Spacer()
-                            Text("Porte: \(p.portString)")
                         }
                         .font(.subheadline)
                         .fontWeight(.semibold)
-
-                        Text(p.procedure)
-                            .font(.subheadline)
-                            .fixedSize(horizontal: false, vertical: true) // permite quebrar em múltiplas linhas
-                            .lineLimit(nil)
+                        HStack {
+                            Text(p.procedure)
+                                .font(.subheadline)
+                                .fixedSize(horizontal: false, vertical: true) // permite quebrar em múltiplas linhas
+                                .lineLimit(nil)
+                            Text("Porte Anestésico: \(p.portString)")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                        }
                     }
                 }
             }

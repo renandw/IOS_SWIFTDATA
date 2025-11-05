@@ -66,8 +66,8 @@ struct IdentificationView: View {
                         }
                         HStack {
                             Text("Procedimento")
-                            Text("\(anesthesia.surgery.proposedProcedure)")
                                 .fontWeight(.semibold)
+                            Text("\(anesthesia.surgery.proposedProcedure)")
                         }
                     }
                     VStack(alignment: .leading) {
@@ -90,22 +90,22 @@ struct IdentificationView: View {
                             
                         }
                     }
-//                    VStack(alignment: .leading) {
-//                        Text("Equipe Cirúrgica:")
-//                            .font(.headline)
-//                            .fontWeight(.semibold)
-//                        HStack {
-//                            Text("Cirurgião:")
-//                            Text("\(anesthesia.surgery.mainSurgeon)")
-//                        }
-//                        
-//                        if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
-//                            HStack {
-//                                Text(anesthesia.surgery.auxiliarySurgeons?.count == 1 ? "Auxiliar:" :"Auxiliares:")
-//                                Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
-//                            }
-//                        }
-//                    }
+                    VStack(alignment: .leading) {
+                        Text("Equipe Cirúrgica:")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        HStack {
+                            Text("Cirurgião:")
+                            Text("\(anesthesia.surgery.mainSurgeon)")
+                        }
+                        
+                        if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
+                            HStack {
+                                Text(anesthesia.surgery.auxiliarySurgeons?.count == 1 ? "Auxiliar:" :"Auxiliares:")
+                                Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
+                            }
+                        }
+                    }
                     
 
                 }
@@ -142,45 +142,84 @@ struct IdentificationView: View {
                         }())
                     }
                 }
-                VStack(alignment: .leading,) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Text("Data")
-                                    .font(.title3)
-                                    .fontWeight(.semibold)
+                
+                
+                    if isSameDay(surgeryDate: anesthesia.surgery.date, anesthesiaStart: anesthesia.start, anesthesiaEnd: anesthesia.end, surgeryStart: anesthesia.surgery.start, surgeryEnd: anesthesia.surgery.end) {
+                        VStack(alignment: .leading,) {
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Text("Data")
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+                                    
+                                    Text("\(anesthesia.surgery.date.formatted(date: .long, time: .omitted))")
+                                        .font(.title3)
+                                }
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text("Início")
+                                            .font(.headline)
+                                            .fontWeight(.semibold)
+                                        Text("Anestesia: \(anesthesia.start?.formatted(date: .omitted, time: .shortened) ?? "-" )")
+                                        Text("Cirurgia: \(anesthesia.surgery.start?.formatted(date: .omitted, time: .shortened) ?? "-" )")
+                                        
+                                    }
+                                    if let anesthesiaEnd = anesthesia.end, let surgeryEnd = surgery.end {
+                                        VStack(alignment: .leading) {
+                                            Text("Fim")
+                                                .font(.headline)
+                                                .fontWeight(.semibold)
+                                            Text("Cirurgia: \(surgeryEnd.formatted(date: .omitted, time: .shortened))")
+                                            Text("Anestesia: \(anesthesiaEnd.formatted(date: .omitted, time: .shortened))")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        VStack(alignment: .leading,) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text("Data")
+                                            .font(.title3)
+                                            .fontWeight(.semibold)
+                                        
+                                        Text("\(anesthesia.surgery.date.formatted(date: .long, time: .omitted))")
+                                            .font(.title3)
+                                    }
+                                }
                                 
-                                Text("\(anesthesia.surgery.date.formatted(date: .long, time: .omitted))")
-                                    .font(.title3)
-                            }
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text("Início")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                            Text("Anestesia: \(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-                            Text("Cirurgia: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
-                            
-                        }
-                        if let anesthesiaEnd = anesthesia.end, let surgeryEnd = surgery.end {
-                            VStack(alignment: .leading) {
-                                Text("Fim")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                                Text("Cirurgia: \(surgeryEnd.formatted(date: .abbreviated, time: .shortened))")
-                                Text("Anestesia: \(anesthesiaEnd.formatted(date: .abbreviated, time: .shortened))")
-                            }
-                        } else {
-                            VStack(alignment: .leading) {
-                                Text("Edite a anestesia para cadastrar horários de finalização.")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                    .fontWeight(.semibold)
+                                VStack(alignment: .leading) {
+                                    Text("Início")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                    Text("Anestesia: \(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                                    Text("Cirurgia: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
+                                    
+                                }
+                                if let anesthesiaEnd = anesthesia.end, let surgeryEnd = surgery.end {
+                                    VStack(alignment: .leading) {
+                                        Text("Fim")
+                                            .font(.headline)
+                                            .fontWeight(.semibold)
+                                        Text("Cirurgia: \(surgeryEnd.formatted(date: .abbreviated, time: .shortened))")
+                                        Text("Anestesia: \(anesthesiaEnd.formatted(date: .abbreviated, time: .shortened))")
+                                    }
+                                } else {
+                                    VStack(alignment: .leading) {
+                                        Text("Edite a anestesia para cadastrar horários de finalização.")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                            .fontWeight(.semibold)
+                                    }
+                                }
                             }
                         }
                     }
-                }
+                    
+                
+                
             }
             .sheet(isPresented: $showingAnesthesiaForm) {
                 if let currentUser = session.currentUser {
