@@ -39,6 +39,7 @@ struct IdentificationView: View {
                         VStack(alignment: .leading) {
                             HStack {
                                 Text("\(anesthesia.surgery.patient.name),")
+                                    .fontWeight(.bold)
                                 Text("\(ageContext.ageString(from: anesthesia.surgery.patient.birthDate)),")
                                 Text(patient.sex.sexStringDescription)
                             }
@@ -201,6 +202,7 @@ struct IdentificationView: View {
                                         Text("Cirurgia: \(anesthesia.surgery.start?.formatted(date: .omitted, time: .shortened) ?? "-" )")
                                         
                                     }
+                                    Spacer()
                                     if let anesthesiaEnd = anesthesia.end, let surgeryEnd = surgery.end {
                                         VStack(alignment: .leading) {
                                             Text("Fim")
