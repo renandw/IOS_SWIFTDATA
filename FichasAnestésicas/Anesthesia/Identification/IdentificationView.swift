@@ -37,8 +37,18 @@ struct IdentificationView: View {
                     }
                     HStack {
                         Text("Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                        Text("Peso: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
                         
                     }
+                    HStack {
+                        Text("Convênio:")
+                        Text("\(anesthesia.surgery.insuranceName)")
+                        if anesthesia.surgery.insuranceName.lowercased() != "particular" {
+                            Text("-")
+                            Text("\(anesthesia.surgery.insuranceNumber)")
+                        }
+                    }
+
                     if anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true) != "000 0000 0000 0000"{
                         Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
                     }
@@ -59,28 +69,12 @@ struct IdentificationView: View {
                             Text("\(anesthesia.surgery.proposedProcedure)")
                                 .fontWeight(.semibold)
                         }
-                        HStack {
-                            Text("Convênio:")
-                            Text("\(anesthesia.surgery.insuranceName)")
-                            if anesthesia.surgery.insuranceName.lowercased() != "particular" {
-                                Text("-")
-                                Text("\(anesthesia.surgery.insuranceNumber)")
-                            }
-                        }
-                        HStack {
-                            
-                            Text("Peso: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
-                        }
-                        
                     }
                     VStack(alignment: .leading) {
                         Text("CBHPM")
                             .font(.headline)
-                        if let procedures = anesthesia.surgery.cbhpmProcedures, !procedures.isEmpty {
-                            ForEach(procedures) { p in
-                                Text("\(p.code) - \(p.procedure) - Porte: \(p.port)")
-                                    .font(.subheadline)
-                            }
+                        if let procedures = anesthesia.surgery.cbhpmProcedures {
+                            CBHPMProceduresList(procedures)
                         } else {
                             Text("Nenhum procedimento selecionado")
                                 .foregroundStyle(.secondary)
@@ -90,26 +84,28 @@ struct IdentificationView: View {
                     VStack(alignment: .leading) {
                         HStack {
                             Text("Hospital:")
+                                .font(.headline)
+                                .fontWeight(.semibold)
                             Text("\(anesthesia.surgery.hospital)")
                             
                         }
                     }
-                    VStack(alignment: .leading) {
-                        Text("Equipe Cirúrgica:")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        HStack {
-                            Text("Cirurgião:")
-                            Text("\(anesthesia.surgery.mainSurgeon)")
-                        }
-                        
-                        if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
-                            HStack {
-                                Text(anesthesia.surgery.auxiliarySurgeons?.count == 1 ? "Auxiliar:" :"Auxiliares:")
-                                Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
-                            }
-                        }
-                    }
+//                    VStack(alignment: .leading) {
+//                        Text("Equipe Cirúrgica:")
+//                            .font(.headline)
+//                            .fontWeight(.semibold)
+//                        HStack {
+//                            Text("Cirurgião:")
+//                            Text("\(anesthesia.surgery.mainSurgeon)")
+//                        }
+//                        
+//                        if anesthesia.surgery.auxiliarySurgeons?.isEmpty == false {
+//                            HStack {
+//                                Text(anesthesia.surgery.auxiliarySurgeons?.count == 1 ? "Auxiliar:" :"Auxiliares:")
+//                                Text("\(anesthesia.surgery.auxiliarySurgeons?.joined(separator: ", ") ?? "-")")
+//                            }
+//                        }
+//                    }
                     
 
                 }
@@ -154,7 +150,7 @@ struct IdentificationView: View {
                                     .font(.title3)
                                     .fontWeight(.semibold)
                                 
-                                Text("\(anesthesia.surgery.date, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                                Text("\(anesthesia.surgery.date.formatted(date: .long, time: .omitted))")
                                     .font(.title3)
                             }
                         }
@@ -179,6 +175,7 @@ struct IdentificationView: View {
                             VStack(alignment: .leading) {
                                 Text("Edite a anestesia para cadastrar horários de finalização.")
                                     .font(.caption)
+                                    .foregroundStyle(.secondary)
                                     .fontWeight(.semibold)
                             }
                         }

@@ -64,7 +64,7 @@ struct PatientRowView: View {
                         
                         Text("•")
                         
-                        Text(patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits))
+                        Text(patient.birthDate.formatted(date:.numeric, time: .omitted))
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundStyle(.secondary)
