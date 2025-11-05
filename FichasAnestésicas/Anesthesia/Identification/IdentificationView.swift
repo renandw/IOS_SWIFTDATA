@@ -27,43 +27,60 @@ struct IdentificationView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
                 VStack(alignment: .leading) {
-                    Text("Paciente")
-                        .font(.title3)
-                        .fontWeight(.semibold)
                     HStack {
-                        Text("\(anesthesia.surgery.patient.name),")
-                        Text("\(ageContext.ageString(from: anesthesia.surgery.patient.birthDate)),")
-                        Text(patient.sex.sexStringDescription)
+                        Image(systemName: "person.fill")
+                            .foregroundStyle(anesthesia.surgery.patient.sex.sexColor)
+                        Text("Paciente")
+                            .font(.title3)
+                            .fontWeight(.semibold)
                     }
-                    HStack {
-                        Text("Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
-                        Text("Peso: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
-                        
-                    }
-                    HStack {
-                        Text("Convênio:")
-                        Text("\(anesthesia.surgery.insuranceName)")
-                        if anesthesia.surgery.insuranceName.lowercased() != "particular" {
-                            Text("-")
-                            Text("\(anesthesia.surgery.insuranceNumber)")
+                    Divider()
+                    VStack(alignment: .leading) {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("\(anesthesia.surgery.patient.name),")
+                                Text("\(ageContext.ageString(from: anesthesia.surgery.patient.birthDate)),")
+                                Text(patient.sex.sexStringDescription)
+                            }
+                            HStack {
+                                Text("Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
+                                Text("Peso: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
+                                
+                            }
+                            HStack {
+                                Image(systemName: "person.text.rectangle")
+                                Text("\(anesthesia.surgery.insuranceName)")
+                                if anesthesia.surgery.insuranceName.lowercased() != "particular" {
+                                    Text("-")
+                                    Text("\(anesthesia.surgery.insuranceNumber)")
+                                }
+                            }
+                            
+                            if anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true) != "000 0000 0000 0000"{
+                                Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
+                            }
                         }
                     }
-
-                    if anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true) != "000 0000 0000 0000"{
-                        Text("CNS: \(anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))")
-                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 
                 VStack(alignment: .leading, spacing: 6) {
                     VStack(alignment: .leading) {
                         HStack{
+                            Image(systemName: "stethoscope")
+                                .foregroundStyle(.green)
                             Text("Cirurgia")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                             Spacer()
                             anesthesia.surgery.status.badgeView
-                            
                         }
+                    }
+                    Divider()
+                    VStack(alignment: .leading) {
                         HStack {
                             Text("Procedimento")
                                 .fontWeight(.semibold)
@@ -109,8 +126,15 @@ struct IdentificationView: View {
                     
 
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                
                 VStack(alignment: .leading) {
                     HStack {
+                        Image(systemName: "syringe.fill")
+                            .foregroundStyle(.purple)
                         Text("Anestesia")
                             .font(.title3)
                             .fontWeight(.semibold)
@@ -122,6 +146,7 @@ struct IdentificationView: View {
                             status.badgeView
                         }
                     }
+                    Divider()
                     VStack(alignment: .leading) {
                         HStack {
                             Text("Posicionamento:")
@@ -142,19 +167,25 @@ struct IdentificationView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 
                 
                     if isSameDay(surgeryDate: anesthesia.surgery.date, anesthesiaStart: anesthesia.start, anesthesiaEnd: anesthesia.end, surgeryStart: anesthesia.surgery.start, surgeryEnd: anesthesia.surgery.end) {
                         VStack(alignment: .leading,) {
                             VStack(alignment: .leading) {
                                 HStack {
+                                    Image(systemName: "calendar")
                                     Text("Data")
                                         .font(.title3)
                                         .fontWeight(.semibold)
-                                    
+                                    Spacer()
                                     Text("\(anesthesia.surgery.date.formatted(date: .long, time: .omitted))")
                                         .font(.title3)
                                 }
+                                Divider()
                                 HStack {
                                     VStack(alignment: .leading) {
                                         Text("Início")
@@ -176,15 +207,20 @@ struct IdentificationView: View {
                                 }
                             }
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(.thinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     } else {
                         VStack(alignment: .leading,) {
                             VStack(alignment: .leading, spacing: 4) {
                                 VStack(alignment: .leading) {
                                     HStack {
+                                        Image(systemName: "calendar")
                                         Text("Data")
                                             .font(.title3)
                                             .fontWeight(.semibold)
-                                        
+                                        Spacer()
                                         Text("\(anesthesia.surgery.date.formatted(date: .long, time: .omitted))")
                                             .font(.title3)
                                     }
@@ -216,6 +252,10 @@ struct IdentificationView: View {
                                 }
                             }
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(.thinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     }
                     
                 
