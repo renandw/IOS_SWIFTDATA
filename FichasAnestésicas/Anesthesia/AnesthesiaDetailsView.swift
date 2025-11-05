@@ -50,7 +50,7 @@ struct AnesthesiaDetailsView: View {
                 headerSection
                     .background(.ultraThinMaterial)
             }
-            .navigationTitle("Detalhes da Anestesia")
+            .navigationTitle("Ficha da Anestésica")
         .onPreferenceChange(CustomTopBarButtonPreferenceKey.self) { pref in
             customTitleBarButton = pref?.view
         }

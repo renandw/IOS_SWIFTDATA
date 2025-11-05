@@ -1,9 +1,3 @@
-//
-//  IdentificationView.swift
-//  FichasAnestésicas
-//
-//  Created by Renan Wrobel on 03/11/25.
-//
 
 import SwiftUI
 
@@ -46,7 +40,6 @@ struct IdentificationView: View {
                             HStack {
                                 Text("Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
                                 Text("Peso: \(anesthesia.surgery.weight, specifier: "%.1f") Kg")
-                                
                             }
                             HStack {
                                 Image(systemName: "person.text.rectangle")
@@ -130,8 +123,6 @@ struct IdentificationView: View {
                             }
                         }
                     }
-                    
-
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
@@ -178,7 +169,6 @@ struct IdentificationView: View {
                 .padding()
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                
                 
                     if isSameDay(surgeryDate: anesthesia.surgery.date, anesthesiaStart: anesthesia.start, anesthesiaEnd: anesthesia.end, surgeryStart: anesthesia.surgery.start, surgeryEnd: anesthesia.surgery.end) {
                         VStack(alignment: .leading,) {
@@ -265,9 +255,6 @@ struct IdentificationView: View {
                         .background(.thinMaterial)
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     }
-                    
-                
-                
             }
             .sheet(isPresented: $showingAnesthesiaForm) {
                 if let currentUser = session.currentUser {
@@ -312,8 +299,6 @@ struct IdentificationView: View {
                 token: "IdentificationView.topbar.buttons.v1"
             )
         )
-        
-        
     }
     
     private var topBarButtons: some View {
@@ -348,4 +333,3 @@ struct IdentificationView: View {
         }
     }
 }
-
