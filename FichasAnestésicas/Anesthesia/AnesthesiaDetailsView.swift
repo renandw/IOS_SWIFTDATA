@@ -145,7 +145,7 @@ struct SectionContent: View {
         case .apaSection:
             ContentUnavailableView("APA To be implemented", image: "plus")
         case .medicationsSection:
-            ContentUnavailableView("Medication To be implemented", image: "plus")
+            MedicationsView(anesthesia: anesthesia)
         case .vitalSignsSection:
             ContentUnavailableView("VitalSignsTo be implemented", image: "plus")
         case .descriptionSection:

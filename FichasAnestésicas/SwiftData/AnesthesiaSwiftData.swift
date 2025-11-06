@@ -269,28 +269,28 @@ final class MedicationEntry {
     @Attribute(.unique) var medicationId: String
     @Relationship var anesthesia: Anesthesia
 
-    var category: String?
-    var dose: String?
+    var categoryRaw: String
+    var category: MedicationCategory {
+        get { MedicationCategory(rawValue: categoryRaw) ?? .opioide }
+        set { categoryRaw = newValue.rawValue }
+    }
+    var viaRaw: String
+    var via: AdministrationRoute {
+        get { AdministrationRoute(rawValue: viaRaw) ?? .EV }
+        set { viaRaw = newValue.rawValue }
+    }
+    var dose: String
     var name: String
     var timestamp: Date
-    var via: String?
-
-    init(
-        medicationId: String = UUID().uuidString,
-        anesthesia: Anesthesia,
-        category: String? = nil,
-        dose: String? = nil,
-        name: String,
-        timestamp: Date = .init(),
-        via: String? = nil
-    ) {
+    
+    init(medicationId: String, anesthesia: Anesthesia, categoryRaw: String, viaRaw: String, dose: String, name: String, timestamp: Date) {
         self.medicationId = medicationId
         self.anesthesia = anesthesia
-        self.category = category
+        self.categoryRaw = categoryRaw
+        self.viaRaw = viaRaw
         self.dose = dose
         self.name = name
         self.timestamp = timestamp
-        self.via = via
     }
 }
 

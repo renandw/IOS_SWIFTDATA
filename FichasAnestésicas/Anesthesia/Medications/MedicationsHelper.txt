@@ -1,0 +1,607 @@
+//
+//  MedicationsHelper.swift
+//  FichasAnestésicas
+//
+//  Created by Renan Wrobel on 05/11/25.
+//
+import SwiftUI
+
+public enum MedicationCategory: String, CaseIterable, Codable {
+    case anestesicoInalatório = "Anestésico Inalatório"
+    case hipnotico = "Hipnótico"
+    case benzodiazepínico = "Benzodiazepínico"
+    case alfa2Agonista = "Alfa-2 Agonista"
+    case neuroléptico = "Neuroléptico"
+    case bloqueadorNeuromuscular = "Bloqueador Neuromuscular"
+    case vasopressor = "Vasopressor"
+    case inotrópico = "Inotrópico"
+    case hipotensor = "Hipotensor"
+    case opioide = "Opioide"
+    case analgésico = "Analgésico"
+    case aine = "AINE"
+    case antiemético = "Antiemético"
+    case corticoide = "Corticoide"
+    case antibiótico = "Antibiótico"
+    case anticonvulsivante = "Anticonvulsivante"
+    case antiarritmico = "Antiarritmico"
+    case reversor = "Reversor"
+    case betabloqueador = "Betabloqueador"
+    case beta2Agonista = "Beta-2 Agonista"
+    case hidroeletrolítico = "Hidroeletrolítico"
+    case antialérgico = "Antialérgico"
+    case cristalóide = "Cristalóide"
+    case hemoderivados = "Hemoderivados"
+    case colinérgico = "Colinérgico"
+    case anticolinérgico = "Anticolinérgico"
+    case anestésicoLocal = "Anestésico Local"
+    case gasFresco = "Gases Frescos"
+    case hormonal = "Hormonal"
+    
+    var label: String {
+        return self.rawValue
+    }
+    
+    var medicationColor: Color {
+        switch self {
+        case .hipnotico:
+            return Color(.systemPurple)
+        case .opioide:
+            return Color(.systemPurple)
+        case .bloqueadorNeuromuscular:
+            return Color(.systemBlue)
+        case .aine:
+            return Color(.systemYellow)
+        case .anestésicoLocal:
+            return Color(.systemYellow)
+        case .antiemético:
+            return Color(.systemGreen)
+        case .corticoide:
+            return Color(.systemOrange)
+        case .antibiótico:
+            return Color(.systemRed)
+        case .vasopressor:
+            return Color(.systemOrange)
+        case .cristalóide:
+            return Color(.systemMint)
+        case .analgésico:
+            return Color(.systemCyan)
+        case .gasFresco:
+            return Color(.systemBrown)
+        case .anestesicoInalatório:
+            return Color(.systemBrown)
+        case .benzodiazepínico:
+            return Color(.systemIndigo)
+        case .alfa2Agonista:
+            return Color(.systemTeal)
+        case .neuroléptico:
+            return Color(.systemPink)
+        case .inotrópico:
+            return Color(.systemOrange)
+        case .hipotensor:
+            return Color(.systemBlue)
+        case .anticonvulsivante:
+            return Color(.systemRed)
+        case .antiarritmico:
+            return Color(.systemRed)
+        case .reversor:
+            return Color(.systemGreen)
+        case .betabloqueador:
+            return Color(.systemBlue)
+        case .beta2Agonista:
+            return Color(.systemCyan)
+        case .hidroeletrolítico:
+            return Color(.systemMint)
+        case .antialérgico:
+            return Color(.systemPink)
+        case .hemoderivados:
+            return Color(.systemRed)
+        case .colinérgico:
+            return Color(.systemGreen)
+        case .anticolinérgico:
+            return Color(.systemOrange)
+        case .hormonal:
+            return Color(.systemPurple)
+        }
+    }
+}
+
+public enum AdministrationRoute: String, CaseIterable, Codable {
+    case EV, IM, IT, PD, PN, SC, SL, IN, TOP, VO, VR
+
+    var label: String {
+        switch self {
+        case .EV:  return "Endovenoso"
+        case .IM:  return "Intramuscular"
+        case .IT:  return "Intratecal"
+        case .PD:  return "Peridural"
+        case .PN:  return "Perineural"
+        case .SC:  return "Subcutâneo"
+        case .SL:  return "Sublingual"
+        case .IN:  return "Intranasal"
+        case .TOP: return "Tópico"
+        case .VO:  return "Via Oral"
+        case .VR:  return "Via Respiratória"
+        }
+    }
+}
+
+struct MedicationData: Identifiable, Codable, Equatable {
+    let id = UUID()
+    let name: String
+    let category: MedicationCategory
+    
+    enum CodingKeys: String, CodingKey {
+        case name, category
+    }
+}
+
+struct MedicationPreset: Identifiable, Equatable {
+    let id = UUID()
+    let name: String
+    let medications: [MedicationEntry]
+}
+
+struct ViaAdministracao: Identifiable, Codable, Equatable {
+    let id = UUID()
+    let code: String
+    let name: String
+    
+    enum CodingKeys: String, CodingKey {
+        case code, name
+    }
+}
+
+
+extension MedicationEntry {
+    static func == (lhs: MedicationEntry, rhs: MedicationEntry) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        lhs.dose == rhs.dose &&
+        lhs.via == rhs.via &&
+        lhs.category == rhs.category
+    }
+}
+
+class MedicationsHelper {
+    
+    // MARK: - Função auxiliar para normalização sem diacríticos, removendo pontuação e normalizando espaços
+    private static func normalizeString(_ string: String) -> String {
+        var s = string
+            .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+            .lowercased()
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let allowed = CharacterSet.alphanumerics.union(.whitespaces)
+        s = String(s.unicodeScalars.filter { allowed.contains($0) })
+        // 3) reduzir múltiplos espaços para um só
+        let parts = s.split { $0.isWhitespace }
+        s = parts.joined(separator: " ")
+        return s
+    }
+    
+    static let viasAdministracao: [ViaAdministracao] = [
+            ViaAdministracao(code: "EV", name: "Endovenoso"),
+            ViaAdministracao(code: "IM", name: "Intramuscular"),
+            ViaAdministracao(code: "IT", name: "Intratecal"),
+            ViaAdministracao(code: "PD", name: "Peridural"),
+            ViaAdministracao(code: "PN", name: "Perineural"),
+            ViaAdministracao(code: "SC", name: "Subcutâneo"),
+            ViaAdministracao(code: "SL", name: "Sublingual"),
+            ViaAdministracao(code: "IN", name: "Intranasal"),
+            ViaAdministracao(code: "TOP", name: "Tópico"),
+            ViaAdministracao(code: "VO", name: "Via Oral"),
+            ViaAdministracao(code: "VR", name: "Via Respiratória")
+        ]
+    
+    // MARK: - Doses Baseadas no Peso
+    static func getWeightBasedDose(medication: String, weight: Double) -> String {
+        let normalizedMedication = normalizeString(medication)
+        
+        switch normalizedMedication {
+        case "propofol":
+            return "\(Int(round(weight * 3)))mg"
+        case "fentanil":
+            return "\(Int(round(weight * 3)))mcg"
+        case "rocuronio":
+            return "\(Int(round(weight * 0.5)))mg"
+        case "morfina":
+            return "\(Int(round(weight * 0.1)))mg"
+        case "cetamina":
+            return "\(Int(round(weight * 1)))mg"
+        case "midazolam":
+            return "\(Int(round(weight * 0.15)))mg"
+        case "succinilcolina":
+            return "\(Int(round(weight * 1)))mg"
+        case "dipirona":
+            return "\(Int(round(weight * 50)))mg"
+        case "cetoprofeno":
+            return "\(Int(round(weight * 1)))mg"
+        case "dimenidrinato":
+            return "30mg"
+        case "metoclopramida":
+            return "\(Int(round(weight * 0.15)))mg"
+        case "ondansetrona":
+            return "\(Int(round(weight * 0.1)))mg"
+        case "dexametasona":
+            return "\(Int(round(weight * 0.1)))mg"
+        case "dexmedetomidina":
+            return "\(Int(weight * 1))mcg"
+        case "diazepam":
+            return "\(Int(round(weight * 0.1)))mg"
+        case "haloperidol":
+            return "2.5mg"
+        case "cisatracurio":
+            return "\(Int(round(weight * 0.15)))mg"
+        case "paracetamol":
+            return "\(Int(round(weight * 15)))mg"
+        case "atracurio":
+            return "\(Int(round(weight * 0.5)))mg"
+        case "adrenalina":
+            return String(format: "%.2f", weight * 0.01) + "mg"
+        case "tramadol":
+            return "\(Int(round(weight * 1.5)))mg"
+        case "tenoxicam":
+            return "20mg"
+        case "escopolamina":
+            return "0.5mg"
+        case "bromoprida":
+            return "\(Int(min(3000, weight * 0.5)))mg"
+        case "cefazolina":
+            return "\(Int(min(3000, weight * 30)))mg"
+        case "cefalotina":
+            return "\(Int(min(3000, weight * 50)))mg"
+        case "cefuroxima":
+            return "\(Int(min(1500, weight * 30)))mg"
+        case "ceftriaxona":
+            return "\(Int(min(2000, weight * 50)))mg"
+        case "clindamicina":
+            return "\(Int(min(900, weight * 10)))mg"
+        case "metronidazol":
+            return "\(Int(min(500, weight * 30)))mg"
+        case "gentamicina":
+            return "\(Int(round(weight * 5)))mg"
+        case "ciprofloxacino":
+            return "\(Int(round(weight * 6)))mg"
+        case "ampicilina":
+            return "\(Int(round(weight * 50)))mg"
+        case "fenitoina":
+            return "\(Int(round(weight * 15)))mg"
+        case "clonidina":
+            return "\(Int(round(weight * 2)))mcg"
+        case "naloxona":
+            return "\(Int(round(weight * 0.01)))mg"
+        case "flumazenil":
+            return String(format: "%.2f", weight * 0.01) + "mg"
+        case "prometazina":
+            return "\(Int(min(50, weight * 0.5)))mg"
+        case "sulfato de magnesio":
+            return "\(Int(round(weight * 30)))mg"
+        case "hidrocortisona":
+            return "\(Int(round(weight * 2)))mg"
+        case "lidocaina":
+            return "\(Int(round(weight * 2)))mg"
+        case "atropina":
+            return String(format: "%.2f", weight * 0.01) + "mg"
+        default:
+            return "Dose não definida"
+        }
+    }
+    
+    // MARK: - Via Sugerida
+    static func getSuggestedVia(for medicationName: String) -> String {
+        let name = normalizeString(medicationName)
+        
+        // Anestésicos endovenosos
+        if name.contains("propofol") || name.contains("etomidato") || name.contains("cetamina") {
+            return "EV"
+        }
+        
+        // Benzodiazepínicos - geralmente EV em anestesia
+        if name.contains("midazolam") || name.contains("diazepam") {
+            return "EV"
+        }
+        
+        // Opioides - contexto determina via
+        if name.contains("fentanil") || name.contains("remifentanil") || name.contains("sufentanil") {
+            return "EV"
+        }
+        if name.contains("morfina") {
+            return "EV" // Padrão EV, mas pode ser IT
+        }
+        
+        // Bloqueadores neuromusculares - sempre EV
+        if name.contains("rocuronio") || name.contains("atracurio") || name.contains("vecuronio") ||
+           name.contains("cisatracurio") || name.contains("pancuronio") || name.contains("succinilcolina") {
+            return "EV"
+        }
+        
+        // Vasopressores/Inotrópicos - sempre EV
+        if name.contains("noradrenalina") || name.contains("adrenalina") || name.contains("fenilefrina") ||
+           name.contains("efedrina") || name.contains("metaraminol") || name.contains("dopamina") || name.contains("dobutamina") ||
+           name.contains("vasopressina") || name.contains("nitroprusseto") || name.contains("nitroglicerina") {
+            return "EV"
+        }
+        
+        // Anestésicos locais - dependem do contexto
+        if name.contains("pesada") || name.contains("isobarica") {
+            if name.contains("sem vasoconstritor") {
+                return "IT" // Sem vaso geralmente é para neuroeixo
+            }
+            return "PN" // Com vaso geralmente é para bloqueios
+        }
+        if name.contains("lidocaína") {
+            if name.contains("adrenalina") {
+                return "PN" // Com adrenalina geralmente bloqueios/infiltração
+            }
+            return "EV" // Lidocaína sem adrenalina pode ser EV
+        }
+        
+        // Antieméticos - geralmente EV
+        if name.contains("ondansetrona") || name.contains("metoclopramida") || name.contains("droperidol") ||
+           name.contains("dimenidrinato") || name.contains("bromoprida") {
+            return "EV"
+        }
+        
+        // Corticoides - geralmente EV
+        if name.contains("dexametasona") {
+            return "EV"
+        }
+        
+        // Analgésicos não-opioides
+        if name.contains("dipirona") || name.contains("paracetamol") {
+            return "EV"
+        }
+        if name.contains("cetorolaco") || name.contains("cetoprofeno") || name.contains("tenoxicam") ||
+           name.contains("dexketoprofeno") {
+            return "EV"
+        }
+        
+        // Antibióticos - geralmente EV
+        if name.contains("cefazolina") || name.contains("cefuroxima") || name.contains("ceftriaxona") ||
+           name.contains("clindamicina") || name.contains("vancomicina") || name.contains("metronidazol") ||
+           name.contains("gentamicina") || name.contains("ciprofloxacino") {
+            return "EV"
+        }
+        
+        // Reversores - sempre EV
+        if name.contains("neostigmina") || name.contains("sugammadex") || name.contains("atropina") {
+            return "EV"
+        }
+        
+        // Alfa-2 agonistas
+        if name.contains("dexmedetomidina") {
+            return "EV"
+        }
+        
+        // Anestésicos inalatórios
+        if name.contains("sevoflurano") || name.contains("desflurano") || name.contains("oxigenio") ||
+           name.contains("ar comprimido") || name.contains("isoflurano") {
+            return "VR"
+        }
+        
+        // Padrão para medicações não categorizadas
+        return "EV"
+    }
+    
+    // MARK: - Presets de Medicações
+    static let medicationPresets: [MedicationPreset] = [
+        MedicationPreset(
+            name: "Anestesia Geral",
+            medications: [
+                MedicationEntry(name: "Propofol", dose: "200mg", viaRaw: "EV", category: .hipnotico),
+                MedicationEntry(name: "Fentanil", dose: "250mcg", via: "EV", category: .opioide),
+                Medication(name: "Rocurônio", dose: "50mg", via: "EV", category: .bloqueadorNeuromuscular),
+                Medication(name: "Cefazolina", dose: "2g", via: "EV", category: .antibiótico),
+                Medication(name: "Cloreto de Sódio 0,9%", dose: "100mL", via: "EV", category: .cristalóide),
+                Medication(name: "Oxigênio", dose: "1L/min", via: "VR", category: .gasFresco),
+                Medication(name: "Ar Comprimido", dose: "1L/min", via: "VR", category: .gasFresco),
+                Medication(name: "Sevoflurano", dose: "10mL", via: "VR", category: .anestesicoInalatório)
+            ]
+        ),
+        
+        MedicationPreset(
+            name: "Profilaxia Dor e NVPO",
+            medications: [
+                Medication(name: "Dipirona", dose: "2g", via: "EV", category: .analgésico),
+                Medication(name: "Metoclopramida", dose: "10mg", via: "EV", category: .antiemético),
+                Medication(name: "Ondansetrona", dose: "8mg", via: "EV", category: .antiemético),
+                Medication(name: "Dexametasona", dose: "10mg", via: "EV", category: .corticoide),
+                Medication(name: "Dimenidrinato", dose: "30mg", via: "EV", category: .antiemético),
+                Medication(name: "Cetoprofeno", dose: "100mg", via: "EV", category: .aine)
+            ]
+        ),
+        
+        MedicationPreset(
+            name: "Raquianestesia - Pesada",
+            medications: [
+                Medication(name: "Bupivacaína Pesada", dose: "15mg", via: "IT", category: .anestésicoLocal),
+                Medication(name: "Morfina", dose: "80mcg", via: "IT", category: .opioide),
+                Medication(name: "Cefazolina", dose: "2g", via: "EV", category: .antibiótico),
+                Medication(name: "Cloreto de Sódio 0,9%", dose: "100mL", via: "EV", category: .cristalóide),
+                Medication(name: "Oxigênio", dose: "3L/min", via: "VR", category: .gasFresco)
+            ]
+        ),
+        
+        MedicationPreset(
+            name: "Raquianestesia - Isobárica",
+            medications: [
+                Medication(name: "Bupivacaína Isobárica", dose: "15mg", via: "IT", category: .anestésicoLocal),
+                Medication(name: "Morfina", dose: "80mcg", via: "IT", category: .opioide),
+                Medication(name: "Cefazolina", dose: "2g", via: "EV", category: .antibiótico),
+                Medication(name: "Cloreto de Sódio 0,9%", dose: "100mL", via: "EV", category: .cristalóide),
+                Medication(name: "Oxigênio", dose: "3L/min", via: "VR", category: .gasFresco)
+            ]
+        ),
+        
+        MedicationPreset(
+            name: "Anestesia Peridural",
+            medications: [
+                Medication(name: "Levobupivacaína", dose: "20ml", via: "PD", category: .anestésicoLocal),
+                Medication(name: "Fentanil", dose: "100mcg", via: "PD", category: .opioide),
+                Medication(name: "Morfina", dose: "2mg", via: "PD", category: .opioide),
+                Medication(name: "Cefazolina", dose: "2g", via: "EV", category: .antibiótico),
+                Medication(name: "Cloreto de Sódio 0,9%", dose: "100mL", via: "EV", category: .cristalóide),
+                Medication(name: "Oxigênio", dose: "3L/min", via: "VR", category: .gasFresco)
+            ]
+        ),
+        
+        MedicationPreset(
+            name: "Sedação Ambulatorial",
+            medications: [
+                Medication(name: "Propofol", dose: "70mg", via: "EV", category: .hipnotico),
+                Medication(name: "Fentanil", dose: "50mcg", via: "EV", category: .opioide),
+                Medication(name: "Cloreto de Sódio 0,9%", dose: "100mL", via: "EV", category: .cristalóide),
+                Medication(name: "Oxigênio", dose: "3L/min", via: "VR", category: .gasFresco)
+            ]
+        ),
+        
+        MedicationPreset(
+            name: "Bloqueio Periférico",
+            medications: [
+                Medication(name: "Levobupivacaína", dose: "50mg", via: "PN", category: .anestésicoLocal),
+                Medication(name: "Lidocaína", dose: "100mg", via: "PN", category: .anestésicoLocal),
+                Medication(name: "Cefazolina", dose: "2g", via: "EV", category: .antibiótico),
+                Medication(name: "Cloreto de Sódio 0,9%", dose: "100mL", via: "EV", category: .cristalóide),
+                Medication(name: "Oxigênio", dose: "3L/min", via: "VR", category: .gasFresco)
+            ]
+        ),
+        
+        MedicationPreset(
+            name: "Indução Rápida (RSI)",
+            medications: [
+                Medication(name: "Etomidato", dose: "20mg", via: "EV", category: .hipnotico),
+                Medication(name: "Succinilcolina", dose: "100mg", via: "EV", category: .bloqueadorNeuromuscular),
+                Medication(name: "Fentanil", dose: "100mcg", via: "EV", category: .opioide),
+                Medication(name: "Lidocaína", dose: "100mg", via: "EV", category: .anestésicoLocal),
+                Medication(name: "Cefazolina", dose: "2g", via: "EV", category: .antibiótico),
+                Medication(name: "Cloreto de Sódio 0,9%", dose: "100mL", via: "EV", category: .cristalóide),
+                Medication(name: "Oxigênio", dose: "1L/min", via: "VR", category: .gasFresco)
+            ]
+        )
+    ]
+    
+    // MARK: - Lista de Todas as Medicações
+    static let allMedications: [MedicationData] = [
+        // Anestésicos Inalatórios
+        MedicationData(name: "Sevoflurano", category: .anestesicoInalatório),
+        MedicationData(name: "Desflurano", category: .anestesicoInalatório),
+        MedicationData(name: "Isoflurano", category: .anestesicoInalatório),
+        MedicationData(name: "Óxido nitroso", category: .anestesicoInalatório),
+        MedicationData(name: "Oxigênio", category: .gasFresco),
+        MedicationData(name: "Ar Comprimido", category: .gasFresco),
+        
+        // Anestésicos Endovenosos
+        MedicationData(name: "Propofol", category: .hipnotico),
+        MedicationData(name: "Etomidato", category: .hipnotico),
+        MedicationData(name: "Cetamina", category: .hipnotico),
+        MedicationData(name: "Midazolam", category: .benzodiazepínico),
+        MedicationData(name: "Dexmedetomidina", category: .alfa2Agonista),
+        MedicationData(name: "Diazepam", category: .benzodiazepínico),
+        MedicationData(name: "Haloperidol", category: .neuroléptico),
+        
+        // Bloqueadores Neuromusculares
+        MedicationData(name: "Succinilcolina", category: .bloqueadorNeuromuscular),
+        MedicationData(name: "Rocurônio", category: .bloqueadorNeuromuscular),
+        MedicationData(name: "Vecurônio", category: .bloqueadorNeuromuscular),
+        MedicationData(name: "Cisatracúrio", category: .bloqueadorNeuromuscular),
+        MedicationData(name: "Atracúrio", category: .bloqueadorNeuromuscular),
+        MedicationData(name: "Pancurônio", category: .bloqueadorNeuromuscular),
+        
+        // Vasopressores / Hipotensores
+        MedicationData(name: "Noradrenalina", category: .vasopressor),
+        MedicationData(name: "Fenilefrina", category: .vasopressor),
+        MedicationData(name: "Efedrina", category: .vasopressor),
+        MedicationData(name: "Adrenalina", category: .vasopressor),
+        MedicationData(name: "Dopamina", category: .vasopressor),
+        MedicationData(name: "Dobutamina", category: .inotrópico),
+        MedicationData(name: "Vasopressina", category: .vasopressor),
+        MedicationData(name: "Nitroprusseto de Sódio", category: .hipotensor),
+        MedicationData(name: "Nitroglicerina", category: .hipotensor),
+        MedicationData(name: "Metaraminol", category: .vasopressor),
+        
+        // Analgésicos Opioides
+        MedicationData(name: "Fentanil", category: .opioide),
+        MedicationData(name: "Remifentanil", category: .opioide),
+        MedicationData(name: "Sufentanil", category: .opioide),
+        MedicationData(name: "Morfina", category: .opioide),
+        MedicationData(name: "Tramadol", category: .opioide),
+        
+        // Analgésicos Não-opioides
+        MedicationData(name: "Dipirona", category: .analgésico),
+        MedicationData(name: "Paracetamol", category: .analgésico),
+        MedicationData(name: "Cetorolaco", category: .aine),
+        MedicationData(name: "Dexketoprofeno", category: .aine),
+        MedicationData(name: "Cetoprofeno", category: .aine),
+        MedicationData(name: "Tenoxicam", category: .aine),
+        
+        // Antieméticos
+        MedicationData(name: "Ondansetrona", category: .antiemético),
+        MedicationData(name: "Dexametasona", category: .corticoide),
+        MedicationData(name: "Droperidol", category: .antiemético),
+        MedicationData(name: "Metoclopramida", category: .antiemético),
+        MedicationData(name: "Dimenidrinato", category: .antiemético),
+        MedicationData(name: "Escopolamina", category: .antiemético),
+        MedicationData(name: "Bromoprida", category: .antiemético),
+        
+        // Antibióticos
+        MedicationData(name: "Cefazolina", category: .antibiótico),
+        MedicationData(name: "Cefalotina", category: .antibiótico),
+        MedicationData(name: "Cefuroxima", category: .antibiótico),
+        MedicationData(name: "Ceftriaxona", category: .antibiótico),
+        MedicationData(name: "Clindamicina", category: .antibiótico),
+        MedicationData(name: "Vancomicina", category: .antibiótico),
+        MedicationData(name: "Metronidazol", category: .antibiótico),
+        MedicationData(name: "Gentamicina", category: .antibiótico),
+        MedicationData(name: "Ciprofloxacino", category: .antibiótico),
+        MedicationData(name: "Ampicilina", category: .antibiótico),
+        
+        // Anticonvulsivantes
+        MedicationData(name: "Fenitoína", category: .anticonvulsivante),
+        MedicationData(name: "Fenobarbital", category: .anticonvulsivante),
+        
+        // Antiarritmicos
+        MedicationData(name: "Amiodarona", category: .antiarritmico),
+        
+        // Miscelânia
+        MedicationData(name: "Clonidina", category: .alfa2Agonista),
+        MedicationData(name: "Ocitocina", category: .hormonal),
+        MedicationData(name: "Flumazenil", category: .reversor),
+        MedicationData(name: "Naloxona", category: .reversor),
+        MedicationData(name: "Esmolol", category: .betabloqueador),
+        MedicationData(name: "Metoprolol", category: .betabloqueador),
+        MedicationData(name: "Bisoprolol", category: .betabloqueador),
+        MedicationData(name: "Hidralazina", category: .hipotensor),
+        MedicationData(name: "Salbutamol (inalado)", category: .beta2Agonista),
+        MedicationData(name: "Hidrocortisona", category: .corticoide),
+        MedicationData(name: "Sulfato de Magnésio", category: .hidroeletrolítico),
+        MedicationData(name: "Prometazina", category: .antialérgico),
+        MedicationData(name: "Gluconato de Cálcio 10%", category: .hidroeletrolítico),
+        MedicationData(name: "Bicarbonato de Sódio 8,4%", category: .hidroeletrolítico),
+        MedicationData(name: "Cloreto de Sódio 0,9%", category: .cristalóide),
+        MedicationData(name: "Soro Glicosado 5%", category: .cristalóide),
+        MedicationData(name: "Ringer Lactato", category: .cristalóide),
+        MedicationData(name: "Concentrado de Hemácias", category: .hemoderivados),
+        MedicationData(name: "Plaquetas", category: .hemoderivados),
+        MedicationData(name: "Plasma Fresco Congelado", category: .hemoderivados),
+        
+        // Reversores
+        MedicationData(name: "Neostigmina", category: .colinérgico),
+        MedicationData(name: "Atropina", category: .anticolinérgico),
+        MedicationData(name: "Sugammadex", category: .reversor),
+        MedicationData(name: "Metilergometrina", category: .hormonal),
+        
+        // Anestésicos Locais
+        MedicationData(name: "Lidocaína + adrenalina", category: .anestésicoLocal),
+        MedicationData(name: "Bupivacaína + adrenalina", category: .anestésicoLocal),
+        MedicationData(name: "Ropivacaína + adrenalina", category: .anestésicoLocal),
+        MedicationData(name: "Lidocaína", category: .anestésicoLocal),
+        MedicationData(name: "Bupivacaína", category: .anestésicoLocal),
+        MedicationData(name: "Bupivacaína Pesada", category: .anestésicoLocal),
+        MedicationData(name: "Bupivacaína Isobárica", category: .anestésicoLocal),
+        MedicationData(name: "Ropivacaína", category: .anestésicoLocal),
+        MedicationData(name: "Mepivacaína", category: .anestésicoLocal),
+        MedicationData(name: "Prilocaína", category: .anestésicoLocal),
+        MedicationData(name: "Levobupivacaína", category: .anestésicoLocal),
+        MedicationData(name: "Levobupivacaína + adrenalina", category: .anestésicoLocal)
+    ]
+}
+
