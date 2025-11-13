@@ -82,7 +82,7 @@ struct MedicationsView: View {
                                                 .foregroundStyle(Color(medication.category.medicationColor))
                                             Text(medication.timestamp.formatted(date: .omitted, time: .shortened))
                                                 .font(.caption)
-                                                .fontWeight(.semibold)
+                                                .fontWeight(.bold)
                                                 .foregroundStyle(.gray)
                                         }
                                     }
@@ -143,7 +143,9 @@ struct MedicationsView: View {
     private var topBarButtons: some View {
         HStack(spacing: 8) {
             Text("\(anesthesia.medications.count)")
+                .fontWeight(.black)
                 .padding(.horizontal)
+                .padding(.vertical, 4)
                 .glassEffect(.regular.interactive())
             
             Button(action: {
