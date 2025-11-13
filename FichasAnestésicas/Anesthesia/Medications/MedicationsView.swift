@@ -7,81 +7,127 @@
 
 import SwiftUI
 
+enum MedicationSheet: Identifiable {
+    case create
+    case edit(MedicationEntry)
+
+    var id: String {
+        switch self {
+        case .create:
+            return "create"
+        case .edit(let entry):
+            return entry.medicationId
+        }
+    }
+}
+
 struct MedicationsView: View {
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
     
     @Bindable var anesthesia: Anesthesia
-    @State private var showingForm = false
-    @State private var selectedMedication: MedicationEntry? = nil
+    @State private var sheetState: MedicationSheet? = nil
     
     
     var body: some View {
-        ScrollView {
-            let grouped = Dictionary(grouping: anesthesia.medications) { $0.via.label }
-            ForEach(grouped.keys.sorted(), id: \.self) { viaLabel in
-                VStack(alignment: .leading, spacing: 8) {
-                    // Group header
-                    Text(viaLabel)
-                        .font(.title3)
-                        .bold()
-                        .padding(.horizontal)
-                        .padding(.top, 8)
-                        //.glassEffect(.regular.interactive())
-                    
-                    // Items within the group, sorted by timestamp ascending
-                    ForEach(grouped[viaLabel]!.sorted(by: { $0.timestamp < $1.timestamp }), id: \.medicationId) { medication in
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack(alignment: .center) {
-                                VStack(alignment: .leading) {
-                                    HStack {
-                                        Text(medication.name)
-                                            .font(.headline)
-                                        Text("\(medication.dose)")
-                                            .font(.subheadline)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    Text("\(medication.category.label)")
-                                        .font(.footnote)
-                                        .foregroundStyle(.tertiary)
-                                }
-                                    
-                                    Spacer()
-                                VStack {
-                                    Text(medication.timestamp.formatted(date: .omitted, time: .shortened))
-                                        .font(.footnote)
-                                        .foregroundStyle(.gray)
-                                }
-                            }
-                            //.foregroundStyle(medication.category.medicationColor)
-
+        Group {
+            if anesthesia.medications.isEmpty {
+                ContentUnavailableView(
+                    "Sem medicações",
+                    systemImage: "pills",
+                    description: Text("Adicione as medicações administradas durante a anestesia.")
+                )
+                .overlay(
+                    VStack {
+                        Spacer()
+                        Button(action: {
+                            sheetState = .create
+                        }) {
+                            Label("Adicionar Medicação", systemImage: "plus")
                         }
+                        .buttonStyle(.glass)
+                        .tint(.blue)
                         .padding()
-                        .onTapGesture {
-                            selectedMedication = medication
-                            showingForm = true
+                    }
+                )
+            } else {
+                ScrollView {
+                    let grouped = Dictionary(grouping: anesthesia.medications) { $0.via.label }
+                    ForEach(grouped.keys.sorted(), id: \.self) { viaLabel in
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(viaLabel)
+                                .font(.title3)
+                                .bold()
+                                .padding(.horizontal)
+                                .padding(.top, 8)
+                            ForEach(grouped[viaLabel]!.sorted(by: { $0.timestamp < $1.timestamp }), id: \.medicationId) { medication in
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack(alignment: .center) {
+                                        VStack(alignment: .leading) {
+                                            HStack {
+                                                Text(medication.name)
+                                                    .font(.headline)
+                                                Text("\(medication.dose)")
+                                                    .font(.subheadline)
+                                                    .foregroundStyle(.primary)
+                                            }
+                                            Text("\(medication.category.label)")
+                                                .font(.footnote)
+                                                .fontWeight(.semibold)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        Spacer()
+                                        HStack {
+                                            Image(systemName: "clock.fill")
+                                                .foregroundStyle(Color(medication.category.medicationColor))
+                                            Text(medication.timestamp.formatted(date: .omitted, time: .shortened))
+                                                .font(.caption)
+                                                .fontWeight(.semibold)
+                                                .foregroundStyle(.gray)
+                                        }
+                                    }
+                                }
+                                .padding()
+                                .onTapGesture {
+                                    sheetState = .edit(medication)
+                                }
+                                .glassEffect(.regular.tint(medication.category.medicationColor.opacity(0.11)).interactive())
+                            }
                         }
-                        .glassEffect(.regular.tint(medication.category.medicationColor).interactive())
+                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-        .sheet(item: $selectedMedication, onDismiss: {
-            selectedMedication = nil
-        }) { medication in
+        .sheet(item: $sheetState, onDismiss: {
+            sheetState = nil
+        }) { state in
             if let currentUser = session.currentUser {
-                let viewModel = MedicationsFormViewModel(
-                    anesthesia: anesthesia,
-                    user: currentUser,
-                    context: modelContext,
-                    entry: medication
-                )
-                MedicationsFormView(
-                    viewModel: viewModel,
-                    catalog: MedicationsHelper.allMedications
-                )
+                switch state {
+                case .create:
+                    let viewModel = MedicationsFormViewModel(
+                        anesthesia: anesthesia,
+                        user: currentUser,
+                        context: modelContext,
+                        entry: nil
+                    )
+                    MedicationsFormView(
+                        viewModel: viewModel,
+                        catalog: MedicationsHelper.allMedications
+                    )
+                case .edit(let medication):
+                    let viewModel = MedicationsFormViewModel(
+                        anesthesia: anesthesia,
+                        user: currentUser,
+                        context: modelContext,
+                        entry: medication
+                    )
+                    MedicationsFormView(
+                        viewModel: viewModel,
+                        catalog: MedicationsHelper.allMedications
+                    )
+                }
             }
         }
         .preference(
@@ -115,7 +161,7 @@ struct MedicationsView: View {
             .tint(.red)
             
             Button(action: {
-                showingForm = true
+                sheetState = .create
             }) {
                 Image(systemName: "plus")
             }
