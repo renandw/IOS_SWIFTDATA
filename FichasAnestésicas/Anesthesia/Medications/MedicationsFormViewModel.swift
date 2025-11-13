@@ -75,7 +75,7 @@ final class MedicationsFormViewModel: ObservableObject {
     }
 
     func suggestViaIfNeeded() {
-        guard via == nil, !name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         via = MedicationsHelper.getSuggestedVia(for: name)
     }
 
