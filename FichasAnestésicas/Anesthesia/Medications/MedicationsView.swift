@@ -53,6 +53,7 @@ struct MedicationsView: View {
                                         .foregroundStyle(.gray)
                                 }
                             }
+                            //.foregroundStyle(medication.category.medicationColor)
 
                         }
                         .padding()
@@ -60,9 +61,10 @@ struct MedicationsView: View {
                             selectedMedication = medication
                             showingForm = true
                         }
-                        .glassEffect(.regular.interactive())
+                        .glassEffect(.regular.tint(medication.category.medicationColor).interactive())
                     }
                 }
+                .padding(.horizontal)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }

@@ -107,7 +107,7 @@ struct AnesthesiaDetailsView: View {
             section: activeSection
 
         )
-        .padding(.horizontal)
+        //.padding(.horizontal)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .id(activeSection)
         

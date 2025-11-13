@@ -256,6 +256,7 @@ struct IdentificationView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     }
             }
+            .padding(.horizontal)
             .sheet(isPresented: $showingAnesthesiaForm) {
                 if let currentUser = session.currentUser {
                     let viewModel = AnesthesiaFormViewModel(
@@ -290,7 +291,9 @@ struct IdentificationView: View {
                     ContentUnavailableView("Sem usuário", systemImage: "person.crop.circle.badge.exclam")
                 }
             }
+
         }
+
         .preference(
             key: CustomTopBarButtonPreferenceKey.self,
             value: CustomTopBarButtonPreference(
