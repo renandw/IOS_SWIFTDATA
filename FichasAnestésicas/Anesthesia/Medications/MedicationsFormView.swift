@@ -5,7 +5,6 @@
 //  Created by Renan Wrobel on 05/11/25.
 //
 
-
 import SwiftUI
 
 struct MedicationsFormView: View {
@@ -17,17 +16,18 @@ struct MedicationsFormView: View {
     @State private var mode: EntryMode = .manual
 
     var body: some View {
-            Form {
-                Section {
-                    Picker("Modo", selection: $mode) {
-                        ForEach(EntryMode.allCases, id: \.self) { m in
-                            Text(m.rawValue).tag(m)
-                        }
-                    }
-                    .pickerStyle(.segmented)
+        NavigationStack {
+            // Segmented control always visible
+            Picker("Modo", selection: $mode) {
+                ForEach(EntryMode.allCases, id: \.self) { m in
+                    Text(m.rawValue).tag(m)
                 }
+            }
+            .pickerStyle(.segmented)
+            .padding([.horizontal, .top])
 
-                if mode == .manual {
+            if mode == .manual {
+                Form {
                     // IDENTIFICAÇÃO
                     Section("Identificação") {
                         NavigationLink("Selecionar do catálogo") {
@@ -78,11 +78,9 @@ struct MedicationsFormView: View {
                                 viewModel.runValidations()
                             }
                         TextField("Dose (ex.: 100mg ou 1–2 mg/kg)", text: $viewModel.dose)
-                            //.disabled(viewModel.autoDose)
                             .onChange(of: viewModel.dose) { _ in viewModel.runValidations() }
                         if let e = viewModel.doseError { Text(e).foregroundStyle(.red) }
-                        // TODO: Expose a public read-only weight on the view model if needed
-                        Text("Peso: \(viewModel.patientWeight) kg")
+                        Text("Peso: \(String(format: "%.1f", viewModel.patientWeight)) kg")
                             .font(.footnote).foregroundStyle(.secondary)
                     }
 
@@ -95,41 +93,37 @@ struct MedicationsFormView: View {
                         Section { Text(msg).foregroundStyle(.red) }
                     }
                 }
-
-                if mode == .presets {
-                    Section("Presets") {
-                        NavigationLink("Selecionar preset") {
-                            MedicationPresetGroupsView { items in
-                                if viewModel.createEntries(from: items) {
-                                    dismiss()
-                                }
+                .navigationTitle(viewModel.isNew ? "Nova Medicação" : "Editar Medicação")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        if !viewModel.isNew {
+                            Button("Excluir", role: .destructive) {
+                                if viewModel.delete() { dismiss() }
                             }
                         }
                     }
-                }
-            }
-            .navigationTitle(viewModel.isNew ? "Nova Medicação" : "Editar Medicação")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    if !viewModel.isNew {
-                        Button("Excluir", role: .destructive) {
-                            if viewModel.delete() { dismiss() }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Salvar") {
+                            if viewModel.save() { dismiss() }
                         }
+                        .disabled(!viewModel.isFormValid)
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Salvar") {
-                        if viewModel.save() { dismiss() }
-                    }
-                    .disabled(!viewModel.isFormValid)
+                .onAppear {
+                    if viewModel.category == nil { viewModel.category = .opioide }
+                    if viewModel.via == nil { viewModel.via = .EV }
+                    viewModel.runValidations()
                 }
+            } else {
+                // Presets list directly (no extra navigation step)
+                MedicationPresetGroupsView { items in
+                    if viewModel.createEntries(from: items) {
+                        dismiss()
+                    }
+                }
+                .navigationTitle("Presets")
             }
-            .onAppear {
-                if viewModel.category == nil { viewModel.category = .opioide }
-                if viewModel.via == nil { viewModel.via = .EV }
-                viewModel.runValidations()
-                mode = .manual
-            }
+        }
     }
 }
 
