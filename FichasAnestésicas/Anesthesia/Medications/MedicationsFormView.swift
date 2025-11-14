@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct MedicationsFormView: View {
@@ -86,14 +85,9 @@ struct MedicationsFormView: View {
 
                     // DOSE
                     Section("Dose") {
-                        Toggle("Calcular automaticamente", isOn: $viewModel.autoDose)
+                        TextField("Dose (ex.: 100mg ou 1–2 mg/kg)", text: $viewModel.dose)
                             .autocorrectionDisabled()
                             .textInputAutocapitalization(.never)
-                            .onChange(of: viewModel.autoDose, initial: false) { _, on in
-                                if on { viewModel.recalcDoseIfNeeded() }
-                                viewModel.runValidations()
-                            }
-                        TextField("Dose (ex.: 100mg ou 1–2 mg/kg)", text: $viewModel.dose)
                             .onChange(of: viewModel.dose, initial: false) { _, _ in
                                 viewModel.runValidations()
                             }

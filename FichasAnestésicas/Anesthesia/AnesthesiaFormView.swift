@@ -176,7 +176,6 @@ struct AnesthesiaFormView: View {
                     }
                 }
 
-                // Técnicas (navegação para seleção com checkmarks)
                 Section {
                     NavigationLink {
                         AnesthesiaTechniquePickerView(selection: $viewModel.techniques)
@@ -226,7 +225,6 @@ struct AnesthesiaFormView: View {
                     }
                 }
 
-                // Posição (navegação para multi-seleção com checkmarks)
                 Section {
                     NavigationLink {
                         PositionPickerView(selection: $viewModel.position)
@@ -326,7 +324,8 @@ struct AnesthesiaTechniquePickerView: View {
                         Text(kind.rawValue)
                         Spacer()
                         if selection.contains(kind) {
-                            Image(systemName: "checkmark")
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.blue)
                         }
                     }
                 }
@@ -440,7 +439,7 @@ struct ASAPickerView: View {
 }
 
 
-private struct DateTimePickerSheetButton: View {
+struct DateTimePickerSheetButton: View {
     @Binding var date: Date
     var title: String
     var minDate: Date? = nil

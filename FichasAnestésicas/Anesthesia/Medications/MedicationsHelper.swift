@@ -38,6 +38,7 @@ public enum MedicationCategory: String, CaseIterable, Codable {
     case anestésicoLocal = "Anestésico Local"
     case gasFresco = "Gases Frescos"
     case hormonal = "Hormonal"
+    case naoPadronizado = "Não Padronizado"
     
     var label: String {
         return self.rawValue
@@ -103,6 +104,8 @@ public enum MedicationCategory: String, CaseIterable, Codable {
             return Color(.systemOrange)
         case .hormonal:
             return Color(.systemPurple)
+        case .naoPadronizado:
+            return Color(.systemGray)
         }
     }
 }
@@ -234,7 +237,9 @@ class MedicationsHelper {
         "flumazenil": "0,5mg",
         "fenitoína": "1g",
         "sugammadex": "200mg",
-        "ceftriaxona": "2g"
+        "ceftriaxona": "2g",
+        "cetorolaco": "30mg",
+        "escopolamina": "20mg"
     ]
 
 
@@ -283,7 +288,7 @@ class MedicationsHelper {
         case "dexametasona":
             return "\(Int(round(weight * 0.1)))mg"
         case "dexmedetomidina":
-            return "\(Int(weight * 1))mcg"
+            return "\(Int(weight * 0.9))mcg"
         case "diazepam":
             return "\(Int(round(weight * 0.1)))mg"
         case "haloperidol":
@@ -299,9 +304,9 @@ class MedicationsHelper {
         case "tramadol":
             return "\(Int(round(weight * 1.5)))mg"
         case "tenoxicam":
-            return "20mg"
+            return "\(Int(round(weight * 0.25)))mg"
         case "escopolamina":
-            return "0.5mg"
+            return "\(Int(round(weight * 0.25)))mg"
         case "bromoprida":
             return "\(Int(min(3000, weight * 0.5)))mg"
         case "cefazolina":
@@ -338,6 +343,8 @@ class MedicationsHelper {
             return "\(Int(round(weight * 2)))mg"
         case "lidocaina":
             return "\(Int(round(weight * 2)))mg"
+        case "cetorolaco":
+            return "\(Int(round(weight * 0.15)))mg"
         case "atropina":
             return String(format: "%.2f", weight * 0.01) + "mg"
         default:
