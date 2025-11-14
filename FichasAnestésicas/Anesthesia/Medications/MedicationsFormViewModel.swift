@@ -30,6 +30,7 @@ final class MedicationsFormViewModel: ObservableObject {
 
     ///patientWeigth vem do @model Surgery através de @relationships
     @Published var patientWeight: Double = 0
+    @Published var anesthesiaStart: Date?
     /// Controle: recalcular dose automaticamente ao mudar peso/nome
     @Published var autoDose: Bool = true
 
@@ -58,6 +59,7 @@ final class MedicationsFormViewModel: ObservableObject {
         self.existingEntry = entry
         self.isNew = (entry == nil)
         self.patientWeight = anesthesia.surgery.weight
+        self.anesthesiaStart = anesthesia.start
         
         if let entry {
             self.name = entry.name
@@ -67,7 +69,7 @@ final class MedicationsFormViewModel: ObservableObject {
             self.timestamp = entry.timestamp
             self.searchQuery = entry.name  // Sincronizar
         } else {
-            self.timestamp = Date()
+            self.timestamp = anesthesia.start ?? Date()
         }
         
         setupAutocomplete()

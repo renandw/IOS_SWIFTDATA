@@ -28,7 +28,7 @@ struct MedicationsFormView: View {
             if mode == .manual {
                 Form {
                     // IDENTIFICAÇÃO
-                    Section("Identificação") {
+                    Section("Medicação") {
                         ZStack(alignment: .topLeading) {
                             VStack(alignment: .leading, spacing: 0) {
                                 TextField("Nome", text: $viewModel.searchQuery)
@@ -103,7 +103,10 @@ struct MedicationsFormView: View {
 
                     // HORÁRIO
                     Section("Horário") {
-                        DatePicker("Aplicação", selection: $viewModel.timestamp, displayedComponents: [.date, .hourAndMinute])
+                        DatePicker("Administração", selection: $viewModel.timestamp, displayedComponents: [.date, .hourAndMinute])
+                        Text("Anestesia iniciou: \(viewModel.anesthesiaStart ?? Date())")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
                     }
 
                     if let msg = viewModel.errorMessage {
@@ -111,6 +114,7 @@ struct MedicationsFormView: View {
                     }
                 }
                 .navigationTitle(viewModel.isNew ? "Nova Medicação" : "Editar Medicação")
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         if !viewModel.isNew {
@@ -120,7 +124,7 @@ struct MedicationsFormView: View {
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Salvar") {
+                        Button("Salvar", role: .confirm) {
                             if viewModel.save() { dismiss() }
                         }
                         .disabled(!viewModel.isFormValid)
@@ -132,46 +136,23 @@ struct MedicationsFormView: View {
                     viewModel.runValidations()
                 }
             } else {
-                // Presets list directly (no extra navigation step)
-                MedicationPresetGroupsView { items in
-                    if viewModel.createEntries(from: items) {
-                        dismiss()
+                Form {
+                    Section("Grupos de Presets") {
+                        List(MedicationsHelper.medicationPresets, id: \.id) { preset in
+                            NavigationLink(preset.name) {
+                                MedicationPresetGroupView(preset: preset) { items in
+                                    if viewModel.createEntries(from: items) {
+                                        dismiss()
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-                .navigationTitle("Presets")
+                .navigationTitle(viewModel.isNew ? "Nova Medicação" : "Editar Medicação")
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
-    }
-}
-
-// Picker com busca + seleção
-struct MedicationCatalogPicker: View {
-    let catalog: [MedicationCatalogItem]
-    let onPick: (MedicationCatalogItem) -> Void
-    @Environment(\.dismiss) private var dismiss
-    @State private var query = ""
-
-    var filtered: [MedicationCatalogItem] {
-        let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        if q.isEmpty { return catalog }
-        return catalog.filter { $0.name.lowercased().contains(q) }
-    }
-
-    var body: some View {
-        List(filtered) { item in
-            Button {
-                onPick(item)
-                dismiss()
-            } label: {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(item.name)
-                    Text(item.category.rawValue).font(.footnote).foregroundStyle(.secondary)
-                }
-            }
-            .foregroundStyle(.primary)
-        }
-        .navigationTitle("Catálogo")
-        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
     }
 }
 
@@ -236,7 +217,7 @@ struct MedicationPresetGroupView: View {
         .navigationTitle(preset.name)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Adicionar selecionados") {
+                Button("Adicionar") {
                     let selected = items.filter { selectedIDs.contains($0.id) }
                     onConfirmItems(selected)
                     dismiss()
