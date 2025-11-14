@@ -98,7 +98,24 @@ struct MedicationsFormView: View {
 
                     // HORÁRIO
                     Section("Horário") {
-                        DatePicker("Administração", selection: $viewModel.timestamp, displayedComponents: [.date, .hourAndMinute])
+                        HStack {
+                            Text("Administração")
+                            Spacer()
+                            DateTimePickerSheetButton(
+                                date: Binding<Date?>(
+                                    get: { viewModel.timestamp },
+                                    set: { viewModel.timestamp = $0 ?? viewModel.timestamp }
+                                ),
+                                title: "Administração",
+                                placeholder: "Selecionar",
+                                minDate: viewModel.anesthesiaStart,
+                                maxDate: nil,
+                                compactInRow: true,
+                                onConfirm: {
+                                    viewModel.runValidations()
+                                }
+                            )
+                        }
                         Text("Anestesia iniciou: \(viewModel.anesthesiaStart ?? Date())")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
@@ -205,6 +222,9 @@ struct MedicationPresetGroupView: View {
                     if selectedIDs.contains(item.id) {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.blue)
+                    } else {
+                        Image(systemName: "circle.dashed")
+                            .foregroundStyle(.gray)
                     }
                 }
             }
@@ -291,4 +311,3 @@ struct AutocompleteSuggestionsView: View {
         )
     }
 }
-
