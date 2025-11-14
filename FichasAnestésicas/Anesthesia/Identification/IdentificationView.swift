@@ -311,6 +311,8 @@ struct IdentificationView: View {
                 showingForm = true
             }) {
                 Image(systemName: "person.fill")
+                    .font(.system(size: 16, weight: .regular))
+                    .frame(width: 20, height: 20)
             }
             .accessibilityLabel("Editar Paciente")
             .buttonStyle(.glass)
@@ -320,6 +322,8 @@ struct IdentificationView: View {
                 selectedSurgery = surgery
             }) {
                 Image(systemName: "stethoscope")
+                    .font(.system(size: 16, weight: .regular))
+                    .frame(width: 20, height: 20)
             }
             .accessibilityLabel("Editar Cirurgia")
             .buttonStyle(.glass)
@@ -329,6 +333,8 @@ struct IdentificationView: View {
                 showingAnesthesiaForm = true
             }) {
                 Image(systemName: surgery.anesthesia == nil ? "plus" : "syringe.fill")
+                    .font(.system(size: 16, weight: .regular))
+                    .frame(width: 20, height: 20)
             }
             .accessibilityLabel(surgery.anesthesia == nil ? "Criar Anestesia" : "Editar Anestesia")
             .buttonStyle(.glass)

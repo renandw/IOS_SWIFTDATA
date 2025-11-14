@@ -1,9 +1,3 @@
-//
-//  MedicationsFormView.swift
-//  FichasAnestésicas
-//
-//  Created by Renan Wrobel on 05/11/25.
-//
 
 import SwiftUI
 
@@ -32,7 +26,10 @@ struct MedicationsFormView: View {
                         ZStack(alignment: .topLeading) {
                             VStack(alignment: .leading, spacing: 0) {
                                 TextField("Nome", text: $viewModel.searchQuery)
-                                    .onChange(of: viewModel.searchQuery) { newValue in
+                                    .autocorrectionDisabled()
+                                    .textInputAutocapitalization(.never)
+                                    .keyboardType(.default)
+                                    .onChange(of: viewModel.searchQuery, initial: false) { oldValue, newValue in
                                         viewModel.name = newValue
                                         if newValue.trimmingCharacters(in: .whitespaces).count < 3 {
                                             viewModel.dismissSuggestions()
@@ -64,7 +61,7 @@ struct MedicationsFormView: View {
                                 Text(c.rawValue).tag(c)
                             }
                         }
-                        .onChange(of: viewModel.category) { _ in
+                        .onChange(of: viewModel.category, initial: false) { _, _ in
                             viewModel.dismissSuggestions()
                             viewModel.runValidations()
                         }
@@ -77,7 +74,7 @@ struct MedicationsFormView: View {
                                 Text(r.label).tag(r)
                             }
                         }
-                        .onChange(of: viewModel.via) { _ in
+                        .onChange(of: viewModel.via, initial: false) { _, _ in
                             viewModel.dismissSuggestions()
                             viewModel.runValidations()
                         }
@@ -90,12 +87,16 @@ struct MedicationsFormView: View {
                     // DOSE
                     Section("Dose") {
                         Toggle("Calcular automaticamente", isOn: $viewModel.autoDose)
-                            .onChange(of: viewModel.autoDose) { on in
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                            .onChange(of: viewModel.autoDose, initial: false) { _, on in
                                 if on { viewModel.recalcDoseIfNeeded() }
                                 viewModel.runValidations()
                             }
                         TextField("Dose (ex.: 100mg ou 1–2 mg/kg)", text: $viewModel.dose)
-                            .onChange(of: viewModel.dose) { _ in viewModel.runValidations() }
+                            .onChange(of: viewModel.dose, initial: false) { _, _ in
+                                viewModel.runValidations()
+                            }
                         if let e = viewModel.doseError { Text(e).foregroundStyle(.red) }
                         Text("Peso: \(String(format: "%.1f", viewModel.patientWeight)) kg")
                             .font(.footnote).foregroundStyle(.secondary)
@@ -208,7 +209,8 @@ struct MedicationPresetGroupView: View {
                     }
                     Spacer()
                     if selectedIDs.contains(item.id) {
-                        Image(systemName: "checkmark")
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.blue)
                     }
                 }
             }
@@ -295,3 +297,4 @@ struct AutocompleteSuggestionsView: View {
         )
     }
 }
+

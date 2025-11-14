@@ -144,30 +144,44 @@ struct MedicationsView: View {
     
     private var topBarButtons: some View {
         HStack(spacing: 8) {
-            Text("\(anesthesia.medications.count)")
-                .fontWeight(.black)
-                .padding(.horizontal)
-                .padding(.vertical, 4)
-                .glassEffect(.regular.interactive())
             
-            Button(action: {
-                if let currentUser = session.currentUser {
-                    let repo = SwiftDataMedicationEntryRepository(context: modelContext)
-                    try? repo.deleteAll(for: anesthesia, by: currentUser)
-                } else {
-                    anesthesia.medications.removeAll()
-                }
-            }) {
-                Image(systemName: "trash")
+            if !anesthesia.medications.isEmpty {
+                Text("\(anesthesia.medications.count)")
+                    .font(.system(size: 16, weight: .bold))
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .glassEffect(.regular.interactive())
+                    .clipShape(Capsule())
             }
-            .accessibilityLabel("Editar Paciente")
-            .buttonStyle(.glass)
-            .tint(.red)
+
+            
+            Spacer()
+            
+            if !anesthesia.medications.isEmpty {
+                Button(action: {
+                    if let currentUser = session.currentUser {
+                        let repo = SwiftDataMedicationEntryRepository(context: modelContext)
+                        try? repo.deleteAll(for: anesthesia, by: currentUser)
+                    } else {
+                        anesthesia.medications.removeAll()
+                    }
+                }) {
+                    Image(systemName: "trash")
+                        .font(.system(size: 16, weight: .regular))
+                        .frame(width: 20, height: 20)
+                }
+                .accessibilityLabel("Editar Paciente")
+                .buttonStyle(.glass)
+                .tint(.red)
+            }
+            
             
             Button(action: {
                 sheetState = .create
             }) {
                 Image(systemName: "plus")
+                    .font(.system(size: 16, weight: .regular))
+                    .frame(width: 20, height: 20)
             }
             .accessibilityLabel("Adicionar Medicações")
             .buttonStyle(.glass)

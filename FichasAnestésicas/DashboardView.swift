@@ -8,9 +8,6 @@
 import SwiftUI
 import SwiftData
 
-import SwiftUI
-import SwiftData
-
 struct DashboardView: View {
     let userId: String
     
@@ -18,6 +15,7 @@ struct DashboardView: View {
     @Query(sort:\Patient.name) var patients: [Patient]
     @Query(sort: \Surgery.date, order: .reverse) var surgeries: [Surgery]
     @Environment(\.modelContext) private var patientContext
+    @State private var navigateToPatients = false
     
     init(userId: String) {
         self.userId = userId
@@ -36,7 +34,18 @@ struct DashboardView: View {
               NavigationStack {
                   ScrollView {
                       VStack {
-                          QuickActionsSection()
+                          // Hidden navigation trigger for Meus Pacientes
+                          NavigationLink(isActive: $navigateToPatients) {
+                              PatientListView(session: session)
+                          } label: { EmptyView() }
+                          .hidden()
+
+                          QuickActionsSection(
+                              onNewAnesthesia: {},
+                              onMyPatients: { navigateToPatients = true },
+                              onFinancial: {}
+                          )
+                          
                           Text("Olá, \(user.name)")
                           Button("Encerrar Sessão") {
                               session.currentUser = nil
@@ -46,10 +55,6 @@ struct DashboardView: View {
                           Text ("Paciente: \(patients.count)")
                           Text ("Cirurgias? \(surgeries.count)")
                           
-                          NavigationLink("Navegar para Lista de Pacientes") {
-                              PatientListView(session: session)
-                          }
-                          .buttonStyle(.borderedProminent)
                           NavigationLink("Navegar para Lista de Usuários") {
                               UserListView()
                           }
@@ -191,3 +196,4 @@ struct QuickActionCard: View {
 //        .environment(SessionManager())
 //        .modelContainer(for: [User.self, Patient.self])
 //}
+

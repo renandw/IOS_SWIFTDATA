@@ -1,10 +1,3 @@
-//
-//  RootView.swift
-//  FichasAnestésicas
-//
-//  Created by Renan Wrobel on 23/10/25.
-//
-
 
 import SwiftUI
 import SwiftData
