@@ -39,29 +39,38 @@ final class MedicationsFormViewModel: ObservableObject {
     @Published var viaError: String?
     @Published var categoryError: String?
     @Published var errorMessage: String?
+    
+    // MARK: - AutoComplete
+    
+    @Published var searchQuery: String = ""
+    @Published var showSuggestions: Bool = false
+    @Published var filteredCatalog: [MedicationCatalogItem] = []
+    private var cancellables = Set<AnyCancellable>()
+    private let catalog: [MedicationCatalogItem]
 
     // MARK: - Init
-    init(anesthesia: Anesthesia, user: User, context: ModelContext, repo: MedicationEntryRepository? = nil, entry: MedicationEntry? = nil) {
+    init(anesthesia: Anesthesia, user: User, context: ModelContext, catalog: [MedicationCatalogItem], repo: MedicationEntryRepository? = nil, entry: MedicationEntry? = nil) {
         self.anesthesia = anesthesia
         self.user = user
         self.context = context
+        self.catalog = catalog
         self.repo = repo ?? SwiftDataMedicationEntryRepository(context: context)
         self.existingEntry = entry
         self.isNew = (entry == nil)
         self.patientWeight = anesthesia.surgery.weight
         
-
         if let entry {
             self.name = entry.name
             self.dose = entry.dose
             self.via = entry.via
             self.category = entry.category
             self.timestamp = entry.timestamp
+            self.searchQuery = entry.name  // Sincronizar
         } else {
-            // Sugestões iniciais vazias; timestamp = agora
             self.timestamp = Date()
-            
         }
+        
+        setupAutocomplete()
     }
 
     // MARK: - Presets & Suggestions
@@ -205,4 +214,55 @@ final class MedicationsFormViewModel: ObservableObject {
             return false
         }
     }
+    
+    private func setupAutocomplete() {
+        $searchQuery
+            .debounce(for: .milliseconds(150), scheduler: RunLoop.main)
+            .sink { [weak self] query in
+                self?.filterCatalog(query: query)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func filterCatalog(query: String) {
+        let trimmed = query.trimmingCharacters(in: .whitespaces)
+        
+        if trimmed.count < 3 {
+            filteredCatalog = []
+            showSuggestions = false
+            return
+        }
+        
+        if catalog.contains(where: { $0.name.lowercased() == trimmed.lowercased() }) {
+            filteredCatalog = []
+            showSuggestions = false
+            return
+        }
+        
+        let lowercased = trimmed.lowercased()
+        filteredCatalog = Array(catalog.filter {
+            $0.name.lowercased().contains(lowercased)
+        }.prefix(7))
+        showSuggestions = !filteredCatalog.isEmpty
+    }
+
+    func selectCatalogItem(_ item: MedicationCatalogItem) {
+        print("🔵 selectCatalogItem chamado")
+        name = item.name
+        searchQuery = item.name
+        category = item.category
+        showSuggestions = false
+        print("🔵 showSuggestions agora é: \(showSuggestions)")
+        suggestViaIfNeeded()
+        recalcDoseIfNeeded()
+        runValidations()
+    }
+
+    func dismissSuggestions() {
+        print("🔴 dismissSuggestions chamado")
+        showSuggestions = false
+        print("🔴 showSuggestions agora é: \(showSuggestions)")
+    }
 }
+
+

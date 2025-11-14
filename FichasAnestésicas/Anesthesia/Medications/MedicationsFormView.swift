@@ -17,7 +17,6 @@ struct MedicationsFormView: View {
 
     var body: some View {
         NavigationStack {
-            // Segmented control always visible
             Picker("Modo", selection: $mode) {
                 ForEach(EntryMode.allCases, id: \.self) { m in
                     Text(m.rawValue).tag(m)
@@ -30,23 +29,33 @@ struct MedicationsFormView: View {
                 Form {
                     // IDENTIFICAÇÃO
                     Section("Identificação") {
-                        NavigationLink("Selecionar do catálogo") {
-                            MedicationCatalogPicker(
-                                catalog: catalog,
-                                onPick: { item in
-                                    viewModel.name = item.name
-                                    viewModel.category = item.category
-                                    viewModel.suggestViaIfNeeded()
-                                    viewModel.recalcDoseIfNeeded()
+                        ZStack(alignment: .topLeading) {
+                            VStack(alignment: .leading, spacing: 0) {
+                                TextField("Nome", text: $viewModel.searchQuery)
+                                    .onChange(of: viewModel.searchQuery) { newValue in
+                                        viewModel.name = newValue
+                                        if newValue.trimmingCharacters(in: .whitespaces).count < 3 {
+                                            viewModel.dismissSuggestions()
+                                        }
+                                        viewModel.suggestViaIfNeeded()
+                                        viewModel.recalcDoseIfNeeded()
+                                        viewModel.runValidations()
+                                    }
+                            }
+                        }
+                        if viewModel.showSuggestions {
+                            AutocompleteSuggestionsView(
+                                suggestions: viewModel.filteredCatalog,
+                                onSelect: { item in
+                                    viewModel.selectCatalogItem(item)
+                                },
+                                onDismiss: {
+                                    viewModel.dismissSuggestions()
                                 }
                             )
+                            .padding(.top, 8)  // Espaçamento do TextField
                         }
-                        TextField("Nome", text: $viewModel.name)
-                            .onChange(of: viewModel.name) { _ in
-                                viewModel.suggestViaIfNeeded()
-                                viewModel.recalcDoseIfNeeded()
-                                viewModel.runValidations()
-                            }
+                        
                         Picker("Categoria", selection: Binding(
                             get: { viewModel.category ?? .opioide },
                             set: { viewModel.category = $0 }
@@ -55,7 +64,11 @@ struct MedicationsFormView: View {
                                 Text(c.rawValue).tag(c)
                             }
                         }
-                        .onChange(of: viewModel.category) { _ in viewModel.runValidations() }
+                        .onChange(of: viewModel.category) { _ in
+                            viewModel.dismissSuggestions()
+                            viewModel.runValidations()
+                        }
+                        
                         Picker("Via", selection: Binding(
                             get: { viewModel.via ?? .EV },
                             set: { viewModel.via = $0 }
@@ -64,7 +77,11 @@ struct MedicationsFormView: View {
                                 Text(r.label).tag(r)
                             }
                         }
-                        .onChange(of: viewModel.via) { _ in viewModel.runValidations() }
+                        .onChange(of: viewModel.via) { _ in
+                            viewModel.dismissSuggestions()
+                            viewModel.runValidations()
+                        }
+                        
                         if let e = viewModel.nameError { Text(e).foregroundStyle(.red) }
                         if let e = viewModel.categoryError { Text(e).foregroundStyle(.red) }
                         if let e = viewModel.viaError { Text(e).foregroundStyle(.red) }
@@ -201,7 +218,9 @@ struct MedicationPresetGroupView: View {
                             Text(item.category.rawValue)
                             Text("•")
                             Text(item.via.label)
-                            if !item.dose.isEmpty { Text("• ") + Text(item.dose) }
+                            if !item.dose.isEmpty {
+                                Text("• \(item.dose)")
+                            }
                         }
                         .font(.footnote)
                         .foregroundStyle(.secondary)
@@ -236,5 +255,62 @@ struct MedicationPresetGroupView: View {
         } else {
             selectedIDs.insert(id)
         }
+    }
+}
+
+// MARK: - Autocomplete Support
+
+struct AutocompleteSuggestionsView: View {
+    let suggestions: [MedicationCatalogItem]
+    let onSelect: (MedicationCatalogItem) -> Void
+    let onDismiss: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 0) {
+                    ForEach(suggestions) { item in
+                        Button {
+                            onSelect(item)
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(item.name)
+                                    Text(item.category.rawValue)
+                                        .font(.footnote)
+                                        .foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        
+                        if item.id != suggestions.last?.id {
+                            Divider()
+                        }
+                    }
+                }
+            }
+            .frame(maxHeight: 250)
+        }
+        .background(.ultraThinMaterial)
+        .cornerRadius(8)
+        .shadow(radius: 2)
+        .padding(.horizontal, 16)
+        .onTapGesture {
+            // Previne dismiss ao clicar dentro
+        }
+        .background(
+            Color.clear
+                .contentShape(Rectangle())
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onTapGesture {
+                    onDismiss()
+                }
+                .ignoresSafeArea()
+        )
     }
 }

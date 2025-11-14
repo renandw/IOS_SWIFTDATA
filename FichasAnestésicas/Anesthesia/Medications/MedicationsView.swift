@@ -110,6 +110,7 @@ struct MedicationsView: View {
                         anesthesia: anesthesia,
                         user: currentUser,
                         context: modelContext,
+                        catalog: MedicationsHelper.allMedications,
                         entry: nil
                     )
                     MedicationsFormView(
@@ -121,6 +122,7 @@ struct MedicationsView: View {
                         anesthesia: anesthesia,
                         user: currentUser,
                         context: modelContext,
+                        catalog: MedicationsHelper.allMedications,
                         entry: medication
                     )
                     MedicationsFormView(
