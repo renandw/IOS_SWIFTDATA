@@ -7,34 +7,6 @@ struct AnesthesiaFormView: View {
     // MARK: - Bindings
     private var surgeryDate: Date { viewModel.surgeryDate }
 
-    private var startBinding: Binding<Date> {
-        Binding<Date>(
-            get: { viewModel.start ?? surgeryDate },
-            set: { viewModel.start = $0 }
-        )
-    }
-
-    private var endBinding: Binding<Date> {
-        Binding<Date>(
-            get: { viewModel.end ?? surgeryDate },
-            set: { viewModel.end = $0 }
-        )
-    }
-
-    private var surgeryStartBinding: Binding<Date> {
-        Binding<Date>(
-            get: { viewModel.surgeryStart ?? surgeryDate },
-            set: { viewModel.surgeryStart = $0 }
-        )
-    }
-
-    private var surgeryEndBinding: Binding<Date> {
-        Binding<Date>(
-            get: { viewModel.surgeryEnd ?? surgeryDate },
-            set: { viewModel.surgeryEnd = $0 }
-        )
-    }
-
     var body: some View {
         NavigationStack {
             Form {
@@ -45,11 +17,9 @@ struct AnesthesiaFormView: View {
                         Spacer()
                         HStack{
                             DateTimePickerSheetButton(
-                                date: startBinding,
+                                date: $viewModel.start,
                                 title: "Início da anestesia",
-                                onConfirm: {
-                                    if viewModel.start == nil { viewModel.start = surgeryDate }
-                                }
+                                placeholder: "Selecionar"
                             )
                             if viewModel.start != nil {
                                 Button(role: .destructive) {
@@ -70,11 +40,9 @@ struct AnesthesiaFormView: View {
                     
                         HStack{
                             DateTimePickerSheetButton(
-                                date: surgeryStartBinding,
+                                date: $viewModel.surgeryStart,
                                 title: "Início da cirurgia",
-                                onConfirm: {
-                                    if viewModel.surgeryStart == nil { viewModel.surgeryStart = surgeryDate }
-                                }
+                                placeholder: "Selecionar"
                             )
                             
                             if viewModel.surgeryStart != nil {
@@ -114,11 +82,9 @@ struct AnesthesiaFormView: View {
                             Spacer()
                             HStack {
                                 DateTimePickerSheetButton(
-                                    date: surgeryEndBinding,
+                                    date: $viewModel.surgeryEnd,
                                     title: "Fim da cirurgia",
-                                    onConfirm: {
-                                        if viewModel.surgeryEnd == nil { viewModel.surgeryEnd = surgeryDate }
-                                    }
+                                    placeholder: "Selecionar"
                                 )
                                 
                                 if viewModel.surgeryEnd != nil {
@@ -139,11 +105,9 @@ struct AnesthesiaFormView: View {
                                 Spacer()
                                 HStack {
                                     DateTimePickerSheetButton(
-                                        date: endBinding,
+                                        date: $viewModel.end,
                                         title: "Fim da anestesia",
-                                        onConfirm: {
-                                            if viewModel.end == nil { viewModel.end = surgeryDate }
-                                        }
+                                        placeholder: "Selecionar"
                                     )
                                     
                                     if viewModel.end != nil {
@@ -440,8 +404,9 @@ struct ASAPickerView: View {
 
 
 struct DateTimePickerSheetButton: View {
-    @Binding var date: Date
+    @Binding var date: Date?
     var title: String
+    var placeholder: String = "Selecionar"
     var minDate: Date? = nil
     var maxDate: Date? = nil
     var compactInRow: Bool = true
@@ -459,9 +424,15 @@ struct DateTimePickerSheetButton: View {
                     HStack(spacing: 6) {
                         Image(systemName: "clock")
                             .foregroundStyle(.secondary)
-                        Text(Self.inlineFormatter.string(from: date))
-                            .foregroundStyle(.tint)
-                            .fontWeight(.semibold)
+                        if let d = date {
+                            Text(Self.inlineFormatter.string(from: d))
+                                .foregroundStyle(.tint)
+                                .fontWeight(.semibold)
+                        } else {
+                            Text(placeholder)
+                                .foregroundStyle(.secondary)
+                                .fontWeight(.regular)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .contentShape(Rectangle())
@@ -469,10 +440,16 @@ struct DateTimePickerSheetButton: View {
                     HStack {
                         Text(title)
                         Spacer()
-                        Text(Self.inlineFormatter.string(from: date))
-                            .foregroundStyle(.tint)
-                            .monospacedDigit()
-                            .fontWeight(.semibold)
+                        if let d = date {
+                            Text(Self.inlineFormatter.string(from: d))
+                                .foregroundStyle(.tint)
+                                .monospacedDigit()
+                                .fontWeight(.semibold)
+                        } else {
+                            Text(placeholder)
+                                .foregroundStyle(.secondary)
+                                .fontWeight(.regular)
+                        }
                     }
                     .font(.body)
                     .padding(.vertical, 6)
@@ -487,7 +464,7 @@ struct DateTimePickerSheetButton: View {
                     DatePicker(
                         "",
                         selection: Binding<Date>(
-                            get: { tempDate ?? date },
+                            get: { tempDate ?? date ?? Date() },
                             set: { tempDate = $0 }
                         ),
                         in: (minDate ?? .distantPast)...(maxDate ?? .distantFuture),
@@ -537,4 +514,3 @@ struct DateTimePickerSheetButton: View {
         return f
     }()
 }
-
