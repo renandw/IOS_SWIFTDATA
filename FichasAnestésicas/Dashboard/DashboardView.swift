@@ -17,6 +17,7 @@ struct DashboardView: View {
     @Query(sort: \Anesthesia.start, order: .reverse) var anesthesias: [Anesthesia]
     @Environment(\.modelContext) private var patientContext
     @State private var navigateToPatients = false
+    @State private var navigateToTwoMonthPatients = false
     @State private var navigateToTwoMonthAnesthesia = false
     
     init(userId: String) {
@@ -49,6 +50,10 @@ struct DashboardView: View {
                               TwoMonthsAnesthesias(anesthesias: anesthesias)
                           } label: { EmptyView() }
                               .hidden()
+                          NavigationLink(isActive: $navigateToTwoMonthPatients) {
+                              TwoMonthsPatients(anesthesias: anesthesias)
+                          } label: { EmptyView() }
+                              .hidden()
 
                           QuickActionsSection(
                               onNewAnesthesia: {},
@@ -57,7 +62,7 @@ struct DashboardView: View {
                           )
 
                           
-                          StatisticsSection(anesthesias: anesthesias, patients: patients , onPatientsTapped: { navigateToPatients = true }, onAnesthesiasTapped : {navigateToTwoMonthAnesthesia = true})
+                          StatisticsSection(anesthesias: anesthesias, patients: patients , onPatientsTapped: { navigateToTwoMonthPatients = true }, onAnesthesiasTapped : {navigateToTwoMonthAnesthesia = true})
                           RecentAnesthesiasSection(anesthesias: anesthesias)
                           
                           
