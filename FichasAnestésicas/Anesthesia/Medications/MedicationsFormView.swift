@@ -10,13 +10,15 @@ struct MedicationsFormView: View {
 
     var body: some View {
         NavigationStack {
-            Picker("Modo", selection: $mode) {
-                ForEach(EntryMode.allCases, id: \.self) { m in
-                    Text(m.rawValue).tag(m)
+            if viewModel.isNew {
+                Picker("Modo", selection: $mode) {
+                    ForEach(EntryMode.allCases, id: \.self) { m in
+                        Text(m.rawValue).tag(m)
+                    }
                 }
+                .pickerStyle(.segmented)
+                .padding([.horizontal, .top])
             }
-            .pickerStyle(.segmented)
-            .padding([.horizontal, .top])
 
             if mode == .manual {
                 Form {
@@ -200,35 +202,43 @@ struct MedicationPresetGroupView: View {
     private var items: [MedicationPresetItem] { preset.medications }
 
     var body: some View {
-        List(items) { item in
-            Button {
-                toggle(item.id)
-            } label: {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(item.name)
-                        HStack(spacing: 6) {
-                            Text(item.category.rawValue)
-                            Text("•")
-                            Text(item.via.label)
-                            if !item.dose.isEmpty {
-                                Text("• \(item.dose)")
+        List {
+            Section(footer:
+                Text("Medicações podem ser alteradas individualmente quando adicionadas")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            ) {
+                ForEach(items) { item in
+                    Button {
+                        toggle(item.id)
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(item.name)
+                                HStack(spacing: 6) {
+                                    Text(item.category.rawValue)
+                                    Text("•")
+                                    Text(item.via.label)
+                                    if !item.dose.isEmpty {
+                                        Text("• \(item.dose)")
+                                    }
+                                }
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            if selectedIDs.contains(item.id) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.blue)
+                            } else {
+                                Image(systemName: "circle.dashed")
+                                    .foregroundStyle(.gray)
                             }
                         }
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
                     }
-                    Spacer()
-                    if selectedIDs.contains(item.id) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.blue)
-                    } else {
-                        Image(systemName: "circle.dashed")
-                            .foregroundStyle(.gray)
-                    }
+                    .foregroundStyle(.primary)
                 }
             }
-            .foregroundStyle(.primary)
         }
         .navigationTitle(preset.name)
         .toolbar {

@@ -51,6 +51,7 @@ struct AnesthesiaDetailsView: View {
                     .background(.ultraThinMaterial)
             }
             .navigationTitle("Ficha da Anestésica")
+            .navigationBarTitleDisplayMode(.inline)
         .onPreferenceChange(CustomTopBarButtonPreferenceKey.self) { pref in
             customTitleBarButton = pref?.view
         }

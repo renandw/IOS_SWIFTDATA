@@ -14,6 +14,7 @@ struct DashboardView: View {
     @Environment(SessionManager.self) var session
     @Query(sort:\Patient.name) var patients: [Patient]
     @Query(sort: \Surgery.date, order: .reverse) var surgeries: [Surgery]
+    @Query(sort: \Anesthesia.start, order: .reverse) var anesthesias: [Anesthesia]
     @Environment(\.modelContext) private var patientContext
     @State private var navigateToPatients = false
     
@@ -26,6 +27,10 @@ struct DashboardView: View {
         _surgeries = Query(
             filter: #Predicate<Surgery> { $0.createdBy.userId == userId },
             sort: [SortDescriptor(\.date, order: .reverse)]
+        )
+        _anesthesias = Query(
+            filter: #Predicate<Anesthesia> { $0.createdBy.userId == userId },
+            sort: [SortDescriptor(\.start, order: .reverse)]
         )
     }
 
@@ -52,9 +57,9 @@ struct DashboardView: View {
                           }
                           .buttonStyle(.glassProminent)
                           
-                          Text ("Paciente: \(patients.count)")
-                          Text ("Cirurgias? \(surgeries.count)")
-                          
+                          StatisticsSection(anesthesias: anesthesias, patients: patients , onPatientsTapped: { navigateToPatients = true }, onAnesthesiasTapped : {})
+                          RecentAnesthesiasSection(anesthesias: anesthesias)
+
                           NavigationLink("Navegar para Lista de Usuários") {
                               UserListView()
                           }
@@ -191,9 +196,12 @@ struct QuickActionCard: View {
     }
 }
 
+
+
 //#Preview {
 //    DashboardView()
 //        .environment(SessionManager())
 //        .modelContainer(for: [User.self, Patient.self])
 //}
+
 
