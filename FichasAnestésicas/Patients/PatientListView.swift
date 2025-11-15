@@ -68,7 +68,7 @@ struct PatientListView: View {
                 } label: {
                     Label("Adicionar Paciente", systemImage: "plus")
                 }
-                .buttonStyle(.glassProminent)
+                .tint(.blue)
             }
         }
     }

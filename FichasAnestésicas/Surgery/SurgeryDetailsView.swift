@@ -84,6 +84,7 @@ struct SurgeryDetailsView: View {
             Button("Adicionar Financeiro", systemImage: "plus") {
                 showingFinancialForm = true
             }
+            .tint(.blue)
         }
         .sheet(isPresented: $showingFinancialForm) {
             if let currentUser = session.currentUser {
