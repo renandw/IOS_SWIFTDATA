@@ -29,7 +29,7 @@ struct RecentAnesthesiasSection: View {
                 )
                 .frame(height: 200)
             } else {
-                VStack(spacing: 8) {
+                LazyVStack(spacing: 8) {
                     ForEach(recentAnesthesias) { anesthesia in
                         RecentAnesthesiaCard(anesthesia: anesthesia)
                     }

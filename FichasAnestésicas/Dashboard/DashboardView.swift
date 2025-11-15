@@ -17,6 +17,7 @@ struct DashboardView: View {
     @Query(sort: \Anesthesia.start, order: .reverse) var anesthesias: [Anesthesia]
     @Environment(\.modelContext) private var patientContext
     @State private var navigateToPatients = false
+    @State private var navigateToTwoMonthAnesthesia = false
     
     init(userId: String) {
         self.userId = userId
@@ -44,21 +45,27 @@ struct DashboardView: View {
                               PatientListView(session: session)
                           } label: { EmptyView() }
                           .hidden()
+                          NavigationLink(isActive: $navigateToTwoMonthAnesthesia) {
+                              TwoMonthsAnesthesias(anesthesias: anesthesias)
+                          } label: { EmptyView() }
+                              .hidden()
 
                           QuickActionsSection(
                               onNewAnesthesia: {},
                               onMyPatients: { navigateToPatients = true },
                               onFinancial: {}
                           )
+
+                          
+                          StatisticsSection(anesthesias: anesthesias, patients: patients , onPatientsTapped: { navigateToPatients = true }, onAnesthesiasTapped : {navigateToTwoMonthAnesthesia = true})
+                          RecentAnesthesiasSection(anesthesias: anesthesias)
+                          
                           
                           Text("Olá, \(user.name)")
                           Button("Encerrar Sessão") {
                               session.currentUser = nil
                           }
                           .buttonStyle(.glassProminent)
-                          
-                          StatisticsSection(anesthesias: anesthesias, patients: patients , onPatientsTapped: { navigateToPatients = true }, onAnesthesiasTapped : {})
-                          RecentAnesthesiasSection(anesthesias: anesthesias)
 
                           NavigationLink("Navegar para Lista de Usuários") {
                               UserListView()
@@ -99,7 +106,10 @@ struct QuickActionsSection: View {
     var onMyPatients: () -> Void = {}
     var onFinancial: () -> Void = {}
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Ações Rápidas")
+                .font(.title3)
+                .fontWeight(.semibold)
             QuickActionCard(
                 title: "Nova Ficha Anestésica",
                 icon: "plus.circle.fill",
@@ -153,6 +163,7 @@ struct QuickActionsSection: View {
                 onTap: onMyPatients
             )
         }
+        .padding(.bottom, 16)
     }
 }
 
