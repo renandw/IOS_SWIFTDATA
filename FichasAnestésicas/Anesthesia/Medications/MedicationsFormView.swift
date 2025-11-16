@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MedicationsFormView: View {
     @ObservedObject var viewModel: MedicationsFormViewModel
-    let catalog: [MedicationCatalogItem]  // name + category
+    let catalog: [MedicationCatalogItem]
 
     @Environment(\.dismiss) private var dismiss
     private enum EntryMode: String, CaseIterable { case manual = "Manual", presets = "Presets" }
@@ -10,37 +10,45 @@ struct MedicationsFormView: View {
 
     var body: some View {
         NavigationStack {
-            if viewModel.isNew {
-                Picker("Modo", selection: $mode) {
-                    ForEach(EntryMode.allCases, id: \.self) { m in
-                        Text(m.rawValue).tag(m)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding([.horizontal, .top])
-            }
-
             if mode == .manual {
                 Form {
+                    if viewModel.isNew {
+                        Section {
+                            Picker("Modo", selection: $mode) {
+                                ForEach(EntryMode.allCases, id: \.self) { m in
+                                    Text(m.rawValue).tag(m)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                    }
                     // IDENTIFICAÇÃO
                     Section("Medicação") {
-                        ZStack(alignment: .topLeading) {
-                            VStack(alignment: .leading, spacing: 0) {
-                                TextField("Nome", text: $viewModel.searchQuery)
-                                    .autocorrectionDisabled()
-                                    .textInputAutocapitalization(.never)
-                                    .keyboardType(.default)
-                                    .onChange(of: viewModel.searchQuery, initial: false) { oldValue, newValue in
-                                        viewModel.name = newValue
-                                        if newValue.trimmingCharacters(in: .whitespaces).count < 3 {
-                                            viewModel.dismissSuggestions()
+                        VStack(alignment: .leading, spacing: 4) {
+                            ZStack(alignment: .topLeading) {
+                                VStack(alignment: .leading, spacing: 0) {
+                                    TextField("Nome", text: $viewModel.searchQuery)
+                                        .autocorrectionDisabled()
+                                        .textInputAutocapitalization(.never)
+                                        .keyboardType(.default)
+                                        .onChange(of: viewModel.searchQuery, initial: false) { oldValue, newValue in
+                                            viewModel.name = newValue
+                                            if newValue.trimmingCharacters(in: .whitespaces).count < 3 {
+                                                viewModel.dismissSuggestions()
+                                            }
+                                            viewModel.suggestViaIfNeeded()
+                                            viewModel.recalcDoseIfNeeded()
+                                            viewModel.runValidations()
                                         }
-                                        viewModel.suggestViaIfNeeded()
-                                        viewModel.recalcDoseIfNeeded()
-                                        viewModel.runValidations()
-                                    }
+                                }
+                            }
+                            if let e = viewModel.nameError {
+                                Text(e)
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
                             }
                         }
+
                         if viewModel.showSuggestions {
                             AutocompleteSuggestionsView(
                                 suggestions: viewModel.filteredCatalog,
@@ -54,48 +62,69 @@ struct MedicationsFormView: View {
                             .padding(.top, 8)  // Espaçamento do TextField
                         }
                         
-                        Picker("Categoria", selection: Binding(
-                            get: { viewModel.category ?? .opioide },
-                            set: { viewModel.category = $0 }
-                        )) {
-                            ForEach(MedicationCategory.allCases, id: \.self) { c in
-                                Text(c.rawValue).tag(c)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Picker("Categoria", selection: Binding(
+                                get: { viewModel.category ?? .opioide },
+                                set: { viewModel.category = $0 }
+                            )) {
+                                ForEach(MedicationCategory.allCases, id: \.self) { c in
+                                    Text(c.rawValue).tag(c)
+                                }
+                            }
+                            .onChange(of: viewModel.category, initial: false) { _, _ in
+                                viewModel.dismissSuggestions()
+                                viewModel.runValidations()
+                            }
+                            
+                            if let e = viewModel.categoryError {
+                                Text(e)
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
                             }
                         }
-                        .onChange(of: viewModel.category, initial: false) { _, _ in
-                            viewModel.dismissSuggestions()
-                            viewModel.runValidations()
-                        }
                         
-                        Picker("Via", selection: Binding(
-                            get: { viewModel.via ?? .EV },
-                            set: { viewModel.via = $0 }
-                        )) {
-                            ForEach(AdministrationRoute.allCases, id: \.self) { r in
-                                Text(r.label).tag(r)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Picker("Via", selection: Binding(
+                                get: { viewModel.via ?? .EV },
+                                set: { viewModel.via = $0 }
+                            )) {
+                                ForEach(AdministrationRoute.allCases, id: \.self) { r in
+                                    Text(r.label).tag(r)
+                                }
+                            }
+                            .onChange(of: viewModel.via, initial: false) { _, _ in
+                                viewModel.dismissSuggestions()
+                                viewModel.runValidations()
+                            }
+                            
+                            if let e = viewModel.viaError {
+                                Text(e)
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
                             }
                         }
-                        .onChange(of: viewModel.via, initial: false) { _, _ in
-                            viewModel.dismissSuggestions()
-                            viewModel.runValidations()
-                        }
-                        
-                        if let e = viewModel.nameError { Text(e).foregroundStyle(.red) }
-                        if let e = viewModel.categoryError { Text(e).foregroundStyle(.red) }
-                        if let e = viewModel.viaError { Text(e).foregroundStyle(.red) }
                     }
 
                     // DOSE
                     Section("Dose") {
-                        TextField("Dose (ex.: 100mg ou 1–2 mg/kg)", text: $viewModel.dose)
-                            .autocorrectionDisabled()
-                            .textInputAutocapitalization(.never)
-                            .onChange(of: viewModel.dose, initial: false) { _, _ in
-                                viewModel.runValidations()
+                        VStack(alignment: .leading, spacing: 4) {
+                            TextField("Dose (ex.: 100mg ou 1–2 mg/kg)", text: $viewModel.dose)
+                                .autocorrectionDisabled()
+                                .textInputAutocapitalization(.never)
+                                .onChange(of: viewModel.dose, initial: false) { _, _ in
+                                    viewModel.runValidations()
+                                }
+
+                            if let e = viewModel.doseError {
+                                Text(e)
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
                             }
-                        if let e = viewModel.doseError { Text(e).foregroundStyle(.red) }
+                        }
+
                         Text("Peso: \(String(format: "%.1f", viewModel.patientWeight)) kg")
-                            .font(.footnote).foregroundStyle(.secondary)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
                     }
 
                     // HORÁRIO
@@ -151,6 +180,16 @@ struct MedicationsFormView: View {
                 }
             } else {
                 Form {
+                    if viewModel.isNew {
+                        Section {
+                            Picker("Modo", selection: $mode) {
+                                ForEach(EntryMode.allCases, id: \.self) { m in
+                                    Text(m.rawValue).tag(m)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                    }
                     Section("Grupos de Presets") {
                         List(MedicationsHelper.medicationPresets, id: \.id) { preset in
                             NavigationLink(preset.name) {

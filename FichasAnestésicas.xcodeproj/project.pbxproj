@@ -29,33 +29,9 @@
 		C083D3DB2EA6A160000B164E /* FichasAnestésicasUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FichasAnestésicasUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C040E3822EBBE6A300DEDF49 /* Exceptions for "FichasAnestésicas" folder in "FichasAnestésicas" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Anesthesia/Medications/MedicationsHelper.txt,
-			);
-			target = C083D3C32EA6A15E000B164E /* FichasAnestésicas */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		C040E3832EBBE6A300DEDF49 /* Exceptions for "FichasAnestésicas" folder in "Compile Sources" phase from "FichasAnestésicas" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = C083D3C02EA6A15E000B164E /* Sources */;
-			membershipExceptions = (
-				Anesthesia/Medications/MedicationsHelper.txt,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C083D3C62EA6A15E000B164E /* FichasAnestésicas */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C040E3822EBBE6A300DEDF49 /* Exceptions for "FichasAnestésicas" folder in "FichasAnestésicas" target */,
-				C040E3832EBBE6A300DEDF49 /* Exceptions for "FichasAnestésicas" folder in "Compile Sources" phase from "FichasAnestésicas" target */,
-			);
 			path = "FichasAnestésicas";
 			sourceTree = "<group>";
 		};
