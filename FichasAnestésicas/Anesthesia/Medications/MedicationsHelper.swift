@@ -167,16 +167,26 @@ struct MedicationPresetItem: Identifiable, Codable, Equatable {
 
     func makeEntry(for anesthesia: Anesthesia,
                    at date: Date = .init(),
+                   weight: Double,
                    id: String = UUID().uuidString) -> MedicationEntry {
         MedicationEntry(
             medicationId: id,
             anesthesia: anesthesia,
             categoryRaw: category.rawValue,
             viaRaw: via.rawValue,
-            dose: dose,
+            dose: adjustedDose(for: weight),
             name: name,
             timestamp: date
         )
+    }
+    
+    func adjustedDose(for weight: Double) -> String {
+        if weight >= MedicationsHelper.adultThresholdKg {
+            return self.dose  // Usa dose do preset
+        } else {
+            let calculated = MedicationsHelper.getWeightBasedDose(medication: self.name, weight: weight)
+            return calculated.isEmpty ? self.dose : calculated
+        }
     }
 }
 

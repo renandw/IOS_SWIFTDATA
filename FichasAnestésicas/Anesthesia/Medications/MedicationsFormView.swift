@@ -253,7 +253,7 @@ struct MedicationPresetGroupView: View {
         List {
             Section {
                 HStack {
-                    Text("Horário de Administração")
+                    Text("Horário")
                     Spacer()
                     DateTimePickerSheetButton(
                         date: Binding<Date?>(
@@ -286,7 +286,7 @@ struct MedicationPresetGroupView: View {
                                     Text("•")
                                     Text(item.via.label)
                                     if !item.dose.isEmpty {
-                                        Text("• \(item.dose)")
+                                        Text("• \(item.adjustedDose(for: viewModel.patientWeight))")
                                     }
                                 }
                                 .font(.footnote)

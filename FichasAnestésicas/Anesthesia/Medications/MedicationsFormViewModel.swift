@@ -207,7 +207,7 @@ final class MedicationsFormViewModel: ObservableObject {
 
         do {
             for item in items {
-                let entry = item.makeEntry(for: anesthesia, at: date)
+                let entry = item.makeEntry(for: anesthesia, at: date, weight: anesthesia.surgery.weight)
                 try repo.create(entry, for: anesthesia, by: user)
             }
             return true

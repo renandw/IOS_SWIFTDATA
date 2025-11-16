@@ -75,7 +75,6 @@ struct StatCard: View {
 
 struct StatisticsSection: View {
     let anesthesias: [Anesthesia]
-    let patients: [Patient]
     var onPatientsTapped: (() -> Void)? = nil
     var onAnesthesiasTapped: (() -> Void)? = nil
 
@@ -102,8 +101,8 @@ struct StatisticsSection: View {
             guard let anesthesiaStart = anesthesia.start else { return false }
             return anesthesiaStart >= start && anesthesiaStart <= end
         }
-        .map { $0.surgery.patient }
-        .reduce(into: Set<Patient>()) { $0.insert($1) }
+        .map { ObjectIdentifier($0.surgery.patient as AnyObject) }
+        .reduce(into: Set<ObjectIdentifier>()) { $0.insert($1) }
         .count
     }
 
@@ -113,8 +112,8 @@ struct StatisticsSection: View {
             guard let anesthesiaStart = anesthesia.start else { return false }
             return anesthesiaStart >= start && anesthesiaStart <= end
         }
-        .map { $0.surgery.patient }
-        .reduce(into: Set<Patient>()) { $0.insert($1) }
+        .map { ObjectIdentifier($0.surgery.patient as AnyObject) }
+        .reduce(into: Set<ObjectIdentifier>()) { $0.insert($1) }
         .count
     }
     private var anesthesiaCurrentMonthCount: Int {
@@ -135,7 +134,10 @@ struct StatisticsSection: View {
     }
 
     private var patientTotalCount: Int {
-        patients.count
+        anesthesias
+            .map { ObjectIdentifier($0.surgery.patient as AnyObject) }
+            .reduce(into: Set<ObjectIdentifier>()) { $0.insert($1) }
+            .count
     }
     
     private var anesthesiaTotalCount: Int {
@@ -201,3 +203,4 @@ struct StatisticsSection: View {
         }
     }
 }
+
