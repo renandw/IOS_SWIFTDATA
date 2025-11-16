@@ -1,6 +1,6 @@
 //
 //  TwoMonthsAnesthesias.swift
-//  FichasAnestésicas
+//  FichasAnestésicas
 //
 //  Created by Renan Wrobel on 15/11/25.
 //
@@ -9,115 +9,79 @@ import SwiftUI
 struct TwoMonthsPatients: View {
     @Environment(SessionManager.self) var session
     let anesthesias: [Anesthesia]
+    private let cal = Calendar.current
     
-    var twoMonthsPatients: [Anesthesia] {
-        // Filtra anestesias entre o início do mês anterior e o fim do mês corrente
-        let rangeStart = previousMonthBounds.start
-        let rangeEnd = monthBounds.end
-        return anesthesias
-            .filter { anesthesia in
-                guard let date = anesthesia.start else { return false }
-                return (rangeStart ... rangeEnd).contains(date)
-            }
-            .sorted { (a, b) in
-                let da = a.start ?? .distantPast
-                let db = b.start ?? .distantPast
-                return da > db
-            }
+    private var grouped: (current: [Anesthesia], previous: [Anesthesia]) {
+        let (curStart, curEnd) = monthBounds(for: now)
+        let (prevStart, prevEnd) = monthBounds(for: cal.date(byAdding: .month, value: -1, to: now)!)
+        
+        func mostRecentPerPatient(in range: ClosedRange<Date>) -> [Anesthesia] {
+            let filtered = anesthesias
+                .compactMap { a in a.start.map { (a, $0) } }
+                .filter { range.contains($0.1) }
+                .map { $0.0 }
+            
+            let grouped = Dictionary(grouping: filtered, by: { $0.surgery.patient.id })
+            return grouped.values
+                .compactMap { $0.max(by: { ($0.start ?? .distantPast) < ($1.start ?? .distantPast) }) }
+                .sorted(by: { ($0.start ?? .distantPast) > ($1.start ?? .distantPast) })
+        }
+        
+        return (
+            current: mostRecentPerPatient(in: curStart...curEnd),
+            previous: mostRecentPerPatient(in: prevStart...prevEnd)
+        )
     }
-    
+
     var body: some View {
-        Group {
-            if twoMonthsPatients.isEmpty {
-                ContentUnavailableView(
-                    "Nenhum Paciente",
-                    systemImage: "Person",
-                    description: Text("Os pacientes aparecerão aqui")
-                )
-                .frame(height: 200)
+        let g = grouped
+        
+        List {
+            if g.current.isEmpty && g.previous.isEmpty {
+                ContentUnavailableView("Nenhum Paciente", systemImage: "person")
             } else {
-                List {
-                    // Este mês
-                    let currentMonth = Calendar.current.dateComponents([.year, .month], from: now)
-                    let currentMonthItems = twoMonthsPatients.filter { item in
-                        guard let d = item.start else { return false }
-                        let comps = Calendar.current.dateComponents([.year, .month], from: d)
-                        return comps.year == currentMonth.year && comps.month == currentMonth.month
-                    }
-
-                    if !currentMonthItems.isEmpty {
-                        Section("Este mês") {
-                            ForEach(currentMonthItems) { anesthesia in
-                                NavigationLink {
-                                    PatientDetailsView(patient: anesthesia.surgery.patient)
-                                } label: {
-                                    PatientRowView(
-                                        patient: anesthesia.surgery.patient,
-                                        numberCnsContext: .notNeeded,
-                                        ageContext: .outSurgery
-                                    )
-                                    .contentShape(Rectangle())
-                                }
-                            }
-                        }
-                    }
-
-                    // Mês anterior
-                    let prevMonthStart = previousMonthBounds.start
-                    let prevMonthComps = Calendar.current.dateComponents([.year, .month], from: prevMonthStart)
-                    let previousMonthItems = twoMonthsPatients.filter { item in
-                        guard let d = item.start else { return false }
-                        let comps = Calendar.current.dateComponents([.year, .month], from: d)
-                        return comps.year == prevMonthComps.year && comps.month == prevMonthComps.month
-                    }
-
-                    if !previousMonthItems.isEmpty {
-                        Section("Mês anterior") {
-                            ForEach(previousMonthItems) { anesthesia in
-                                NavigationLink {
-                                    PatientDetailsView(patient: anesthesia.surgery.patient)
-                                } label: {
-                                    PatientRowView(
-                                        patient: anesthesia.surgery.patient,
-                                        numberCnsContext: .notNeeded,
-                                        ageContext: .outSurgery
-                                    )
-                                    .contentShape(Rectangle())
-                                }
-                            }
-                        }
-                    }
-
-                    Section {
-                        NavigationLink(destination: PatientListView(session: session)) {
-                            Label("Navegar para todos os pacientes", systemImage: "wallet.pass.fill")
-                                .font(.body)
-                                .fontWeight(.semibold)
-                        }
+                if !g.current.isEmpty {
+                    Section("Este mês") {
+                        ForEach(g.current) { a in row(for: a) }
                     }
                 }
-                .listStyle(.insetGrouped)
+                
+                if !g.previous.isEmpty {
+                    Section("Mês anterior") {
+                        ForEach(g.previous) { a in row(for: a) }
+                    }
+                }
+            }
+            
+            Section {
+                NavigationLink("Todos os pacientes") {
+                    PatientListView(session: session)
+                }
             }
         }
         .navigationTitle("Pacientes Recentes")
-        .navigationBarTitleDisplayMode(.automatic)
+        .listStyle(.insetGrouped)
+    }
+    
+    private func row(for anesthesia: Anesthesia) -> some View {
+        NavigationLink {
+            PatientDetailsView(patient: anesthesia.surgery.patient)
+        } label: {
+            PatientRowView(
+                patient: anesthesia.surgery.patient,
+                numberCnsContext: .notNeeded,
+                ageContext: .outSurgery
+            )
+        }
+    }
+    
+    private func monthBounds(for date: Date) -> (start: Date, end: Date) {
+        let start = cal.date(from: cal.dateComponents([.year, .month], from: date))!
+        let end = cal.date(byAdding: .second, value: -1,
+                    to: cal.date(byAdding: .month, value: 1, to: start)!)!
+        return (start, end)
     }
     
     private var now: Date { Date() }
-
-    private var monthBounds: (start: Date, end: Date) {
-        let cal = Calendar.current
-        let start = cal.date(from: cal.dateComponents([.year, .month], from: now)) ?? now
-        let end = cal.date(byAdding: .month, value: 1, to: start).map { cal.date(byAdding: .second, value: -1, to: $0) ?? $0 } ?? now
-        return (start, end)
-    }
-
-    private var previousMonthBounds: (start: Date, end: Date) {
-        let cal = Calendar.current
-        let currentStart = cal.date(from: cal.dateComponents([.year, .month], from: now)) ?? now
-        let start = cal.date(byAdding: .month, value: -1, to: currentStart) ?? now
-        let end = cal.date(byAdding: .second, value: -1, to: currentStart) ?? currentStart
-        return (start, end)
-    }
 }
 
