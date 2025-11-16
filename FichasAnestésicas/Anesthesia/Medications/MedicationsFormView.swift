@@ -22,24 +22,28 @@ struct MedicationsFormView: View {
                             .pickerStyle(.segmented)
                         }
                     }
-                    // IDENTIFICAÇÃO
-                    Section("Medicação") {
+                    Section {
+                        // IDENTIFICAÇÃO
                         VStack(alignment: .leading, spacing: 4) {
                             ZStack(alignment: .topLeading) {
                                 VStack(alignment: .leading, spacing: 0) {
-                                    TextField("Nome", text: $viewModel.searchQuery)
-                                        .autocorrectionDisabled()
-                                        .textInputAutocapitalization(.never)
-                                        .keyboardType(.default)
-                                        .onChange(of: viewModel.searchQuery, initial: false) { oldValue, newValue in
-                                            viewModel.name = newValue
-                                            if newValue.trimmingCharacters(in: .whitespaces).count < 3 {
-                                                viewModel.dismissSuggestions()
+                                    HStack {
+                                        Text("Medicação:")
+                                        Spacer()
+                                        TextField("Nome", text: $viewModel.searchQuery)
+                                            .autocorrectionDisabled()
+                                            .textInputAutocapitalization(.never)
+                                            .keyboardType(.default)
+                                            .onChange(of: viewModel.searchQuery, initial: false) { oldValue, newValue in
+                                                viewModel.name = newValue
+                                                if newValue.trimmingCharacters(in: .whitespaces).count < 3 {
+                                                    viewModel.dismissSuggestions()
+                                                }
+                                                viewModel.suggestViaIfNeeded()
+                                                viewModel.recalcDoseIfNeeded()
+                                                viewModel.runValidations()
                                             }
-                                            viewModel.suggestViaIfNeeded()
-                                            viewModel.recalcDoseIfNeeded()
-                                            viewModel.runValidations()
-                                        }
+                                    }
                                 }
                             }
                             if let e = viewModel.nameError {
@@ -103,17 +107,18 @@ struct MedicationsFormView: View {
                                     .foregroundStyle(.red)
                             }
                         }
-                    }
 
-                    // DOSE
-                    Section("Dose") {
                         VStack(alignment: .leading, spacing: 4) {
-                            TextField("Dose (ex.: 100mg ou 1–2 mg/kg)", text: $viewModel.dose)
-                                .autocorrectionDisabled()
-                                .textInputAutocapitalization(.never)
-                                .onChange(of: viewModel.dose, initial: false) { _, _ in
-                                    viewModel.runValidations()
-                                }
+                            HStack {
+                                Text("Dose:")
+                                Spacer()
+                                TextField("Dose (ex.: 100mg ou 1–2 mg/kg)", text: $viewModel.dose)
+                                    .autocorrectionDisabled()
+                                    .textInputAutocapitalization(.never)
+                                    .onChange(of: viewModel.dose, initial: false) { _, _ in
+                                        viewModel.runValidations()
+                                    }
+                            }
 
                             if let e = viewModel.doseError {
                                 Text(e)
@@ -122,13 +127,6 @@ struct MedicationsFormView: View {
                             }
                         }
 
-                        Text("Peso: \(String(format: "%.1f", viewModel.patientWeight)) kg")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    // HORÁRIO
-                    Section("Horário") {
                         HStack {
                             Text("Administração")
                             Spacer()
@@ -147,10 +145,17 @@ struct MedicationsFormView: View {
                                 }
                             )
                         }
-                        Text("Anestesia iniciou: \(viewModel.anesthesiaStart ?? Date())")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
+                    } header: {
+                        Text("Medicação")
+                    } footer: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Doses, surgeridas automaticamente, para peso: \(String(format: "%.1f", viewModel.patientWeight)) kg")
+                            Text("Início Anestesia: \(viewModel.anesthesiaStart?.formatted(date: .numeric, time: .shortened) ?? "Não iniciada")")
+                        }
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                     }
+
 
                     if let msg = viewModel.errorMessage {
                         Section { Text(msg).foregroundStyle(.red) }
@@ -190,7 +195,7 @@ struct MedicationsFormView: View {
                             .pickerStyle(.segmented)
                         }
                     }
-                    Section("Grupos de Presets") {
+                    Section {
                         List(MedicationsHelper.medicationPresets, id: \.id) { preset in
                             NavigationLink(preset.name) {
                                 MedicationPresetGroupView(preset: preset) { items in
@@ -200,6 +205,8 @@ struct MedicationsFormView: View {
                                 }
                             }
                         }
+                    } header: {
+                        Text("Grupos de Presets")
                     }
                 }
                 .navigationTitle(viewModel.isNew ? "Nova Medicação" : "Editar Medicação")
