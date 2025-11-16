@@ -25,26 +25,23 @@ struct MedicationsFormView: View {
                     Section {
                         // IDENTIFICAÇÃO
                         VStack(alignment: .leading, spacing: 4) {
-                            ZStack(alignment: .topLeading) {
-                                VStack(alignment: .leading, spacing: 0) {
-                                    HStack {
-                                        Text("Medicação:")
-                                        Spacer()
-                                        TextField("Nome", text: $viewModel.searchQuery)
-                                            .autocorrectionDisabled()
-                                            .textInputAutocapitalization(.never)
-                                            .keyboardType(.default)
-                                            .onChange(of: viewModel.searchQuery, initial: false) { oldValue, newValue in
-                                                viewModel.name = newValue
-                                                if newValue.trimmingCharacters(in: .whitespaces).count < 3 {
-                                                    viewModel.dismissSuggestions()
-                                                }
-                                                viewModel.suggestViaIfNeeded()
-                                                viewModel.recalcDoseIfNeeded()
-                                                viewModel.runValidations()
-                                            }
+                            LabeledContent {
+                                TextField("Nome", text: $viewModel.searchQuery)
+                                    .multilineTextAlignment(.trailing)
+                                    .autocorrectionDisabled()
+                                    .textInputAutocapitalization(.never)
+                                    .keyboardType(.default)
+                                    .onChange(of: viewModel.searchQuery, initial: false) { oldValue, newValue in
+                                        viewModel.name = newValue
+                                        if newValue.trimmingCharacters(in: .whitespaces).count < 3 {
+                                            viewModel.dismissSuggestions()
+                                        }
+                                        viewModel.suggestViaIfNeeded()
+                                        viewModel.recalcDoseIfNeeded()
+                                        viewModel.runValidations()
                                     }
-                                }
+                            } label: {
+                                Label("Medicação", systemImage: "pills")
                             }
                             if let e = viewModel.nameError {
                                 Text(e)
@@ -107,19 +104,16 @@ struct MedicationsFormView: View {
                                     .foregroundStyle(.red)
                             }
                         }
-
                         VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text("Dose:")
-                                Spacer()
-                                TextField("Dose (ex.: 100mg ou 1–2 mg/kg)", text: $viewModel.dose)
+                            LabeledContent("Dose") {
+                                TextField("(ex.: 150mg)", text: $viewModel.dose)
+                                    .multilineTextAlignment(.trailing)
                                     .autocorrectionDisabled()
                                     .textInputAutocapitalization(.never)
                                     .onChange(of: viewModel.dose, initial: false) { _, _ in
                                         viewModel.runValidations()
                                     }
                             }
-
                             if let e = viewModel.doseError {
                                 Text(e)
                                     .font(.caption)
@@ -165,6 +159,11 @@ struct MedicationsFormView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
+                        if viewModel.isNew {
+                            Button("Fechar") { dismiss() }
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarLeading) {
                         if !viewModel.isNew {
                             Button("Excluir", role: .destructive) {
                                 if viewModel.delete() { dismiss() }
@@ -198,11 +197,7 @@ struct MedicationsFormView: View {
                     Section {
                         List(MedicationsHelper.medicationPresets, id: \.id) { preset in
                             NavigationLink(preset.name) {
-                                MedicationPresetGroupView(preset: preset) { items in
-                                    if viewModel.createEntries(from: items) {
-                                        dismiss()
-                                    }
-                                }
+                                MedicationPresetGroupView(preset: preset, viewModel: viewModel)
                             }
                         }
                     } header: {
@@ -211,13 +206,20 @@ struct MedicationsFormView: View {
                 }
                 .navigationTitle(viewModel.isNew ? "Nova Medicação" : "Editar Medicação")
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        if viewModel.isNew {
+                            Button("Fechar") { dismiss() }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 struct MedicationPresetGroupsView: View {
-    let onConfirmItems: ([MedicationPresetItem]) -> Void
+    @ObservedObject var viewModel: MedicationsFormViewModel
     @State private var query = ""
 
     private var groups: [MedicationPreset] { MedicationsHelper.medicationPresets }
@@ -231,7 +233,7 @@ struct MedicationPresetGroupsView: View {
     var body: some View {
         List(filteredGroups, id: \.id) { preset in
             NavigationLink(preset.name) {
-                MedicationPresetGroupView(preset: preset, onConfirmItems: onConfirmItems)
+                MedicationPresetGroupView(preset: preset, viewModel: viewModel)
             }
         }
         .navigationTitle("Presets")
@@ -241,7 +243,7 @@ struct MedicationPresetGroupsView: View {
 
 struct MedicationPresetGroupView: View {
     let preset: MedicationPreset
-    let onConfirmItems: ([MedicationPresetItem]) -> Void
+    @ObservedObject var viewModel: MedicationsFormViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var selectedIDs: Set<UUID> = []
 
@@ -249,6 +251,24 @@ struct MedicationPresetGroupView: View {
 
     var body: some View {
         List {
+            Section {
+                HStack {
+                    Text("Horário de Administração")
+                    Spacer()
+                    DateTimePickerSheetButton(
+                        date: Binding<Date?>(
+                            get: { viewModel.timestamp },
+                            set: { viewModel.timestamp = $0 ?? viewModel.timestamp }
+                        ),
+                        title: "Administração",
+                        placeholder: "Selecionar",
+                        minDate: nil, // ou defina se precisar
+                        maxDate: nil,
+                        compactInRow: true
+                    )
+                }
+            }
+            
             Section(footer:
                 Text("Medicações podem ser alteradas individualmente quando adicionadas")
                     .font(.footnote)
@@ -291,8 +311,9 @@ struct MedicationPresetGroupView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Adicionar") {
                     let selected = items.filter { selectedIDs.contains($0.id) }
-                    onConfirmItems(selected)
-                    dismiss()
+                    if viewModel.createEntries(from: selected, at: viewModel.timestamp) {
+                        dismiss()
+                    }
                 }
             }
         }
