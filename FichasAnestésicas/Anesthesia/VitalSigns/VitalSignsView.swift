@@ -136,6 +136,19 @@ struct VitalSignsView: View {
                     .clipShape(Capsule())
             }
 
+            if !anesthesia.vitalSigns.isEmpty {
+                Button(action: {
+                    //toogle graphview in vitalsignsview
+                
+                }) {
+                    Image(systemName: "chart.xyaxis.line")
+                        .font(.system(size: 16, weight: .regular))
+                        .frame(width: 20, height: 20)
+                }
+                .accessibilityLabel("Apagar Registros")
+                .buttonStyle(.glass)
+                .tint(.blue)
+            }
             
             Spacer()
             
