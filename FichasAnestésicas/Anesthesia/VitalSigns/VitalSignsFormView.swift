@@ -19,8 +19,22 @@ struct VitalSignsFormView: View {
             }
 
             
-            Section("Data e hora") {
-                DatePicker("Horário do registro", selection: $viewModel.timestamp, displayedComponents: [.date, .hourAndMinute])
+            Section {
+                HStack {
+                    Text("Horário")
+                    Spacer()
+                    DateTimePickerSheetButton(
+                        date: Binding<Date?>(
+                            get: { viewModel.timestamp },
+                            set: { viewModel.timestamp = $0 ?? viewModel.timestamp }
+                        ),
+                        title: "Administração",
+                        placeholder: "Selecionar",
+                        minDate: nil, // ou defina se precisar
+                        maxDate: nil,
+                        compactInRow: true
+                    )
+                }
             }
 
             Section("Sinais vitais") {
@@ -102,61 +116,134 @@ struct VitalSignsFormView: View {
             }
 
             Section("Monitorização avançada") {
-                HStack { Text("BIS"); Spacer(); TextField("", value: $viewModel.bis, format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorBis { Text(error).foregroundStyle(.red).font(.footnote) }
-                HStack { Text("TOF"); Spacer(); TextField("%", value: $viewModel.tof, format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorTof { Text(error).foregroundStyle(.red).font(.footnote) }
-                HStack { Text("PVC"); Spacer(); TextField("mmHg", value: $viewModel.pvc, format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorPvc { Text(error).foregroundStyle(.red).font(.footnote) }
-                HStack { Text("Débito cardíaco"); Spacer(); TextField("L/min", value: $viewModel.debitCardiaco, format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorDebitCardiaco { Text(error).foregroundStyle(.red).font(.footnote) }
-                HStack { Text("Pupilas"); Spacer(); TextField("", text: Binding<String>(get: { viewModel.pupilas ?? "" }, set: { viewModel.pupilas = $0.isEmpty ? nil : $0 })).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorPupilas { Text(error).foregroundStyle(.red).font(.footnote) }
+                HStack {
+                    Text("BIS")
+                    Spacer()
+                    TextField("", value: $viewModel.bis, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorBis {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
+                HStack {
+                    Text("TOF")
+                    Spacer()
+                    TextField("%", value: $viewModel.tof, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorTof {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
+                HStack {
+                    Text("PVC")
+                    Spacer()
+                    TextField("mmHg", value: $viewModel.pvc, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorPvc {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
+                HStack {
+                    Text("Débito cardíaco")
+                    Spacer()
+                    TextField("L/min", value: $viewModel.debitCardiaco, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorDebitCardiaco {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
+                HStack {
+                    Text("Pupilas")
+                    Spacer()
+                    TextField("", text: Binding<String>(
+                        get: { viewModel.pupilas ?? "" },
+                        set: { viewModel.pupilas = $0.isEmpty ? nil : $0 }))
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorPupilas {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
             }
 
             Section("Metabólico e balanço") {
-                HStack { Text("Glicemia"); Spacer(); TextField("mg/dL", value: $viewModel.glicemia, format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorGlicemia { Text(error).foregroundStyle(.red).font(.footnote) }
-                HStack { Text("Lactato"); Spacer(); TextField("mmol/L", value: $viewModel.lactato, format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorLactato { Text(error).foregroundStyle(.red).font(.footnote) }
-                HStack { Text("Temperatura"); Spacer(); TextField("°C", value: $viewModel.temperatura, format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorTemperatura { Text(error).foregroundStyle(.red).font(.footnote) }
-                HStack { Text("Diurese"); Spacer(); TextField("mL", value: $viewModel.diurese, format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorDiurese { Text(error).foregroundStyle(.red).font(.footnote) }
-                HStack { Text("Sangramento"); Spacer(); TextField("mL", value: $viewModel.sangramento, format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing) }
-                if let error = viewModel.errorSangramento { Text(error).foregroundStyle(.red).font(.footnote) }
+                HStack {
+                    Text("Glicemia")
+                    Spacer()
+                    TextField("mg/dL", value: $viewModel.glicemia, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorGlicemia {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
+                HStack {
+                    Text("Lactato")
+                    Spacer()
+                    TextField("mmol/L", value: $viewModel.lactato, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorLactato {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
+                HStack {
+                    Text("Temperatura")
+                    Spacer()
+                    TextField("°C", value: $viewModel.temperatura, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorTemperatura {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
+                HStack {
+                    Text("Diurese")
+                    Spacer()
+                    TextField("mL", value: $viewModel.diurese, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorDiurese {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
+                HStack {
+                    Text("Sangramento")
+                    Spacer()
+                    TextField("mL", value: $viewModel.sangramento, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorSangramento {
+                    Text(error).foregroundStyle(.red).font(.footnote)
+                }
             }
-
-//            Section {
-//                if viewModel.isNew {
-//                    Button("Criar registro") {
-//                        do { try viewModel.createCurrent(); dismiss() } catch { /* handle error UI */ }
-//                    }
-//                    .buttonStyle(.borderedProminent)
-//                } else {
-//                    Button("Atualizar registro") {
-//                        do { try viewModel.updateCurrent(); dismiss() } catch { /* handle error UI */ }
-//                    }
-//                    Button(role: .destructive) { do { try viewModel.deleteCurrent(); dismiss() } catch { /* handle error UI */ } } label: {
-//                        Text("Deletar registro")
-//                    }
-//                }
-//            }
         }
         .navigationTitle(viewModel.isNew ? "Novo registro" : "Editar registro")
         .navigationBarTitleDisplayMode(.inline)
         
-        .toolbar{
-            if viewModel.isNew {
-                Button("Criar Registro"){
-                    do { try viewModel.createCurrent(); dismiss() } catch { /* handle error UI */ }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if viewModel.isNew {
+                    Button("Criar Registro", systemImage: "plus") {
+                        do { try viewModel.createCurrent(); dismiss() } catch { /* handle error UI */ }
+                    }
+                } else {
+                    Button("Atualizar registro", systemImage: "checkmark.arrow.trianglehead.clockwise") {
+                        do { try viewModel.updateCurrent(); dismiss() } catch { /* handle error UI */ }
+                    }
                 }
-            } else {
-                Button("Atualizar registro") {
-                    do { try viewModel.updateCurrent(); dismiss() } catch { /* handle error UI */ }
-                }
-                Button(role: .destructive) { do { try viewModel.deleteCurrent(); dismiss() } catch { /* handle error UI */ } } label: {
-                    Text("Deletar registro")
+            }
+            if !viewModel.isNew {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(role: .destructive) {
+                        do { try viewModel.deleteCurrent(); dismiss() } catch { /* handle error UI */ }
+                    } label: {
+                        Image(systemName: "trash")
+                    }
                 }
             }
         }

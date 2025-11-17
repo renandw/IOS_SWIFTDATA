@@ -12,13 +12,15 @@ struct VitalSignsView: View {
     @Environment(\.modelContext) private var modelContext
     
     @Bindable var anesthesia: Anesthesia
-    @State private var showingMedicationsForm = false
+    @State private var showingVitalSignsFormCreate = false
+    @State private var selectedEntry: VitalSignEntry? = nil
     
     var body: some View {
         ScrollView {
             
             Button("Adicionar Sinais Vitais", systemImage: "plus") {
-                showingMedicationsForm = true
+                showingVitalSignsFormCreate = true
+                selectedEntry = nil
             }
             
             if anesthesia.vitalSigns.isEmpty {
@@ -27,34 +29,64 @@ struct VitalSignsView: View {
                 Text("Sinais vitais registrados \(anesthesia.vitalSigns.count).")
                 VStack(alignment: .leading) {
                     ForEach(anesthesia.vitalSigns) { vitalSign in
-                        HStack(alignment: .center) {
-                            VStack(alignment: .leading) {
-                                Text("FC:")
-                                Text("\(displayOrNoRecord(vitalSign.fc, decimals: 0, suffix: "bpm"))")
+                        HStack {
+                            Text(vitalSign.timestamp.formatted(date: .omitted, time: .shortened))
+                            
+                            if vitalSign.fc != nil {
+                                VStack(alignment: .leading) {
+                                    Text("FC:")
+                                    Text("\(displayOrNoRecord(vitalSign.fc, decimals: 0, suffix: "bpm"))")
+                                }
                             }
-                            VStack(alignment: .leading) {
-                                Text("PA:")
-                                Text("\(displayOrNoRecord(vitalSign.paS, decimals: 0, suffix: "")) / \(displayOrNoRecord(vitalSign.paD, decimals: 0, suffix: "mmHg"))")
+                            if vitalSign.paS != nil || vitalSign.paD != nil {
+                                VStack(alignment: .leading) {
+                                    Text("PA:")
+                                    Text("\(displayOrNoRecord(vitalSign.paS, decimals: 0, suffix: "")) / \(displayOrNoRecord(vitalSign.paD, decimals: 0, suffix: "mmHg"))")
+                                }
                             }
-                            VStack(alignment: .leading) {
-                                Text("SpO₂:")
-                                Text("\(displayOrNoRecord(vitalSign.spo2, decimals: 1, suffix: "%"))")
+                            if vitalSign.spo2 != nil {
+                                VStack(alignment: .leading) {
+                                    Text("SpO₂:")
+                                    Text("\(displayOrNoRecord(vitalSign.spo2, decimals: 1, suffix: "%"))")
+                                }
                             }
-                            VStack(alignment: .leading) {
-                                Text("Ritmo:")
-                                Text("\(displayOrNoStringRecord(vitalSign.rhythm))")
+                            if (vitalSign.rhythm) != nil{
+                                VStack(alignment: .leading) {
+                                    Text("Ritmo:")
+                                    Text("\(displayOrNoStringRecord(vitalSign.rhythm))")
+                                }
                             }
+                    
                         }
                         .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .glassEffect(.regular.interactive())
+                        .onTapGesture {
+                            selectedEntry = vitalSign
+                        }
+                        
                     }
                 }
                 .padding(.horizontal)
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
             Spacer()
         }
-        .sheet(isPresented: $showingMedicationsForm) {
+        .sheet(item: $selectedEntry) { entry in
+            if let user = session.currentUser {
+                let repo: VitalSignsEntryRepository = SwiftDataVitalSignsEntryRepository(context: modelContext)
+                let vm = VitalSignsFormViewModel(
+                    repo: repo,
+                    anesthesia: anesthesia,
+                    user: user,
+                    context: modelContext,
+                    existingEntry: entry
+                )
+                NavigationStack { VitalSignsFormView(viewModel: vm) }
+            } else {
+                NavigationStack { Text("Dependências indisponíveis para abrir o formulário.") }
+            }
+        }
+        .sheet(isPresented: $showingVitalSignsFormCreate) {
             if let user = session.currentUser {
                 let repo: VitalSignsEntryRepository = SwiftDataVitalSignsEntryRepository(context: modelContext)
                 let vm = VitalSignsFormViewModel(
@@ -94,7 +126,7 @@ struct VitalSignsView: View {
             
             Spacer()
             
-            if !anesthesia.medications.isEmpty {
+            if !anesthesia.vitalSigns.isEmpty {
                 Button(action: {
                     if let currentUser = session.currentUser {
                         let repo: VitalSignsEntryRepository = SwiftDataVitalSignsEntryRepository(context: modelContext)
@@ -114,7 +146,8 @@ struct VitalSignsView: View {
             
             
             Button(action: {
-                showingMedicationsForm = true
+                selectedEntry = nil
+                showingVitalSignsFormCreate = true
             }) {
                 Image(systemName: "plus")
                     .font(.system(size: 16, weight: .regular))
@@ -143,3 +176,4 @@ struct VitalSignsView: View {
         return trimmed.isEmpty ? noRecord : trimmed
     }
 }
+
