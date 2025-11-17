@@ -46,6 +46,7 @@ final class VitalSignsFormViewModel: ObservableObject {
     @Published var anesthesiaEnd: Date?
     @Published var surgeryStart: Date?
     @Published var surgeryEnd: Date?
+    @Published var patientAge: Int
     //vem de @model surgery através de @relationships com @model SharedPreAndAnesthesia
     @Published var techniques: [AnesthesiaTechniqueKind] = []
     @Published var asaClassification: ASAClassification? = nil
@@ -90,6 +91,10 @@ final class VitalSignsFormViewModel: ObservableObject {
         self.surgeryEnd = anesthesia.surgery.end
         self.techniques = anesthesia.surgery.shared?.techniques ?? []
         self.asaClassification = anesthesia.surgery.shared?.asa
+        
+        // Calcular idade do paciente usando AgeContext
+        let ageContext = AgeContext.inSurgery(anesthesia.surgery)
+        self.patientAge = ageContext.ageInYears(from: anesthesia.surgery.patient.birthDate)
         
         if let entry = existingEntry {
             // Modo edição
@@ -256,5 +261,8 @@ final class VitalSignsFormViewModel: ObservableObject {
         diurese = nil
         sangramento = nil
     }
-
+    //to-do: validations for each input, automatic register with variations
+    //criteria: 1- techniques; 2- asa; 3- patientAge
 }
+
+

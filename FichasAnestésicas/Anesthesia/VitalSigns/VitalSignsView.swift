@@ -11,6 +11,7 @@ struct VitalSignsView: View {
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
     
+    
     @Bindable var anesthesia: Anesthesia
     @State private var showingVitalSignsFormCreate = false
     @State private var selectedEntry: VitalSignEntry? = nil

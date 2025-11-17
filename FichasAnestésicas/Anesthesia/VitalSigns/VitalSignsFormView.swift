@@ -17,6 +17,15 @@ struct VitalSignsFormView: View {
                 let allTechniques = viewModel.techniques.map { $0.rawValue }.joined(separator: ", ")
                 Text(allTechniques.isEmpty ? "Sem técnicas anestésicas descritas" : allTechniques)
             }
+            Section("ASA") {
+                if let asa = viewModel.asaClassification {
+                    Text(String(describing:asa))
+                } else {
+                    Text("Não informado")
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Text("Idade: \(viewModel.patientAge)")
 
             
             Section {
