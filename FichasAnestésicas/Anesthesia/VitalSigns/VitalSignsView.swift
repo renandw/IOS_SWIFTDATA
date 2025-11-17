@@ -63,6 +63,12 @@ struct VitalSignsView: View {
                                     Text("\(displayOrNoStringRecord(vitalSign.rhythm))")
                                 }
                             }
+                            if (vitalSign.etco2) != nil{
+                                VStack(alignment: .leading) {
+                                    Text("ETCO₂:")
+                                    Text("\(displayOrNoRecord(vitalSign.etco2, decimals: 0, suffix: "mmHg"))")
+                                }
+                            }
                     
                         }
                         .padding()

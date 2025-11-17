@@ -28,6 +28,7 @@ final class VitalSignsFormViewModel: ObservableObject {
     @Published var pam: Double? = nil
     @Published var spo2: Double? = nil
     @Published var rhythm: String? = nil
+    @Published var etco2: Double? = nil
     @Published var fio2: Double? = nil
     @Published var peep: Double? = nil
     @Published var volumeCorrente: Double? = nil
@@ -47,6 +48,7 @@ final class VitalSignsFormViewModel: ObservableObject {
     @Published var paSTouched: Bool = false
     @Published var paDTouched: Bool = false
     @Published var rhythmTouched: Bool = false
+    @Published var etco2Touched: Bool = false
     @Published var spo2Touched: Bool = false
     
     //vem de @model surgery através de @relationships
@@ -65,6 +67,7 @@ final class VitalSignsFormViewModel: ObservableObject {
     @Published var errorPaS: String? = nil
     @Published var errorPaD: String? = nil
     @Published var errorRhythm: String? = nil
+    @Published var errorEtco2: String? = nil
     @Published var errorSpo2: String? = nil
     @Published var errorFio2: String? = nil
     @Published var errorPeep: String? = nil
@@ -108,35 +111,51 @@ final class VitalSignsFormViewModel: ObservableObject {
         
         if let entry = existingEntry {
             // Modo edição
-            self.existingEntry = entry
+            // Garante que usamos a instância gerenciada pelo mesmo ModelContext deste ViewModel
+            let managedEntry: VitalSignEntry
+            let id = entry.vitalSignsId
+            if let fetched = try? context.fetch(
+                FetchDescriptor<VitalSignEntry>(
+                    predicate: #Predicate { $0.vitalSignsId == id }
+                )
+            ).first {
+                managedEntry = fetched
+            } else {
+                // Fallback: usa a própria referência recebida
+                managedEntry = entry
+            }
+
+            self.existingEntry = managedEntry
             self.isNew = false
-            self.timestamp = entry.timestamp
-            self.fc = entry.fc
-            self.paS = entry.paS
-            self.paD = entry.paD
-            self.pam = entry.pam
-            self.rhythm = entry.rhythm
-            self.spo2 = entry.spo2
-            self.fio2 = entry.fio2
-            self.peep = entry.peep
-            self.volumeCorrente = entry.volumeCorrente
-            self.bis = entry.bis
-            self.pupilas = entry.pupilas
-            self.tof = entry.tof
-            self.pvc = entry.pvc
-            self.debitCardiaco = entry.debitCardiaco
-            self.glicemia = entry.glicemia
-            self.lactato = entry.lactato
-            self.temperatura = entry.temperatura
-            self.diurese = entry.diurese
-            self.sangramento = entry.sangramento
+            self.timestamp = managedEntry.timestamp
+            self.fc = managedEntry.fc
+            self.paS = managedEntry.paS
+            self.paD = managedEntry.paD
+            self.pam = managedEntry.pam
+            self.rhythm = managedEntry.rhythm
+            self.etco2 = managedEntry.etco2
+            self.spo2 = managedEntry.spo2
+            self.fio2 = managedEntry.fio2
+            self.peep = managedEntry.peep
+            self.volumeCorrente = managedEntry.volumeCorrente
+            self.bis = managedEntry.bis
+            self.pupilas = managedEntry.pupilas
+            self.tof = managedEntry.tof
+            self.pvc = managedEntry.pvc
+            self.debitCardiaco = managedEntry.debitCardiaco
+            self.glicemia = managedEntry.glicemia
+            self.lactato = managedEntry.lactato
+            self.temperatura = managedEntry.temperatura
+            self.diurese = managedEntry.diurese
+            self.sangramento = managedEntry.sangramento
             
             // Initialize touched flags based on existing values
-            self.fcTouched = entry.fc != nil
-            self.paSTouched = entry.paS != nil
-            self.paDTouched = entry.paD != nil
-            self.rhythmTouched = entry.rhythm != nil
-            self.spo2Touched = entry.spo2 != nil
+            self.fcTouched = managedEntry.fc != nil
+            self.paSTouched = managedEntry.paS != nil
+            self.paDTouched = managedEntry.paD != nil
+            self.rhythmTouched = managedEntry.rhythm != nil
+            self.etco2Touched = managedEntry.etco2 != nil
+            self.spo2Touched = managedEntry.spo2 != nil
         } else {
             // Modo criação - timestamp com fallback
             self.timestamp = anesthesia.start ?? Date()
@@ -146,6 +165,7 @@ final class VitalSignsFormViewModel: ObservableObject {
             self.paSTouched = false
             self.paDTouched = false
             self.rhythmTouched = false
+            self.etco2Touched = false
             self.spo2Touched = false
         }
         setupValidationBindings()
@@ -366,6 +386,7 @@ final class VitalSignsFormViewModel: ObservableObject {
         entry.paD = paD
         entry.pam = calculatePam(paS: paS, paD: paD)
         entry.rhythm = rhythm
+        entry.etco2 = etco2
         entry.spo2 = spo2
         entry.fio2 = fio2
         entry.peep = peep
@@ -396,6 +417,7 @@ final class VitalSignsFormViewModel: ObservableObject {
             paD = entry.paD
             pam = entry.pam
             rhythm = entry.rhythm
+            etco2 = entry.etco2
             spo2 = entry.spo2
             fio2 = entry.fio2
             peep = entry.peep
@@ -434,13 +456,43 @@ final class VitalSignsFormViewModel: ObservableObject {
     }
 
     func updateCurrent() throws {
-        // Require an existing entry id to update
+        // Require an existing entry to update
         guard let current = existingEntry else {
-            throw NSError(domain: "VitalSignsFormViewModel", code: 1, userInfo: [NSLocalizedDescriptionKey: "Nenhuma entrada existente para atualizar."])
+            throw NSError(
+                domain: "VitalSignsFormViewModel",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "Nenhuma entrada existente para atualizar."]
+            )
         }
-        let updated = makeEntry(from: current.vitalSignsId)
-        try repo.update(updated, for: anesthesia, by: user)
-        existingEntry = updated
+
+        // Copia os valores do form para o objeto gerenciado pelo SwiftData
+        current.timestamp       = timestamp
+        current.fc              = fc
+        current.paS             = paS
+        current.paD             = paD
+        current.pam             = calculatePam(paS: paS, paD: paD)
+        current.rhythm          = rhythm
+        current.spo2            = spo2
+        current.fio2            = fio2
+        current.etco2           = etco2
+        current.peep            = peep
+        current.volumeCorrente  = volumeCorrente
+        current.bis             = bis
+        current.pupilas         = pupilas
+        current.tof             = tof
+        current.pvc             = pvc
+        current.debitCardiaco   = debitCardiaco
+        current.glicemia        = glicemia
+        current.lactato         = lactato
+        current.temperatura     = temperatura
+        current.diurese         = diurese
+        current.sangramento     = sangramento
+
+        // Persiste as alterações
+        try repo.update(current, for: anesthesia, by: user)
+
+        // Garante que o ViewModel continue apontando para a entrada atualizada
+        existingEntry = current
     }
 
     func deleteCurrent() throws {
@@ -458,6 +510,7 @@ final class VitalSignsFormViewModel: ObservableObject {
         pam = nil
         spo2 = nil
         rhythm = nil
+        etco2 = nil
         fio2 = nil
         peep = nil
         volumeCorrente = nil
@@ -476,6 +529,7 @@ final class VitalSignsFormViewModel: ObservableObject {
         paSTouched = false
         paDTouched = false
         rhythmTouched = false
+        etco2Touched = false
         spo2Touched = false
     }
 
@@ -492,6 +546,7 @@ final class VitalSignsFormViewModel: ObservableObject {
         spo2 = nil
         rhythm = nil
         fio2 = nil
+        etco2 = nil
         peep = nil
         volumeCorrente = nil
         bis = nil
@@ -509,6 +564,7 @@ final class VitalSignsFormViewModel: ObservableObject {
         paSTouched = false
         paDTouched = false
         rhythmTouched = false
+        etco2Touched = false
         spo2Touched = false
     }
     
@@ -517,6 +573,7 @@ final class VitalSignsFormViewModel: ObservableObject {
     func markPaSTouched() { paSTouched = true }
     func markPaDTouched() { paDTouched = true }
     func markRhythmTouched() { rhythmTouched = true }
+    func markEtco2Touched() { etco2Touched = true }
     func markSpo2Touched() { spo2Touched = true }
     
     //to-do: validations for each input, automatic register with variations

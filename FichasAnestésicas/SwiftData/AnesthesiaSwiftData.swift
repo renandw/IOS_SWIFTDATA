@@ -307,6 +307,7 @@ final class VitalSignEntry {
     var paS: Double?
     var paD: Double?
     var rhythm: String?
+    var etco2: Double?
     var spo2: Double?
     var fio2: Double?
     var peep: Double?

@@ -49,7 +49,6 @@ final class SwiftDataVitalSignsEntryRepository: VitalSignsEntryRepository {
     }
 
     func update(_ entry: VitalSignEntry, for anesthesia: Anesthesia, by user: User) throws {
-        entry.timestamp = entry.timestamp // força o SwiftData detectar alteração
         anesthesia.updatedAt = Date()
         anesthesia.updatedBy = user
         anesthesia.surgery.lastActivityAt = Date()

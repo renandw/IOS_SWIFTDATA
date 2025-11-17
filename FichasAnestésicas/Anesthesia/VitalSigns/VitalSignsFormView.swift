@@ -148,6 +148,14 @@ struct VitalSignsFormView: View {
                     .pickerStyle(.menu)
                 }
                 if let error = viewModel.errorRhythm { Text(error).foregroundStyle(.red).font(.footnote) }
+                HStack {
+                    Text("EtCo2")
+                    Spacer()
+                    TextField("mmHg", value: $viewModel.etco2, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+                if let error = viewModel.errorEtco2 { Text(error).foregroundStyle(.red).font(.footnote) }
             }
 
             Section("Ventilação") {
