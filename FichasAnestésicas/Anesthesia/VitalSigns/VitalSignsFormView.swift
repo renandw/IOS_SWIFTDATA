@@ -10,6 +10,12 @@ import SwiftUI
 struct VitalSignsFormView: View {
     @ObservedObject var viewModel: VitalSignsFormViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    
+    @FocusState private var fcFieldFocused: Bool
+    @FocusState private var spo2FieldFocused: Bool
+    @FocusState private var paSFieldFocused: Bool
+    @FocusState private var paDFieldFocused: Bool
 
     var body: some View {
         Form {
@@ -53,6 +59,16 @@ struct VitalSignsFormView: View {
                     TextField("bpm", value: $viewModel.fc, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
+                        .focused($fcFieldFocused)
+                        .onChange(of: fcFieldFocused) { isFocused in
+                            if isFocused {
+                                // Campo ganhou foco: marca como tocado para habilitar validação
+                                viewModel.markFcTouched()
+                            } else {
+                                // Campo perdeu foco: força validação do valor atual (inclusive em branco)
+                                viewModel.validateFc()
+                            }
+                        }
                 }
                 if let error = viewModel.errorFc { Text(error).foregroundStyle(.red).font(.footnote) }
 
@@ -62,6 +78,14 @@ struct VitalSignsFormView: View {
                     TextField("%", value: $viewModel.spo2, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
+                        .focused($spo2FieldFocused)
+                        .onChange(of: spo2FieldFocused) {isFocused in
+                            if isFocused {
+                                viewModel.markSpo2Touched()
+                            } else {
+                                viewModel.validateSpo2()
+                            }
+                        }
                 }
                 if let error = viewModel.errorSpo2 { Text(error).foregroundStyle(.red).font(.footnote) }
 
@@ -71,6 +95,14 @@ struct VitalSignsFormView: View {
                     TextField("mmHg", value: $viewModel.paS, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
+                        .focused($paSFieldFocused)
+                        .onChange(of: paSFieldFocused) { isFocused in
+                            if isFocused {
+                                viewModel.markPaSTouched()
+                            } else {
+                                viewModel.validatePa()
+                            }
+                        }
                 }
                 if let error = viewModel.errorPaS { Text(error).foregroundStyle(.red).font(.footnote) }
 
@@ -80,12 +112,18 @@ struct VitalSignsFormView: View {
                     TextField("mmHg", value: $viewModel.paD, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
+                        .focused($paDFieldFocused)
+                        .onChange(of: paDFieldFocused) { isFocused in
+                            if isFocused {
+                                viewModel.markPaDTouched()
+                            } else {
+                                viewModel.validatePa()
+                            }
+                        }
                 }
                 if let error = viewModel.errorPaD { Text(error).foregroundStyle(.red).font(.footnote) }
 
                 HStack {
-                    Text("Ritmo")
-                    Spacer()
                     let rhythmOptions: [String] = [
                         "Sinusal",
                         "Taquicardia Sinusal",

@@ -45,6 +45,12 @@ struct VitalSignsView: View {
                                     Text("\(displayOrNoRecord(vitalSign.paS, decimals: 0, suffix: "")) / \(displayOrNoRecord(vitalSign.paD, decimals: 0, suffix: "mmHg"))")
                                 }
                             }
+                            if vitalSign.pam != nil{
+                                VStack(alignment: .leading) {
+                                    Text("PAM:")
+                                    Text("\(displayOrNoRecord(vitalSign.pam, decimals: 0, suffix: "mmHg"))")
+                                }
+                            }
                             if vitalSign.spo2 != nil {
                                 VStack(alignment: .leading) {
                                     Text("SpO₂:")
