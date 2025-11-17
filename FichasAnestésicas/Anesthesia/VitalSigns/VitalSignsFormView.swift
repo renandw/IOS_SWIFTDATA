@@ -39,7 +39,7 @@ struct VitalSignsFormView: View {
                         ),
                         title: "Administração",
                         placeholder: "Selecionar",
-                        minDate: nil, // ou defina se precisar
+                        minDate: nil,
                         maxDate: nil,
                         compactInRow: true
                     )
@@ -86,11 +86,28 @@ struct VitalSignsFormView: View {
                 HStack {
                     Text("Ritmo")
                     Spacer()
-                    TextField("sinusal / FA / ...", text: Binding<String>(
+                    let rhythmOptions: [String] = [
+                        "Sinusal",
+                        "Taquicardia Sinusal",
+                        "Bradicardia Sinusal",
+                        "Fibrilação Atrial",
+                        "Flutter Atrial",
+                        "Taquicardia Supraventricular",
+                        "Extrassístoles",
+                        "Ritmo Nodal"
+                    ]
+                    Picker("Ritmo", selection: Binding<String>(
                         get: { viewModel.rhythm ?? "" },
-                        set: { viewModel.rhythm = $0.isEmpty ? nil : $0 }
-                    ))
-                        .multilineTextAlignment(.trailing)
+                        set: { newValue in
+                            viewModel.rhythm = newValue.isEmpty ? nil : newValue
+                        }
+                    )) {
+                        Text("Selecionar").tag("")
+                        ForEach(rhythmOptions, id: \.self) { option in
+                            Text(option).tag(option)
+                        }
+                    }
+                    .pickerStyle(.menu)
                 }
                 if let error = viewModel.errorRhythm { Text(error).foregroundStyle(.red).font(.footnote) }
             }

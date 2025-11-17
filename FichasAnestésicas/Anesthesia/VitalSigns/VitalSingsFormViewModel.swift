@@ -41,6 +41,13 @@ final class VitalSignsFormViewModel: ObservableObject {
     @Published var diurese: Double? = nil
     @Published var sangramento: Double? = nil
     
+    // Touched flags for validation/UI state
+    @Published var fcTouched: Bool = false
+    @Published var paSTouched: Bool = false
+    @Published var paDTouched: Bool = false
+    @Published var rhythmTouched: Bool = false
+    @Published var spo2Touched: Bool = false
+    
     //vem de @model surgery através de @relationships
     @Published var anesthesiaStart: Date?
     @Published var anesthesiaEnd: Date?
@@ -119,9 +126,23 @@ final class VitalSignsFormViewModel: ObservableObject {
             self.temperatura = entry.temperatura
             self.diurese = entry.diurese
             self.sangramento = entry.sangramento
+            
+            // Initialize touched flags based on existing values
+            self.fcTouched = entry.fc != nil
+            self.paSTouched = entry.paS != nil
+            self.paDTouched = entry.paD != nil
+            self.rhythmTouched = entry.rhythm != nil
+            self.spo2Touched = entry.spo2 != nil
         } else {
             // Modo criação - timestamp com fallback
             self.timestamp = anesthesia.start ?? Date()
+            
+            // New entry: untouched fields
+            self.fcTouched = false
+            self.paSTouched = false
+            self.paDTouched = false
+            self.rhythmTouched = false
+            self.spo2Touched = false
         }
     }
     
@@ -181,6 +202,13 @@ final class VitalSignsFormViewModel: ObservableObject {
             temperatura = entry.temperatura
             diurese = entry.diurese
             sangramento = entry.sangramento
+            
+            // Initialize touched flags based on loaded entry
+            fcTouched = entry.fc != nil
+            paSTouched = entry.paS != nil
+            paDTouched = entry.paD != nil
+            rhythmTouched = entry.rhythm != nil
+            spo2Touched = entry.spo2 != nil
         }
         return entry
     }
@@ -234,6 +262,12 @@ final class VitalSignsFormViewModel: ObservableObject {
         temperatura = nil
         diurese = nil
         sangramento = nil
+        
+        fcTouched = false
+        paSTouched = false
+        paDTouched = false
+        rhythmTouched = false
+        spo2Touched = false
     }
 
     func deleteAll() throws {
@@ -260,9 +294,22 @@ final class VitalSignsFormViewModel: ObservableObject {
         temperatura = nil
         diurese = nil
         sangramento = nil
+        
+        fcTouched = false
+        paSTouched = false
+        paDTouched = false
+        rhythmTouched = false
+        spo2Touched = false
     }
+    
+    // MARK: - Touched helpers
+    func markFcTouched() { fcTouched = true }
+    func markPaSTouched() { paSTouched = true }
+    func markPaDTouched() { paDTouched = true }
+    func markRhythmTouched() { rhythmTouched = true }
+    func markSpo2Touched() { spo2Touched = true }
+    
     //to-do: validations for each input, automatic register with variations
     //criteria: 1- techniques; 2- asa; 3- patientAge
 }
-
 
