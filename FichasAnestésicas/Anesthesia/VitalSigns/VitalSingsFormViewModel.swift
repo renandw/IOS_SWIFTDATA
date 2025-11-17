@@ -157,8 +157,8 @@ final class VitalSignsFormViewModel: ObservableObject {
             self.etco2Touched = managedEntry.etco2 != nil
             self.spo2Touched = managedEntry.spo2 != nil
         } else {
-            // Modo criação - timestamp com fallback
-            self.timestamp = anesthesia.start ?? Date()
+            // Modo criação - timestamp sugerido com base na âncora (início da anestesia) e no último registro
+            self.timestamp = computeNextSuggestedTimestamp()
             
             // New entry: untouched fields
             self.fcTouched = false
@@ -372,6 +372,37 @@ final class VitalSignsFormViewModel: ObservableObject {
         errorPaD = nil
     }
     
+    // MARK: - Time suggestion helpers
+    private func lastRecordedTimestamp() -> Date? {
+        repo.getAll(for: anesthesia)
+            .sorted { $0.timestamp < $1.timestamp }
+            .last?
+            .timestamp
+    }
+
+    private func nextSuggestedTime(anchor: Date, last: Date?) -> Date {
+        // Se não houver último registro, o primeiro ponto usa a âncora
+        guard let last else {
+            return anchor
+        }
+
+        // Calcula tempo decorrido entre a âncora (início da anestesia) e o último registro
+        let elapsedMinutes = last.timeIntervalSince(anchor) / 60
+
+        // Regra:
+        // - Se elapsed < 30 min -> incremento de 5 min
+        // - Senão -> incremento de 10 min
+        let incrementMinutes: Double = elapsedMinutes < 30 ? 5 : 10
+
+        return last.addingTimeInterval(incrementMinutes * 60)
+    }
+
+    private func computeNextSuggestedTimestamp() -> Date {
+        let anchor = anesthesia.start ?? Date()
+        let last = lastRecordedTimestamp()
+        return nextSuggestedTime(anchor: anchor, last: last)
+    }
+
     // MARK: - Mapping helpers
     private func makeEntry(from id: String? = nil) -> VitalSignEntry {
         // Build according to @Model VitalSignEntry initializer
@@ -503,7 +534,7 @@ final class VitalSignsFormViewModel: ObservableObject {
         // Reset form state after deletion
         existingEntry = nil
         isNew = true
-        timestamp = anesthesia.start ?? Date()
+        timestamp = computeNextSuggestedTimestamp()
         fc = nil
         paS = nil
         paD = nil
@@ -538,7 +569,7 @@ final class VitalSignsFormViewModel: ObservableObject {
         // Optional: also reset local state
         existingEntry = nil
         isNew = true
-        timestamp = anesthesia.start ?? Date()
+        timestamp = computeNextSuggestedTimestamp()
         fc = nil
         paS = nil
         paD = nil
