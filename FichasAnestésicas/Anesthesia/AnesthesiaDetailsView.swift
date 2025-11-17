@@ -148,7 +148,7 @@ struct SectionContent: View {
         case .medicationsSection:
             MedicationsView(anesthesia: anesthesia)
         case .vitalSignsSection:
-            ContentUnavailableView("VitalSignsTo be implemented", image: "plus")
+            VitalSignsView(anesthesia: anesthesia)
         case .descriptionSection:
             ContentUnavailableView("Description To be implemented", image: "plus")
         case .previewSection:
