@@ -75,6 +75,7 @@ struct VitalSignsView: View {
                                 }
                                 
                                 HStack {
+                                    Spacer()
                                     if vitalSign.spo2 != nil {
                                         HStack {
                                             Text("SpO₂:")
@@ -86,7 +87,7 @@ struct VitalSignsView: View {
                                         }
                                     }
                                     
-                                    Spacer()
+                                    
                                     
                                     if vitalSign.paS != nil || vitalSign.paD != nil {
                                         HStack(alignment: .bottom) {
