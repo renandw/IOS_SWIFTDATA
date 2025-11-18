@@ -13,10 +13,10 @@ import Combine
 @MainActor
 final class VitalSignsFormViewModel: ObservableObject {
     // MARK: - Dependencies
-    private let repo: VitalSignsEntryRepository
-    private let anesthesia: Anesthesia
-    private let user: User
-    private let context: ModelContext
+    let repo: VitalSignsEntryRepository
+    let anesthesia: Anesthesia
+    let user: User
+    let context: ModelContext
     
     // MARK: - Editing state
     @Published var existingEntry: VitalSignEntry?
@@ -193,14 +193,14 @@ final class VitalSignsFormViewModel: ObservableObject {
     // MARK: - Validation
         
     // MARK: - Time suggestion helpers
-    private func lastRecordedTimestamp() -> Date? {
+    func lastRecordedTimestamp() -> Date? {
         repo.getAll(for: anesthesia)
             .sorted { $0.timestamp < $1.timestamp }
             .last?
             .timestamp
     }
 
-    private func nextSuggestedTime(anchor: Date, last: Date?) -> Date {
+    func nextSuggestedTime(anchor: Date, last: Date?) -> Date {
         // Se não houver último registro, o primeiro ponto usa a âncora
         guard let last else {
             return anchor
@@ -217,14 +217,14 @@ final class VitalSignsFormViewModel: ObservableObject {
         return last.addingTimeInterval(incrementMinutes * 60)
     }
 
-    private func computeNextSuggestedTimestamp() -> Date {
+    func computeNextSuggestedTimestamp() -> Date {
         let anchor = anesthesia.start ?? Date()
         let last = lastRecordedTimestamp()
         return nextSuggestedTime(anchor: anchor, last: last)
     }
 
     // MARK: - Mapping helpers
-    private func makeEntry(from id: String? = nil) -> VitalSignEntry {
+    func makeEntry(from id: String? = nil) -> VitalSignEntry {
         // Build according to @Model VitalSignEntry initializer
         let entry = VitalSignEntry(
             vitalSignsId: id ?? UUID().uuidString,
@@ -257,124 +257,7 @@ final class VitalSignsFormViewModel: ObservableObject {
 
     // MARK: - Gerar sinais vitais automaticamente
 
-    func generateSeries(durationMinutes: Int? = nil) throws {
-        // 1. Só disponível em modo criação
-        guard isNew, existingEntry == nil else {
-            throw SeriesGenerationError.notInCreationMode
-        }
-
-        // 2. Campos obrigatórios
-        guard let baseFc = fc,
-              let basePaS = paS,
-              let basePaD = paD,
-              let baseSpo2 = spo2 else {
-            throw SeriesGenerationError.missingRequiredFields
-        }
-
-        // 3. Determinar duração em minutos
-        let duration: Int
-        if let explicitDuration = durationMinutes, explicitDuration > 0 {
-            duration = explicitDuration
-        } else if let start = anesthesia.start, let end = anesthesia.end, end > start {
-            duration = Int(end.timeIntervalSince(start) / 60)
-        } else {
-            throw SeriesGenerationError.cannotInferDuration
-        }
-
-        // Se a duração for zero ou negativa, não há o que gerar
-        guard duration > 0 else {
-            shouldDismissAfterGenerateSeries = true
-            return
-        }
-
-        // 4. Âncora e fim da janela da série
-        let anchor = anesthesia.start ?? Date()
-        let seriesEnd = anchor.addingTimeInterval(TimeInterval(duration * 60))
-
-        // 5. Descobrir último registro já persistido (pode ser nil)
-        var last = lastRecordedTimestamp()
-
-        // Primeiro timestamp sugerido
-        var currentTimestamp = nextSuggestedTime(anchor: anchor, last: last)
-
-        // Se o primeiro timestamp já estiver além do fim da janela, nada a fazer
-        guard currentTimestamp <= seriesEnd else {
-            shouldDismissAfterGenerateSeries = true
-            return
-        }
-
-        // 6. Definir faixas "normais" em torno dos valores base
-        let fcRange   = (baseFc - 10)...(baseFc + 10)
-        let paSRange  = (basePaS - 15)...(basePaS + 15)
-        let paDRange  = (basePaD - 10)...(basePaD + 10)
-        let spo2Range = (baseSpo2 - 2)...(baseSpo2 + 2)
-
-        // Começamos o "random walk" a partir dos valores base
-        var lastFc = baseFc
-        var lastPaS = basePaS
-        var lastPaD = basePaD
-        var lastSpo2 = baseSpo2
-
-        // 7. Loop de geração
-        while currentTimestamp <= seriesEnd {
-            // Pequenas flutuações em torno do valor anterior, já clampadas e arredondadas
-            var newFc   = (lastFc   + Double.random(in: -3...3)).clamped(to: fcRange).rounded()
-            var newPaS  = (lastPaS  + Double.random(in: -5...5)).clamped(to: paSRange).rounded()
-            var newPaD  = (lastPaD  + Double.random(in: -3...3)).clamped(to: paDRange).rounded()
-            var newSpo2 = (lastSpo2 + Double.random(in: -0.5...0.5)).clamped(to: spo2Range).rounded()
-
-            // Garantir relação PAS > PAD (mantendo suave)
-            if newPaS <= newPaD {
-                let adjustedPaS = newPaD + 5
-                newPaS = min(adjustedPaS, paSRange.upperBound).rounded()
-            }
-
-            // 8. Criar entrada para esse timestamp
-            let entry = VitalSignEntry(
-                vitalSignsId: UUID().uuidString,
-                anesthesia: anesthesia,
-                timestamp: currentTimestamp
-            )
-
-            entry.fc = newFc
-            entry.paS = newPaS
-            entry.paD = newPaD
-            entry.pam = calculatePam(paS: newPaS, paD: newPaD)
-            entry.spo2 = newSpo2
-
-            // Copia os demais campos opcionais do estado atual do formulário (se existirem)
-            entry.rhythm = rhythm
-            entry.etco2 = etco2
-            entry.fio2 = fio2
-            entry.peep = peep
-            entry.volumeCorrente = volumeCorrente
-            entry.bis = bis
-            entry.pupilas = pupilas
-            entry.tof = tof
-            entry.pvc = pvc
-            entry.debitCardiaco = debitCardiaco
-            entry.glicemia = glicemia
-            entry.lactato = lactato
-            entry.temperatura = temperatura
-            entry.diurese = diurese
-            entry.sangramento = sangramento
-
-            // Persiste a entrada
-            try repo.create(entry, for: anesthesia, by: user)
-
-            // Atualiza "últimos" para a próxima iteração
-            lastFc = newFc
-            lastPaS = newPaS
-            lastPaD = newPaD
-            lastSpo2 = newSpo2
-
-            last = currentTimestamp
-            currentTimestamp = nextSuggestedTime(anchor: anchor, last: last)
-        }
-
-        // Após gerar a série completa, sinaliza para a tela dispensar o formulário
-        shouldDismissAfterGenerateSeries = true
-    }
+    
 
         // MARK: - Repository passthrough API
 
@@ -552,13 +435,13 @@ final class VitalSignsFormViewModel: ObservableObject {
     //to-do: validations for each input, automatic register with variations
     //criteria: 1- techniques; 2- asa; 3- patientAge
 
-    private func calculatePam(paS: Double?, paD: Double?) -> Double? {
+    func calculatePam(paS: Double?, paD: Double?) -> Double? {
         guard let s = paS, let d = paD else { return nil }
         return (s + 2 * d) / 3
     }
 }
 
-private extension Double {
+extension Double {
     func clamped(to range: ClosedRange<Double>) -> Double {
         return min(max(self, range.lowerBound), range.upperBound)
     }

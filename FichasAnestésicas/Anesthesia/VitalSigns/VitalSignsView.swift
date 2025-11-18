@@ -30,46 +30,76 @@ struct VitalSignsView: View {
                 Text("Sinais vitais registrados \(anesthesia.vitalSigns.count).")
                 VStack(alignment: .leading) {
                     ForEach(anesthesia.vitalSigns) { vitalSign in
-                        HStack {
-                            Text(vitalSign.timestamp.formatted(date: .omitted, time: .shortened))
-                            
-                            if vitalSign.fc != nil {
-                                VStack(alignment: .leading) {
-                                    Text("FC:")
-                                    Text("\(displayOrNoRecord(vitalSign.fc, decimals: 0, suffix: "bpm"))")
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text(vitalSign.timestamp.formatted(date: .omitted, time: .shortened))
+                                
+                                if (vitalSign.rhythm) != nil{
+                                    VStack(alignment: .leading) {
+                                        Text("Ritmo:")
+                                        Text("\(displayOrNoStringRecord(vitalSign.rhythm))")
+                                    }
+                                }
+                                
+                            }
+                            HStack {
+                                
+                                if vitalSign.fc != nil {
+                                    VStack(alignment: .leading) {
+                                        Text("FC:")
+                                        Text("\(displayOrNoRecord(vitalSign.fc, decimals: 0, suffix: "bpm"))")
+                                    }
+                                }
+                                if vitalSign.paS != nil || vitalSign.paD != nil {
+                                    VStack(alignment: .leading) {
+                                        Text("PA:")
+                                        Text("\(displayOrNoRecord(vitalSign.paS, decimals: 0, suffix: "")) / \(displayOrNoRecord(vitalSign.paD, decimals: 0, suffix: "mmHg"))")
+                                    }
+                                }
+                                if vitalSign.pam != nil{
+                                    VStack(alignment: .leading) {
+                                        Text("PAM:")
+                                        Text("\(displayOrNoRecord(vitalSign.pam, decimals: 0, suffix: "mmHg"))")
+                                    }
                                 }
                             }
-                            if vitalSign.paS != nil || vitalSign.paD != nil {
-                                VStack(alignment: .leading) {
-                                    Text("PA:")
-                                    Text("\(displayOrNoRecord(vitalSign.paS, decimals: 0, suffix: "")) / \(displayOrNoRecord(vitalSign.paD, decimals: 0, suffix: "mmHg"))")
+                            HStack {
+                                if vitalSign.spo2 != nil {
+                                    VStack(alignment: .leading) {
+                                        Text("SpO₂:")
+                                        Text("\(displayOrNoRecord(vitalSign.spo2, decimals: 1, suffix: "%"))")
+                                    }
                                 }
-                            }
-                            if vitalSign.pam != nil{
-                                VStack(alignment: .leading) {
-                                    Text("PAM:")
-                                    Text("\(displayOrNoRecord(vitalSign.pam, decimals: 0, suffix: "mmHg"))")
+                                
+                                if (vitalSign.etco2) != nil{
+                                    VStack(alignment: .leading) {
+                                        Text("ETCO₂:")
+                                        Text("\(displayOrNoRecord(vitalSign.etco2, decimals: 0, suffix: "mmHg"))")
+                                    }
                                 }
-                            }
-                            if vitalSign.spo2 != nil {
-                                VStack(alignment: .leading) {
-                                    Text("SpO₂:")
-                                    Text("\(displayOrNoRecord(vitalSign.spo2, decimals: 1, suffix: "%"))")
+                                if (vitalSign.volumeCorrente) != nil{
+                                    VStack(alignment: .leading) {
+                                        Text("VC:")
+                                        Text("\(displayOrNoRecord(vitalSign.volumeCorrente, decimals: 0, suffix: "mL"))")
+                                    }
                                 }
+                                
                             }
-                            if (vitalSign.rhythm) != nil{
-                                VStack(alignment: .leading) {
-                                    Text("Ritmo:")
-                                    Text("\(displayOrNoStringRecord(vitalSign.rhythm))")
+                            HStack {
+                                if vitalSign.bis != nil {
+                                    VStack(alignment: .leading) {
+                                        Text("BIS:")
+                                        Text("\(displayOrNoRecord(vitalSign.bis, decimals: 1, suffix: "bis"))")
+                                    }
                                 }
-                            }
-                            if (vitalSign.etco2) != nil{
-                                VStack(alignment: .leading) {
-                                    Text("ETCO₂:")
-                                    Text("\(displayOrNoRecord(vitalSign.etco2, decimals: 0, suffix: "mmHg"))")
+                                if vitalSign.pvc != nil {
+                                    VStack(alignment: .leading) {
+                                        Text("PVC:")
+                                        Text("\(displayOrNoRecord(vitalSign.pvc, decimals: 1, suffix: "mmHg"))")
+                                    }
                                 }
+                                
                             }
-                    
                         }
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
