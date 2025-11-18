@@ -94,8 +94,8 @@ struct VitalSignsFormView: View {
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
                         .focused($fcFieldFocused)
-                        .onChange(of: fcFieldFocused) { isFocused in
-                            if isFocused {
+                        .onChange(of: fcFieldFocused) { oldValue, newValue in
+                            if newValue {
                                 // Campo ganhou foco: marca como tocado para habilitar validação
                                 viewModel.markFcTouched()
                             } else {
@@ -113,8 +113,8 @@ struct VitalSignsFormView: View {
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
                         .focused($spo2FieldFocused)
-                        .onChange(of: spo2FieldFocused) {isFocused in
-                            if isFocused {
+                        .onChange(of: spo2FieldFocused) { oldValue, newValue in
+                            if newValue {
                                 viewModel.markSpo2Touched()
                             } else {
                                 viewModel.validateSpo2()
@@ -130,8 +130,8 @@ struct VitalSignsFormView: View {
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
                         .focused($paSFieldFocused)
-                        .onChange(of: paSFieldFocused) { isFocused in
-                            if isFocused {
+                        .onChange(of: paSFieldFocused) { oldValue, newValue in
+                            if newValue {
                                 viewModel.markPaSTouched()
                             } else {
                                 viewModel.validatePa()
@@ -147,8 +147,8 @@ struct VitalSignsFormView: View {
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
                         .focused($paDFieldFocused)
-                        .onChange(of: paDFieldFocused) { isFocused in
-                            if isFocused {
+                        .onChange(of: paDFieldFocused) { oldValue, newValue in
+                            if newValue {
                                 viewModel.markPaDTouched()
                             } else {
                                 viewModel.validatePa()
@@ -344,8 +344,8 @@ struct VitalSignsFormView: View {
                 }
             }
         }
-        .onChange(of: viewModel.shouldDismissAfterGenerateSeries) { shouldDismiss in
-            if shouldDismiss {
+        .onChange(of: viewModel.shouldDismissAfterGenerateSeries) { oldValue, newValue in
+            if newValue {
                 dismiss()
             }
         }
