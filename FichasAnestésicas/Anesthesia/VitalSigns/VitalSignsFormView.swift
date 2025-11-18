@@ -16,6 +16,7 @@ struct VitalSignsFormView: View {
     @FocusState private var spo2FieldFocused: Bool
     @FocusState private var paSFieldFocused: Bool
     @FocusState private var paDFieldFocused: Bool
+    @State private var seriesDurationMinutes: Int? = nil
 
     var body: some View {
         Form {
@@ -293,6 +294,35 @@ struct VitalSignsFormView: View {
                     Text(error).foregroundStyle(.red).font(.footnote)
                 }
             }
+            if viewModel.isNew {
+                Section("Preenchimento automático") {
+                    Text("Gerar uma série de registros automaticamente a partir deste ponto, com pequenas variações dentro de faixas normais.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+
+                    HStack {
+                        Text("Duração")
+                        Spacer()
+                        TextField("min", value: $seriesDurationMinutes, format: .number)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+
+                    Text("Se deixar em branco, será usada a diferença entre início e fim da anestesia (quando disponível).")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+
+                    Button {
+                        do {
+                            try viewModel.generateSeries(durationMinutes: seriesDurationMinutes)
+                        } catch {
+                            // TODO: apresentar erro ao usuário (SeriesGenerationError ou outro)
+                        }
+                    } label: {
+                        Label("Gerar série", systemImage: "sparkles")
+                    }
+                }
+            }
         }
         .navigationTitle(viewModel.isNew ? "Novo registro" : "Editar registro")
         .navigationBarTitleDisplayMode(.inline)
@@ -319,7 +349,11 @@ struct VitalSignsFormView: View {
                 }
             }
         }
+        .onChange(of: viewModel.shouldDismissAfterGenerateSeries) { shouldDismiss in
+            if shouldDismiss {
+                dismiss()
+            }
+        }
             
     }
 }
-

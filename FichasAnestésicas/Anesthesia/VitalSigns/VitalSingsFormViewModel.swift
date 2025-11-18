@@ -83,7 +83,26 @@ final class VitalSignsFormViewModel: ObservableObject {
     @Published var errorDiurese: String? = nil
     @Published var errorSangramento: String? = nil
 
-    private var cancellables: Set<AnyCancellable> = []
+    @Published var shouldDismissAfterGenerateSeries: Bool = false
+
+    enum SeriesGenerationError: LocalizedError {
+        case notInCreationMode
+        case missingRequiredFields
+        case cannotInferDuration
+
+        var errorDescription: String? {
+            switch self {
+            case .notInCreationMode:
+                return "Gerar série só é permitido no modo de criação."
+            case .missingRequiredFields:
+                return "Para gerar uma série, FC, PAS, PAD e SpO₂ precisam estar preenchidos."
+            case .cannotInferDuration:
+                return "Não foi possível determinar a duração da série. Informe manualmente ou preencha início e fim da anestesia."
+            }
+        }
+    }
+
+    var cancellables: Set<AnyCancellable> = []
     
     init(
         repo: VitalSignsEntryRepository,
@@ -172,206 +191,7 @@ final class VitalSignsFormViewModel: ObservableObject {
     }
     
     // MARK: - Validation
-    private func setupValidationBindings() {
-        // Validate FC on change
-        $fc
-            .sink { [weak self] _ in
-                self?.validateFc()
-            }
-            .store(in: &cancellables)
-
-        // Also revalidate when patientAge changes (if it can change dynamically)
-        $patientAge
-            .sink { [weak self] _ in
-                self?.validateFc()
-            }
-            .store(in: &cancellables)
-
-        // Revalidate when touched flips to true
-        $fcTouched
-            .sink { [weak self] _ in
-                self?.validateFc()
-            }
-            .store(in: &cancellables)
-
-        // Validate SpO2 on change
-        $spo2
-            .sink { [weak self] _ in
-                self?.validateSpo2()
-            }
-            .store(in: &cancellables)
-
-        // Revalidate when SpO2 touched flips to true
-        $spo2Touched
-            .sink { [weak self] _ in
-                self?.validateSpo2()
-            }
-            .store(in: &cancellables)
         
-        // Validate PA (PAS/PAD) on change
-        $paS
-            .sink { [weak self] _ in
-                self?.validatePa()
-            }
-            .store(in: &cancellables)
-
-        $paD
-            .sink { [weak self] _ in
-                self?.validatePa()
-            }
-            .store(in: &cancellables)
-
-        // Revalidate when PAS/PAD touched flags change
-        $paSTouched
-            .sink { [weak self] _ in
-                self?.validatePa()
-            }
-            .store(in: &cancellables)
-
-        $paDTouched
-            .sink { [weak self] _ in
-                self?.validatePa()
-            }
-            .store(in: &cancellables)
-    }
-
-    func validateFc() {
-        // Só mostra algo depois que o campo foi tocado
-        guard fcTouched else {
-            errorFc = nil
-            return
-        }
-
-        // Se estiver vazio, tudo bem — não é erro, só não foi registrado agora
-        guard let value = fc else {
-            errorFc = "Campo não pode ficar em branco."
-            return
-        }
-
-        // Regras puramente técnicas, não clínicas:
-        if value < 0 {
-            errorFc = "Frequência cardíaca não pode ser negativa."
-            return
-        }
-
-        if value > 280 {
-            errorFc = "Valor de FC muito alto, confirme se não houve erro de digitação."
-            return
-        }
-
-        // Dentro da faixa técnica aceitável → sem erro
-        errorFc = nil
-    }
-    
-    func validateSpo2() {
-        // Só mostra algo depois que o campo foi tocado
-        guard spo2Touched else {
-            errorSpo2 = nil
-            return
-        }
-
-        // SpO₂ é obrigatório
-        guard let value = spo2 else {
-            errorSpo2 = "SpO₂ não pode ficar em branco."
-            return
-        }
-
-        // Regras técnicas: 0–100%
-        if value < 0 || value > 100 {
-            errorSpo2 = "SpO₂ deve estar entre 0% e 100%."
-            return
-        }
-
-        // Dentro da faixa aceitável → sem erro
-        errorSpo2 = nil
-    }
-    
-    func validatePa() {
-        // Só mostra algo depois que pelo menos um dos campos foi tocado
-        guard paSTouched || paDTouched else {
-            errorPaS = nil
-            errorPaD = nil
-            return
-        }
-
-        // Limpa erros atuais; serão recalculados
-        errorPaS = nil
-        errorPaD = nil
-
-        let sOpt = paS
-        let dOpt = paD
-
-        // Regras de obrigatoriedade por campo (somente se o campo foi tocado)
-        if paSTouched && sOpt == nil {
-            errorPaS = "PAS não pode ficar em branco."
-        }
-
-        if paDTouched && dOpt == nil {
-            errorPaD = "PAD não pode ficar em branco."
-        }
-
-        // Regras técnicas independentes para cada campo (não dependem do outro)
-        if let s = sOpt {
-            if s < 0 {
-                errorPaS = "PAS não pode ser negativa."
-            } else if s > 300 {
-                errorPaS = "PAS não pode ser maior que 300 mmHg."
-            }
-        }
-
-        if let d = dOpt {
-            if d < 0 {
-                errorPaD = "PAD não pode ser negativa."
-            } else if d > 200 {
-                errorPaD = "PAD não pode ser maior que 200 mmHg."
-            }
-        }
-
-        // Se ainda não temos os dois valores, não faz sentido aplicar regras relacionais
-        guard let s = sOpt, let d = dOpt,
-              errorPaS == nil, errorPaD == nil else {
-            return
-        }
-
-        // A partir daqui, temos PAS e PAD válidos individualmente → aplicar regras de relação
-
-        // Se PAS for 0, PAD precisa ser 0
-        if s == 0 && d != 0 {
-            let msg = "Se PAS for 0, PAD também deve ser 0."
-            errorPaS = msg
-            errorPaD = msg
-            return
-        }
-
-        // Se PAD for 0, PAS precisa ser 0
-        if d == 0 && s != 0 {
-            let msg = "Se PAD for 0, PAS também deve ser 0."
-            errorPaS = msg
-            errorPaD = msg
-            return
-        }
-
-        // PAS e PAD só podem ser iguais se ambas forem 0
-        if s == d && s != 0 {
-            let msg = "PAS e PAD só podem ser iguais se ambas forem 0."
-            errorPaS = msg
-            errorPaD = msg
-            return
-        }
-
-        // Regra geral: PAS deve ser > PAD
-        if s < d {
-            let msg = "PAS deve ser maior que PAD."
-            errorPaS = msg
-            errorPaD = msg
-            return
-        }
-
-        // Tudo ok → sem erros
-        errorPaS = nil
-        errorPaD = nil
-    }
-    
     // MARK: - Time suggestion helpers
     private func lastRecordedTimestamp() -> Date? {
         repo.getAll(for: anesthesia)
@@ -436,6 +256,144 @@ final class VitalSignsFormViewModel: ObservableObject {
     }
 
     // MARK: - Repository passthrough API
+
+    func generateSeries(durationMinutes: Int? = nil) throws {
+        // 1. Só disponível em modo criação
+        guard isNew, existingEntry == nil else {
+            throw SeriesGenerationError.notInCreationMode
+        }
+
+        // 2. Campos obrigatórios
+        guard let baseFc = fc,
+              let basePaS = paS,
+              let basePaD = paD,
+              let baseSpo2 = spo2 else {
+            throw SeriesGenerationError.missingRequiredFields
+        }
+
+        // 3. Determinar duração em minutos
+        let duration: Int
+        if let explicitDuration = durationMinutes, explicitDuration > 0 {
+            duration = explicitDuration
+        } else if let start = anesthesia.start, let end = anesthesia.end, end > start {
+            duration = Int(end.timeIntervalSince(start) / 60)
+        } else {
+            throw SeriesGenerationError.cannotInferDuration
+        }
+
+        // Se a duração for zero ou negativa, não há o que gerar
+        guard duration > 0 else {
+            shouldDismissAfterGenerateSeries = true
+            return
+        }
+
+        // 4. Âncora e fim da janela da série
+        let anchor = anesthesia.start ?? Date()
+        let seriesEnd = anchor.addingTimeInterval(TimeInterval(duration * 60))
+
+        // 5. Descobrir último registro já persistido (pode ser nil)
+        var last = lastRecordedTimestamp()
+
+        // Primeiro timestamp sugerido
+        var currentTimestamp = nextSuggestedTime(anchor: anchor, last: last)
+
+        // Se o primeiro timestamp já estiver além do fim da janela, nada a fazer
+        guard currentTimestamp <= seriesEnd else {
+            shouldDismissAfterGenerateSeries = true
+            return
+        }
+
+        // 6. Definir faixas "normais" em torno dos valores base
+        let fcRange   = (baseFc - 10)...(baseFc + 10)
+        let paSRange  = (basePaS - 15)...(basePaS + 15)
+        let paDRange  = (basePaD - 10)...(basePaD + 10)
+        let spo2Range = (baseSpo2 - 2)...(baseSpo2 + 2)
+
+        // Valores técnicos de segurança (largos, iguais aos da validação)
+        let fcTechRange: ClosedRange<Double>   = 0...280
+        let paSTechRange: ClosedRange<Double>  = 0...300
+        let paDTechRange: ClosedRange<Double>  = 0...200
+        let spo2TechRange: ClosedRange<Double> = 0...100
+
+        // Começamos o "random walk" a partir dos valores base
+        var lastFc = baseFc
+        var lastPaS = basePaS
+        var lastPaD = basePaD
+        var lastSpo2 = baseSpo2
+
+        // 7. Loop de geração
+        while currentTimestamp <= seriesEnd {
+            // Pequenas flutuações em torno do valor anterior
+            var newFc   = lastFc   + Double.random(in: -3...3)
+            var newPaS  = lastPaS  + Double.random(in: -5...5)
+            var newPaD  = lastPaD  + Double.random(in: -3...3)
+            var newSpo2 = lastSpo2 + Double.random(in: -0.5...0.5)
+
+            // Clamp para faixas normais
+            newFc   = newFc.clamped(to: fcRange).clamped(to: fcTechRange)
+            newPaS  = newPaS.clamped(to: paSRange).clamped(to: paSTechRange)
+            newPaD  = newPaD.clamped(to: paDRange).clamped(to: paDTechRange)
+            newSpo2 = newSpo2.clamped(to: spo2Range).clamped(to: spo2TechRange)
+
+            // Garantir relação PAS > PAD (mantendo suave)
+            if newPaS <= newPaD {
+                let adjustedPaS = newPaD + 5
+                newPaS = min(adjustedPaS, paSRange.upperBound, paSTechRange.upperBound)
+            }
+
+            // Arredondar para valores inteiros (vida real não tem decimais nesses campos)
+            newFc   = newFc.rounded()
+            newPaS  = newPaS.rounded()
+            newPaD  = newPaD.rounded()
+            newSpo2 = newSpo2.rounded()
+
+            // 8. Criar entrada para esse timestamp
+            let entry = VitalSignEntry(
+                vitalSignsId: UUID().uuidString,
+                anesthesia: anesthesia,
+                timestamp: currentTimestamp
+            )
+
+            entry.fc = newFc
+            entry.paS = newPaS
+            entry.paD = newPaD
+            entry.pam = calculatePam(paS: newPaS, paD: newPaD)
+            entry.spo2 = newSpo2
+
+            // Copia os demais campos opcionais do estado atual do formulário (se existirem)
+            entry.rhythm = rhythm
+            entry.etco2 = etco2
+            entry.fio2 = fio2
+            entry.peep = peep
+            entry.volumeCorrente = volumeCorrente
+            entry.bis = bis
+            entry.pupilas = pupilas
+            entry.tof = tof
+            entry.pvc = pvc
+            entry.debitCardiaco = debitCardiaco
+            entry.glicemia = glicemia
+            entry.lactato = lactato
+            entry.temperatura = temperatura
+            entry.diurese = diurese
+            entry.sangramento = sangramento
+
+            // Persiste a entrada
+            try repo.create(entry, for: anesthesia, by: user)
+
+            // Atualiza "últimos" para a próxima iteração
+            lastFc = newFc
+            lastPaS = newPaS
+            lastPaD = newPaD
+            lastSpo2 = newSpo2
+
+            last = currentTimestamp
+            currentTimestamp = nextSuggestedTime(anchor: anchor, last: last)
+        }
+
+        // Após gerar a série completa, sinaliza para a tela dispensar o formulário
+        shouldDismissAfterGenerateSeries = true
+    }
+
     func get(by id: String) -> VitalSignEntry? {
         let entry = repo.get(by: id)
         if let entry {
@@ -609,9 +567,15 @@ final class VitalSignsFormViewModel: ObservableObject {
     
     //to-do: validations for each input, automatic register with variations
     //criteria: 1- techniques; 2- asa; 3- patientAge
-}
 
     private func calculatePam(paS: Double?, paD: Double?) -> Double? {
         guard let s = paS, let d = paD else { return nil }
         return (s + 2 * d) / 3
     }
+}
+
+private extension Double {
+    func clamped(to range: ClosedRange<Double>) -> Double {
+        return min(max(self, range.lowerBound), range.upperBound)
+    }
+}
