@@ -20,19 +20,25 @@ struct VitalSignsFormView: View {
 
     var body: some View {
         Form {
-            Section("Técnicas Anestésicas") {
-                let allTechniques = viewModel.techniques.map { $0.rawValue }.joined(separator: ", ")
-                Text(allTechniques.isEmpty ? "Sem técnicas anestésicas descritas" : allTechniques)
-            }
-            Section("ASA") {
-                if let asa = viewModel.asaClassification {
-                    Text(String(describing:asa))
-                } else {
-                    Text("Não informado")
+            if viewModel.isNew {
+                Section("Preenchimento automático") {
+                    Text("Gerar uma série de registros automaticamente, com pequenas variações dos sinais vitais dentro de faixas normais.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+
+                    HStack {
+                        Text("Duração")
+                        Spacer()
+                        TextField("min", value: $seriesDurationMinutes, format: .number)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+
+                    Text("Quando em branco, será usada a diferença entre início e fim da anestesia (quando disponível).")
+                        .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
             }
-            Text("Idade: \(viewModel.patientAge)")
 
             
             Section {
@@ -294,35 +300,6 @@ struct VitalSignsFormView: View {
                     Text(error).foregroundStyle(.red).font(.footnote)
                 }
             }
-            if viewModel.isNew {
-                Section("Preenchimento automático") {
-                    Text("Gerar uma série de registros automaticamente a partir deste ponto, com pequenas variações dentro de faixas normais.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-
-                    HStack {
-                        Text("Duração")
-                        Spacer()
-                        TextField("min", value: $seriesDurationMinutes, format: .number)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                    }
-
-                    Text("Se deixar em branco, será usada a diferença entre início e fim da anestesia (quando disponível).")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-
-                    Button {
-                        do {
-                            try viewModel.generateSeries(durationMinutes: seriesDurationMinutes)
-                        } catch {
-                            // TODO: apresentar erro ao usuário (SeriesGenerationError ou outro)
-                        }
-                    } label: {
-                        Label("Gerar série", systemImage: "sparkles")
-                    }
-                }
-            }
         }
         .navigationTitle(viewModel.isNew ? "Novo registro" : "Editar registro")
         .navigationBarTitleDisplayMode(.inline)
@@ -348,6 +325,19 @@ struct VitalSignsFormView: View {
                     }
                 }
             }
+            if viewModel.isNew && viewModel.anesthesiaEnd != nil {
+                ToolbarItem(placement: .topBarTrailing){
+                    Button {
+                        do {
+                            try viewModel.generateSeries(durationMinutes: seriesDurationMinutes)
+                        } catch {
+                            // TODO: apresentar erro ao usuário (SeriesGenerationError ou outro)
+                        }
+                    } label: {
+                        Label("Gerar série", systemImage: "sparkles")
+                    }
+                }
+            }
         }
         .onChange(of: viewModel.shouldDismissAfterGenerateSeries) { shouldDismiss in
             if shouldDismiss {
@@ -357,3 +347,4 @@ struct VitalSignsFormView: View {
             
     }
 }
+

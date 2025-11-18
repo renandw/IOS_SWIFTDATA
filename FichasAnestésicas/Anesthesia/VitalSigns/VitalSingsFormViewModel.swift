@@ -255,7 +255,7 @@ final class VitalSignsFormViewModel: ObservableObject {
         return entry
     }
 
-    // MARK: - Repository passthrough API
+    // MARK: - Gerar sinais vitais automaticamente
 
     func generateSeries(durationMinutes: Int? = nil) throws {
         // 1. Só disponível em modo criação
@@ -309,12 +309,6 @@ final class VitalSignsFormViewModel: ObservableObject {
         let paDRange  = (basePaD - 10)...(basePaD + 10)
         let spo2Range = (baseSpo2 - 2)...(baseSpo2 + 2)
 
-        // Valores técnicos de segurança (largos, iguais aos da validação)
-        let fcTechRange: ClosedRange<Double>   = 0...280
-        let paSTechRange: ClosedRange<Double>  = 0...300
-        let paDTechRange: ClosedRange<Double>  = 0...200
-        let spo2TechRange: ClosedRange<Double> = 0...100
-
         // Começamos o "random walk" a partir dos valores base
         var lastFc = baseFc
         var lastPaS = basePaS
@@ -323,29 +317,17 @@ final class VitalSignsFormViewModel: ObservableObject {
 
         // 7. Loop de geração
         while currentTimestamp <= seriesEnd {
-            // Pequenas flutuações em torno do valor anterior
-            var newFc   = lastFc   + Double.random(in: -3...3)
-            var newPaS  = lastPaS  + Double.random(in: -5...5)
-            var newPaD  = lastPaD  + Double.random(in: -3...3)
-            var newSpo2 = lastSpo2 + Double.random(in: -0.5...0.5)
-
-            // Clamp para faixas normais
-            newFc   = newFc.clamped(to: fcRange).clamped(to: fcTechRange)
-            newPaS  = newPaS.clamped(to: paSRange).clamped(to: paSTechRange)
-            newPaD  = newPaD.clamped(to: paDRange).clamped(to: paDTechRange)
-            newSpo2 = newSpo2.clamped(to: spo2Range).clamped(to: spo2TechRange)
+            // Pequenas flutuações em torno do valor anterior, já clampadas e arredondadas
+            var newFc   = (lastFc   + Double.random(in: -3...3)).clamped(to: fcRange).rounded()
+            var newPaS  = (lastPaS  + Double.random(in: -5...5)).clamped(to: paSRange).rounded()
+            var newPaD  = (lastPaD  + Double.random(in: -3...3)).clamped(to: paDRange).rounded()
+            var newSpo2 = (lastSpo2 + Double.random(in: -0.5...0.5)).clamped(to: spo2Range).rounded()
 
             // Garantir relação PAS > PAD (mantendo suave)
             if newPaS <= newPaD {
                 let adjustedPaS = newPaD + 5
-                newPaS = min(adjustedPaS, paSRange.upperBound, paSTechRange.upperBound)
+                newPaS = min(adjustedPaS, paSRange.upperBound).rounded()
             }
-
-            // Arredondar para valores inteiros (vida real não tem decimais nesses campos)
-            newFc   = newFc.rounded()
-            newPaS  = newPaS.rounded()
-            newPaD  = newPaD.rounded()
-            newSpo2 = newSpo2.rounded()
 
             // 8. Criar entrada para esse timestamp
             let entry = VitalSignEntry(
@@ -393,6 +375,8 @@ final class VitalSignsFormViewModel: ObservableObject {
         // Após gerar a série completa, sinaliza para a tela dispensar o formulário
         shouldDismissAfterGenerateSeries = true
     }
+
+        // MARK: - Repository passthrough API
 
     func get(by id: String) -> VitalSignEntry? {
         let entry = repo.get(by: id)
