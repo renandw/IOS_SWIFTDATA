@@ -20,7 +20,7 @@ struct VitalSignsFormView: View {
 
     var body: some View {
         Form {
-            if viewModel.isNew {
+            if viewModel.isNew && viewModel.anesthesiaEnd == nil {
                 Section("Preenchimento automático") {
                     Text("Gerar uma série de registros automaticamente, com pequenas variações dos sinais vitais dentro de faixas normais.")
                         .font(.footnote)
@@ -325,7 +325,7 @@ struct VitalSignsFormView: View {
                     }
                 }
             }
-            if viewModel.isNew && viewModel.anesthesiaEnd != nil {
+            if viewModel.isNew && viewModel.anesthesiaEnd != nil || viewModel.isNew && seriesDurationMinutes != nil {
                 ToolbarItem(placement: .topBarTrailing){
                     Button {
                         do {
