@@ -60,6 +60,7 @@ final class VitalSignsFormViewModel: ObservableObject {
     //vem de @model surgery através de @relationships com @model SharedPreAndAnesthesia
     @Published var techniques: [AnesthesiaTechniqueKind] = []
     @Published var asaClassification: ASAClassification? = nil
+    @Published var anesthesiaPosition: [Positioning] = []
     
     //errors
     @Published var errorPam: String? = nil
@@ -123,6 +124,7 @@ final class VitalSignsFormViewModel: ObservableObject {
         self.surgeryEnd = anesthesia.surgery.end
         self.techniques = anesthesia.surgery.shared?.techniques ?? []
         self.asaClassification = anesthesia.surgery.shared?.asa
+        self.anesthesiaPosition = anesthesia.position
         
         // Calcular idade do paciente usando AgeContext
         let ageContext = AgeContext.inSurgery(anesthesia.surgery)
@@ -256,7 +258,7 @@ final class VitalSignsFormViewModel: ObservableObject {
     }
 
     // MARK: - Gerar sinais vitais automaticamente
-
+    
     
 
         // MARK: - Repository passthrough API

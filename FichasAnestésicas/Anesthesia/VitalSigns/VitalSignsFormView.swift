@@ -17,6 +17,7 @@ struct VitalSignsFormView: View {
     @FocusState private var paSFieldFocused: Bool
     @FocusState private var paDFieldFocused: Bool
     @State private var seriesDurationMinutes: Int? = nil
+    @State private var showExtraMonitoring: Bool = false
 
     var body: some View {
         Form {
@@ -59,7 +60,33 @@ struct VitalSignsFormView: View {
                 }
             }
 
-            Section("Sinais vitais") {
+            Section("Monitorização Básica") {
+                HStack {
+                    let rhythmOptions: [String] = [
+                        "Sinusal",
+                        "Taquicardia Sinusal",
+                        "Bradicardia Sinusal",
+                        "Fibrilação Atrial",
+                        "Flutter Atrial",
+                        "Taquicardia Supraventricular",
+                        "Extrassístoles",
+                        "Ritmo Nodal"
+                    ]
+                    Picker("Ritmo", selection: Binding<String>(
+                        get: { viewModel.rhythm ?? "Sinusal" },
+                        set: { newValue in
+                            viewModel.rhythm = newValue.isEmpty ? nil : newValue
+                        }
+                    )) {
+                        
+                        ForEach(rhythmOptions, id: \.self) { option in
+                            Text(option).tag(option)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                if let error = viewModel.errorRhythm { Text(error).foregroundStyle(.red).font(.footnote) }
+                
                 HStack {
                     Text("FC")
                     Spacer()
@@ -130,31 +157,7 @@ struct VitalSignsFormView: View {
                 }
                 if let error = viewModel.errorPaD { Text(error).foregroundStyle(.red).font(.footnote) }
 
-                HStack {
-                    let rhythmOptions: [String] = [
-                        "Sinusal",
-                        "Taquicardia Sinusal",
-                        "Bradicardia Sinusal",
-                        "Fibrilação Atrial",
-                        "Flutter Atrial",
-                        "Taquicardia Supraventricular",
-                        "Extrassístoles",
-                        "Ritmo Nodal"
-                    ]
-                    Picker("Ritmo", selection: Binding<String>(
-                        get: { viewModel.rhythm ?? "" },
-                        set: { newValue in
-                            viewModel.rhythm = newValue.isEmpty ? nil : newValue
-                        }
-                    )) {
-                        Text("Selecionar").tag("")
-                        ForEach(rhythmOptions, id: \.self) { option in
-                            Text(option).tag(option)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                }
-                if let error = viewModel.errorRhythm { Text(error).foregroundStyle(.red).font(.footnote) }
+                
                 HStack {
                     Text("EtCo2")
                     Spacer()
@@ -165,139 +168,141 @@ struct VitalSignsFormView: View {
                 if let error = viewModel.errorEtco2 { Text(error).foregroundStyle(.red).font(.footnote) }
             }
 
-            Section("Ventilação") {
-                HStack {
-                    Text("FiO₂")
-                    Spacer()
-                    TextField("%", value: $viewModel.fio2, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorFio2 { Text(error).foregroundStyle(.red).font(.footnote) }
+            Section {
+                DisclosureGroup(isExpanded: $showExtraMonitoring) {
+                    // Ventilação
+                    HStack {
+                        Text("FiO₂")
+                        Spacer()
+                        TextField("%", value: $viewModel.fio2, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorFio2 { Text(error).foregroundStyle(.red).font(.footnote) }
 
-                HStack {
-                    Text("PEEP")
-                    Spacer()
-                    TextField("cmH₂O", value: $viewModel.peep, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorPeep { Text(error).foregroundStyle(.red).font(.footnote) }
+                    HStack {
+                        Text("PEEP")
+                        Spacer()
+                        TextField("cmH₂O", value: $viewModel.peep, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorPeep { Text(error).foregroundStyle(.red).font(.footnote) }
 
-                HStack {
-                    Text("Volume Corrente")
-                    Spacer()
-                    TextField("mL", value: $viewModel.volumeCorrente, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorVolumeCorrente { Text(error).foregroundStyle(.red).font(.footnote) }
-            }
+                    HStack {
+                        Text("Volume Corrente")
+                        Spacer()
+                        TextField("mL", value: $viewModel.volumeCorrente, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorVolumeCorrente { Text(error).foregroundStyle(.red).font(.footnote) }
 
-            Section("Monitorização avançada") {
-                HStack {
-                    Text("BIS")
-                    Spacer()
-                    TextField("", value: $viewModel.bis, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorBis {
-                    Text(error).foregroundStyle(.red).font(.footnote)
-                }
-                HStack {
-                    Text("TOF")
-                    Spacer()
-                    TextField("%", value: $viewModel.tof, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorTof {
-                    Text(error).foregroundStyle(.red).font(.footnote)
-                }
-                HStack {
-                    Text("PVC")
-                    Spacer()
-                    TextField("mmHg", value: $viewModel.pvc, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorPvc {
-                    Text(error).foregroundStyle(.red).font(.footnote)
-                }
-                HStack {
-                    Text("Débito cardíaco")
-                    Spacer()
-                    TextField("L/min", value: $viewModel.debitCardiaco, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorDebitCardiaco {
-                    Text(error).foregroundStyle(.red).font(.footnote)
-                }
-                HStack {
-                    Text("Pupilas")
-                    Spacer()
-                    TextField("", text: Binding<String>(
-                        get: { viewModel.pupilas ?? "" },
-                        set: { viewModel.pupilas = $0.isEmpty ? nil : $0 }))
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorPupilas {
-                    Text(error).foregroundStyle(.red).font(.footnote)
-                }
-            }
-
-            Section("Metabólico e balanço") {
-                HStack {
-                    Text("Glicemia")
-                    Spacer()
-                    TextField("mg/dL", value: $viewModel.glicemia, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorGlicemia {
-                    Text(error).foregroundStyle(.red).font(.footnote)
-                }
-                HStack {
-                    Text("Lactato")
-                    Spacer()
-                    TextField("mmol/L", value: $viewModel.lactato, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorLactato {
-                    Text(error).foregroundStyle(.red).font(.footnote)
-                }
-                HStack {
-                    Text("Temperatura")
-                    Spacer()
-                    TextField("°C", value: $viewModel.temperatura, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorTemperatura {
-                    Text(error).foregroundStyle(.red).font(.footnote)
-                }
-                HStack {
-                    Text("Diurese")
-                    Spacer()
-                    TextField("mL", value: $viewModel.diurese, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorDiurese {
-                    Text(error).foregroundStyle(.red).font(.footnote)
-                }
-                HStack {
-                    Text("Sangramento")
-                    Spacer()
-                    TextField("mL", value: $viewModel.sangramento, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                }
-                if let error = viewModel.errorSangramento {
-                    Text(error).foregroundStyle(.red).font(.footnote)
+                    // Metabólico e balanço
+                    HStack {
+                        Text("Glicemia")
+                        Spacer()
+                        TextField("mg/dL", value: $viewModel.glicemia, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorGlicemia {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                    HStack {
+                        Text("Lactato")
+                        Spacer()
+                        TextField("mmol/L", value: $viewModel.lactato, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorLactato {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                    HStack {
+                        Text("Temperatura")
+                        Spacer()
+                        TextField("°C", value: $viewModel.temperatura, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorTemperatura {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                    HStack {
+                        Text("Diurese")
+                        Spacer()
+                        TextField("mL", value: $viewModel.diurese, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorDiurese {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                    HStack {
+                        Text("Sangramento")
+                        Spacer()
+                        TextField("mL", value: $viewModel.sangramento, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorSangramento {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                    HStack {
+                        Text("PVC")
+                        Spacer()
+                        TextField("mmHg", value: $viewModel.pvc, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorPvc {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                    HStack {
+                        Text("Débito Cardíaco")
+                        Spacer()
+                        TextField("L/min", value: $viewModel.debitCardiaco, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorDebitCardiaco {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                    // Monitorização avançada
+                    HStack {
+                        Text("BIS")
+                        Spacer()
+                        TextField("", value: $viewModel.bis, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorBis {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                    HStack {
+                        Text("TOF")
+                        Spacer()
+                        TextField("%", value: $viewModel.tof, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorTof {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                    HStack {
+                        Text("Pupilas")
+                        Spacer()
+                        TextField("", text: Binding<String>(
+                            get: { viewModel.pupilas ?? "" },
+                            set: { viewModel.pupilas = $0.isEmpty ? nil : $0 }))
+                            .multilineTextAlignment(.trailing)
+                    }
+                    if let error = viewModel.errorPupilas {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                } label: {
+                    Text("Ventilação, Hídrico e Metabólico")
                 }
             }
         }
