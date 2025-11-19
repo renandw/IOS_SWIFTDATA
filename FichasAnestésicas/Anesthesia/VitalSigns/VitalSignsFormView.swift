@@ -72,15 +72,9 @@ struct VitalSignsFormView: View {
                         "Extrassístoles",
                         "Ritmo Nodal"
                     ]
-                    Picker("Ritmo", selection: Binding<String>(
-                        get: { viewModel.rhythm ?? "" },
-                        set: { newValue in
-                            viewModel.rhythm = newValue.isEmpty ? nil : newValue
-                        }
-                    )) {
-                        Text("Selecionar").tag("")
-                        ForEach(rhythmOptions, id: \.self) { option in
-                            Text(option).tag(option)
+                    Picker("Ritmo", selection: $viewModel.rhythm) {
+                        ForEach(rhythmOptions, id: \.self) { r in
+                            Text(r).tag(String?.some(r))
                         }
                     }
                     .pickerStyle(.menu)

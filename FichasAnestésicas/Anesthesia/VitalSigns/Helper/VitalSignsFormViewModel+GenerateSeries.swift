@@ -45,14 +45,14 @@ struct VitalSignsSeriesGenerator {
         let hasSedationOnly = hasSedation && !hasGeneral && !hasNeuraxial
 
         // FC e PA: ranges básicos, levemente mais estreitos em anestesia geral
-        var fcRange   = (baseFc - 10)...(baseFc + 10)
-        var paSRange  = (basePaS - 15)...(basePaS + 15)
-        var paDRange  = (basePaD - 10)...(basePaD + 10)
+        var fcRange   = (baseFc - 5)...(baseFc + 5)
+        var paSRange  = (basePaS - 8)...(basePaS + 8)
+        var paDRange  = (basePaD - 6)...(basePaD + 6)
 
         if hasGeneral {
-            fcRange  = (baseFc - 5)...(baseFc + 5)
-            paSRange = (basePaS - 10)...(basePaS + 10)
-            paDRange = (basePaD - 5)...(basePaD + 5)
+            fcRange  = (baseFc - 2)...(baseFc + 2)
+            paSRange = (basePaS - 6)...(basePaS + 6)
+            paDRange = (basePaD - 2)...(basePaD + 2)
         }
 
         // SpO₂: regras específicas por idade/técnica
@@ -62,20 +62,20 @@ struct VitalSignsSeriesGenerator {
         if isInfant {
             // RN / lactente: manter sempre entre 96–100
             spo2Range = 96...100
-            spo2StepRange = -0.5...0.5
+            spo2StepRange = -2...2
         } else if hasGeneral {
             // Geral (balanceada / TIVA / inalatória): muito estável, 98–100
             spo2Range = 98...100
-            spo2StepRange = -0.3...0.3
+            spo2StepRange = -2...2
         } else if hasSedationOnly {
             // Sedação pura: próximo da basal, mas dentro de 96–100
             let lower = max(96, baseSpo2 - 2)
             spo2Range = lower...100
-            spo2StepRange = -0.5...0.5
+            spo2StepRange = -2...2
         } else {
             // Caso geral padrão
             spo2Range = (baseSpo2 - 2)...(baseSpo2 + 2)
-            spo2StepRange = -0.5...0.5
+            spo2StepRange = -2...2
         }
 
         // Variáveis opcionais: se estiverem preenchidas, também serão variáveis na série

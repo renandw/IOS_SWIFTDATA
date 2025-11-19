@@ -179,6 +179,8 @@ final class VitalSignsFormViewModel: ObservableObject {
             self.spo2Touched = managedEntry.spo2 != nil
         } else {
             // Modo criação - timestamp sugerido com base na âncora (início da anestesia) e no último registro
+            self.isNew = true
+            self.rhythm = "Sinusal" 
             self.timestamp = computeNextSuggestedTimestamp()
             
             // New entry: untouched fields

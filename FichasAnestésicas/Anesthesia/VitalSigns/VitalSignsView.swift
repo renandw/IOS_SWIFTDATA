@@ -16,6 +16,8 @@ struct VitalSignsView: View {
     @State private var showingVitalSignsFormCreate = false
     @State private var selectedEntry: VitalSignEntry? = nil
     
+    @State private var showingChart = false
+    
     var body: some View {
         
         Group {
@@ -41,7 +43,6 @@ struct VitalSignsView: View {
                 )
             } else {
                 ScrollView {
-                    Text("Sinais vitais registrados \(anesthesia.vitalSigns.count).")
                     VStack(alignment: .leading) {
                         ForEach(anesthesia.vitalSigns) { vitalSign in
                             VStack(alignment: .leading) {
@@ -184,6 +185,11 @@ struct VitalSignsView: View {
                     NavigationStack { Text("Dependências indisponíveis para abrir o formulário.") }
                 }
             }
+        
+            .sheet(isPresented: $showingChart) {
+                VitalChartSheet(anesthesia: anesthesia)
+            }
+        
             .preference(
                 key: CustomTopBarButtonPreferenceKey.self,
                 value: CustomTopBarButtonPreference(
@@ -210,14 +216,14 @@ struct VitalSignsView: View {
 
             if !anesthesia.vitalSigns.isEmpty {
                 Button(action: {
-                    //toogle graphview in vitalsignsview
+                    showingChart = true
                 
                 }) {
                     Image(systemName: "chart.xyaxis.line")
                         .font(.system(size: 16, weight: .regular))
                         .frame(width: 20, height: 20)
                 }
-                .accessibilityLabel("Apagar Registros")
+                .accessibilityLabel("Ver Gráfico")
                 .buttonStyle(.glass)
                 .tint(.blue)
             }
