@@ -35,51 +35,75 @@ public enum Positioning: String, Codable, CaseIterable {
 
 }
 
-public enum AirwayKind: String, Codable, CaseIterable {
-    case mascara
-    case cannula
-    case tot
-    case lma
-    case traqueostomia
-    case espontanea
-    case outro
-}
 
 public enum ConsciousnessKind: String, Codable, CaseIterable {
-    case alerta
-    case sedadoLeve
-    case sedadoProfundo
-    case anestesiado
-    case outro
+    case alert
+    case drowsy
+    case lethargic
+    case obtunded
+    case responsiveToPain
+    case unresponsive
 }
 
-public enum VentilatoryKind: String, Codable, CaseIterable {
-    case espontanea
-    case vmAC
-    case vmVCV
-    case vmPCV
-    case vni
-    case outro
+public enum AirwayKind: String, Codable, CaseIterable {
+    case noDevice
+    case oropharyngealGuedel
+    case nasopharyngeal
+    case lma
+    case maskLMA
+    case endotrachealTube
+    case tracheostomy
 }
 
-public enum OxygenKind: String, Codable, CaseIterable {
-    case arAmbiente
-    case cateter
-    case mascara
-    case venturi
-    case reinalacao
-    case tubo
-    case traqueo
+public enum VentilationMode: String, Codable, CaseIterable {
+    case expontaneus
+    case invasiveMechanicalVentilation
+    case nonInvasiveMechanicalVentilation
+}
+
+public enum MechanicalVentilationMode: String, Codable, CaseIterable {
+    case CPAP
+    case BiPAP
+    case VCV
+    case PCV
+    case SIMV
+    case PSV
+}
+
+public enum OxygenSupply: String, Codable, CaseIterable {
+    case ambientAir
+    case nasalCateter
+    case venturiMask
+    case nonReinalantMask
+}
+
+struct AirwauDeviceInfo: Codable {
+    var kind: AirwayKind
+    var size: Double?
 }
 
 public enum HemodynamicKind: String, Codable, CaseIterable {
-    case estavel
-    case hipotenso
-    case hipertenso
-    case taquicardico
-    case bradicardico
-    case instavel
+    case stable
+    case unstable
+    case compensated
+    case unstableDespiteDrugs
 }
+
+public enum VeinAccessKind: String, Codable, CaseIterable {
+    case none
+    case inOpRoom
+    case previouslyInserted
+}
+
+public enum VeinGaugeKind: String, Codable, CaseIterable {
+        case g14 = "14g"
+        case g18 = "18g"
+        case g20 = "20g"
+        case g22 = "22g"
+        case g24 = "24g"
+        case cdl = "acesso venoso central"
+}
+
 
 public enum ASAClassification: String, Codable, CaseIterable {
     case I
@@ -103,7 +127,7 @@ final class Anesthesia {
     @Attribute(.unique) var anesthesiaId: String
     @Relationship var surgery: Surgery
     
-    @Relationship(deleteRule: .cascade, inverse: \AnesthesiaDescription.anesthesia) var anesthesiaDescriptions: [AnesthesiaDescription]
+    @Relationship(deleteRule: .cascade, inverse: \AnesthesiaDescriptionEntry.anesthesia) var anesthesiaDescriptions: [AnesthesiaDescriptionEntry]
     var anesthesiaTechniqueRaw: [String]
     @Relationship(deleteRule: .cascade, inverse: \MedicationEntry.anesthesia) var medications: [MedicationEntry]
     @Relationship(deleteRule: .cascade, inverse: \VitalSignEntry.anesthesia) var vitalSigns: [VitalSignEntry]
@@ -129,7 +153,7 @@ final class Anesthesia {
     
     @Relationship var shared: SharedPreAndAnesthesia?
     
-    init(anesthesiaId: String, surgery: Surgery, anesthesiaDescriptions: [AnesthesiaDescription], anesthesiaTechniqueRaw: [String], medications: [MedicationEntry], vitalSigns: [VitalSignEntry], start: Date? = nil, end: Date? = nil, statusRaw: String? = nil, createdBy: User, updatedBy: User? = nil, createdAt: Date, updatedAt: Date? = nil, positionRaw: [String]) {
+    init(anesthesiaId: String, surgery: Surgery, anesthesiaDescriptions: [AnesthesiaDescriptionEntry], anesthesiaTechniqueRaw: [String], medications: [MedicationEntry], vitalSigns: [VitalSignEntry], start: Date? = nil, end: Date? = nil, statusRaw: String? = nil, createdBy: User, updatedBy: User? = nil, createdAt: Date, updatedAt: Date? = nil, positionRaw: [String]) {
         self.anesthesiaId = anesthesiaId
         self.surgery = surgery
         self.anesthesiaDescriptions = anesthesiaDescriptions
@@ -151,33 +175,56 @@ final class Anesthesia {
 // MARK: - Descrição de Anestesia
 
 @Model
-final class AnesthesiaDescription {
+final class AnesthesiaDescriptionEntry {
     @Relationship var anesthesia: Anesthesia
     @Attribute(.unique) var descriptionId: String
 
-    var cardioscopia: Bool
-    var oximetria: Bool
-    var pani: Bool
-    var capnografia: Bool
-    var pai: Bool
-    var pvc: Bool
-    var termometro: Bool
+    //Monitoring
+    var electrocardioscopy: Bool
+    var oximetry: Bool
+    var nonInvasiveBloodPressure: Bool
+    var capnography: Bool
+    var invasiveBloodPlessure: Bool
+    var centralVenousPressure: Bool
+    var thermometer: Bool
     var bis: Bool
     var tof: Bool
     var customMonitorings: [String]
 
+    var timestamp: Date
+    //Admission
     var airwayRaw: String?
+    var airway: AirwayKind? { get { airwayRaw.flatMap(AirwayKind.init(rawValue:)) } set { airwayRaw = newValue?.rawValue } }
+    
     var consciousnessRaw: String?
+    var consciousness: ConsciousnessKind? { get { consciousnessRaw.flatMap(ConsciousnessKind.init(rawValue:)) } set { consciousnessRaw = newValue?.rawValue } }
+    
     var ventilatoryRaw: String?
-    var oxygenRaw: String?
+    var ventilatory: VentilationMode? { get { ventilatoryRaw.flatMap(VentilationMode.init(rawValue:)) } set { ventilatoryRaw = newValue?.rawValue } }
+    
+    var mechanicalVentilationRaw: String?
+    var mechanicalVentilation: MechanicalVentilationMode? { get { mechanicalVentilationRaw.flatMap(MechanicalVentilationMode.init(rawValue:)) } set { mechanicalVentilationRaw = newValue?.rawValue}}
+    
+    var oxygenSupplyRaw: String?
+    var oxygenSupply: OxygenSupply? { get { oxygenSupplyRaw.flatMap(OxygenSupply.init(rawValue:)) } set { oxygenSupplyRaw = newValue?.rawValue } }
+    var fiO2Fraction: Double?
+    
     var hemodynamicRaw: String?
+    var hemodynamic: HemodynamicKind? { get { hemodynamicRaw.flatMap(HemodynamicKind.init(rawValue:)) } set { hemodynamicRaw = newValue?.rawValue } }
+    
+    var veinAccessRaw: String?
+    var veinAccess: VeinAccessKind? { get { veinAccessRaw.flatMap(VeinAccessKind.init(rawValue:)) } set { veinAccessRaw = newValue?.rawValue } }
+    
+    var veinGaugeRaw: String?
+    var veinGauge: VeinGaugeKind? { get { veinGaugeRaw.flatMap(VeinGaugeKind.init(rawValue:)) } set { veinGaugeRaw = newValue?.rawValue } }
 
-
-    var geral: Bool
-    var raquianestesia: Bool
-    var sedacao: Bool
-    var peridural: Bool
-    var periferico: Bool
+    //Anesthesia Tecnique
+    var generalAnesthesia: Bool
+    var spinalAnesthesia: Bool
+    var sedationAnesthesia: Bool
+    var periduralAnesthesia: Bool
+    var peripheralBlockAnesthesia: Bool
+    var localAnesthesia: Bool
     var techOrder: [String]
 
     var instrumentoAcesso: String?
@@ -216,49 +263,145 @@ final class AnesthesiaDescription {
     var finalDescription: String?
 
 
-    var airway: AirwayKind? { get { airwayRaw.flatMap(AirwayKind.init(rawValue:)) } set { airwayRaw = newValue?.rawValue } }
-    var consciousness: ConsciousnessKind? { get { consciousnessRaw.flatMap(ConsciousnessKind.init(rawValue:)) } set { consciousnessRaw = newValue?.rawValue } }
-    var ventilatory: VentilatoryKind? { get { ventilatoryRaw.flatMap(VentilatoryKind.init(rawValue:)) } set { ventilatoryRaw = newValue?.rawValue } }
-    var oxygen: OxygenKind? { get { oxygenRaw.flatMap(OxygenKind.init(rawValue:)) } set { oxygenRaw = newValue?.rawValue } }
-    var hemodynamic: HemodynamicKind? { get { hemodynamicRaw.flatMap(HemodynamicKind.init(rawValue:)) } set { hemodynamicRaw = newValue?.rawValue } }
+    
+
 
     init(
         descriptionId: String = UUID().uuidString,
         anesthesia: Anesthesia,
-        cardioscopia: Bool = false, oximetria: Bool = false, pani: Bool = false, capnografia: Bool = false, pai: Bool = false, pvc: Bool = false,
-        termometro: Bool = false, bis: Bool = false, tof: Bool = false, customMonitorings: [String] = [],
-        airway: AirwayKind? = nil, consciousness: ConsciousnessKind? = nil, ventilatory: VentilatoryKind? = nil, oxygen: OxygenKind? = nil, hemodynamic: HemodynamicKind? = nil,
-        geral: Bool = false, raquianestesia: Bool = false, sedacao: Bool = false, peridural: Bool = false, periferico: Bool = false, techOrder: [String] = [],
-        instrumentoAcesso: String? = nil, totNumber: String? = nil, cormack: String? = nil, fixacao: String? = nil,
-        raquiPosicao: String? = nil, raquiNivel: String? = nil, raquiNivelOutro: String? = nil, raquiAgulhaTipo: String? = nil, raquiAgulhaGauge: String? = nil,
-        sedacaoNivel: String? = nil, sedacaoModo: String? = nil, sedacaoOxigenio: String? = nil, sedacaoCircuito: String? = nil,
-        peridPosicao: String? = nil, peridNivel: String? = nil, peridNivelOutro: String? = nil, peridAgulhaGauge: String? = nil, peridIdentificacao: String? = nil, peridCateterCm: String? = nil,
-        perifGuia: String? = nil, perifPlexoBraquial: [String] = [], perifMembroInferior: [String] = [], perifParedeToracAbd: [String] = [], perifOutros: [String] = [], perifOutroTexto: String? = nil,
-        standardEnd: Bool = true, destination: String? = nil, adverseEvolution: String? = nil, finalDescription: String? = nil
+        timestamp: Date,
+        
+        electrocardioscopy: Bool = false,
+        oximetry: Bool = false,
+        nonInvasiveBloodPressure: Bool = false,
+        capnography: Bool = false,
+        invasiveBloodPlessure: Bool = false,
+        centralVenousPressure: Bool = false,
+        thermometer: Bool = false,
+        bis: Bool = false,
+        tof: Bool = false,
+        customMonitorings: [String] = [],
+        
+        airway: AirwayKind? = nil,
+        consciousness: ConsciousnessKind? = nil,
+        ventilatory: VentilationMode? = nil,
+        mechanicalVentilation: MechanicalVentilationMode? = nil,
+        oxygenSupply: OxygenSupply? = nil,
+        fiO2Fraction: Double? = nil,
+        hemodynamic: HemodynamicKind? = nil,
+        veinAccess: VeinAccessKind? = nil,
+        veinGauge: VeinGaugeKind? = nil,
+        
+        generalAnesthesia: Bool = false,
+        spinalAnesthesia: Bool = false,
+        sedationAnesthesia: Bool = false,
+        periduralAnesthesia: Bool = false,
+        peripheralBlockAnesthesia: Bool = false,
+        localAnesthesia: Bool = false,
+        techOrder: [String] = [],
+        
+        instrumentoAcesso: String? = nil,
+        totNumber: String? = nil,
+        cormack: String? = nil,
+        fixacao: String? = nil,
+        
+        raquiPosicao: String? = nil,
+        raquiNivel: String? = nil,
+        raquiNivelOutro: String? = nil,
+        raquiAgulhaTipo: String? = nil,
+        raquiAgulhaGauge: String? = nil,
+        
+        sedacaoNivel: String? = nil,
+        sedacaoModo: String? = nil,
+        sedacaoOxigenio: String? = nil,
+        sedacaoCircuito: String? = nil,
+        
+        peridPosicao: String? = nil,
+        peridNivel: String? = nil,
+        peridNivelOutro: String? = nil,
+        peridAgulhaGauge: String? = nil,
+        peridIdentificacao: String? = nil,
+        peridCateterCm: String? = nil,
+        
+        perifGuia: String? = nil,
+        perifPlexoBraquial: [String] = [],
+        perifMembroInferior: [String] = [],
+        perifParedeToracAbd: [String] = [],
+        perifOutros: [String] = [],
+        perifOutroTexto: String? = nil,
+        standardEnd: Bool = true,
+        
+        destination: String? = nil,
+        adverseEvolution: String? = nil,
+        finalDescription: String? = nil
     ) {
         self.descriptionId = descriptionId
         self.anesthesia = anesthesia
+        self.timestamp = timestamp
 
-        self.cardioscopia = cardioscopia; self.oximetria = oximetria; self.pani = pani; self.capnografia = capnografia; self.pai = pai; self.pvc = pvc
-        self.termometro = termometro; self.bis = bis; self.tof = tof; self.customMonitorings = customMonitorings
+        self.electrocardioscopy = electrocardioscopy
+        self.oximetry = oximetry
+        self.nonInvasiveBloodPressure = nonInvasiveBloodPressure
+        self.capnography = capnography
+        self.invasiveBloodPlessure = invasiveBloodPlessure
+        self.centralVenousPressure = centralVenousPressure
+        self.thermometer = thermometer
+        self.bis = bis
+        self.tof = tof
+        self.customMonitorings = customMonitorings
 
-        self.airwayRaw = airway?.rawValue; self.consciousnessRaw = consciousness?.rawValue
-        self.ventilatoryRaw = ventilatory?.rawValue; self.oxygenRaw = oxygen?.rawValue; self.hemodynamicRaw = hemodynamic?.rawValue
-
-        self.geral = geral; self.raquianestesia = raquianestesia; self.sedacao = sedacao; self.peridural = peridural; self.periferico = periferico
+        self.airwayRaw = airway?.rawValue
+        self.consciousnessRaw = consciousness?.rawValue
+        self.ventilatoryRaw = ventilatory?.rawValue
+        self.mechanicalVentilationRaw = mechanicalVentilation?.rawValue
+        self.oxygenSupplyRaw = oxygenSupply?.rawValue
+        self.fiO2Fraction = fiO2Fraction
+        self.hemodynamicRaw = hemodynamic?.rawValue
+        self.veinAccessRaw = veinAccess?.rawValue
+        self.veinGaugeRaw = veinGauge?.rawValue
+        
+        self.generalAnesthesia = generalAnesthesia
+        self.spinalAnesthesia = spinalAnesthesia
+        self.sedationAnesthesia = sedationAnesthesia
+        self.periduralAnesthesia = periduralAnesthesia
+        self.peripheralBlockAnesthesia = peripheralBlockAnesthesia
+        self.localAnesthesia = localAnesthesia
         self.techOrder = techOrder
 
-        self.instrumentoAcesso = instrumentoAcesso; self.totNumber = totNumber; self.cormack = cormack; self.fixacao = fixacao
+        self.instrumentoAcesso = instrumentoAcesso
+        self.totNumber = totNumber
+        self.cormack = cormack
+        self.fixacao = fixacao
 
-        self.raquiPosicao = raquiPosicao; self.raquiNivel = raquiNivel; self.raquiNivelOutro = raquiNivelOutro; self.raquiAgulhaTipo = raquiAgulhaTipo; self.raquiAgulhaGauge = raquiAgulhaGauge
+        self.raquiPosicao = raquiPosicao
+        self.raquiNivel = raquiNivel
+        self.raquiNivelOutro = raquiNivelOutro
+        self.raquiAgulhaTipo = raquiAgulhaTipo
+        self.raquiAgulhaGauge = raquiAgulhaGauge
 
-        self.sedacaoNivel = sedacaoNivel; self.sedacaoModo = sedacaoModo; self.sedacaoOxigenio = sedacaoOxigenio; self.sedacaoCircuito = sedacaoCircuito
+        self.sedacaoNivel = sedacaoNivel
+        self.sedacaoModo = sedacaoModo
+        self.sedacaoOxigenio = sedacaoOxigenio
+        self.sedacaoCircuito = sedacaoCircuito
 
-        self.peridPosicao = peridPosicao; self.peridNivel = peridNivel; self.peridNivelOutro = peridNivelOutro; self.peridAgulhaGauge = peridAgulhaGauge; self.peridIdentificacao = peridIdentificacao; self.peridCateterCm = peridCateterCm
+        self.peridPosicao = peridPosicao
+        self.peridNivel = peridNivel
+        self.peridNivelOutro = peridNivelOutro
+        self.peridAgulhaGauge = peridAgulhaGauge
+        self.peridIdentificacao = peridIdentificacao
+        self.peridCateterCm = peridCateterCm
 
-        self.perifGuia = perifGuia; self.perifPlexoBraquial = perifPlexoBraquial; self.perifMembroInferior = perifMembroInferior; self.perifParedeToracAbd = perifParedeToracAbd; self.perifOutros = perifOutros; self.perifOutroTexto = perifOutroTexto
+        self.perifGuia = perifGuia
+        self.perifPlexoBraquial = perifPlexoBraquial
+        self.perifMembroInferior = perifMembroInferior
+        self.perifParedeToracAbd = perifParedeToracAbd
+        self.perifOutros = perifOutros
+        self.perifOutroTexto = perifOutroTexto
 
-        self.standardEnd = standardEnd; self.destination = destination; self.adverseEvolution = adverseEvolution; self.finalDescription = finalDescription
+        self.standardEnd = standardEnd
+        self.destination = destination
+        self.adverseEvolution = adverseEvolution
+        self.finalDescription = finalDescription
     }
 }
 
@@ -356,3 +499,4 @@ final class SharedPreAndAnesthesia {
         self.asaRaw = asaRaw
     }
 }
+
