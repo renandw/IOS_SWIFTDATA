@@ -157,7 +157,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
             let new = Anesthesia(
                 anesthesiaId: UUID().uuidString,
                 surgery: surgery,
-                anesthesiaDescriptions: [],
+                anesthesiaDescription: nil,
                 anesthesiaTechniqueRaw: [],
                 medications: [],
                 vitalSigns: [],
@@ -403,3 +403,4 @@ final class AnesthesiaFormViewModel: ObservableObject {
     }
     
 }
+

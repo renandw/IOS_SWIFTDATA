@@ -9,8 +9,9 @@ import SwiftUI
 import Observation   // para @Bindable
 
 struct AnesthesiaDescriptionFormView: View {
-
+    @Environment(\.dismiss) private var dismiss
     @Bindable var viewModel: AnesthesiaDescriptionViewModel
+    @State private var newCustomMonitoring: String = ""
 
     init(viewModel: AnesthesiaDescriptionViewModel) {
         self.viewModel = viewModel
@@ -22,18 +23,31 @@ struct AnesthesiaDescriptionFormView: View {
                 monitoringSection
                 admissionSection
 
-                Section {
-                    Button("Salvar") {
-                        do {
-                            try viewModel.save()
-                            print("AnesthesiaDescriptionEntry salvo com sucesso")
-                        } catch {
-                            print("Erro ao salvar AnesthesiaDescriptionEntry: \(error)")
-                        }
+            }
+            .navigationTitle("Descrição Anestésica")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                Button("Salvar", systemImage: "checkmark") {
+                    do {
+                        try viewModel.save()
+                        dismiss()
+                    }
+                    catch {
+                        print("Erro ao salvar AnesthesiaDescriptionEntry: \(error)")
                     }
                 }
+                Button("Excluir", systemImage: "trash") {
+                    do {
+                        try viewModel.delete()
+                        dismiss()
+                    }
+                    catch {
+                        print("Erro ao excluir AnesthesiaDescriptionEntry: \(error)")
+                    }
+                }
+                
             }
-            .navigationTitle("Descrição da anestesia")
+            
         }
     }
 
@@ -45,11 +59,60 @@ struct AnesthesiaDescriptionFormView: View {
             Toggle("Oximetria", isOn: $viewModel.monitoring.oximetry)
             Toggle("PANI", isOn: $viewModel.monitoring.nonInvasiveBloodPressure)
             Toggle("Capnografia", isOn: $viewModel.monitoring.capnography)
-            Toggle("P. Art. invasiva", isOn: $viewModel.monitoring.invasiveBloodPlessure)
+            Toggle("Pa Invasiva", isOn: $viewModel.monitoring.invasiveBloodPlessure)
             Toggle("PVC", isOn: $viewModel.monitoring.centralVenousPressure)
             Toggle("Termômetro", isOn: $viewModel.monitoring.thermometer)
             Toggle("BIS", isOn: $viewModel.monitoring.bis)
             Toggle("TOF", isOn: $viewModel.monitoring.tof)
+            
+            // Adicionar monitorizações personalizadas
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    TextField("Ex.: ecotransesofágico", text: $newCustomMonitoring)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled(true)
+                        .textFieldStyle(.roundedBorder)
+                        .submitLabel(.done)
+                        .onSubmit {
+                            let trimmed = newCustomMonitoring.trimmingCharacters(in: .whitespacesAndNewlines)
+                            guard !trimmed.isEmpty else { return }
+                            viewModel.monitoring.addCustomMonitoring(trimmed)
+                            newCustomMonitoring = ""
+                        }
+                    Button {
+                        let trimmed = newCustomMonitoring.trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !trimmed.isEmpty else { return }
+                        viewModel.monitoring.addCustomMonitoring(trimmed)
+                        newCustomMonitoring = ""
+                    } label: {
+                        Label("Adicionar", systemImage: "plus")
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(newCustomMonitoring.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+                
+                // Lista de customizações como "toggles" com controle real pelo toggle
+                ForEach(Array(viewModel.monitoring.customMonitorings.enumerated()), id: \.offset) { index, name in
+                    Toggle(isOn: Binding<Bool>(
+                        get: {
+                            // Se o índice ainda é válido, o item está "ligado"
+                            viewModel.monitoring.customMonitorings.indices.contains(index)
+                        },
+                        set: { newValue in
+                            if newValue {
+                                // Garantir presença (evitar duplicatas)
+                                if !viewModel.monitoring.customMonitorings.contains(where: { $0.caseInsensitiveCompare(name) == .orderedSame }) {
+                                    viewModel.monitoring.customMonitorings.append(name)
+                                }
+                            } else {
+                                viewModel.monitoring.removeCustomMonitoring(at: index)
+                            }
+                        }
+                    )) {
+                        Text(name)
+                    }
+                }
+            }
         }
     }
 
@@ -160,3 +223,4 @@ struct AnesthesiaDescriptionFormView: View {
         }
     }
 }
+

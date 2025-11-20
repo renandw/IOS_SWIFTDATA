@@ -128,7 +128,7 @@ final class Anesthesia {
     @Attribute(.unique) var anesthesiaId: String
     @Relationship var surgery: Surgery
     
-    @Relationship(deleteRule: .cascade, inverse: \AnesthesiaDescriptionEntry.anesthesia) var anesthesiaDescriptions: [AnesthesiaDescriptionEntry]
+    @Relationship(deleteRule: .cascade, inverse: \AnesthesiaDescriptionEntry.anesthesia) var anesthesiaDescription: AnesthesiaDescriptionEntry?
     var anesthesiaTechniqueRaw: [String]
     @Relationship(deleteRule: .cascade, inverse: \MedicationEntry.anesthesia) var medications: [MedicationEntry]
     @Relationship(deleteRule: .cascade, inverse: \VitalSignEntry.anesthesia) var vitalSigns: [VitalSignEntry]
@@ -154,10 +154,11 @@ final class Anesthesia {
     
     @Relationship var shared: SharedPreAndAnesthesia?
     
-    init(anesthesiaId: String, surgery: Surgery, anesthesiaDescriptions: [AnesthesiaDescriptionEntry], anesthesiaTechniqueRaw: [String], medications: [MedicationEntry], vitalSigns: [VitalSignEntry], start: Date? = nil, end: Date? = nil, statusRaw: String? = nil, createdBy: User, updatedBy: User? = nil, createdAt: Date, updatedAt: Date? = nil, positionRaw: [String]) {
+    
+    init(anesthesiaId: String, surgery: Surgery, anesthesiaDescription: AnesthesiaDescriptionEntry?, anesthesiaTechniqueRaw: [String], medications: [MedicationEntry], vitalSigns: [VitalSignEntry], start: Date? = nil, end: Date? = nil, statusRaw: String? = nil, createdBy: User, updatedBy: User? = nil, createdAt: Date, updatedAt: Date? = nil, positionRaw: [String]) {
         self.anesthesiaId = anesthesiaId
         self.surgery = surgery
-        self.anesthesiaDescriptions = anesthesiaDescriptions
+        self.anesthesiaDescription = anesthesiaDescription
         self.anesthesiaTechniqueRaw = anesthesiaTechniqueRaw
         self.medications = medications
         self.vitalSigns = vitalSigns

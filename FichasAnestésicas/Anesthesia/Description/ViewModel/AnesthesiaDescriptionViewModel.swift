@@ -10,9 +10,10 @@ import SwiftUI
 import SwiftData
 
 @Observable
-final class AnesthesiaDescriptionViewModel {
+final class AnesthesiaDescriptionViewModel: Identifiable {
 
     // MARK: - Repositório e modelos
+    
     private let repo: AnesthesiaDescriptionEntryRepository
     private let anesthesia: Anesthesia
     private let user: User
@@ -76,4 +77,9 @@ final class AnesthesiaDescriptionViewModel {
             try repo.update(entry, for: anesthesia, by: user)
         }
     }
+    
+    func delete() throws {
+        try repo.delete(entry, for: anesthesia, by: user)
+    }
+
 }

@@ -45,4 +45,16 @@ final class MonitoringSectionViewModel {
         e.tof = tof
         e.customMonitorings = customMonitorings
     }
+    
+    func addCustomMonitoring(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !customMonitorings.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+        customMonitorings.append(trimmed)
+    }
+    
+    func removeCustomMonitoring(at index: Int) {
+        guard customMonitorings.indices.contains(index) else { return }
+        customMonitorings.remove(at: index)
+    }
 }

@@ -10,14 +10,13 @@ import SwiftData
 
 protocol AnesthesiaDescriptionEntryRepository {
     func get(by id: String) -> AnesthesiaDescriptionEntry?
-    func getAll(for anesthesia: Anesthesia) -> [AnesthesiaDescriptionEntry]
+    func get(for anesthesia: Anesthesia) -> AnesthesiaDescriptionEntry?
     func create(_ entry: AnesthesiaDescriptionEntry, for anesthesia: Anesthesia, by user: User) throws
     func update(_ entry: AnesthesiaDescriptionEntry, for anesthesia: Anesthesia, by user: User) throws
     func delete(_ entry: AnesthesiaDescriptionEntry, for anesthesia: Anesthesia, by user: User) throws
-    func deleteAll(for anesthesia: Anesthesia, by user: User) throws
 }
 
-final class SwiftDataAnesthesiaDescriptionEntryRepositoryRepository: AnesthesiaDescriptionEntryRepository {
+final class SwiftDataAnesthesiaDescriptionEntryRepository: AnesthesiaDescriptionEntryRepository {
     private let context: ModelContext
 
     init(context: ModelContext) {
@@ -31,17 +30,16 @@ final class SwiftDataAnesthesiaDescriptionEntryRepositoryRepository: AnesthesiaD
         return try? context.fetch(descriptor).first
     }
 
-    func getAll(for anesthesia: Anesthesia) -> [AnesthesiaDescriptionEntry] {
+    func get(for anesthesia: Anesthesia) -> AnesthesiaDescriptionEntry? {
         let aid = anesthesia.anesthesiaId
         let descriptor = FetchDescriptor<AnesthesiaDescriptionEntry>(
-            predicate: #Predicate { $0.anesthesia.anesthesiaId == aid },
-            sortBy: [SortDescriptor(\.timestamp)]
+            predicate: #Predicate { $0.anesthesia.anesthesiaId == aid }
         )
-        return (try? context.fetch(descriptor)) ?? []
+        return try? context.fetch(descriptor).first
     }
 
     func create(_ entry: AnesthesiaDescriptionEntry, for anesthesia: Anesthesia, by user: User) throws {
-        anesthesia.anesthesiaDescriptions.append(entry)
+        anesthesia.anesthesiaDescription = entry
         anesthesia.updatedAt = Date()
         anesthesia.updatedBy = user
         anesthesia.surgery.lastActivityAt = Date()
@@ -50,6 +48,7 @@ final class SwiftDataAnesthesiaDescriptionEntryRepositoryRepository: AnesthesiaD
     }
 
     func update(_ entry: AnesthesiaDescriptionEntry, for anesthesia: Anesthesia, by user: User) throws {
+        anesthesia.anesthesiaDescription = entry
         anesthesia.updatedAt = Date()
         anesthesia.updatedBy = user
         anesthesia.surgery.lastActivityAt = Date()
@@ -57,16 +56,8 @@ final class SwiftDataAnesthesiaDescriptionEntryRepositoryRepository: AnesthesiaD
     }
 
     func delete(_ entry: AnesthesiaDescriptionEntry, for anesthesia: Anesthesia, by user: User) throws {
+        anesthesia.anesthesiaDescription = nil
         context.delete(entry)
-        anesthesia.updatedAt = Date()
-        anesthesia.updatedBy = user
-        anesthesia.surgery.lastActivityAt = Date()
-        try context.save()
-    }
-
-    func deleteAll(for anesthesia: Anesthesia, by user: User) throws {
-        let entries = getAll(for: anesthesia)
-        for e in entries { context.delete(e) }
         anesthesia.updatedAt = Date()
         anesthesia.updatedBy = user
         anesthesia.surgery.lastActivityAt = Date()
