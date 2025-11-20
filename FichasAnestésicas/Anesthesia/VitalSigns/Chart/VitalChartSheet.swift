@@ -164,16 +164,26 @@ private struct VitalChartContent: View {
                     }
                 }
                 
-                // Marcadores verticais: início e fim da anestesia
+                // Marcadores verticais: início e fim da anestesia/cirurgia
                 if let start = anesthesia.start {
-                    RuleMark(x: .value("Início", start))
-                        .foregroundStyle(.gray)
-                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [8, 4]))
+                    RuleMark(x: .value("Anestesia ↓", start))
+                        .foregroundStyle(.green)
+                        .lineStyle(StrokeStyle(lineWidth: 2))
+                }
+                if let surgeryStart = anesthesia.surgery.start {
+                    RuleMark(x: .value("Cirurgia ↓", surgeryStart))
+                        .foregroundStyle(.blue)
+                        .lineStyle(StrokeStyle(lineWidth: 2))
+                }
+                if let surgeryEnd = anesthesia.surgery.end {
+                    RuleMark(x: .value("Cirurgia ↑", surgeryEnd))
+                        .foregroundStyle(.blue)
+                        .lineStyle(StrokeStyle(lineWidth: 2))
                 }
                 if let end = anesthesia.end {
-                    RuleMark(x: .value("Fim", end))
-                        .foregroundStyle(.gray)
-                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [8, 4]))
+                    RuleMark(x: .value("Anestesia ↑", end))
+                        .foregroundStyle(.green)
+                        .lineStyle(StrokeStyle(lineWidth: 2))
                 }
             }
             .chartYAxis {

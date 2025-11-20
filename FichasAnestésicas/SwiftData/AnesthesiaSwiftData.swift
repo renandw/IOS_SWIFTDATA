@@ -356,4 +356,3 @@ final class SharedPreAndAnesthesia {
         self.asaRaw = asaRaw
     }
 }
-
