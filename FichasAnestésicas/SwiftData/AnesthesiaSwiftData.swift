@@ -45,6 +45,7 @@ public enum ConsciousnessKind: String, Codable, CaseIterable {
     case unresponsive
 }
 
+
 public enum AirwayKind: String, Codable, CaseIterable {
     case noDevice
     case oropharyngealGuedel
