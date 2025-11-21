@@ -33,6 +33,12 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
             }
         }
     }
+    /// Idade do paciente em anos, calculada a partir do contexto (cirurgia ou fora dela)
+    var patientAge: Int {
+        let surgery = anesthesia.surgery
+        let birthDate = surgery.patient.birthDate
+        return AgeContext.inSurgery(surgery).ageInYears(from: birthDate)
+    }
     
     // MARK: - Sub-ViewModels
     var monitoring = MonitoringSectionViewModel()
@@ -94,5 +100,5 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
     func delete() throws {
         try repo.delete(entry, for: anesthesia, by: user)
     }
-
 }
+

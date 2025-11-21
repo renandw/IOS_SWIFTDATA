@@ -60,14 +60,10 @@ final class MonitoringSectionViewModel {
         customMonitorings.remove(at: index)
     }
     
-    // Sugere monitorização baseada no tipo de anestesia
     func applyMonitoringSuggestion(hasGeneralAnesthesia: Bool) {
-        // Sempre recomendados
         electrocardioscopy = true
         oximetry = true
         nonInvasiveBloodPressure = true
-        
-        // Recomendado apenas em anestesia geral
         capnography = hasGeneralAnesthesia
     }
 }
