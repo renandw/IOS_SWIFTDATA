@@ -14,7 +14,7 @@ struct MonitoringSectionView: View {
                         MonitoringItem(title: "Eletrocardioscopia", icon: "waveform.path.ecg.rectangle", binding: $viewModel.monitoring.electrocardioscopy),
                         MonitoringItem(title: "Oximetria", icon: "lungs", binding: $viewModel.monitoring.oximetry),
                         MonitoringItem(title: "PANI", icon: "blood.pressure.cuff", binding: $viewModel.monitoring.nonInvasiveBloodPressure),
-                        MonitoringItem(title: "Capnografia", icon: "carbon.dioxide.cloud.fill", binding: $viewModel.monitoring.capnography)
+                        MonitoringItem(title: "Capnografia", icon: "carbon.dioxide.cloud", binding: $viewModel.monitoring.capnography)
                     ]
                     
                     let nonEssentialMonitoringItems: [MonitoringItem] = [

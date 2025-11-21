@@ -183,6 +183,125 @@ enum CormackLehane: String, CaseIterable, Codable, Identifiable {
     }
 }
 
+public enum SpinalPosition: String, Codable, CaseIterable {
+    case seated
+    case lateralDecubitus
+}
+
+public enum SpinalLevel: String, Codable, CaseIterable {
+    case t1
+    case t2
+    case t3
+    case t4
+    case t5
+    case t6
+    case t7
+    case t8
+    case t9
+    case t10
+    case t11
+    case t12
+    case l1
+    case l2
+    case l3
+    case l4
+    case l5
+    case sacral
+    case coccyx
+
+    var DisplayName: String {
+        switch self {
+        case .t1:  return "T1-T2"
+        case .t2:  return "T2-T3"
+        case .t3:  return "T3-T4"
+        case .t4:  return "T4-T5"
+        case .t5:  return "T5-T6"
+        case .t6:  return "T6-T7"
+        case .t7:  return "T7-T8"
+        case .t8:  return "T8-T9"
+        case .t9:  return "T9-T10"
+        case .t10: return "T10-T11"
+        case .t11: return "T11-T12"
+        case .t12: return "T12-L1"
+        case .l1:  return "L1-L2"
+        case .l2:  return "L2-L3"
+        case .l3:  return "L3-L4"
+        case .l4:  return "L4-L5"
+        case .l5:  return "L5-Sacral"
+        case .sacral: return "Sacral"
+        case .coccyx: return "Coccyx"
+        }
+    }
+}
+public enum SpinalNeedle: String, Codable, CaseIterable {
+    case whitacre
+    case quincke
+    case thuohy
+    case tuohysoho
+    case caudal
+}
+
+public enum SpinalGaugeKind: String, Codable, CaseIterable {
+    case g16
+    case g17
+    case g18
+    case g20
+    case g22
+    case g24
+    case g25
+    case g26
+    case g27
+    
+    var DisplayName: String {
+        switch self {
+        case .g16:  return "16G"
+        case .g17:  return "17G"
+        case .g18:  return "18G"
+        case .g20:  return "20G"
+        case .g22:  return "22G"
+        case .g24:  return "24G"
+        case .g25:  return "25G"
+        case .g26:  return "26G"
+        case .g27:  return "27G"
+        }
+    }
+}
+
+public enum PeriduralTechniqueKind: String, Codable, CaseIterable {
+    case dogliotti
+    case gutierrez
+}
+
+public enum SedationTechniqueKind: String, Codable, CaseIterable {
+    case shallow
+    case moderate
+    case profound
+}
+
+public enum SedationType: String, Codable, CaseIterable {
+    case intravenous
+    case inalatory
+    case combined
+}
+
+public enum SedationOxygenSupplyKind: String, Codable, CaseIterable {
+    case cateterNasal
+    case facialMask
+    
+    func displayName(for age: Int) -> String {
+            let isChild = age < 12
+            switch self {
+            case .cateterNasal:
+                return isChild ? "cateter nasal" : "cateter nasal"
+                
+            case .facialMask:
+                return isChild ? "máscara facial em circuito Mappleson A" : "máscara facial"
+
+            }
+        }
+}
+
+
 
 @Model
 final class Anesthesia {
@@ -290,10 +409,16 @@ final class AnesthesiaDescriptionEntry {
     var localAnesthesia: Bool
     var techOrder: [String]
 
-    var instrumentoAcesso: String?
+    // Visualization and equipment used for airway access
+    var visualizationMethodRaw: String?
+    var visualizationMethod: VisualizationMethod? { get { visualizationMethodRaw.flatMap(VisualizationMethod.init(rawValue:)) } set { visualizationMethodRaw = newValue?.rawValue } }
+    
+    var equipmentRaw: String?
+    var equipment: LaringoschopyEquipment? { get { equipmentRaw.flatMap(LaringoschopyEquipment.init(rawValue:)) } set { equipmentRaw = newValue?.rawValue } }
     var totNumber: String?
-    var cormack: String?
-    var fixacao: String?
+    var cormackRaw: String?
+    var cormack: CormackLehane? { get { cormackRaw.flatMap(CormackLehane.init(rawValue:)) } set { cormackRaw = newValue?.rawValue } }
+    var fixation: String?
 
     var raquiPosicao: String?
     var raquiNivel: String?
@@ -363,10 +488,11 @@ final class AnesthesiaDescriptionEntry {
         localAnesthesia: Bool = false,
         techOrder: [String] = [],
         
-        instrumentoAcesso: String? = nil,
+        visualizationMethod: VisualizationMethod? = nil,
+        equipment: LaringoschopyEquipment? = nil,
         totNumber: String? = nil,
-        cormack: String? = nil,
-        fixacao: String? = nil,
+        cormack: CormackLehane? = nil,
+        fixation: String? = nil,
         
         raquiPosicao: String? = nil,
         raquiNivel: String? = nil,
@@ -431,10 +557,11 @@ final class AnesthesiaDescriptionEntry {
         self.localAnesthesia = localAnesthesia
         self.techOrder = techOrder
 
-        self.instrumentoAcesso = instrumentoAcesso
+        self.visualizationMethodRaw = visualizationMethod?.rawValue
+        self.equipmentRaw = equipment?.rawValue
         self.totNumber = totNumber
-        self.cormack = cormack
-        self.fixacao = fixacao
+        self.cormackRaw = cormack?.rawValue
+        self.fixation = fixation
 
         self.raquiPosicao = raquiPosicao
         self.raquiNivel = raquiNivel
