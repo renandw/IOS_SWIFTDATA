@@ -2,26 +2,36 @@
 import Foundation
 
 extension ConsciousnessKind {
-    var displayName: String {
+    func displayName(for age: Int) -> String {
+        let isChild = age < 12
         switch self {
-        case .alert:              "Alerta"
-        case .drowsy:             "Sonolento"
-        case .lethargic:          "Letárgico"
-        case .obtunded:           "Rebaixado"
-        case .responsiveToPain:   "Responde à dor"
-        case .unresponsive:       "Sem resposta"
+        case .alert:
+            return isChild ? "ativo e reativo" : "lúcido e orientado"
+            
+        case .drowsy:
+            return isChild ? "hipoativo e reativo" : "sonolento"
+            
+        case .lethargic:
+            return isChild ? "hipoativo e hiporeativo" : "letárgico"
+            
+        case .responsiveToPain:
+            return isChild ? "chora ao estimulo doloroso" : "resposta a dor"
+            
+        case .unresponsive:
+            return isChild ? "sem resposta" : "sem resposta"
         }
     }
 }
 
+
 extension AirwayKind {
     var displayName: String {
         switch self {
-        case .noDevice:              "Sem dispositivo"
-        case .oropharyngealGuedel:   "Guedel orofaríngeo"
-        case .nasopharyngeal:        "Nasofaríngeo"
-        case .lma:                   "LMA"
-        case .maskLMA:               "Máscara + LMA"
+        case .noDevice:              "pérvia"
+        case .compromised:            "potencialmente comprometida"
+        case .oropharyngealGuedel:   "guedel orofaríngeo"
+        case .nasopharyngeal:        "dispositivo nasofaríngeo"
+        case .lma:                   "máscara laríngea"
         case .endotrachealTube:      "Tubo orotraqueal"
         case .tracheostomy:          "Traqueostomia"
         }
@@ -31,7 +41,7 @@ extension AirwayKind {
 extension VentilationMode {
     var displayName: String {
         switch self {
-        case .expontaneus:                   "Espontânea"
+        case .spontaneous:                   "Espontânea"
         case .invasiveMechanicalVentilation: "VM invasiva"
         case .nonInvasiveMechanicalVentilation: "VM não invasiva"
         }

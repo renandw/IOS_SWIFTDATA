@@ -9,17 +9,23 @@ struct AdmissionSectionView: View {
       NavigationStack {
           Form {
               Section {
-                airwayPicker
-                consciousnessPicker
-                ventilatoryPicker
-                mechanicalVentilationPicker
-                oxygenSupplyPicker
-                fiO2Field
-                hemodynamicPicker
-                veinAccessPicker
-                veinGaugePicker
+                  airwayPicker
+                  consciousnessPicker
+                  ventilatoryPicker
+                  if viewModel.admission.ventilatory != .spontaneous {
+                      mechanicalVentilationPicker
+                  }
+                  oxygenSupplyPicker
+                  if viewModel.admission.oxygenSupply != .ambientAir {
+                      fiO2Field
+                  }
+                  hemodynamicPicker
+                  veinAccessPicker
+                  if viewModel.admission.veinAccess != VeinAccessKind.none {
+                      veinGaugePicker
+                  }
               } header: {
-                Text("Admissão")
+                  Text("Admissão")
               }
           }
           .navigationTitle("Admissão")
@@ -31,6 +37,15 @@ struct AdmissionSectionView: View {
           }
       }
   }
+    private var consciousnessPicker: some View {
+        Picker("Consciência", selection: $viewModel.admission.consciousness) {
+            Text("Não informado").tag(nil as ConsciousnessKind?)
+            ForEach(ConsciousnessKind.allCases, id: \.self) { (kind: ConsciousnessKind) in
+                Text(kind.displayName(for: viewModel.patientAge))
+                    .tag(Optional(kind))
+            }
+        }
+    }
 
     private var airwayPicker: some View {
         Picker("Via aérea", selection: $viewModel.admission.airway) {
@@ -42,20 +57,17 @@ struct AdmissionSectionView: View {
         }
     }
 
-    private var consciousnessPicker: some View {
-        Picker("Consciência", selection: $viewModel.admission.consciousness) {
-            Text("Não informado").tag(nil as ConsciousnessKind?)
-            ForEach(ConsciousnessKind.allCases, id: \.self) { (kind: ConsciousnessKind) in
-                Text(kind.displayName)
-                    .tag(Optional(kind))
-            }
-        }
-    }
-
     private var ventilatoryPicker: some View {
-        Picker("Modo ventilatório", selection: $viewModel.admission.ventilatory) {
+        // Compute allowed options outside the ViewBuilder to avoid '()' in View context
+        let allowed: [VentilationMode]
+        if let airway = viewModel.admission.airway, [.noDevice, .compromised, .oropharyngealGuedel, .nasopharyngeal].contains(airway) {
+            allowed = [.spontaneous]
+        } else {
+            allowed = VentilationMode.allCases
+        }
+        return Picker("Modo ventilatório", selection: $viewModel.admission.ventilatory) {
             Text("Não informado").tag(nil as VentilationMode?)
-            ForEach(VentilationMode.allCases, id: \.self) { (mode: VentilationMode) in
+            ForEach(allowed, id: \.self) { (mode: VentilationMode) in
                 Text(mode.displayName)
                     .tag(Optional(mode))
             }
@@ -121,3 +133,4 @@ struct AdmissionSectionView: View {
         }
     }
 }
+

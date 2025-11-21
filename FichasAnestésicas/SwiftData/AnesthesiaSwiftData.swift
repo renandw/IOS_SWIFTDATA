@@ -40,7 +40,6 @@ public enum ConsciousnessKind: String, Codable, CaseIterable {
     case alert
     case drowsy
     case lethargic
-    case obtunded
     case responsiveToPain
     case unresponsive
 }
@@ -48,16 +47,16 @@ public enum ConsciousnessKind: String, Codable, CaseIterable {
 
 public enum AirwayKind: String, Codable, CaseIterable {
     case noDevice
+    case compromised
     case oropharyngealGuedel
     case nasopharyngeal
     case lma
-    case maskLMA
     case endotrachealTube
     case tracheostomy
 }
 
 public enum VentilationMode: String, Codable, CaseIterable {
-    case expontaneus
+    case spontaneous
     case invasiveMechanicalVentilation
     case nonInvasiveMechanicalVentilation
 }
@@ -78,7 +77,7 @@ public enum OxygenSupply: String, Codable, CaseIterable {
     case nonReinalantMask
 }
 
-struct AirwauDeviceInfo: Codable {
+struct AirwayDeviceInfo: Codable {
     var kind: AirwayKind
     var size: Double?
 }
@@ -105,7 +104,6 @@ public enum VeinGaugeKind: String, Codable, CaseIterable {
         case cdl = "acesso venoso central"
 }
 
-
 public enum ASAClassification: String, Codable, CaseIterable {
     case I
     case II
@@ -118,10 +116,73 @@ public enum ASAClassification: String, Codable, CaseIterable {
     case IIIe
     case IVe
     case Ve
-    
-    
 
 }
+
+public enum VisualizationMethod: String, Codable, CaseIterable {
+    case indirect
+    case direct
+}
+
+public enum LaringoschopyEquipment: String, Codable, CaseIterable {
+    case laringoscope
+    case fibroscope
+    case mirrorGarcia
+    case videoLaryngoscope
+}
+
+public enum TubeCuff: String, Codable, CaseIterable {
+    case with
+    case without
+}
+
+public enum TubeRoute: String, Codable, CaseIterable {
+    case nasal
+    case oral
+}
+
+public enum TubeType: String, Codable, CaseIterable {
+    case common
+    case aramado
+    case doubleLumen
+    case eNasal
+    case traqueal
+}
+public enum TubeAcess: String, Codable, CaseIterable {
+    case inORInserted
+    case previouslyInserted
+}
+
+enum CormackLehane: String, CaseIterable, Codable, Identifiable {
+    case grade1        // glote totalmente visível
+    case grade2a       // parte posterior da glote visível
+    case grade2b       // apenas aritenoides / cartilagens visíveis
+    case grade3        // somente epiglote visível
+    case grade4        // nem epiglote visível
+    
+    var id: String { rawValue }
+    
+    var displayName: String {
+        switch self {
+        case .grade1:  return "Grau I – Glote totalmente visível"
+        case .grade2a: return "Grau IIa – Parte da glote visível"
+        case .grade2b: return "Grau IIb – Apenas aritenoides"
+        case .grade3:  return "Grau III – Apenas epiglote"
+        case .grade4:  return "Grau IV – Nada visível"
+        }
+    }
+    
+    var shortLabel: String {
+        switch self {
+        case .grade1:  return "I"
+        case .grade2a: return "IIa"
+        case .grade2b: return "IIb"
+        case .grade3:  return "III"
+        case .grade4:  return "IV"
+        }
+    }
+}
+
 
 @Model
 final class Anesthesia {

@@ -8,15 +8,47 @@ import SwiftUI
 
 @Observable
 final class AdmissionSectionViewModel {
-    var airway: AirwayKind?
+    var airway: AirwayKind? { didSet { updateVentilationOptions() } }
     var consciousness: ConsciousnessKind?
-    var ventilatory: VentilationMode?
+    var ventilatory: VentilationMode? { didSet { updateMechanicalVisibility() } }
     var mechanicalVentilation: MechanicalVentilationMode?
-    var oxygenSupply: OxygenSupply?
+    var oxygenSupply: OxygenSupply? { didSet { updateFiO2() } }
     var fiO2Fraction: Double?
     var hemodynamic: HemodynamicKind?
-    var veinAccess: VeinAccessKind?
+    var veinAccess: VeinAccessKind? { didSet { updateVeinGaugeVisibility() } }
     var veinGauge: VeinGaugeKind?
+
+    // MARK: - UI Rules (computed/helpers)
+
+    /// Only spontaneous when airway in these cases:
+    private var spontaneousOnlyAirways: [AirwayKind] {
+        [.noDevice, .compromised, .oropharyngealGuedel, .nasopharyngeal]
+    }
+
+    private func updateVentilationOptions() {
+        guard let airway else { return }
+        if spontaneousOnlyAirways.contains(airway) {
+            ventilatory = .spontaneous
+        }
+    }
+
+    private func updateMechanicalVisibility() {
+        if ventilatory == .spontaneous {
+            mechanicalVentilation = nil
+        }
+    }
+
+    private func updateFiO2() {
+        if oxygenSupply == .ambientAir {
+            fiO2Fraction = 21
+        }
+    }
+
+    private func updateVeinGaugeVisibility() {
+        if veinAccess == VeinAccessKind.none {
+            veinGauge = nil
+        }
+    }
 
     func load(from e: AnesthesiaDescriptionEntry) {
         airway = e.airway
@@ -40,5 +72,15 @@ final class AdmissionSectionViewModel {
         e.hemodynamic = hemodynamic
         e.veinAccess = veinAccess
         e.veinGauge = veinGauge
+    }
+    
+    func applyMonitoringSuggestion() {
+        airway = .noDevice
+        consciousness = .alert
+        ventilatory = .spontaneous
+        oxygenSupply = .ambientAir
+        hemodynamic = .stable
+        veinAccess = .inOpRoom
+        veinGauge = .g22
     }
 }

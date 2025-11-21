@@ -45,7 +45,7 @@ struct AnesthesiaDescriptionFormView: View {
                         Text("Admissão")
                         Spacer()
                         Button {
-                           //TODO - apply suggestions
+                            viewModel.admission.applyMonitoringSuggestion()
                         } label: {
                             Label("Sugerir", systemImage: "wand.and.stars")
                         }
