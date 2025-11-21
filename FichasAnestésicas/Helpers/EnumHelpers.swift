@@ -311,12 +311,12 @@ enum CormackLehane: String, CaseIterable, Codable, Identifiable {
     }
 }
 
-public enum SpinalPosition: String, Codable, CaseIterable {
+public enum SpinalAndEpiduralPosition: String, Codable, CaseIterable {
     case seated
     case lateralDecubitus
 }
 
-public enum SpinalLevel: String, Codable, CaseIterable {
+public enum SpinalAndEpiduralLevel: String, Codable, CaseIterable {
     case t1
     case t2
     case t3
@@ -361,7 +361,7 @@ public enum SpinalLevel: String, Codable, CaseIterable {
         }
     }
 }
-public enum SpinalNeedle: String, Codable, CaseIterable {
+public enum SpinalAndEpiduralNeedle: String, Codable, CaseIterable {
     case whitacre
     case quincke
     case thuohy
@@ -369,7 +369,7 @@ public enum SpinalNeedle: String, Codable, CaseIterable {
     case caudal
 }
 
-public enum SpinalGaugeKind: String, Codable, CaseIterable {
+public enum SpinalAndEpiduralGaugeKind: String, Codable, CaseIterable {
     case g16
     case g17
     case g18
@@ -432,4 +432,141 @@ public enum SedationOxygenSupplyKind: String, Codable, CaseIterable {
 
             }
         }
+}
+
+
+public enum BlockEquipmentKind: String, Codable, CaseIterable {
+    case usg
+    case usgAndNeuralStimulation
+    case neuralStimulationOnly
+    case landmarks
+    
+    var DisplayName: String {
+        switch self {
+        case .usg:
+            return "Ultrassonografia"
+        case .usgAndNeuralStimulation:
+            return "Ultrassonografia + Estimulação Neural"
+        case .neuralStimulationOnly:
+            return "Estimulação Neural"
+        case .landmarks:
+            return "Marcos Anatômicos"
+        }
+    }
+}
+
+public enum MMSSTechnique: String, Codable, CaseIterable {
+    case interescalenical
+    case supraclavian
+    case subclavian
+    case axilar
+    
+    var DisplayNameReport: String {
+        switch self {
+        case .interescalenical:
+            return "Bloqueio plexo braquial via Interescalênico"
+        case .supraclavian:
+            return "Bloqueio plexo braquial via Supraclavicular"
+        case .subclavian:
+            return "Bloqueio plexo braquial via  Infraclavicular"
+        case .axilar:
+            return "Bloqueio plexo braquial via  Axilar"
+        }
+    }
+    var DisplayName: String {
+        switch self {
+        case .interescalenical:
+            return "Interescalênico"
+        case .supraclavian:
+            return "Supraclavicular"
+        case .subclavian:
+            return "Infraclavicular"
+        case .axilar:
+            return "Axilar"
+        }
+    }
+}
+
+public enum MMIITechnique: String, Codable, CaseIterable {
+    case femoral
+    case adutor
+    case sciatic_gluteal
+    case sciatic_poplitean
+    
+    var DisplayNameReport: String {
+        switch self {
+        case .femoral:
+            return "Bloqueio nervo femoral"
+        case .adutor:
+            return "Bloqueio plexo lombar ao nível Adutor"
+        case .sciatic_gluteal:
+            return "Bloqueio nervo ciático ao nível de glúteos"
+        case . sciatic_poplitean:
+            return "Bloqueio nervo ciático ao nível de artéria poplítea"
+        }
+    }
+    var DisplayName: String {
+        switch self {
+        case .femoral:
+            return "Femoral"
+        case .adutor:
+            return "Adutor"
+        case .sciatic_gluteal:
+            return "Cíatico - Glúteo"
+        case .sciatic_poplitean:
+            return "Ciático - Poplítea"
+        }
+    }
+}
+
+public enum AbdominalToraxTechnique: String, Codable, CaseIterable {
+    case tap
+    case quadrado_lombar
+    case pecs1
+    case pecs2
+    case serratus
+    case paravertebral
+    case ilioinguinal
+    
+    var DisplayNameReport: String {
+        switch self {
+        case .tap:
+            return "Bloqueio ao nível de músculo transverso"
+        case .quadrado_lombar:
+            return "Bloqueio ao nível de Quadrado lombar"
+        case .pecs1:
+            return "PECs 1"
+        case .pecs2:
+            return "PECs 2"
+        case .serratus:
+            return "Serratus anterior"
+        case .paravertebral:
+            return "Paravertebral"
+        case .ilioinguinal:
+            return "Iliopsoas e Inguinalis"
+        }
+    }
+    var DisplayName: String {
+        switch self {
+        case .tap:
+            return "TAP"
+        case .quadrado_lombar:
+            return "Quadrado lombar"
+        case .pecs1:
+            return "PEC 1"
+        case .pecs2:
+            return "PEC 2"
+        case .serratus:
+            return "Serrátil"
+        case .paravertebral:
+            return "Paravertebral"
+        case .ilioinguinal:
+            return "Ilioinguinal"
+        }
+    }
+}
+
+public enum BlockSide: String, Codable, CaseIterable {
+    case left
+    case right
 }

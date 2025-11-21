@@ -117,7 +117,7 @@ final class AnesthesiaDescriptionEntry {
     var localAnesthesia: Bool
     var techOrder: [String]
 
-    // Visualization and equipment used for airway access
+    // Visualization and equipment used for airway access in general anesthesia
     var visualizationMethodRaw: String?
     var visualizationMethod: VisualizationMethod? { get { visualizationMethodRaw.flatMap(VisualizationMethod.init(rawValue:)) } set { visualizationMethodRaw = newValue?.rawValue } }
     
@@ -128,31 +128,73 @@ final class AnesthesiaDescriptionEntry {
     var cormack: CormackLehane? { get { cormackRaw.flatMap(CormackLehane.init(rawValue:)) } set { cormackRaw = newValue?.rawValue } }
     var fixation: String?
 
-    var raquiPosicao: String?
-    var raquiNivel: String?
+    // Raqui - SpinalAnesthesia
+    var raquiPositionRaw: String?
+    var raquiPosition: SpinalAndEpiduralPosition? { get { raquiPositionRaw.flatMap(SpinalAndEpiduralPosition.init(rawValue:)) } set { raquiPositionRaw = newValue?.rawValue } }
+
+    var raquiLevelRaw: String?
+    var raquiLevel: SpinalAndEpiduralLevel? { get { raquiLevelRaw.flatMap(SpinalAndEpiduralLevel.init(rawValue:)) } set { raquiLevelRaw = newValue?.rawValue } }
     var raquiNivelOutro: String?
-    var raquiAgulhaTipo: String?
-    var raquiAgulhaGauge: String?
 
-    var sedacaoNivel: String?
-    var sedacaoModo: String?
-    var sedacaoOxigenio: String?
-    var sedacaoCircuito: String?
+    var raquiNeedleRaw: String?
+    var raquiNeedle: SpinalAndEpiduralNeedle? { get { raquiNeedleRaw.flatMap(SpinalAndEpiduralNeedle.init(rawValue:)) } set { raquiNeedleRaw = newValue?.rawValue } }
 
-    var peridPosicao: String?
-    var peridNivel: String?
-    var peridNivelOutro: String?
-    var peridAgulhaGauge: String?
-    var peridIdentificacao: String?
-    var peridCateterCm: String?
+    var raquiNeedleGaugeRaw: String?
+    var raquiNeedleGauge: SpinalAndEpiduralGaugeKind? { get { raquiNeedleGaugeRaw.flatMap(SpinalAndEpiduralGaugeKind.init(rawValue:)) } set { raquiNeedleGaugeRaw = newValue?.rawValue } }
+    
 
-    var perifGuia: String?
-    var perifPlexoBraquial: [String]
-    var perifMembroInferior: [String]
-    var perifParedeToracAbd: [String]
-    var perifOutros: [String]
-    var perifOutroTexto: String?
+    // Sedation
+    var sedationTechniqueRaw: String?
+    var sedationTechnique: SedationTechniqueKind? { get { sedationTechniqueRaw.flatMap(SedationTechniqueKind.init(rawValue:)) } set { sedationTechniqueRaw = newValue?.rawValue } }
+    
+    var sedationTypeRaw: String?
+    var sedationType: SedationType? { get { sedationTypeRaw.flatMap(SedationType.init(rawValue:)) } set { sedationTypeRaw = newValue?.rawValue } }
+    
+    var intraVenousSedationTypeRaw: String?
+    var intraVenousSedation: IntraVenousSedationType? { get { intraVenousSedationTypeRaw.flatMap(IntraVenousSedationType.init(rawValue:)) } set { intraVenousSedationTypeRaw = newValue?.rawValue } }
+    
+    var sedationOxygenSupplyRaw: String?
+    var sedationOxygenSupply: SedationOxygenSupplyKind? { get { sedationOxygenSupplyRaw.flatMap(SedationOxygenSupplyKind.init(rawValue:)) } set { sedationOxygenSupplyRaw = newValue?.rawValue } }
 
+    
+    // PeriduralAnesthesia
+    var periduralPositionRaw: String?
+    var periduralPosition: SpinalAndEpiduralPosition? { get { periduralPositionRaw.flatMap(SpinalAndEpiduralPosition.init(rawValue:)) } set { periduralPositionRaw = newValue?.rawValue } }
+    
+    var periduralLevelRaw: String?
+    var periduralLevel: SpinalAndEpiduralLevel? { get { periduralLevelRaw.flatMap(SpinalAndEpiduralLevel.init(rawValue:)) } set { periduralLevelRaw = newValue?.rawValue } }
+    
+    var periduralNeedleRaw: String?
+    var periduralNeedle: SpinalAndEpiduralNeedle? { get { periduralNeedleRaw.flatMap(SpinalAndEpiduralNeedle.init(rawValue:)) } set { periduralNeedleRaw = newValue?.rawValue } }
+    
+    var periduralNeedleGaugeRaw: String?
+    var periduralNeedleGauge: SpinalAndEpiduralGaugeKind? { get { periduralNeedleGaugeRaw.flatMap(SpinalAndEpiduralGaugeKind.init(rawValue:)) } set { periduralNeedleGaugeRaw = newValue?.rawValue } }
+    
+    var periduralTechniqueRaw: String?
+    var periduralTechnique: PeriduralTechniqueKind? { get { periduralTechniqueRaw.flatMap(PeriduralTechniqueKind.init(rawValue:)) } set { periduralTechniqueRaw = newValue?.rawValue } }
+    
+    var periduralCateterFixation: String?
+    
+    
+    // Peripheral Block
+    var blockEquipmentRaw: String?
+    var blockEquipment: BlockEquipmentKind? { get { blockEquipmentRaw.flatMap(BlockEquipmentKind.init(rawValue:)) } set { blockEquipmentRaw = newValue?.rawValue } }
+
+    var mmssTechinqueRaw: String?
+    var mmssTechinque: MMSSTechnique? { get { mmssTechinqueRaw.flatMap(MMSSTechnique.init(rawValue:)) } set { mmssTechinqueRaw = newValue?.rawValue } }
+    var mmiiTechniqueRaw: String?
+    var mmiiTechinquency: MMIITechnique? { get { mmiiTechniqueRaw.flatMap(MMIITechnique.init(rawValue:)) } set { mmiiTechniqueRaw = newValue?.rawValue } }
+
+    var abdominalToraxTechniqueRaw: String?
+    var abdominalToraxTechnique: AbdominalToraxTechnique? { get { abdominalToraxTechniqueRaw.flatMap(AbdominalToraxTechnique.init(rawValue:)) } set { abdominalToraxTechniqueRaw = newValue?.rawValue } }
+    var blockSideRaw: String?
+    var blockSide: BlockSide? { get { blockSideRaw.flatMap(BlockSide.init(rawValue:)) } set { blockSideRaw = newValue?.rawValue } }
+
+    var blockOthers: String?
+    
+    
+    
+    // Última Parte
     var standardEnd: Bool
     var destination: String?
     var adverseEvolution: String?
@@ -202,32 +244,32 @@ final class AnesthesiaDescriptionEntry {
         cormack: CormackLehane? = nil,
         fixation: String? = nil,
         
-        raquiPosicao: String? = nil,
-        raquiNivel: String? = nil,
-        raquiNivelOutro: String? = nil,
-        raquiAgulhaTipo: String? = nil,
-        raquiAgulhaGauge: String? = nil,
+        raquiPosition: SpinalAndEpiduralPosition? = nil,
+        raquiLevel: SpinalAndEpiduralLevel? = nil,
+        raquiNeedle: SpinalAndEpiduralNeedle? = nil,
+        raquiNeedleGauge: SpinalAndEpiduralGaugeKind? = nil,
         
-        sedacaoNivel: String? = nil,
-        sedacaoModo: String? = nil,
-        sedacaoOxigenio: String? = nil,
-        sedacaoCircuito: String? = nil,
+        sedationTechnique: SedationTechniqueKind? = nil,
+        sedationType: SedationType? = nil,
+        intraVenousSedationType: IntraVenousSedationType? = nil,
+        sedationOxygenSupply: SedationOxygenSupplyKind? = nil,
         
-        peridPosicao: String? = nil,
-        peridNivel: String? = nil,
-        peridNivelOutro: String? = nil,
-        peridAgulhaGauge: String? = nil,
-        peridIdentificacao: String? = nil,
-        peridCateterCm: String? = nil,
+        periduralPosition: SpinalAndEpiduralPosition? = nil,
+        periduralLevel: SpinalAndEpiduralLevel? = nil,
+        periduralNeedle: SpinalAndEpiduralNeedle? = nil,
+        periduralNeedleGauge: SpinalAndEpiduralGaugeKind? = nil,
+        periduralTechnique: PeriduralTechniqueKind? = nil,
+        periduralCateterFixation: String? = nil,
         
-        perifGuia: String? = nil,
-        perifPlexoBraquial: [String] = [],
-        perifMembroInferior: [String] = [],
-        perifParedeToracAbd: [String] = [],
-        perifOutros: [String] = [],
-        perifOutroTexto: String? = nil,
+        blockEquipment: BlockEquipmentKind? = nil,
+        mmssTechinque: MMSSTechnique? = nil,
+        mmiiTechinque: MMIITechnique? = nil,
+        abdominalToraxTechnique: AbdominalToraxTechnique? = nil,
+        blockSide: BlockSide? = nil,
+        blockOthers: String? = nil,
+        
+        
         standardEnd: Bool = true,
-        
         destination: String? = nil,
         adverseEvolution: String? = nil,
         finalDescription: String? = nil
@@ -271,31 +313,30 @@ final class AnesthesiaDescriptionEntry {
         self.cormackRaw = cormack?.rawValue
         self.fixation = fixation
 
-        self.raquiPosicao = raquiPosicao
-        self.raquiNivel = raquiNivel
-        self.raquiNivelOutro = raquiNivelOutro
-        self.raquiAgulhaTipo = raquiAgulhaTipo
-        self.raquiAgulhaGauge = raquiAgulhaGauge
+        self.raquiPositionRaw = raquiPosition?.rawValue
+        self.raquiLevelRaw = raquiLevel?.rawValue
+        self.raquiNeedleRaw = raquiNeedle?.rawValue
+        self.raquiNeedleGaugeRaw = raquiNeedleGauge?.rawValue
+        
+        self.sedationTechniqueRaw = sedationTechnique?.rawValue
+        self.sedationTypeRaw = sedationType?.rawValue
+        self.intraVenousSedationTypeRaw = intraVenousSedationType?.rawValue
+        self.sedationOxygenSupplyRaw = sedationOxygenSupply?.rawValue
+        
+        self.periduralPositionRaw = periduralPosition?.rawValue
+        self.periduralLevelRaw = periduralLevel?.rawValue
+        self.periduralNeedleRaw = periduralNeedle?.rawValue
+        self.periduralNeedleGaugeRaw = periduralNeedleGauge?.rawValue
+        self.periduralTechniqueRaw = periduralTechnique?.rawValue
+        self.periduralCateterFixation = periduralCateterFixation
 
-        self.sedacaoNivel = sedacaoNivel
-        self.sedacaoModo = sedacaoModo
-        self.sedacaoOxigenio = sedacaoOxigenio
-        self.sedacaoCircuito = sedacaoCircuito
-
-        self.peridPosicao = peridPosicao
-        self.peridNivel = peridNivel
-        self.peridNivelOutro = peridNivelOutro
-        self.peridAgulhaGauge = peridAgulhaGauge
-        self.peridIdentificacao = peridIdentificacao
-        self.peridCateterCm = peridCateterCm
-
-        self.perifGuia = perifGuia
-        self.perifPlexoBraquial = perifPlexoBraquial
-        self.perifMembroInferior = perifMembroInferior
-        self.perifParedeToracAbd = perifParedeToracAbd
-        self.perifOutros = perifOutros
-        self.perifOutroTexto = perifOutroTexto
-
+        self.blockEquipmentRaw = blockEquipment?.rawValue
+        self.mmssTechinqueRaw = mmssTechinque?.rawValue
+        self.mmiiTechniqueRaw = mmiiTechinque?.rawValue
+        self.abdominalToraxTechniqueRaw = abdominalToraxTechnique?.rawValue
+        self.blockSideRaw = blockSide?.rawValue
+        self.blockOthers = blockOthers
+        
         self.standardEnd = standardEnd
         self.destination = destination
         self.adverseEvolution = adverseEvolution
