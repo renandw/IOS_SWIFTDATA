@@ -5,12 +5,7 @@
 //  Created by Renan Wrobel on 23/10/25.
 //
 import SwiftData
-import SwiftUI
-
-public enum Sex: String, Codable, CaseIterable {
-    case male
-    case female
-}
+import Foundation
 
 @Model
 final class Patient {

@@ -1,21 +1,8 @@
 import Foundation
 import SwiftData
+import SwiftUI
 
-// MARK: - Cirurgias
-/// cada surgery precisa estar atrelada a um patient via relatioships
 
-public enum Status: String, Codable, CaseIterable {
-    case scheduled
-    case inProgress
-    case finished
-    case cancelled
-    case notNecessary
-}
-
-public enum SurgeryType: String, Codable, CaseIterable {
-    case sus
-    case convenio
-}
 
 @Model
 final class Surgery {

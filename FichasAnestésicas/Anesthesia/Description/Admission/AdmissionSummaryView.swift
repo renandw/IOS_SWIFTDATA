@@ -16,7 +16,7 @@ struct AdmissionSummaryView: View {
   private var admissionSummary: String {
     var result: [String] = []
 
-      if let airway = viewModel.admission.airway {
+      if let airway = viewModel.admission.airway?.displayName {
       result.append("\(airway)")
     }
     if let consciousness = viewModel.admission.consciousness {

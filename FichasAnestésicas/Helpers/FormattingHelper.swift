@@ -21,38 +21,6 @@ public extension String {
     }
 }
 
-public extension Sex {
-    /// Localized, user-facing description for the patient's sex.
-    var sexStringDescription: String {
-        switch self {
-        case .male:
-            return "Masculino"
-        case .female:
-            return "Feminino"
-        }
-    }
-    
-    var sexColor: Color {
-        /// Standardized color associated with the patient's sex for SwiftUI.
-        /// - Note: `.male` maps to blue; `.female` maps to pink.
-        switch self {
-        case .male:
-            return .blue
-        case .female:
-            return .pink
-        }
-    }
-    
-    var sexImage: String {
-        switch self {
-        case .male:
-            return "figure.stand"
-        case .female:
-            return "figure.stand.dress"
-        }
-    }
-}
-
 // Esqueleto para cálculo de idade com e sem contexto de cirurgia
 enum AgeContext {
     case outSurgery
@@ -111,86 +79,6 @@ enum AgeContext {
 enum numberCnsContex {
     case needed
     case notNeeded
-}
-
-
-// MARK: - Status UI Helpers
-public extension Status {
-    var displayName: String {
-        switch self {
-        case .scheduled: return "Agendada"
-        case .inProgress: return "Em andamento"
-        case .finished: return "Concluída"
-        case .cancelled: return "Cancelada"
-        case .notNecessary: return "Não Necessária"
-        }
-    }
-
-    var tintColor: Color {
-        switch self {
-        case .scheduled: return .blue
-        case .inProgress: return .orange
-        case .finished: return .green
-        case .cancelled: return .red
-        case .notNecessary: return .gray
-        }
-    }
-
-    var badgeLabel: String { "Status: \(displayName)" }
-
-    @ViewBuilder
-    var badgeView: some View {
-        Text(displayName)
-            .foregroundStyle(tintColor)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(tintColor.opacity(0.15))
-            .clipShape(Capsule())
-    }
-}
-
-public extension ASAClassification {
-    var displayName: String {
-        switch self {
-        case .I: return "ASA I"
-        case .II: return "ASA II"
-        case .III: return "ASA III"
-        case .IV: return "ASA IV"
-        case .V: return "ASA V"
-        case .VI: return "ASA VI"
-        case .Ie: return "ASA Ie"
-        case .IIe: return "ASA IIe"
-        case .IIIe: return "ASA IIIe"
-        case .IVe: return "ASA IVe"
-        case .Ve: return "ASA Ve"
-        
-        }
-    }
-
-    var tintColor: Color {
-        switch self {
-        case .I: return Color.green
-        case .II: return Color.yellow
-        case .III: return Color.orange
-        case .IV: return Color.red
-        case .V: return Color.purple
-        case .VI: return Color.gray
-        case .Ie: return Color.green.opacity(0.7)
-        case .IIe: return Color.yellow.opacity(0.7)
-        case .IIIe: return Color.orange.opacity(0.7)
-        case .IVe: return Color.red.opacity(0.7)
-        case .Ve: return Color.purple.opacity(0.7)
-        }
-    }
-    @ViewBuilder
-    var badgeView: some View {
-        Text(displayName)
-            .foregroundStyle(tintColor)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(tintColor.opacity(0.15))
-            .clipShape(Capsule())
-    }
 }
 
 
