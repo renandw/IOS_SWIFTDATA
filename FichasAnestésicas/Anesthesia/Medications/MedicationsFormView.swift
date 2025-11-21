@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MedicationsFormView: View {
-    @ObservedObject var viewModel: MedicationsFormViewModel
+    @Bindable var viewModel: MedicationsFormViewModel
     let catalog: [MedicationCatalogItem]
 
     @Environment(\.dismiss) private var dismiss
@@ -60,7 +60,7 @@ struct MedicationsFormView: View {
                                     viewModel.dismissSuggestions()
                                 }
                             )
-                            .padding(.top, 8)  // Espaçamento do TextField
+                            .padding(.top, 8)
                         }
                         
                         VStack(alignment: .leading, spacing: 4) {
@@ -219,7 +219,7 @@ struct MedicationsFormView: View {
 }
 
 struct MedicationPresetGroupsView: View {
-    @ObservedObject var viewModel: MedicationsFormViewModel
+    @Bindable var viewModel: MedicationsFormViewModel
     @State private var query = ""
 
     private var groups: [MedicationPreset] { MedicationsHelper.medicationPresets }
@@ -243,7 +243,7 @@ struct MedicationPresetGroupsView: View {
 
 struct MedicationPresetGroupView: View {
     let preset: MedicationPreset
-    @ObservedObject var viewModel: MedicationsFormViewModel
+    @Bindable var viewModel: MedicationsFormViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var selectedIDs: Set<UUID> = []
 
@@ -262,7 +262,7 @@ struct MedicationPresetGroupView: View {
                         ),
                         title: "Administração",
                         placeholder: "Selecionar",
-                        minDate: nil, // ou defina se precisar
+                        minDate: nil,
                         maxDate: nil,
                         compactInRow: true
                     )
@@ -318,7 +318,6 @@ struct MedicationPresetGroupView: View {
             }
         }
         .onAppear {
-            // Seleciona todos por padrão ao abrir
             selectedIDs = Set(items.map(\.id))
         }
     }

@@ -1,6 +1,6 @@
 //
 //  MedicationsFormViewModel.swift
-//  FichasAnestésicas
+//  FichasAnestésicas
 //
 //  Created by Renan Wrobel on 05/11/25.
 //
@@ -10,7 +10,8 @@ import SwiftUI
 import Combine
 
 @MainActor
-final class MedicationsFormViewModel: ObservableObject {
+@Observable
+final class MedicationsFormViewModel {
     // MARK: - Dependencies
     private let repo: MedicationEntryRepository
     private let anesthesia: Anesthesia
@@ -18,39 +19,46 @@ final class MedicationsFormViewModel: ObservableObject {
     private let context: ModelContext
 
     // MARK: - Editing state
-    @Published var existingEntry: MedicationEntry?
-    @Published var isNew: Bool = true
+    var existingEntry: MedicationEntry?
+    var isNew: Bool = true
 
     // MARK: - Form fields
-    @Published var name: String = ""
-    @Published var dose: String = ""
-    @Published var via: AdministrationRoute? = nil
-    @Published var category: MedicationCategory? = nil
-    @Published var timestamp: Date = .init()
+    var name: String = ""
+    var dose: String = ""
+    var via: AdministrationRoute? = nil
+    var category: MedicationCategory? = nil
+    var timestamp: Date = .init()
 
-    ///patientWeigth vem do @model Surgery através de @relationships
-    @Published var patientWeight: Double = 0
-    @Published var anesthesiaStart: Date?
-    /// Controle: recalcular dose automaticamente ao mudar peso/nome
-    @Published var autoDose: Bool = true
+    var patientWeight: Double = 0
+    var anesthesiaStart: Date?
+    var autoDose: Bool = true
 
     // MARK: - Errors
-    @Published var nameError: String?
-    @Published var doseError: String?
-    @Published var viaError: String?
-    @Published var categoryError: String?
-    @Published var errorMessage: String?
+    var nameError: String?
+    var doseError: String?
+    var viaError: String?
+    var categoryError: String?
+    var errorMessage: String?
     
     // MARK: - AutoComplete
+    var searchQuery: String = "" {
+        didSet { scheduleFilter() }
+    }
+    var showSuggestions: Bool = false
+    var filteredCatalog: [MedicationCatalogItem] = []
     
-    @Published var searchQuery: String = ""
-    @Published var showSuggestions: Bool = false
-    @Published var filteredCatalog: [MedicationCatalogItem] = []
-    private var cancellables = Set<AnyCancellable>()
+    private var filterTask: Task<Void, Never>?
     private let catalog: [MedicationCatalogItem]
 
     // MARK: - Init
-    init(anesthesia: Anesthesia, user: User, context: ModelContext, catalog: [MedicationCatalogItem], repo: MedicationEntryRepository? = nil, entry: MedicationEntry? = nil) {
+    init(
+        anesthesia: Anesthesia,
+        user: User,
+        context: ModelContext,
+        catalog: [MedicationCatalogItem],
+        repo: MedicationEntryRepository? = nil,
+        entry: MedicationEntry? = nil
+    ) {
         self.anesthesia = anesthesia
         self.user = user
         self.context = context
@@ -67,12 +75,42 @@ final class MedicationsFormViewModel: ObservableObject {
             self.via = entry.via
             self.category = entry.category
             self.timestamp = entry.timestamp
-            self.searchQuery = entry.name  // Sincronizar
+            self.searchQuery = entry.name
         } else {
             self.timestamp = anesthesia.start ?? Date()
         }
+    }
+
+    // MARK: - Autocomplete (debounce via Task)
+    private func scheduleFilter() {
+        filterTask?.cancel()
+        filterTask = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(150))
+            guard !Task.isCancelled else { return }
+            self?.filterCatalog()
+        }
+    }
+
+    private func filterCatalog() {
+        let trimmed = searchQuery.trimmingCharacters(in: .whitespaces)
         
-        setupAutocomplete()
+        if trimmed.count < 3 {
+            filteredCatalog = []
+            showSuggestions = false
+            return
+        }
+        
+        if catalog.contains(where: { $0.name.lowercased() == trimmed.lowercased() }) {
+            filteredCatalog = []
+            showSuggestions = false
+            return
+        }
+        
+        let lowercased = trimmed.lowercased()
+        filteredCatalog = Array(catalog.filter {
+            $0.name.lowercased().contains(lowercased)
+        }.prefix(7))
+        showSuggestions = !filteredCatalog.isEmpty
     }
 
     // MARK: - Presets & Suggestions
@@ -81,7 +119,6 @@ final class MedicationsFormViewModel: ObservableObject {
         category = item.category
         via = item.via
         dose = item.dose
-        // Recalcular dose conforme peso se autoDose ativo
         recalcDoseIfNeeded()
     }
 
@@ -92,7 +129,6 @@ final class MedicationsFormViewModel: ObservableObject {
 
     func recalcDoseIfNeeded() {
         guard autoDose else { return }
-        // Usa o peso da cirurgia
         let weight = anesthesia.surgery.weight
         let calculated = MedicationsHelper.getWeightBasedDose(medication: name, weight: weight)
         if !calculated.isEmpty { dose = calculated }
@@ -137,7 +173,6 @@ final class MedicationsFormViewModel: ObservableObject {
 
         do {
             if let entry = existingEntry {
-                // Update
                 entry.name = name
                 entry.dose = dose
                 entry.via = via ?? entry.via
@@ -145,7 +180,6 @@ final class MedicationsFormViewModel: ObservableObject {
                 entry.timestamp = timestamp
                 try repo.update(entry, for: anesthesia, by: user)
             } else {
-                // Create
                 let new = MedicationEntry(
                     medicationId: UUID().uuidString,
                     anesthesia: anesthesia,
@@ -198,9 +232,8 @@ final class MedicationsFormViewModel: ObservableObject {
         category = nil
         timestamp = Date()
         clearErrors()
-        // mantém isNew conforme contexto do formulário
     }
-    // Cria várias medicações a partir de itens de preset
+
     @discardableResult
     func createEntries(from items: [MedicationPresetItem], at date: Date = .init()) -> Bool {
         guard !items.isEmpty else { return true }
@@ -216,55 +249,18 @@ final class MedicationsFormViewModel: ObservableObject {
             return false
         }
     }
-    
-    private func setupAutocomplete() {
-        $searchQuery
-            .debounce(for: .milliseconds(150), scheduler: RunLoop.main)
-            .sink { [weak self] query in
-                self?.filterCatalog(query: query)
-            }
-            .store(in: &cancellables)
-    }
-
-    private func filterCatalog(query: String) {
-        let trimmed = query.trimmingCharacters(in: .whitespaces)
-        
-        if trimmed.count < 3 {
-            filteredCatalog = []
-            showSuggestions = false
-            return
-        }
-        
-        if catalog.contains(where: { $0.name.lowercased() == trimmed.lowercased() }) {
-            filteredCatalog = []
-            showSuggestions = false
-            return
-        }
-        
-        let lowercased = trimmed.lowercased()
-        filteredCatalog = Array(catalog.filter {
-            $0.name.lowercased().contains(lowercased)
-        }.prefix(7))
-        showSuggestions = !filteredCatalog.isEmpty
-    }
 
     func selectCatalogItem(_ item: MedicationCatalogItem) {
-        print("🔵 selectCatalogItem chamado")
         name = item.name
         searchQuery = item.name
         category = item.category
         showSuggestions = false
-        print("🔵 showSuggestions agora é: \(showSuggestions)")
         suggestViaIfNeeded()
         recalcDoseIfNeeded()
         runValidations()
     }
 
     func dismissSuggestions() {
-        print("🔴 dismissSuggestions chamado")
         showSuggestions = false
-        print("🔴 showSuggestions agora é: \(showSuggestions)")
     }
 }
-
-
