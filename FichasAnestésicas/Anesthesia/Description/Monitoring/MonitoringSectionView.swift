@@ -1,9 +1,3 @@
-//
-//  Monitoring.swift
-//  FichasAnestésicas
-//
-//  Created by Renan Wrobel on 20/11/25.
-//
 
 import SwiftUI
 
@@ -14,7 +8,6 @@ struct MonitoringSectionView: View {
     
     var body: some View {
         NavigationStack {
-            
             Form {
                 Section("Monitorização") {
                     let essentialMonitoringItems: [MonitoringItem] = [
@@ -30,19 +23,15 @@ struct MonitoringSectionView: View {
                         MonitoringItem(title: "Termômetro", icon: "thermometer.variable", binding: $viewModel.monitoring.thermometer),
                         MonitoringItem(title: "BIS", icon: "brain", binding: $viewModel.monitoring.bis),
                         MonitoringItem(title: "TOF", icon: "gauge.with.dots.needle.67percent", binding: $viewModel.monitoring.tof),
-                        
                     ]
                     
                     ForEach(Array(essentialMonitoringItems.enumerated()), id: \.offset) { _, item in
                         Toggle(item.title, systemImage: item.icon, isOn: item.binding)
-                        
                     }
                     DisclosureGroup("Monitorizações adicionais") {
                         ForEach(Array(nonEssentialMonitoringItems.enumerated()), id: \.offset) { _, item in
                             Toggle(item.title,systemImage: item.icon , isOn: item.binding)
-                            
                         }
-                        
                         ForEach(Array(viewModel.monitoring.customMonitorings.enumerated()), id: \.offset) { index, name in
                             Toggle(isOn: Binding<Bool>(
                                 get: {
@@ -63,7 +52,6 @@ struct MonitoringSectionView: View {
                                 Text(name)
                             }
                         }
-                        
                         // Adicionar monitorizações personalizadas
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {

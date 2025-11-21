@@ -22,27 +22,7 @@ struct AnesthesiaDescriptionFormView: View {
         NavigationStack {
             Form {
                 Section {
-                    HStack(spacing: 12) {
-                        Image(systemName: "waveform.path.ecg")
-                            .foregroundStyle(.secondary)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Monitorização")
-                                .font(.body)
-                                .foregroundColor(.primary)
-                            Text(monitoringSummary)
-                                .font(.footnote)
-                                .foregroundColor(.secondary)
-                                .lineLimit(2)
-                                .multilineTextAlignment(.trailing)
-                                .truncationMode(.tail)
-                        }
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 13, weight: .semibold))
-                            .foregroundStyle(.tertiary)
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture { isMonitoringSheetPresented = true }
+                    MonitoringSummaryView(viewModel: viewModel, isPresented: $isMonitoringSheetPresented)
                 } header: {
                     HStack {
                         Text("Monitorização")
@@ -93,31 +73,6 @@ struct AnesthesiaDescriptionFormView: View {
                 newCustomMonitoring: $newCustomMonitoring
             )
         }
-    }
-
-    // MARK: - Helpers
-    private var monitoringSummary: String {
-        var names: [String] = []
-        if viewModel.monitoring.electrocardioscopy { names.append("Cardioscopia") }
-        if viewModel.monitoring.oximetry { names.append("Oximetria") }
-        if viewModel.monitoring.nonInvasiveBloodPressure { names.append("PANI") }
-        if viewModel.monitoring.capnography { names.append("Capnografia") }
-        if viewModel.monitoring.invasiveBloodPlessure { names.append("PAI") }
-        if viewModel.monitoring.centralVenousPressure { names.append("PVC") }
-        if viewModel.monitoring.thermometer { names.append("Termômetro") }
-        if viewModel.monitoring.bis { names.append("BIS") }
-        if viewModel.monitoring.tof { names.append("TOF") }
-
-        // If customMonitorings is an array of simple names (String)
-        if let custom = viewModel.monitoring.customMonitorings as? [String] {
-            names.append(contentsOf: custom)
-        }
-
-        // If customMonitorings is an array of items with `isOn` and `name`, keep the next line.
-        // names.append(contentsOf: viewModel.monitoring.customMonitorings.filter { $0.isOn }.map { $0.name })
-
-        if names.isEmpty { return "Nenhuma monitorização selecionada" }
-        return names.joined(separator: ", ")
     }
 
 
