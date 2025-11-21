@@ -21,6 +21,19 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
     private(set) var entry: AnesthesiaDescriptionEntry
     private let isNew: Bool
 
+    // Indica se há anestesia geral com base nas técnicas selecionadas
+    var hasGeneralAnesthesia: Bool {
+        guard let shared = anesthesia.shared else { return false }
+        return shared.techniques.contains { technique in
+            switch technique {
+            case .geralBalanceada, .geralVenosaTotal, .geralInalatoria:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+    
     // MARK: - Sub-ViewModels
     var monitoring = MonitoringSectionViewModel()
     var admission = AdmissionSectionViewModel()

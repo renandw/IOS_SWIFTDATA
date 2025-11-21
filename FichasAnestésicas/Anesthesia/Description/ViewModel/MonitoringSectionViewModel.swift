@@ -9,6 +9,8 @@ import SwiftData
 
 @Observable
 final class MonitoringSectionViewModel {
+
+    
     var electrocardioscopy = false
     var oximetry = false
     var nonInvasiveBloodPressure = false
@@ -56,5 +58,16 @@ final class MonitoringSectionViewModel {
     func removeCustomMonitoring(at index: Int) {
         guard customMonitorings.indices.contains(index) else { return }
         customMonitorings.remove(at: index)
+    }
+    
+    // Sugere monitorização baseada no tipo de anestesia
+    func applyMonitoringSuggestion(hasGeneralAnesthesia: Bool) {
+        // Sempre recomendados
+        electrocardioscopy = true
+        oximetry = true
+        nonInvasiveBloodPressure = true
+        
+        // Recomendado apenas em anestesia geral
+        capnography = hasGeneralAnesthesia
     }
 }

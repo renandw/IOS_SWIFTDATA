@@ -11,6 +11,7 @@ import Observation   // para @Bindable
 struct AnesthesiaDescriptionFormView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var viewModel: AnesthesiaDescriptionViewModel
+    @State private var isMonitoringSheetPresented: Bool = false
     @State private var newCustomMonitoring: String = ""
 
     init(viewModel: AnesthesiaDescriptionViewModel) {
@@ -20,101 +21,105 @@ struct AnesthesiaDescriptionFormView: View {
     var body: some View {
         NavigationStack {
             Form {
-                monitoringSection
+                Section {
+                    HStack(spacing: 12) {
+                        Image(systemName: "waveform.path.ecg")
+                            .foregroundStyle(.secondary)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Monitorização")
+                                .font(.body)
+                                .foregroundColor(.primary)
+                            Text(monitoringSummary)
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                                .multilineTextAlignment(.trailing)
+                                .truncationMode(.tail)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(.tertiary)
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture { isMonitoringSheetPresented = true }
+                } header: {
+                    HStack {
+                        Text("Monitorização")
+                        Spacer()
+                        Button {
+                            viewModel.monitoring.applyMonitoringSuggestion(hasGeneralAnesthesia: viewModel.hasGeneralAnesthesia)
+                        } label: {
+                            Label("Sugerir", systemImage: "wand.and.stars")
+                        }
+                        .buttonStyle(.borderless)
+                        .controlSize(.mini)
+                        .foregroundStyle(.tint)
+                    }
+                }
                 admissionSection
 
             }
             .navigationTitle("Descrição Anestésica")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Button("Salvar", systemImage: "checkmark") {
-                    do {
-                        try viewModel.save()
-                        dismiss()
-                    }
-                    catch {
-                        print("Erro ao salvar AnesthesiaDescriptionEntry: \(error)")
-                    }
-                }
-                Button("Excluir", systemImage: "trash") {
-                    do {
-                        try viewModel.delete()
-                        dismiss()
-                    }
-                    catch {
-                        print("Erro ao excluir AnesthesiaDescriptionEntry: \(error)")
-                    }
-                }
-                
-            }
-            
-        }
-    }
-
-    // MARK: - Seção de Monitorização
-
-    private var monitoringSection: some View {
-        Section("Monitorização") {
-            Toggle("Eletrocardioscopia", isOn: $viewModel.monitoring.electrocardioscopy)
-            Toggle("Oximetria", isOn: $viewModel.monitoring.oximetry)
-            Toggle("PANI", isOn: $viewModel.monitoring.nonInvasiveBloodPressure)
-            Toggle("Capnografia", isOn: $viewModel.monitoring.capnography)
-            Toggle("Pa Invasiva", isOn: $viewModel.monitoring.invasiveBloodPlessure)
-            Toggle("PVC", isOn: $viewModel.monitoring.centralVenousPressure)
-            Toggle("Termômetro", isOn: $viewModel.monitoring.thermometer)
-            Toggle("BIS", isOn: $viewModel.monitoring.bis)
-            Toggle("TOF", isOn: $viewModel.monitoring.tof)
-            
-            // Adicionar monitorizações personalizadas
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    TextField("Ex.: ecotransesofágico", text: $newCustomMonitoring)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled(true)
-                        .textFieldStyle(.roundedBorder)
-                        .submitLabel(.done)
-                        .onSubmit {
-                            let trimmed = newCustomMonitoring.trimmingCharacters(in: .whitespacesAndNewlines)
-                            guard !trimmed.isEmpty else { return }
-                            viewModel.monitoring.addCustomMonitoring(trimmed)
-                            newCustomMonitoring = ""
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Salvar", systemImage: "checkmark") {
+                        do {
+                            try viewModel.save()
+                            dismiss()
                         }
-                    Button {
-                        let trimmed = newCustomMonitoring.trimmingCharacters(in: .whitespacesAndNewlines)
-                        guard !trimmed.isEmpty else { return }
-                        viewModel.monitoring.addCustomMonitoring(trimmed)
-                        newCustomMonitoring = ""
-                    } label: {
-                        Label("Adicionar", systemImage: "plus")
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(newCustomMonitoring.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                }
-                
-                // Lista de customizações como "toggles" com controle real pelo toggle
-                ForEach(Array(viewModel.monitoring.customMonitorings.enumerated()), id: \.offset) { index, name in
-                    Toggle(isOn: Binding<Bool>(
-                        get: {
-                            // Se o índice ainda é válido, o item está "ligado"
-                            viewModel.monitoring.customMonitorings.indices.contains(index)
-                        },
-                        set: { newValue in
-                            if newValue {
-                                // Garantir presença (evitar duplicatas)
-                                if !viewModel.monitoring.customMonitorings.contains(where: { $0.caseInsensitiveCompare(name) == .orderedSame }) {
-                                    viewModel.monitoring.customMonitorings.append(name)
-                                }
-                            } else {
-                                viewModel.monitoring.removeCustomMonitoring(at: index)
-                            }
+                        catch {
+                            print("Erro ao salvar AnesthesiaDescriptionEntry: \(error)")
                         }
-                    )) {
-                        Text(name)
+                    }
+                }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Excluir", systemImage: "trash") {
+                        do {
+                            try viewModel.delete()
+                            dismiss()
+                        }
+                        catch {
+                            print("Erro ao excluir AnesthesiaDescriptionEntry: \(error)")
+                        }
                     }
                 }
             }
         }
+        .sheet(isPresented: $isMonitoringSheetPresented) {
+            MonitoringSectionView(
+                viewModel: viewModel,
+                newCustomMonitoring: $newCustomMonitoring
+            )
+        }
     }
+
+    // MARK: - Helpers
+    private var monitoringSummary: String {
+        var names: [String] = []
+        if viewModel.monitoring.electrocardioscopy { names.append("Cardioscopia") }
+        if viewModel.monitoring.oximetry { names.append("Oximetria") }
+        if viewModel.monitoring.nonInvasiveBloodPressure { names.append("PANI") }
+        if viewModel.monitoring.capnography { names.append("Capnografia") }
+        if viewModel.monitoring.invasiveBloodPlessure { names.append("PAI") }
+        if viewModel.monitoring.centralVenousPressure { names.append("PVC") }
+        if viewModel.monitoring.thermometer { names.append("Termômetro") }
+        if viewModel.monitoring.bis { names.append("BIS") }
+        if viewModel.monitoring.tof { names.append("TOF") }
+
+        // If customMonitorings is an array of simple names (String)
+        if let custom = viewModel.monitoring.customMonitorings as? [String] {
+            names.append(contentsOf: custom)
+        }
+
+        // If customMonitorings is an array of items with `isOn` and `name`, keep the next line.
+        // names.append(contentsOf: viewModel.monitoring.customMonitorings.filter { $0.isOn }.map { $0.name })
+
+        if names.isEmpty { return "Nenhuma monitorização selecionada" }
+        return names.joined(separator: ", ")
+    }
+
 
     // MARK: - Seção de Admissão
 

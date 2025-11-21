@@ -34,6 +34,8 @@ struct AnesthesiaDescriptionView: View {
                                             Text(anesthesiaDescription.timestamp, style: .time)
                                                 .font(.subheadline)
                                                 .foregroundStyle(.secondary)
+                                            let cardioscopia = anesthesiaDescription.electrocardioscopy ? "ECG" : ""
+                                            Text(cardioscopia)
                                         }
                                         Spacer()
                                         Image(systemName: "chevron.right")
