@@ -425,8 +425,18 @@ public enum SpinalAndEpiduralNeedle: String, Codable, CaseIterable {
     case whitacre
     case quincke
     case thuohy
-    case tuohysoho
+    case thuohysoho
     case caudal
+    
+    var DisplayName: String {
+        switch self {
+            case .whitacre:  return "Whitacre"
+            case .quincke:  return "Quincke"
+            case .thuohy:  return "Thuohy"
+            case .thuohysoho:  return "Thuohy SOHO"
+            case .caudal:  return "Caudal"
+        }
+    }
 }
 
 public enum SpinalAndEpiduralGaugeKind: String, Codable, CaseIterable {

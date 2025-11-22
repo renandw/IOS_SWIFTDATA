@@ -17,13 +17,16 @@ struct SpinalAnesthesiaSectionView: View {
           Form {
               Section {
                   spinalAnesthesiaPositionPicker
+                  needlePicker
+                  levelPicker
+                  gaugePicker
                   
                   
               } header: {
-                  Text("Anestesia Geral")
+                  Text("Raquianestesia")
               }
           }
-          .navigationTitle("Anestesia Geral")
+          .navigationTitle("Raquianestesia")
           .navigationBarTitleDisplayMode(.inline)
           .toolbar {
               ToolbarItem(placement: .confirmationAction) {
@@ -34,7 +37,7 @@ struct SpinalAnesthesiaSectionView: View {
   }
 
     private var spinalAnesthesiaPositionPicker: some View {
-        Picker("Visualização", selection: $viewModel.techniques.raquiPosition) {
+        Picker("Posicionamento", selection: $viewModel.techniques.raquiPosition) {
             Text("Não informado").tag(nil as SpinalAndEpiduralPosition?)
             ForEach(SpinalAndEpiduralPosition.allCases, id: \.self) { (kind: SpinalAndEpiduralPosition) in
                 Text(kind.DisplayName)
@@ -42,82 +45,33 @@ struct SpinalAnesthesiaSectionView: View {
             }
         }
     }
-    private var equipmentMethodPicker: some View {
-        Picker("Equipamento", selection: $viewModel.techniques.equipment) {
-            Text("Não informado").tag(nil as LaringoschopyEquipment?)
-            ForEach(LaringoschopyEquipment.allCases, id: \.self) { (kind: LaringoschopyEquipment) in
+    private var needlePicker: some View {
+        Picker("Agulha", selection: $viewModel.techniques.raquiNeedle) {
+            Text("Não informado").tag(nil as SpinalAndEpiduralLevel?)
+            ForEach(SpinalAndEpiduralNeedle.allCases, id: \.self) { (kind: SpinalAndEpiduralNeedle) in
                 Text(kind.DisplayName)
                     .tag(Optional(kind))
             }
         }
     }
     
-    private var commarckPicker: some View {
-        Picker("Cormarck-Lehane", selection: $viewModel.techniques.cormack) {
-            Text("Não informado").tag(nil as CormackLehane?)
-            ForEach(CormackLehane.allCases, id: \.self) { (kind: CormackLehane) in
-                Text(kind.ShortLabel)
+    private var levelPicker: some View {
+        Picker("Nível", selection: $viewModel.techniques.raquiLevel) {
+            Text("Não informado").tag(nil as SpinalAndEpiduralLevel?)
+            ForEach(SpinalAndEpiduralLevel.allCases, id: \.self) { (kind: SpinalAndEpiduralLevel) in
+                Text(kind.DisplayName)
                     .tag(Optional(kind))
             }
         }
     }
     
-    private var tubeTypePicker: some View {
-        Picker("Tipo de tubo", selection: $viewModel.techniques.tubeType) {
+    private var gaugePicker: some View {
+        Picker("Calibre Agulha", selection: $viewModel.techniques.raquiNeedleGauge) {
             Text("Não informado").tag(nil as TubeType?)
-            ForEach(TubeType.allCases, id: \.self) { (kind: TubeType) in
+            ForEach(SpinalAndEpiduralGaugeKind.allCases, id: \.self) { (kind: SpinalAndEpiduralGaugeKind) in
                 Text(kind.DisplayName)
                     .tag(Optional(kind))
             }
-        }
-    }
-    private var tubeAcessPicker: some View {
-        Picker("Entubação", selection: $viewModel.techniques.tubeAcess) {
-            Text("Não informado").tag(nil as TubeAcess?)
-            ForEach(TubeAcess.allCases, id: \.self) { (kind: TubeAcess) in
-                Text(kind.DisplayName)
-                    .tag(Optional(kind))
-            }
-        }
-    }
-    private var tubeCuffPicker: some View {
-        Picker("Cuff", selection: $viewModel.techniques.tubeCuff) {
-            Text("Não informado").tag(nil as TubeCuff?)
-            ForEach(TubeCuff.allCases, id: \.self) { (kind: TubeCuff) in
-                Text(kind.DisplayName)
-                    .tag(Optional(kind))
-            }
-        }
-    }
-    private var tubeRoutePicker: some View {
-        Picker("Oral/Nasal", selection: $viewModel.techniques.tubeRoute) {
-            Text("Não informado").tag(nil as TubeRoute?)
-            ForEach(TubeRoute.allCases, id: \.self) { (kind: TubeRoute) in
-                Text(kind.DisplayName)
-                    .tag(Optional(kind))
-            }
-        }
-    }
-    private var totNumberField: some View {
-        HStack {
-            Text("Diâmetro do tubo")
-            TextField("7,5", text: Binding(
-                get: { viewModel.techniques.totNumber ?? "" },
-                set: { viewModel.techniques.totNumber = $0 }
-            ))
-                .keyboardType(.decimalPad)
-                .multilineTextAlignment(.trailing)
-        }
-    }
-    private var totFixationField: some View {
-        HStack {
-            Text("Fixação do tubo")
-            TextField("22", text: Binding(
-                get: { viewModel.techniques.fixation ?? "" },
-                set: { viewModel.techniques.fixation = $0 }
-            ))
-                .keyboardType(.decimalPad)
-                .multilineTextAlignment(.trailing)
         }
     }
     
