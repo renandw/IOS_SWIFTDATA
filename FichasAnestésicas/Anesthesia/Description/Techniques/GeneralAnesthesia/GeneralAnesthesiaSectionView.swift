@@ -17,14 +17,20 @@ struct GeneralAnesthesiaSectionView: View {
           Form {
               Section {
                   tubeAcessPicker
-                  visualizationMethodPicker
-                  equipmentMethodPicker
-                  commarckPicker
+                  if viewModel.techniques.tubeAcess != .previouslyInserted {
+                      equipmentMethodPicker
+                      visualizationMethodPicker
+                      commarckPicker
+                  }
                   tubeTypePicker
-                  tubeCuffPicker
-                  tubeRoutePicker
+                  if viewModel.techniques.tubeType != .traqueal {
+                      tubeCuffPicker
+                      tubeRoutePicker
+                      totFixationField
+                  }
+                  
                   totNumberField
-                  totFixationField
+                  
                   
               } header: {
                   Text("Anestesia Geral")
@@ -107,7 +113,11 @@ struct GeneralAnesthesiaSectionView: View {
     }
     private var totNumberField: some View {
         HStack {
-            Text("Diâmetro do tubo")
+            if viewModel.techniques.tubeType == .traqueal {
+                Text("Diâmetro do traqueóstomo")
+            } else {
+                Text("Diâmetro do tubo")
+            }
             TextField("7,5", text: Binding(
                 get: { viewModel.techniques.totNumber ?? "" },
                 set: { viewModel.techniques.totNumber = $0 }

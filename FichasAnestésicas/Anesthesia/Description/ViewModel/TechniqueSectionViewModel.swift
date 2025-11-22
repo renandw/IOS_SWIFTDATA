@@ -21,8 +21,8 @@ final class TechniquesSectionViewModel {
     var visualizationMethod: VisualizationMethod?
     var equipment: LaringoschopyEquipment?
     var tubeType: TubeType?
-    var tubeAcess: TubeAcess?
-    var tubeCuff: TubeCuff?
+    var tubeAcess: TubeAcess? { didSet {tubeAcessVisibility() } }
+    var tubeCuff: TubeCuff? {didSet {tubeTypeVisibility() } }
     var tubeRoute: TubeRoute?
     var totNumber: String?
     // Cormack is raw-backed in the entry, so keep a raw storage here as well
@@ -182,6 +182,30 @@ final class TechniquesSectionViewModel {
     func intraVenousPickerVisibility() {
         if sedationType == .inalatory {
             intraVenousSedationType = nil
+        }
+    }
+    
+    func resetSedationSelection() {
+        sedationTechnique = nil
+        sedationType = nil
+        intraVenousSedationType = nil
+        sedationOxygenSupply = nil
+    }
+    
+    // GeneralAnesthesia
+    
+    func tubeAcessVisibility(){
+        if tubeAcess == .previouslyInserted {
+            visualizationMethod = nil
+            cormack = nil
+            equipment = nil
+        }
+    }
+    func tubeTypeVisibility(){
+        if tubeType == .traqueal {
+            tubeRoute = nil
+            tubeCuff = nil
+            fixation = nil
         }
     }
 
