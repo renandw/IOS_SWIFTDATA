@@ -468,30 +468,60 @@ public enum SpinalAndEpiduralGaugeKind: String, Codable, CaseIterable {
 public enum PeriduralTechniqueKind: String, Codable, CaseIterable {
     case dogliotti
     case gutierrez
+    
+    var DisplayName: String {
+        switch self {
+        case .dogliotti:  return "Dogliotti"
+        case .gutierrez:  return "Gutierrez"
+        }
+    }
 }
 
 public enum SedationTechniqueKind: String, Codable, CaseIterable {
     case minimal
     case moderate
     case deep
+    
+    var DisplayName: String {
+        switch self {
+        case .minimal:  return "Minima"
+        case .moderate:  return "Moderada"
+        case .deep:  return "Profunda"
+        }
+    }
 }
 
 public enum SedationType: String, Codable, CaseIterable {
     case intravenous
     case inalatory
     case combined
+    
+    var DisplayName: String {
+        switch self {
+        case .intravenous:  return "Intravenosa"
+        case .inalatory:  return "Inalatória"
+        case .combined:  return "Combinada"
+        }
+    }
 }
 
 public enum IntraVenousSedationType: String, Codable, CaseIterable {
     case tiva
     case intermitent
+    
+    var DisplayName: String {
+        switch self {
+            case .tiva:  return "TIVA"
+            case .intermitent:  return "Bôlus Intermitente"
+        }
+    }
 }
 
 public enum SedationOxygenSupplyKind: String, Codable, CaseIterable {
     case cateterNasal
     case facialMask
     
-    func displayName(for age: Int) -> String {
+    func DisplayName(for age: Int) -> String {
             let isChild = age < 12
             switch self {
             case .cateterNasal:
@@ -639,4 +669,16 @@ public enum AbdominalToraxTechnique: String, Codable, CaseIterable {
 public enum BlockSide: String, Codable, CaseIterable {
     case left
     case right
+    case bilateral
+    
+    var DisplayName: String {
+        switch self {
+        case .left:
+            return "Esquerda"
+        case .right:
+            return "Direita"
+        case .bilateral:
+            return "Bilateral"
+        }
+    }
 }

@@ -36,25 +36,25 @@ final class TechniquesSectionViewModel {
     var raquiNeedleGauge: SpinalAndEpiduralGaugeKind?
 
     // Sedation
-    var sedationTechniqueRaw: String?
-    var sedationTypeRaw: String?
-    var intraVenousSedationTypeRaw: String?
-    var sedationOxygenSupplyRaw: String?
+    var sedationTechnique: SedationTechniqueKind?
+    var sedationType: SedationType? { didSet {intraVenousPickerVisibility() }}
+    var intraVenousSedationType: IntraVenousSedationType?
+    var sedationOxygenSupply: SedationOxygenSupplyKind?
 
     // Peridural
-    var periduralPositionRaw: String?
-    var periduralLevelRaw: String?
-    var periduralNeedleRaw: String?
-    var periduralNeedleGaugeRaw: String?
-    var periduralTechniqueRaw: String?
+    var periduralPosition: SpinalAndEpiduralPosition?
+    var periduralLevel: SpinalAndEpiduralLevel?
+    var periduralNeedle: SpinalAndEpiduralNeedle?
+    var periduralNeedleGauge: SpinalAndEpiduralGaugeKind?
+    var periduralTechnique: PeriduralTechniqueKind?
     var periduralCateterFixation: String?
 
     // Peripheral block
-    var blockEquipmentRaw: String?
-    var mmssTechinqueRaw: String?
-    var mmiiTechniqueRaw: String?
-    var abdominalToraxTechniqueRaw: String?
-    var blockSideRaw: String?
+    var blockEquipment: BlockEquipmentKind?
+    var mmssTechnique: MMSSTechnique?
+    var mmiiTechnique: MMIITechnique?
+    var abdominalToraxTechnique: AbdominalToraxTechnique?
+    var blockSide: BlockSide?
     var blockOthers: String?
 
     func load(from e: AnesthesiaDescriptionEntry) {
@@ -85,25 +85,25 @@ final class TechniquesSectionViewModel {
         raquiNeedleGauge = e.raquiNeedleGauge
 
         // Sedation
-        sedationTechniqueRaw = e.sedationTechniqueRaw
-        sedationTypeRaw = e.sedationTypeRaw
-        intraVenousSedationTypeRaw = e.intraVenousSedationTypeRaw
-        sedationOxygenSupplyRaw = e.sedationOxygenSupplyRaw
+        sedationTechnique = e.sedationTechnique
+        sedationType = e.sedationType
+        intraVenousSedationType = e.intraVenousSedationType
+        sedationOxygenSupply = e.sedationOxygenSupply
 
         // Peridural
-        periduralPositionRaw = e.periduralPositionRaw
-        periduralLevelRaw = e.periduralLevelRaw
-        periduralNeedleRaw = e.periduralNeedleRaw
-        periduralNeedleGaugeRaw = e.periduralNeedleGaugeRaw
-        periduralTechniqueRaw = e.periduralTechniqueRaw
+        periduralPosition = e.periduralPosition
+        periduralLevel = e.periduralLevel
+        periduralNeedle = e.periduralNeedle
+        periduralNeedleGauge = e.periduralNeedleGauge
+        periduralTechnique = e.periduralTechnique
         periduralCateterFixation = e.periduralCateterFixation
 
         // Peripheral block
-        blockEquipmentRaw = e.blockEquipmentRaw
-        mmssTechinqueRaw = e.mmssTechinqueRaw
-        mmiiTechniqueRaw = e.mmiiTechniqueRaw
-        abdominalToraxTechniqueRaw = e.abdominalToraxTechniqueRaw
-        blockSideRaw = e.blockSideRaw
+        blockEquipment = e.blockEquipment
+        mmssTechnique = e.mmssTechnique
+        mmiiTechnique = e.mmiiTechnique
+        abdominalToraxTechnique = e.abdominalToraxTechnique
+        blockSide = e.blockSide
         blockOthers = e.blockOthers
     }
 
@@ -135,25 +135,25 @@ final class TechniquesSectionViewModel {
         e.raquiNeedleGauge = raquiNeedleGauge
 
         // Sedation
-        e.sedationTechniqueRaw = sedationTechniqueRaw
-        e.sedationTypeRaw = sedationTypeRaw
-        e.intraVenousSedationTypeRaw = intraVenousSedationTypeRaw
-        e.sedationOxygenSupplyRaw = sedationOxygenSupplyRaw
+        e.sedationTechnique = sedationTechnique
+        e.sedationType = sedationType
+        e.intraVenousSedationType = intraVenousSedationType
+        e.sedationOxygenSupply = sedationOxygenSupply
 
         // Peridural
-        e.periduralPositionRaw = periduralPositionRaw
-        e.periduralLevelRaw = periduralLevelRaw
-        e.periduralNeedleRaw = periduralNeedleRaw
-        e.periduralNeedleGaugeRaw = periduralNeedleGaugeRaw
-        e.periduralTechniqueRaw = periduralTechniqueRaw
+        e.periduralPosition = periduralPosition
+        e.periduralLevel = periduralLevel
+        e.periduralNeedle = periduralNeedle
+        e.periduralNeedleGauge = periduralNeedleGauge
+        e.periduralTechnique = periduralTechnique
         e.periduralCateterFixation = periduralCateterFixation
 
         // Peripheral block
-        e.blockEquipmentRaw = blockEquipmentRaw
-        e.mmssTechinqueRaw = mmssTechinqueRaw
-        e.mmiiTechniqueRaw = mmiiTechniqueRaw
-        e.abdominalToraxTechniqueRaw = abdominalToraxTechniqueRaw
-        e.blockSideRaw = blockSideRaw
+        e.blockEquipment = blockEquipment
+        e.mmssTechnique = mmssTechnique
+        e.mmiiTechnique = mmiiTechnique
+        e.abdominalToraxTechnique = abdominalToraxTechnique
+        e.blockSide = blockSide
         e.blockOthers = blockOthers
     }
     
@@ -165,4 +165,24 @@ final class TechniquesSectionViewModel {
         peripheralAnesthesia = false
         localAnesthesia = false
     }
+    
+    //Sedation
+    
+    func applySedationSuggestion(patientAge: Int) {
+        sedationTechnique = .minimal
+        if patientAge < 12 {
+            sedationType = .combined
+        } else {
+            sedationType = .intravenous
+        }
+        intraVenousSedationType = .intermitent
+        sedationOxygenSupply = .cateterNasal
+    }
+    
+    func intraVenousPickerVisibility() {
+        if sedationType == .inalatory {
+            intraVenousSedationType = nil
+        }
+    }
+
 }

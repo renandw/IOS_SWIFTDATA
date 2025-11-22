@@ -160,7 +160,7 @@ final class AnesthesiaDescriptionEntry {
     var sedationType: SedationType? { get { sedationTypeRaw.flatMap(SedationType.init(rawValue:)) } set { sedationTypeRaw = newValue?.rawValue } }
     
     var intraVenousSedationTypeRaw: String?
-    var intraVenousSedation: IntraVenousSedationType? { get { intraVenousSedationTypeRaw.flatMap(IntraVenousSedationType.init(rawValue:)) } set { intraVenousSedationTypeRaw = newValue?.rawValue } }
+    var intraVenousSedationType: IntraVenousSedationType? { get { intraVenousSedationTypeRaw.flatMap(IntraVenousSedationType.init(rawValue:)) } set { intraVenousSedationTypeRaw = newValue?.rawValue } }
     
     var sedationOxygenSupplyRaw: String?
     var sedationOxygenSupply: SedationOxygenSupplyKind? { get { sedationOxygenSupplyRaw.flatMap(SedationOxygenSupplyKind.init(rawValue:)) } set { sedationOxygenSupplyRaw = newValue?.rawValue } }
@@ -189,10 +189,10 @@ final class AnesthesiaDescriptionEntry {
     var blockEquipmentRaw: String?
     var blockEquipment: BlockEquipmentKind? { get { blockEquipmentRaw.flatMap(BlockEquipmentKind.init(rawValue:)) } set { blockEquipmentRaw = newValue?.rawValue } }
 
-    var mmssTechinqueRaw: String?
-    var mmssTechinque: MMSSTechnique? { get { mmssTechinqueRaw.flatMap(MMSSTechnique.init(rawValue:)) } set { mmssTechinqueRaw = newValue?.rawValue } }
+    var mmssTechniqueRaw: String?
+    var mmssTechnique: MMSSTechnique? { get { mmssTechniqueRaw.flatMap(MMSSTechnique.init(rawValue:)) } set { mmssTechniqueRaw = newValue?.rawValue } }
     var mmiiTechniqueRaw: String?
-    var mmiiTechinquency: MMIITechnique? { get { mmiiTechniqueRaw.flatMap(MMIITechnique.init(rawValue:)) } set { mmiiTechniqueRaw = newValue?.rawValue } }
+    var mmiiTechnique: MMIITechnique? { get { mmiiTechniqueRaw.flatMap(MMIITechnique.init(rawValue:)) } set { mmiiTechniqueRaw = newValue?.rawValue } }
 
     var abdominalToraxTechniqueRaw: String?
     var abdominalToraxTechnique: AbdominalToraxTechnique? { get { abdominalToraxTechniqueRaw.flatMap(AbdominalToraxTechnique.init(rawValue:)) } set { abdominalToraxTechniqueRaw = newValue?.rawValue } }
@@ -275,8 +275,8 @@ final class AnesthesiaDescriptionEntry {
         periduralCateterFixation: String? = nil,
         
         blockEquipment: BlockEquipmentKind? = nil,
-        mmssTechinque: MMSSTechnique? = nil,
-        mmiiTechinque: MMIITechnique? = nil,
+        mmssTechnique: MMSSTechnique? = nil,
+        mmiiTechnique: MMIITechnique? = nil,
         abdominalToraxTechnique: AbdominalToraxTechnique? = nil,
         blockSide: BlockSide? = nil,
         blockOthers: String? = nil,
@@ -344,8 +344,8 @@ final class AnesthesiaDescriptionEntry {
         self.periduralCateterFixation = periduralCateterFixation
 
         self.blockEquipmentRaw = blockEquipment?.rawValue
-        self.mmssTechinqueRaw = mmssTechinque?.rawValue
-        self.mmiiTechniqueRaw = mmiiTechinque?.rawValue
+        self.mmssTechniqueRaw = mmssTechnique?.rawValue
+        self.mmiiTechniqueRaw = mmiiTechnique?.rawValue
         self.abdominalToraxTechniqueRaw = abdominalToraxTechnique?.rawValue
         self.blockSideRaw = blockSide?.rawValue
         self.blockOthers = blockOthers

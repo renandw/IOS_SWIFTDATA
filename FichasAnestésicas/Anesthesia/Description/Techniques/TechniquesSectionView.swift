@@ -44,8 +44,14 @@ struct TechniquesSectionView: View {
                             }
                         }
                         if viewModel.techniques.sedationAnesthesia {
-                            Text("Sedação Anestésica")
-                                .foregroundColor(.secondary)
+                            NavigationLink {
+                                SedationAnesthesiaSectionView(viewModel: viewModel)
+                            } label: {
+                                HStack {
+                                    Text("Sedação Anestésica")
+                                        .foregroundColor(.secondary)
+                                }
+                            }
                         }
                         if viewModel.techniques.spinalAnesthesia {
                             NavigationLink {
@@ -58,12 +64,24 @@ struct TechniquesSectionView: View {
                             }
                         }
                         if viewModel.techniques.periduralAnesthesia {
-                            Text("Peridural")
-                                .foregroundColor(.secondary)
+                            NavigationLink {
+                                PeriduralAnesthesiaSectionView(viewModel: viewModel)
+                            } label: {
+                                HStack {
+                                    Text("Peridural")
+                                        .foregroundColor(.secondary)
+                                }
+                            }
                         }
                         if viewModel.techniques.peripheralAnesthesia {
-                            Text("Bloqueio Periférico")
-                                .foregroundColor(.secondary)
+                            NavigationLink {
+                                PeripheralBlockAnesthesiaSectionView(viewModel: viewModel)
+                            } label: {
+                                HStack{
+                                    Text("Bloqueio Periférico")
+                                        .foregroundColor(.secondary)
+                                }
+                            }
                         }
                         if viewModel.techniques.localAnesthesia {
                             Text("Anestesia Local")
