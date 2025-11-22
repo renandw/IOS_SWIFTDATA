@@ -131,7 +131,8 @@ struct PatientDetailsView: View {
                 .tint(.blue)
             
             }
-        }        .sheet(isPresented: $showingSurgeryForm) {
+        }
+        .sheet(isPresented: $showingSurgeryForm) {
             let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
             let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
             let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)

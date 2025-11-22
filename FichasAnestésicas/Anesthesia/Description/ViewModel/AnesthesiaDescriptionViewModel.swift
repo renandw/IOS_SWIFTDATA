@@ -43,7 +43,7 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
     // MARK: - Sub-ViewModels
     var monitoring = MonitoringSectionViewModel()
     var admission = AdmissionSectionViewModel()
-//    var techniques = TechniquesSectionViewModel()
+    var techniques = TechniquesSectionViewModel()
 //    var finalSection = FinalSectionViewModel()
 
     // MARK: - Inicializador (edição)
@@ -61,7 +61,7 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
 
         monitoring.load(from: entry)
         admission.load(from: entry)
-//        techniques.load(from: entry)
+        techniques.load(from: entry)
 //        finalSection.load(from: entry)
     }
 
@@ -87,7 +87,7 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
     func save() throws {
         monitoring.apply(to: entry)
         admission.apply(to: entry)
-//        techniques.apply(to: entry)
+        techniques.apply(to: entry)
 //        finalSection.apply(to: entry)
 
         if isNew {

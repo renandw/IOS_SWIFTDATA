@@ -13,6 +13,7 @@ struct AnesthesiaDescriptionFormView: View {
     @Bindable var viewModel: AnesthesiaDescriptionViewModel
     @State private var isMonitoringSheetPresented: Bool = false
     @State private var isAdmissionSheetPresented: Bool = false
+    @State private var isTechniquesSheetPresented: Bool = false
     @State private var newCustomMonitoring: String = ""
     
     init(viewModel: AnesthesiaDescriptionViewModel) {
@@ -43,6 +44,22 @@ struct AnesthesiaDescriptionFormView: View {
                 } header: {
                     HStack {
                         Text("Admissão")
+                        Spacer()
+                        Button {
+                            viewModel.admission.applyMonitoringSuggestion()
+                        } label: {
+                            Label("Sugerir", systemImage: "wand.and.stars")
+                        }
+                        .buttonStyle(.borderless)
+                        .controlSize(.mini)
+                        .foregroundStyle(.tint)
+                    }
+                }
+                Section {
+                    TechniquesSummaryView(viewModel: viewModel, isPresented: $isTechniquesSheetPresented)
+                } header: {
+                    HStack {
+                        Text("Técnicas Anestésicas")
                         Spacer()
                         Button {
                             viewModel.admission.applyMonitoringSuggestion()
@@ -90,6 +107,9 @@ struct AnesthesiaDescriptionFormView: View {
         }
         .sheet(isPresented: $isAdmissionSheetPresented) {
             AdmissionSectionView(viewModel: viewModel)
+        }
+        .sheet(isPresented: $isTechniquesSheetPresented) {
+            TechniquesSectionView(viewModel: viewModel)
         }
     }
     
