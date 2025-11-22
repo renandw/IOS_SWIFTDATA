@@ -147,4 +147,13 @@ final class TechniquesSectionViewModel {
         e.blockSideRaw = blockSideRaw
         e.blockOthers = blockOthers
     }
+    
+    func resetTechniquesSelection() {
+        generalAnesthesia = false
+        spinalAnesthesia = false
+        sedationAnesthesia = false
+        periduralAnesthesia = false
+        peripheralAnesthesia = false
+        localAnesthesia = false
+    }
 }

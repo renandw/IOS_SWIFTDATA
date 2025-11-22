@@ -43,7 +43,7 @@ struct TechniquesSectionView: View {
                                 .foregroundColor(.secondary)
                         }
                         if viewModel.techniques.peripheralAnesthesia {
-                            Text("Bloqueio Periféric")
+                            Text("Bloqueio Periférico")
                                 .foregroundColor(.secondary)
                         }
                         if viewModel.techniques.localAnesthesia {
@@ -53,6 +53,10 @@ struct TechniquesSectionView: View {
                     }
                 }
             }
+            Button("Resetar Seleção de Técnicas Anestésicas") {
+                viewModel.techniques.resetTechniquesSelection()
+            }
+            
             .navigationTitle("Técnicas Anestésicas")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
