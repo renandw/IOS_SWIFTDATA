@@ -18,19 +18,22 @@ final class TechniquesSectionViewModel {
     var techOrder: [String] = []
 
     // General anesthesia – airway access
-    var visualizationMethodRaw: String?
-    var equipmentRaw: String?
+    var visualizationMethod: VisualizationMethod?
+    var equipment: LaringoschopyEquipment?
+    var tubeType: TubeType?
+    var tubeAcess: TubeAcess?
+    var tubeCuff: TubeCuff?
+    var tubeRoute: TubeRoute?
     var totNumber: String?
     // Cormack is raw-backed in the entry, so keep a raw storage here as well
-    var cormackRaw: String?
+    var cormack: CormackLehane?
     var fixation: String?
 
     // Spinal (Raqui)
-    var raquiPositionRaw: String?
-    var raquiLevelRaw: String?
-    var raquiNivelOutro: String?
-    var raquiNeedleRaw: String?
-    var raquiNeedleGaugeRaw: String?
+    var raquiPosition: SpinalAndEpiduralPosition?
+    var raquiLevel: SpinalAndEpiduralLevel?
+    var raquiNeedle: SpinalAndEpiduralNeedle?
+    var raquiNeedleGauge: SpinalAndEpiduralGaugeKind?
 
     // Sedation
     var sedationTechniqueRaw: String?
@@ -65,18 +68,21 @@ final class TechniquesSectionViewModel {
         techOrder = e.techOrder
 
         // General anesthesia – airway access
-        visualizationMethodRaw = e.visualizationMethodRaw
-        equipmentRaw = e.equipmentRaw
+        visualizationMethod = e.visualizationMethod
+        equipment = e.equipment
+        tubeType = e.tubeType
+        tubeAcess = e.tubeAcess
+        tubeCuff = e.tubeCuff
+        tubeRoute = e.tubeRoute
         totNumber = e.totNumber
-        cormackRaw = e.cormackRaw
+        cormack = e.cormack
         fixation = e.fixation
 
         // Spinal (Raqui)
-        raquiPositionRaw = e.raquiPositionRaw
-        raquiLevelRaw = e.raquiLevelRaw
-        raquiNivelOutro = e.raquiNivelOutro
-        raquiNeedleRaw = e.raquiNeedleRaw
-        raquiNeedleGaugeRaw = e.raquiNeedleGaugeRaw
+        raquiPosition = e.raquiPosition
+        raquiLevel = e.raquiLevel
+        raquiNeedle = e.raquiNeedle
+        raquiNeedleGauge = e.raquiNeedleGauge
 
         // Sedation
         sedationTechniqueRaw = e.sedationTechniqueRaw
@@ -112,18 +118,21 @@ final class TechniquesSectionViewModel {
         e.techOrder = techOrder
 
         // General anesthesia – airway access
-        e.visualizationMethodRaw = visualizationMethodRaw
-        e.equipmentRaw = equipmentRaw
+        e.visualizationMethod = visualizationMethod
+        e.tubeType = tubeType
+        e.tubeAcess = tubeAcess
+        e.tubeCuff = tubeCuff
+        e.tubeRoute = tubeRoute
+        e.equipment = equipment
         e.totNumber = totNumber
-        e.cormackRaw = cormackRaw
+        e.cormack = cormack
         e.fixation = fixation
 
         // Spinal (Raqui)
-        e.raquiPositionRaw = raquiPositionRaw
-        e.raquiLevelRaw = raquiLevelRaw
-        e.raquiNivelOutro = raquiNivelOutro
-        e.raquiNeedleRaw = raquiNeedleRaw
-        e.raquiNeedleGaugeRaw = raquiNeedleGaugeRaw
+        e.raquiPosition = raquiPosition
+        e.raquiLevel = raquiLevel
+        e.raquiNeedle = raquiNeedle
+        e.raquiNeedleGauge = raquiNeedleGauge
 
         // Sedation
         e.sedationTechniqueRaw = sedationTechniqueRaw

@@ -123,6 +123,15 @@ final class AnesthesiaDescriptionEntry {
     
     var equipmentRaw: String?
     var equipment: LaringoschopyEquipment? { get { equipmentRaw.flatMap(LaringoschopyEquipment.init(rawValue:)) } set { equipmentRaw = newValue?.rawValue } }
+    var tubeTypeRaw: String?
+    var tubeType: TubeType? { get { tubeTypeRaw.flatMap(TubeType.init(rawValue:)) } set { tubeTypeRaw = newValue?.rawValue } }
+    var tubeAcessRaw: String?
+    var tubeAcess: TubeAcess? { get { tubeAcessRaw.flatMap(TubeAcess.init(rawValue:)) } set { tubeAcessRaw = newValue?.rawValue } }
+    var tubeCuffRaw: String?
+    var tubeCuff: TubeCuff? { get { tubeCuffRaw.flatMap(TubeCuff.init(rawValue:)) } set { tubeCuffRaw = newValue?.rawValue } }
+    var tubeRouteRaw: String?
+    var tubeRoute: TubeRoute? { get { tubeRouteRaw.flatMap(TubeRoute.init(rawValue:)) } set { tubeRouteRaw = newValue?.rawValue } }
+    
     var totNumber: String?
     var cormackRaw: String?
     var cormack: CormackLehane? { get { cormackRaw.flatMap(CormackLehane.init(rawValue:)) } set { cormackRaw = newValue?.rawValue } }
@@ -240,6 +249,10 @@ final class AnesthesiaDescriptionEntry {
         
         visualizationMethod: VisualizationMethod? = nil,
         equipment: LaringoschopyEquipment? = nil,
+        tubeType: TubeType? = nil,
+        tubeAcess: TubeAcess? = nil,
+        tubeCuff: TubeCuff? = nil,
+        tubeRoute: TubeRoute? = nil,
         totNumber: String? = nil,
         cormack: CormackLehane? = nil,
         fixation: String? = nil,

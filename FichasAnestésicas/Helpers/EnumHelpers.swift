@@ -250,6 +250,13 @@ public enum ASAClassification: String, Codable, CaseIterable {
 public enum VisualizationMethod: String, Codable, CaseIterable {
     case indirect
     case direct
+    
+    var DisplayName: String {
+        switch self {
+        case .indirect: return "Indireta"
+        case .direct: return "Direta"
+        }
+    }
 }
 
 public enum LaringoschopyEquipment: String, Codable, CaseIterable {
@@ -257,16 +264,39 @@ public enum LaringoschopyEquipment: String, Codable, CaseIterable {
     case fibroscope
     case mirrorGarcia
     case videoLaryngoscope
+    
+    var DisplayName: String {
+        switch self {
+        case .laringoscope: return "Laringoscópio"
+        case .fibroscope: return "Fibroscópio"
+        case .mirrorGarcia: return "Mirror de García"
+        case .videoLaryngoscope: return "Videolaringoscópio"
+        }
+    }
 }
 
 public enum TubeCuff: String, Codable, CaseIterable {
     case with
     case without
+    
+    var DisplayName: String {
+        switch self {
+        case .with: return "Com cuff"
+        case .without: return "Sem cuff"
+        }
+    }
 }
 
 public enum TubeRoute: String, Codable, CaseIterable {
     case nasal
     case oral
+    
+    var DisplayName: String {
+        switch self {
+        case .nasal: return "Nasal"
+        case .oral: return "Oral"
+        }
+    }
 }
 
 public enum TubeType: String, Codable, CaseIterable {
@@ -275,10 +305,33 @@ public enum TubeType: String, Codable, CaseIterable {
     case doubleLumen
     case eNasal
     case traqueal
+    
+    var DisplayName: String {
+        switch self {
+        case .common: return "Comum"
+        case .aramado: return "Aramado"
+        case .doubleLumen: return "Duplo Lumen"
+        case .eNasal: return "eNasal"
+        case .traqueal: return "Traqueóstomo"
+        }
+    }
 }
 public enum TubeAcess: String, Codable, CaseIterable {
     case inORInserted
     case previouslyInserted
+    
+    var DisplayNameReport: String {
+        switch self {
+        case .inORInserted: return "Entubado em sala operatória"
+        case .previouslyInserted: return "Recebo paciente com via aérea definitiva préviamente"
+        }
+    }
+    var DisplayName: String {
+        switch self {
+        case .inORInserted: return "Via aérea definitiva em SO"
+        case .previouslyInserted: return "Via aérea definitiva prévia"
+        }
+    }
 }
 
 enum CormackLehane: String, CaseIterable, Codable, Identifiable {
@@ -290,7 +343,7 @@ enum CormackLehane: String, CaseIterable, Codable, Identifiable {
     
     var id: String { rawValue }
     
-    var displayName: String {
+    var DisplayName: String {
         switch self {
         case .grade1:  return "Grau I – Glote totalmente visível"
         case .grade2a: return "Grau IIa – Parte da glote visível"
@@ -300,7 +353,7 @@ enum CormackLehane: String, CaseIterable, Codable, Identifiable {
         }
     }
     
-    var shortLabel: String {
+    var ShortLabel: String {
         switch self {
         case .grade1:  return "I"
         case .grade2a: return "IIa"
@@ -314,6 +367,13 @@ enum CormackLehane: String, CaseIterable, Codable, Identifiable {
 public enum SpinalAndEpiduralPosition: String, Codable, CaseIterable {
     case seated
     case lateralDecubitus
+    
+    var DisplayName: String {
+        switch self {
+        case .seated:      return "Sentado"
+        case .lateralDecubitus: return "Decúbito lateral"
+        }
+    }
 }
 
 public enum SpinalAndEpiduralLevel: String, Codable, CaseIterable {

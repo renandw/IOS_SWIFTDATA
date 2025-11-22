@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct TechniquesSectionView: View {
@@ -8,7 +7,7 @@ struct TechniquesSectionView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Técnicas Anestésicas") {
+                Section {
                     let anesthesiaTechniques: [AnesthesiaTechniqueItems] = [
                         AnesthesiaTechniqueItems(title: "Anestesia Geral", icon: "waveform.path.ecg.rectangle", binding: $viewModel.techniques.generalAnesthesia),
                         AnesthesiaTechniqueItems(title: "Sedação", icon: "lungs", binding: $viewModel.techniques.sedationAnesthesia),
@@ -23,20 +22,40 @@ struct TechniquesSectionView: View {
                         Toggle(item.title, systemImage: item.icon, isOn: item.binding)
                     }
                     
+                } header: {
+                    HStack {
+                        Text("Técnicas Anestésicas")
+                        Spacer()
+                        Button("Limpar seleção") {
+                            viewModel.techniques.resetTechniquesSelection()
+                        }
+                    }
                 }
                 if viewModel.techniques.generalAnesthesia || viewModel.techniques.sedationAnesthesia || viewModel.techniques.spinalAnesthesia || viewModel.techniques.periduralAnesthesia || viewModel.techniques.peripheralAnesthesia || viewModel.techniques.localAnesthesia {
                     Section ("Técnicas Selecionadas") {
                         if viewModel.techniques.generalAnesthesia {
-                            Text("Anestesia Geral")
-                                .foregroundColor(.secondary)
+                            NavigationLink {
+                                GeneralAnesthesiaSectionView(viewModel: viewModel)
+                            } label: {
+                                HStack {
+                                    Text("Anestesia Geral")
+                                        .foregroundColor(.secondary)
+                                }
+                            }
                         }
                         if viewModel.techniques.sedationAnesthesia {
                             Text("Sedação Anestésica")
                                 .foregroundColor(.secondary)
                         }
                         if viewModel.techniques.spinalAnesthesia {
-                            Text("Raquianestesia")
-                                .foregroundColor(.secondary)
+                            NavigationLink {
+                                SpinalAnesthesiaSectionView(viewModel: viewModel)
+                            } label: {
+                                HStack {
+                                    Text("Raquianestesia")
+                                        .foregroundColor(.secondary)
+                                }
+                            }
                         }
                         if viewModel.techniques.periduralAnesthesia {
                             Text("Peridural")
@@ -53,10 +72,6 @@ struct TechniquesSectionView: View {
                     }
                 }
             }
-            Button("Resetar Seleção de Técnicas Anestésicas") {
-                viewModel.techniques.resetTechniquesSelection()
-            }
-            
             .navigationTitle("Técnicas Anestésicas")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
