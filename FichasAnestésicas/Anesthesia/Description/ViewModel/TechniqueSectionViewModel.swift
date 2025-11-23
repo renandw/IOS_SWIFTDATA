@@ -20,10 +20,10 @@ final class TechniquesSectionViewModel {
     // General anesthesia – airway access
     var visualizationMethod: VisualizationMethod?
     var equipment: LaringoschopyEquipment?
-    var tubeType: TubeType?
+    var tubeType: TubeType? {didSet { tubeTypeeNasalVisibility(); tubeTypeDoubleLumenVisibility() } }
     var tubeAcess: TubeAcess? { didSet {tubeAcessVisibility() } }
-    var tubeCuff: TubeCuff? {didSet {tubeTypeVisibility() } }
-    var tubeRoute: TubeRoute?
+    var tubeCuff: TubeCuff? {didSet {tubeTypeVisibility(); tubeTypeAramadoVisibility() } }
+    var tubeRoute: TubeRoute? {didSet {tubeRouteVisibility() } }
     var totNumber: String?
     // Cormack is raw-backed in the entry, so keep a raw storage here as well
     var cormack: CormackLehane?
@@ -194,6 +194,54 @@ final class TechniquesSectionViewModel {
     
     // GeneralAnesthesia
     
+    func applyGeneralAnesthesiaSuggestion(patientAge: Int, patientWeight: Double, patientSex: Sex) {
+        tubeAcess = .inORInserted
+        equipment = .laringoscope
+        tubeType = .common
+        visualizationMethod = .direct
+        cormack = .grade2a
+        tubeRoute = .oral
+        tubeCuff = .with
+        
+        if patientAge > 12 {
+            // Adulto
+            if patientSex == .male {
+                totNumber = "7.5"
+                fixation = "22"
+            } else {
+                totNumber = "7"
+                fixation = "21"
+            }
+        } else if patientAge >= 2 {
+            // Pediátrico (2-12 anos)
+            let calculatedTube = (Double(patientAge) / 4.0) + 3.5
+            let roundedTube = (calculatedTube * 2).rounded() / 2
+            totNumber = String(format: "%.1f", roundedTube)
+            fixation = String(format: "%.0f", roundedTube * 3.0)
+        } else {
+            // < 2 anos: baseado no peso
+            let tube: Double
+            switch patientWeight {
+            case ..<1:
+                tube = 2.5
+            case 1..<2:
+                tube = 3.0
+            case 2..<3.5:
+                tube = 3.0
+            case 3.5..<7:
+                tube = 3.5
+            case 7..<10:
+                tube = 3.5
+            case 10...:
+                tube = 4.0
+            default:
+                tube = 3.0
+            }
+            totNumber = String(format: "%.1f", tube)
+            fixation = String(format: "%.0f", tube * 3.0)
+        }
+    }
+    
     func tubeAcessVisibility(){
         if tubeAcess == .previouslyInserted {
             visualizationMethod = nil
@@ -207,6 +255,37 @@ final class TechniquesSectionViewModel {
             tubeCuff = nil
             fixation = nil
         }
+    }
+    func tubeTypeAramadoVisibility(){
+        if tubeType == .aramado {
+            tubeCuff = .with
+        }
+    }
+    func tubeRouteVisibility(){
+        if tubeRoute == .nasal {
+            fixation = nil
+        }
+    }
+    func tubeTypeeNasalVisibility(){
+        if tubeType == .eNasal {
+            tubeRoute = .nasal
+        }
+    }
+    func tubeTypeDoubleLumenVisibility(){
+        if tubeType == .doubleLumen {
+            tubeRoute = .oral
+        }
+    }
+    func resetGeneralAnesthesia(){
+        visualizationMethod = nil
+        equipment = nil
+        tubeType = nil
+        tubeAcess = nil
+        tubeCuff = nil
+        tubeRoute = nil
+        totNumber = nil
+        cormack = nil
+        fixation = nil
     }
 
 }

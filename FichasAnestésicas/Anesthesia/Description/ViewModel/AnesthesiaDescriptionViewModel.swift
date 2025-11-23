@@ -39,6 +39,16 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
         let birthDate = surgery.patient.birthDate
         return AgeContext.inSurgery(surgery).ageInYears(from: birthDate)
     }
+    var patientWeight: Double {
+        let surgery = anesthesia.surgery
+        let weight = surgery.weight
+        return weight
+    }
+    var patientSex : Sex {
+        let surgery = anesthesia.surgery
+        let sex = surgery.patient.sex
+        return sex
+    }
     
     // MARK: - Sub-ViewModels
     var monitoring = MonitoringSectionViewModel()

@@ -24,16 +24,26 @@ struct GeneralAnesthesiaSectionView: View {
                   }
                   tubeTypePicker
                   if viewModel.techniques.tubeType != .traqueal {
-                      tubeCuffPicker
+                      if viewModel.techniques.tubeType != .aramado {
+                          tubeCuffPicker
+                      }
                       tubeRoutePicker
-                      totFixationField
+                      if viewModel.techniques.tubeRoute != .nasal {
+                          totFixationField
+                      }
+                      
                   }
-                  
                   totNumberField
                   
                   
               } header: {
-                  Text("Anestesia Geral")
+                  HStack {
+                      Text("Anestesia Geral")
+                      Spacer()
+                      Button("Sugerir", systemImage: "wand.and.sparkles"){
+                          viewModel.techniques.applyGeneralAnesthesiaSuggestion(patientAge: viewModel.patientAge, patientWeight: viewModel.patientWeight, patientSex: viewModel.patientSex)
+                      }
+                  }
               }
           }
           .navigationTitle("Anestesia Geral")
@@ -76,7 +86,7 @@ struct GeneralAnesthesiaSectionView: View {
     }
     
     private var tubeTypePicker: some View {
-        Picker("Tipo de tubo", selection: $viewModel.techniques.tubeType) {
+        Picker("Tipo de dispositivo", selection: $viewModel.techniques.tubeType) {
             Text("Não informado").tag(nil as TubeType?)
             ForEach(TubeType.allCases, id: \.self) { (kind: TubeType) in
                 Text(kind.DisplayName)
