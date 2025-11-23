@@ -14,6 +14,7 @@ struct AnesthesiaDescriptionFormView: View {
     @State private var isMonitoringSheetPresented: Bool = false
     @State private var isAdmissionSheetPresented: Bool = false
     @State private var isTechniquesSheetPresented: Bool = false
+    @State private var isCompletionSheetPresented: Bool = false
     @State private var newCustomMonitoring: String = ""
     
     init(viewModel: AnesthesiaDescriptionViewModel) {
@@ -83,6 +84,22 @@ struct AnesthesiaDescriptionFormView: View {
                         .foregroundStyle(.tint)
                     }
                 }
+                Section {
+                    CompletionSummaryView(viewModel: viewModel, isPresented: $isCompletionSheetPresented)
+                } header: {
+                    HStack{
+                        Text("Encerramento")
+                        Spacer()
+                        Button {
+                            viewModel.completion.applyCompletionSuggestion()
+                        } label: {
+                            Label("Sugerir", systemImage: "wand.and.stars")
+                        }
+                        .buttonStyle(.borderless)
+                        .controlSize(.mini)
+                        .foregroundStyle(.tint)
+                    }
+                }
             }
             .navigationTitle("Descrição Anestésica")
             .navigationBarTitleDisplayMode(.inline)
@@ -114,6 +131,7 @@ struct AnesthesiaDescriptionFormView: View {
                                 patientWeight: viewModel.patientWeight,
                                 patientSex: viewModel.patientSex
                             )
+                            viewModel.completion.applyCompletionSuggestion()
                             try viewModel.save()
                         }
                         catch {
@@ -147,6 +165,9 @@ struct AnesthesiaDescriptionFormView: View {
         }
         .sheet(isPresented: $isTechniquesSheetPresented) {
             TechniquesSectionView(viewModel: viewModel)
+        }
+        .sheet(isPresented: $isCompletionSheetPresented) {
+            CompletionSectionView(viewModel: viewModel)
         }
     }
     

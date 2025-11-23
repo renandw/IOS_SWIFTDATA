@@ -110,7 +110,7 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
     var monitoring = MonitoringSectionViewModel()
     var admission = AdmissionSectionViewModel()
     var techniques = TechniquesSectionViewModel()
-//    var finalSection = FinalSectionViewModel()
+    var completion = CompletionSectionViewModel()
 
     // MARK: - Inicializador (edição)
     init(
@@ -128,7 +128,7 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
         monitoring.load(from: entry)
         admission.load(from: entry)
         techniques.load(from: entry)
-//        finalSection.load(from: entry)
+        completion.load(from: entry)
     }
 
     // MARK: - Inicializador (novo)
@@ -154,7 +154,7 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
         monitoring.apply(to: entry)
         admission.apply(to: entry)
         techniques.apply(to: entry)
-//        finalSection.apply(to: entry)
+        completion.apply(to: entry)
 
         if isNew {
             try repo.create(entry, for: anesthesia, by: user)

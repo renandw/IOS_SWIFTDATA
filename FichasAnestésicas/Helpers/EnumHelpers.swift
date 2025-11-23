@@ -682,3 +682,31 @@ public enum BlockSide: String, Codable, CaseIterable {
         }
     }
 }
+
+public enum DestinationAnesthesia: String, Codable, CaseIterable {
+    case rpa
+    case uti
+    
+    var DisplayName: String {
+        switch self {
+        case .rpa:
+            return "RPA"
+        case .uti:
+            return "UTI"
+        }
+    }
+}
+
+public enum EndAnesthesia: String, Codable, CaseIterable {
+    case noComplication
+    case complication
+    
+    var DisplayName: String {
+        switch self {
+        case .noComplication:
+            return "Sem intercorrências"
+        case .complication:
+            return "Intercorrências"
+        }
+    }
+}

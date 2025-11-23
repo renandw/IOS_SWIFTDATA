@@ -66,4 +66,26 @@ final class MonitoringSectionViewModel {
         nonInvasiveBloodPressure = true
         capnography = hasGeneralAnesthesia
     }
+    
+    
+    func generateMonitoringText() -> String {
+        var items: [String] = []
+        
+        let monitors: [(Bool, String)] = [
+            (electrocardioscopy, "cardioscopia"),
+            (oximetry, "oximetria"),
+            (nonInvasiveBloodPressure, "PANI"),
+            (capnography, "capnografia"),
+            (invasiveBloodPlessure, "PAI"),
+            (centralVenousPressure, "PVC"),
+            (thermometer, "termômetro"),
+            (bis, "BIS"),
+            (tof, "TOF")
+        ]
+        
+        items.append(contentsOf: monitors.filter { $0.0 }.map { $0.1 })
+        items.append(contentsOf: customMonitorings)
+        guard !items.isEmpty else { return "" }
+        return "Checklist de materiais de anestesia. Monitorização: \(items.joined(separator: ", "))."
+    }
 }

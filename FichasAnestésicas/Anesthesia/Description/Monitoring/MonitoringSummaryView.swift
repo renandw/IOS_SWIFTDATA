@@ -55,6 +55,7 @@ struct MonitoringSummaryView: View {
         Text(monitoringSummary)
           .font(.caption)
           .foregroundColor(.secondary)
+          Text(viewModel.monitoring.generateMonitoringText())
       }
       Spacer()
       Image(systemName: "chevron.right")
