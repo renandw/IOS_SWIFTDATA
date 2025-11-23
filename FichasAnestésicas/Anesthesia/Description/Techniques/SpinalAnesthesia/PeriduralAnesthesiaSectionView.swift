@@ -24,7 +24,13 @@ struct PeriduralAnesthesiaSectionView: View {
                   
                   
               } header: {
-                  Text("Anestesia Peridural")
+                  HStack {
+                      Text("Anestesia Peridural")
+                      Spacer()
+                      Button("Sugerir", systemImage: "wand.and.sparkles"){
+                          viewModel.techniques.applyPeriduralAnesthesiaSuggestion(patientAge: viewModel.patientAge)
+                      }
+                  }
               }
           }
           .navigationTitle("Anestesia Peridural")
@@ -46,10 +52,13 @@ struct PeriduralAnesthesiaSectionView: View {
             }
         }
     }
+    private let periduralAllowedNeedlesForRaqui: [SpinalAndEpiduralNeedle] = [
+        .thuohy, .thuohysoho, .caudal
+    ]
     private var needlePicker: some View {
         Picker("Agulha", selection: $viewModel.techniques.periduralNeedle) {
             Text("Não informado").tag(nil as SpinalAndEpiduralNeedle?)
-            ForEach(SpinalAndEpiduralNeedle.allCases, id: \.self) { (kind: SpinalAndEpiduralNeedle) in
+            ForEach(periduralAllowedNeedlesForRaqui, id: \.self) { (kind: SpinalAndEpiduralNeedle) in
                 Text(kind.DisplayName)
                     .tag(Optional(kind))
             }
@@ -66,10 +75,13 @@ struct PeriduralAnesthesiaSectionView: View {
         }
     }
     
+    private let periduralAllowedGaugeKindsForRaqui: [SpinalAndEpiduralGaugeKind] = [
+        .g16, .g17, .g18, .g20, .g22
+    ]
     private var gaugePicker: some View {
         Picker("Calibre Agulha", selection: $viewModel.techniques.periduralNeedleGauge) {
             Text("Não informado").tag(nil as SpinalAndEpiduralGaugeKind?)
-            ForEach(SpinalAndEpiduralGaugeKind.allCases, id: \.self) { (kind: SpinalAndEpiduralGaugeKind) in
+            ForEach(periduralAllowedGaugeKindsForRaqui, id: \.self) { (kind: SpinalAndEpiduralGaugeKind) in
                 Text(kind.DisplayName)
                     .tag(Optional(kind))
             }

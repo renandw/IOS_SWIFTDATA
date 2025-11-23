@@ -29,25 +29,49 @@ struct TechniquesSectionView: View {
                             title: "Sedação",
                             icon: "lungs",
                             binding: $viewModel.techniques.sedationAnesthesia,
-                            onChange: nil
+                            onChange: { newValue in
+                                if newValue {
+                                    viewModel.techniques.applySedationSuggestion(patientAge: viewModel.patientAge)
+                                } else {
+                                    viewModel.techniques.resetSedationSelection()
+                                }
+                            }
                         ),
                         AnesthesiaTechniqueItems(
                             title: "RaquiAnestesia",
                             icon: "blood.pressure.cuff",
                             binding: $viewModel.techniques.spinalAnesthesia,
-                            onChange: nil
+                            onChange: { newValue in
+                                if newValue {
+                                    viewModel.techniques.applySpinalAnesthesiaSuggestion(patientAge: viewModel.patientAge)
+                                } else {
+                                    viewModel.techniques.resetSpinalAnesthesia()
+                                }
+                            }
                         ),
                         AnesthesiaTechniqueItems(
                             title: "Peridural",
                             icon: "carbon.dioxide.cloud",
                             binding: $viewModel.techniques.periduralAnesthesia,
-                            onChange: nil
+                            onChange: { newValue in
+                                if newValue {
+                                    viewModel.techniques.applyPeriduralAnesthesiaSuggestion(patientAge: viewModel.patientAge)
+                                } else {
+                                    viewModel.techniques.resetPeriduralAnesthesia()
+                                }
+                            }
                         ),
                         AnesthesiaTechniqueItems(
                             title: "Bloqueios Periféricos",
                             icon: "carbon.dioxide.cloud",
                             binding: $viewModel.techniques.peripheralAnesthesia,
-                            onChange: nil
+                            onChange: { newValue in
+                                if newValue {
+                                    viewModel.techniques.applyPeripheralBlockAnesthesiaSuggestion()
+                                } else {
+                                    viewModel.techniques.resetPeripheralBlockAnesthesia()
+                                }
+                            }
                         ),
                         AnesthesiaTechniqueItems(
                             title: "Local",

@@ -74,7 +74,7 @@ final class AdmissionSectionViewModel {
         e.veinGauge = veinGauge
     }
     
-    func applyMonitoringSuggestion() {
+    func applyAdmissionSuggestion() {
         airway = .noDevice
         consciousness = .alert
         ventilatory = .spontaneous

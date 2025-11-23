@@ -33,6 +33,62 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
             }
         }
     }
+    var hasSpinalAnesthesia: Bool {
+        guard let shared = anesthesia.shared else { return false }
+        return shared.techniques.contains { technique in
+            switch technique {
+            case .raquianestesia:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+    var hasPeriduralAnesthesia: Bool {
+        guard let shared = anesthesia.shared else { return false }
+        return shared.techniques.contains { technique in
+            switch technique {
+            case .peridural:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+    var hasPeripheralBlockAnesthesia: Bool {
+        guard let shared = anesthesia.shared else { return false }
+        return shared.techniques.contains { technique in
+            switch technique {
+            case .bloqueioPeriferico:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+    var hasSedationAnesthesia: Bool {
+        guard let shared = anesthesia.shared else { return false }
+        return shared.techniques.contains { technique in
+            switch technique {
+            case .sedacao:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+    var hasLocalAnesthesia: Bool {
+        guard let shared = anesthesia.shared else { return false }
+        return shared.techniques.contains { technique in
+            switch technique {
+            case .anestesiaLocal:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+    
     /// Idade do paciente em anos, calculada a partir do contexto (cirurgia ou fora dela)
     var patientAge: Int {
         let surgery = anesthesia.surgery
@@ -110,5 +166,6 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
     func delete() throws {
         try repo.delete(entry, for: anesthesia, by: user)
     }
+    
 }
 

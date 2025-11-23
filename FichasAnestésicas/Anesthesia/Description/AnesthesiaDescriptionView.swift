@@ -49,8 +49,8 @@ struct AnesthesiaDescriptionView: View {
                     }
                 } else {
                     ContentUnavailableView(
-                        "Sem medicações",
-                        systemImage: "pills",
+                        "Sem Descrição",
+                        systemImage: "text.document.fill",
                         description: Text("Adicione as medicações administradas durante a anestesia.")
                     )
                     .overlay(
@@ -74,7 +74,7 @@ struct AnesthesiaDescriptionView: View {
                 value: CustomTopBarButtonPreference(
                     id: "AnesthesiaDescriptionView.topbar.buttons",
                     view: AnyView(topBarButtons),
-                    token: "AnesthesiaDescriptionView.topbar.buttons.v"
+                    token: "AnesthesiaDescriptionView.topbar.buttons.\(anesthesia.anesthesiaDescription == nil)"
                 )
             )
 

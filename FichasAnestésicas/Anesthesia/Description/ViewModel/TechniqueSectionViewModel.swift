@@ -292,5 +292,93 @@ final class TechniquesSectionViewModel {
         cormack = nil
         fixation = nil
     }
-
+    
+    // SpinalAnesthesia
+    
+    func applySpinalAnesthesiaSuggestion(patientAge: Int){
+        raquiPosition = .seated
+        raquiNeedle = .quincke
+        if patientAge < 12 {
+            raquiLevel = .l4
+            raquiNeedleGauge = .g27
+        } else {
+            raquiLevel = .l3
+            raquiNeedleGauge = .g26
+        }
+    }
+    
+    func resetSpinalAnesthesia(){
+        raquiPosition = nil
+        raquiLevel = nil
+        raquiNeedle = nil
+        raquiNeedleGauge = nil
+    }
+    
+    //PeriduralAnesthesia
+    
+    func applyPeriduralAnesthesiaSuggestion(patientAge: Int){
+        periduralPosition = .seated
+        periduralLevel = .l4
+        periduralNeedle = .thuohy
+        periduralTechnique = .dogliotti
+        periduralCateterFixation = nil
+        if patientAge < 12 {
+            periduralNeedleGauge = .g22
+        } else {
+            periduralNeedleGauge = .g18
+        }
+    }
+    
+    func resetPeriduralAnesthesia(){
+        periduralPosition = nil
+        periduralLevel = nil
+        periduralNeedle = nil
+        periduralTechnique = nil
+        periduralCateterFixation = nil
+        periduralNeedleGauge = nil
+    }
+    
+    // PeripheralBlockAnesthesia
+    
+    func applyPeripheralBlockAnesthesiaSuggestion(){
+        blockEquipment = .usg
+        mmssTechnique = .subclavian
+    }
+    
+    func resetPeripheralBlockAnesthesia(){
+        blockEquipment = nil
+        mmssTechnique = nil
+        mmiiTechnique = nil
+        abdominalToraxTechnique = nil
+        blockSide = nil
+        blockOthers = nil
+    }
+    
+    // geral
+    
+    func applyTechinquesSuggestion(hasGeneralAnesthesia: Bool, hasSpinalAnesthesia: Bool, hasPeridualAnesthesia: Bool, hasPeripheralBlockAnesthesia: Bool, hasSedationAnesthesia: Bool, hasLocalAnesthesia: Bool, patientAge: Int, patientWeight: Double, patientSex: Sex) {
+        localAnesthesia = hasLocalAnesthesia
+        
+        if hasGeneralAnesthesia {
+            generalAnesthesia = hasGeneralAnesthesia
+            applyGeneralAnesthesiaSuggestion(patientAge: patientAge, patientWeight: patientWeight, patientSex: patientSex)
+        }
+        if hasSedationAnesthesia {
+            sedationAnesthesia = hasSedationAnesthesia
+            applySedationSuggestion(patientAge: patientAge)
+        }
+        if hasSpinalAnesthesia {
+            spinalAnesthesia = hasSpinalAnesthesia
+            applySpinalAnesthesiaSuggestion(patientAge: patientAge)
+        }
+        if hasPeridualAnesthesia {
+            periduralAnesthesia = hasPeridualAnesthesia
+            applyPeriduralAnesthesiaSuggestion(patientAge: patientAge)
+        }
+        if hasPeripheralBlockAnesthesia {
+            peripheralAnesthesia = hasPeripheralBlockAnesthesia
+            applyPeripheralBlockAnesthesiaSuggestion()
+        }
+    }
+    
 }

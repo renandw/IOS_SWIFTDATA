@@ -46,7 +46,7 @@ struct AnesthesiaDescriptionFormView: View {
                         Text("Admissão")
                         Spacer()
                         Button {
-                            viewModel.admission.applyMonitoringSuggestion()
+                            viewModel.admission.applyAdmissionSuggestion()
                         } label: {
                             Label("Sugerir", systemImage: "wand.and.stars")
                         }
@@ -62,7 +62,19 @@ struct AnesthesiaDescriptionFormView: View {
                         Text("Técnicas Anestésicas")
                         Spacer()
                         Button {
-                            viewModel.admission.applyMonitoringSuggestion()
+                            viewModel.monitoring.applyMonitoringSuggestion(hasGeneralAnesthesia: viewModel.hasGeneralAnesthesia)
+                            viewModel.admission.applyAdmissionSuggestion()
+                            viewModel.techniques.applyTechinquesSuggestion(
+                                hasGeneralAnesthesia: viewModel.hasGeneralAnesthesia,
+                                hasSpinalAnesthesia: viewModel.hasSpinalAnesthesia,
+                                hasPeridualAnesthesia: viewModel.hasPeriduralAnesthesia,
+                                hasPeripheralBlockAnesthesia: viewModel.hasPeripheralBlockAnesthesia,
+                                hasSedationAnesthesia: viewModel.hasSedationAnesthesia,
+                                hasLocalAnesthesia: viewModel.hasLocalAnesthesia,
+                                patientAge: viewModel.patientAge,
+                                patientWeight: viewModel.patientWeight,
+                                patientSex: viewModel.patientSex
+                            )
                         } label: {
                             Label("Sugerir", systemImage: "wand.and.stars")
                         }
@@ -86,11 +98,36 @@ struct AnesthesiaDescriptionFormView: View {
                         }
                     }
                 }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Sugerir", systemImage: "wand.and.stars") {
+                        do {
+                            viewModel.monitoring.applyMonitoringSuggestion(hasGeneralAnesthesia: viewModel.hasGeneralAnesthesia)
+                            viewModel.admission.applyAdmissionSuggestion()
+                            viewModel.techniques.applyTechinquesSuggestion(
+                                hasGeneralAnesthesia: viewModel.hasGeneralAnesthesia,
+                                hasSpinalAnesthesia: viewModel.hasSpinalAnesthesia,
+                                hasPeridualAnesthesia: viewModel.hasPeriduralAnesthesia,
+                                hasPeripheralBlockAnesthesia: viewModel.hasPeripheralBlockAnesthesia,
+                                hasSedationAnesthesia: viewModel.hasSedationAnesthesia,
+                                hasLocalAnesthesia: viewModel.hasLocalAnesthesia,
+                                patientAge: viewModel.patientAge,
+                                patientWeight: viewModel.patientWeight,
+                                patientSex: viewModel.patientSex
+                            )
+                            try viewModel.save()
+                        }
+                        catch {
+                            print("Erro ao salvar AnesthesiaDescriptionEntry: \(error)")
+                        }
+                    }
+                }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Excluir", systemImage: "trash") {
                         do {
                             try viewModel.delete()
-                            dismiss()
+                            DispatchQueue.main.async {
+                                dismiss()
+                            }
                         }
                         catch {
                             print("Erro ao excluir AnesthesiaDescriptionEntry: \(error)")

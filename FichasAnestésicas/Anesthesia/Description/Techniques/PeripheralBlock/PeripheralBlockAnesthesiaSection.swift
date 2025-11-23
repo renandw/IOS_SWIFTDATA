@@ -24,7 +24,13 @@ struct PeripheralBlockAnesthesiaSectionView: View {
                   blockOthersField
                   
               } header: {
-                  Text("Bloqueios Periféricos")
+                  HStack {
+                      Text("Bloqueios Periféricos")
+                      Spacer()
+                      Button("Sugerir", systemImage: "wand.and.sparkles"){
+                          viewModel.techniques.applyPeripheralBlockAnesthesiaSuggestion()
+                      }
+                  }
               }
           }
           .navigationTitle("Bloqueios Periféricos")
