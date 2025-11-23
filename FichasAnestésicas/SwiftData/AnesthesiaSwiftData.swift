@@ -209,7 +209,7 @@ final class AnesthesiaDescriptionEntry {
     var destinationAnesthesia: DestinationAnesthesia? { get { destinationAnesthesiaRaw.flatMap(DestinationAnesthesia.init(rawValue:)) } set { destinationAnesthesiaRaw = newValue?.rawValue} }
     var endAnesthesiaRaw: String?
     var endAnesthesia: EndAnesthesia? { get { endAnesthesiaRaw.flatMap(EndAnesthesia.init(rawValue:)) } set { endAnesthesiaRaw = newValue?.rawValue} }
-    var complications: [String]
+    //var complications: [String]
     var adverseEvolution: String?
     var finalDescription: String?
 
@@ -289,7 +289,7 @@ final class AnesthesiaDescriptionEntry {
         standardEnd: Bool = false,
         destinationAnesthesia: DestinationAnesthesia? = nil,
         endAnesthesia: EndAnesthesia? = nil,
-        complications: [String] = [],
+        //complications: [String] = [],
         adverseEvolution: String? = nil,
         finalDescription: String? = nil
     ) {
@@ -359,7 +359,7 @@ final class AnesthesiaDescriptionEntry {
         self.standardEnd = standardEnd
         self.destinationAnesthesiaRaw = destinationAnesthesia?.rawValue
         self.endAnesthesiaRaw = endAnesthesia?.rawValue
-        self.complications = complications
+        //self.complications = complications
         self.adverseEvolution = adverseEvolution
         self.finalDescription = finalDescription
     }
@@ -459,4 +459,3 @@ final class SharedPreAndAnesthesia {
         self.asaRaw = asaRaw
     }
 }
-

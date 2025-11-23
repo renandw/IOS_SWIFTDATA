@@ -13,7 +13,7 @@ final class CompletionSectionViewModel {
     var standardEnd = false {didSet{standardEndVisibility() } }
     var destinationAnesthesia: DestinationAnesthesia?
     var endAnesthesia: EndAnesthesia? {didSet {adverseEndVisibility() } }
-    var complications: [String] = []
+    //var complications: [String] = []
     var adverseEvolution: String?
     var finalDescription: String?
     
@@ -23,13 +23,13 @@ final class CompletionSectionViewModel {
         endAnesthesia = e.endAnesthesia
         adverseEvolution = e.adverseEvolution
         finalDescription = e.finalDescription
-        complications = e.complications
+        //complications = e.complications
     }
     func apply(to e: AnesthesiaDescriptionEntry) {
         e.standardEnd = standardEnd
         e.destinationAnesthesia = destinationAnesthesia
         e.endAnesthesia = endAnesthesia
-        e.complications = complications
+      //  e.complications = complications
         e.adverseEvolution = adverseEvolution
         e.finalDescription = finalDescription
     }
@@ -50,7 +50,7 @@ final class CompletionSectionViewModel {
     func adverseEndVisibility() {
         if endAnesthesia == .noComplication {
             adverseEvolution = nil
-            complications = []
+     //       complications = []
         }
     }
     func standardEndVisibility() {
@@ -61,17 +61,17 @@ final class CompletionSectionViewModel {
         
     }
     
-    func addComplications(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !complications.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        complications.append(trimmed)
-    }
-    
-    func removeComplications(at index: Int) {
-        guard complications.indices.contains(index) else { return }
-        complications.remove(at: index)
-    }
+//    func addComplications(_ name: String) {
+//        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+//        guard !trimmed.isEmpty else { return }
+//        guard !complications.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+//        complications.append(trimmed)
+//    }
+//    
+//    func removeComplications(at index: Int) {
+//        guard complications.indices.contains(index) else { return }
+//        complications.remove(at: index)
+//    }
     
     func generateCompletionText() -> String {
         var parts: [String] = []
@@ -88,7 +88,7 @@ final class CompletionSectionViewModel {
             parts.append(endAnesthesia)
         }
 
-        parts.append(contentsOf: complications)
+       // parts.append(contentsOf: complications)
         guard !parts.isEmpty else { return "" }
         return "Ao término da cirurgia\(parts.joined(separator: ", ")),."
         
