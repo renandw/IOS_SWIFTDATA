@@ -20,9 +20,9 @@ final class TechniquesSectionViewModel {
     // General anesthesia – airway access
     var visualizationMethod: VisualizationMethod?
     var equipment: LaringoschopyEquipment?
-    var tubeType: TubeType? {didSet { tubeTypeeNasalVisibility(); tubeTypeDoubleLumenVisibility() } }
+    var tubeType: TubeType? {didSet { tubeTypeeNasalVisibility(); tubeTypeDoubleLumenVisibility(); tubeTypeVisibility()  } }
     var tubeAcess: TubeAcess? { didSet {tubeAcessVisibility() } }
-    var tubeCuff: TubeCuff? {didSet {tubeTypeVisibility(); tubeTypeAramadoVisibility() } }
+    var tubeCuff: TubeCuff? {didSet {tubeTypeAramadoVisibility() } }
     var tubeRoute: TubeRoute? {didSet {tubeRouteVisibility() } }
     var totNumber: String?
     // Cormack is raw-backed in the entry, so keep a raw storage here as well
@@ -254,6 +254,9 @@ final class TechniquesSectionViewModel {
             tubeRoute = nil
             tubeCuff = nil
             fixation = nil
+            tubeRoute = nil
+            visualizationMethod = nil
+            cormack = nil
         }
     }
     func tubeTypeAramadoVisibility(){
