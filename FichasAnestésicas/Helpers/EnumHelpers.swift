@@ -831,9 +831,9 @@ public enum DestinationAnesthesia: String, Codable, CaseIterable {
     var reportDisplayName: String {
         switch self {
         case .rpa:
-            return "RPA"
+            return "encaminho à RPA"
         case .uti:
-            return "UTI"
+            return "encaminho à UTI"
         }
     }
 }
@@ -853,9 +853,9 @@ public enum EndAnesthesia: String, Codable, CaseIterable {
     var reportDisplayName: String {
         switch self {
         case .noComplication:
-            return "Sem intercorrências"
+            return "procedimento ocorreu intercorrências"
         case .complication:
-            return "Intercorrências"
+            return "apresentou as seguintes intercorrências:"
         }
     }
 }
