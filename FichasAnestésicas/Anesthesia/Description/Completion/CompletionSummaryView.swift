@@ -34,24 +34,25 @@ struct CompletionSummaryView: View {
       }
 
   var body: some View {
-    HStack(spacing: 15) {
-      Image(systemName: "document.circle.fill")
-        .resizable()
-        .scaledToFit()
-        .frame(width: 40, height: 40)
-        .foregroundColor(.purple)
-
-      VStack(alignment: .leading) {
-        Text("Encerramento")
-          .font(.headline)
-        Text(completionSummary)
-          .font(.caption)
-          .foregroundColor(.secondary)
+      HStack(spacing: 15) {
+          Image(systemName: "document.circle.fill")
+              .resizable()
+              .scaledToFit()
+              .frame(width: 40, height: 40)
+              .foregroundColor(.purple)
+          
+          VStack(alignment: .leading) {
+              Text("Encerramento")
+                  .font(.headline)
+              Text(completionSummary)
+                  .font(.caption)
+                  .foregroundColor(.secondary)
+              Text(viewModel.completion.generateCompletionText())
+          }
+          Spacer()
+          Image(systemName: "chevron.right")
+              .foregroundColor(.secondary)
       }
-      Spacer()
-      Image(systemName: "chevron.right")
-        .foregroundColor(.secondary)
-    }
     .contentShape(Rectangle())
     .onTapGesture {
       isPresented = true

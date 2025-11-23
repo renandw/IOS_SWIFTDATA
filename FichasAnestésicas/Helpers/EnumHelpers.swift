@@ -128,6 +128,7 @@ public enum ConsciousnessKind: String, Codable, CaseIterable {
     case lethargic
     case responsiveToPain
     case unresponsive
+    case sedated
 }
 
 
@@ -257,6 +258,12 @@ public enum VisualizationMethod: String, Codable, CaseIterable {
         case .direct: return "Direta"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+        case .indirect: return "sob visualização indireta"
+        case .direct: return "sob visualização direta"
+        }
+    }
 }
 
 public enum LaringoschopyEquipment: String, Codable, CaseIterable {
@@ -273,6 +280,14 @@ public enum LaringoschopyEquipment: String, Codable, CaseIterable {
         case .videoLaryngoscope: return "Videolaringoscópio"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+        case .laringoscope: return "utilizando laringoscópio"
+        case .fibroscope: return "utilizando fibroscópio"
+        case .mirrorGarcia: return "utilizando espelho de García"
+        case .videoLaryngoscope: return "utilizando videolaringoscópio"
+        }
+    }
 }
 
 public enum TubeCuff: String, Codable, CaseIterable {
@@ -283,6 +298,12 @@ public enum TubeCuff: String, Codable, CaseIterable {
         switch self {
         case .with: return "Com cuff"
         case .without: return "Sem cuff"
+        }
+    }
+    var reportDisplayName: String {
+        switch self {
+        case .with: return "com cuff"
+        case .without: return "sem cuff"
         }
     }
 }
@@ -297,6 +318,13 @@ public enum TubeRoute: String, Codable, CaseIterable {
         case .oral: return "Oral"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+        case .nasal: return "tubo via nasal"
+        case .oral: return "tubo via oral"
+        }
+    }
+
 }
 
 public enum TubeType: String, Codable, CaseIterable {
@@ -315,15 +343,24 @@ public enum TubeType: String, Codable, CaseIterable {
         case .traqueal: return "Traqueóstomo"
         }
     }
+        var reportDisplayName: String {
+        switch self {
+        case .common: return "comum"
+        case .aramado: return "aramado"
+        case .doubleLumen: return "duplo Lumen"
+        case .eNasal: return "eNasal"
+        case .traqueal: return "traqueóstomo"
+        }
+    }
 }
 public enum TubeAcess: String, Codable, CaseIterable {
     case inORInserted
     case previouslyInserted
     
-    var DisplayNameReport: String {
+    var reportDisplayName: String {
         switch self {
-        case .inORInserted: return "Entubado em sala operatória"
-        case .previouslyInserted: return "Recebo paciente com via aérea definitiva préviamente"
+        case .inORInserted: return "entubado em sala operatória"
+        case .previouslyInserted: return "acoplo, à estação de anestesia, paciente com via aérea definitiva prévia"
         }
     }
     var DisplayName: String {
@@ -343,16 +380,6 @@ enum CormackLehane: String, CaseIterable, Codable, Identifiable {
     
     var id: String { rawValue }
     
-    var DisplayName: String {
-        switch self {
-        case .grade1:  return "Grau I – Glote totalmente visível"
-        case .grade2a: return "Grau IIa – Parte da glote visível"
-        case .grade2b: return "Grau IIb – Apenas aritenoides"
-        case .grade3:  return "Grau III – Apenas epiglote"
-        case .grade4:  return "Grau IV – Nada visível"
-        }
-    }
-    
     var ShortLabel: String {
         switch self {
         case .grade1:  return "I"
@@ -360,6 +387,15 @@ enum CormackLehane: String, CaseIterable, Codable, Identifiable {
         case .grade2b: return "IIb"
         case .grade3:  return "III"
         case .grade4:  return "IV"
+        }
+    }
+    var reportDisplayName: String {
+        switch self {
+        case .grade1:  return "CormackLehane - I"
+        case .grade2a: return "CormackLehane - IIa"
+        case .grade2b: return "CormackLehane - IIb"
+        case .grade3:  return "CormackLehane - III"
+        case .grade4:  return "CormackLehane - IV"
         }
     }
 }
@@ -372,6 +408,12 @@ public enum SpinalAndEpiduralPosition: String, Codable, CaseIterable {
         switch self {
         case .seated:      return "Sentado"
         case .lateralDecubitus: return "Decúbito lateral"
+        }
+    }
+    var reportDisplayName: String {
+        switch self {
+        case .seated:      return "paciente em posição sentado"
+        case .lateralDecubitus: return "paciente em decúbito lateral"
         }
     }
 }
@@ -420,6 +462,29 @@ public enum SpinalAndEpiduralLevel: String, Codable, CaseIterable {
         case .coccyx: return "Coccyx"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+        case .t1:  return "ao nível de vértebras T1-T2"
+        case .t2:  return "ao nível de vértebras T2-T3"
+        case .t3:  return "ao nível de vértebras T3-T4"
+        case .t4:  return "ao nível de vértebras T4-T5"
+        case .t5:  return "ao nível de vértebras T5-T6"
+        case .t6:  return "ao nível de vértebras T6-T7"
+        case .t7:  return "ao nível de vértebras T7-T8"
+        case .t8:  return "ao nível de vértebras T8-T9"
+        case .t9:  return "ao nível de vértebras T9-T10"
+        case .t10: return "ao nível de vértebras T10-T11"
+        case .t11: return "ao nível de vértebras T11-T12"
+        case .t12: return "ao nível de vértebras T12-L1"
+        case .l1:  return "ao nível de vértebras L1-L2"
+        case .l2:  return "ao nível de vértebras L2-L3"
+        case .l3:  return "ao nível de vértebras L3-L4"
+        case .l4:  return "ao nível de vértebras L4-L5"
+        case .l5:  return "ao nível de vértebras L5-Sacral"
+        case .sacral: return "ao nível de vértebras Sacral"
+        case .coccyx: return "ao nível de coccyx"
+        }
+    }
 }
 public enum SpinalAndEpiduralNeedle: String, Codable, CaseIterable {
     case whitacre
@@ -435,6 +500,15 @@ public enum SpinalAndEpiduralNeedle: String, Codable, CaseIterable {
             case .thuohy:  return "Thuohy"
             case .thuohysoho:  return "Thuohy SOHO"
             case .caudal:  return "Caudal"
+        }
+    }
+    var reportDisplayName: String {
+        switch self {
+            case .whitacre:  return "punção com agulha Whitacre"
+            case .quincke:  return "punção com agulhaQuincke"
+            case .thuohy:  return "punção com agulha Thuohy"
+            case .thuohysoho:  return "punção com agulha Thuohy SOHO"
+            case .caudal:  return "punção com agulha do tipo Caudal"
         }
     }
 }
@@ -475,6 +549,12 @@ public enum PeriduralTechniqueKind: String, Codable, CaseIterable {
         case .gutierrez:  return "Gutierrez"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+        case .dogliotti:  return "confirmado presença em espaço peridural com perda de resistência à seringa (técnica de Dogliotti)"
+        case .gutierrez:  return "confirmado presença em espaço peridural com aspiração de gota pendente (técnica de Gutierrez)"
+        }
+    }
 }
 
 public enum SedationTechniqueKind: String, Codable, CaseIterable {
@@ -484,9 +564,16 @@ public enum SedationTechniqueKind: String, Codable, CaseIterable {
     
     var DisplayName: String {
         switch self {
-        case .minimal:  return "Minima"
+        case .minimal:  return "Leve"
         case .moderate:  return "Moderada"
         case .deep:  return "Profunda"
+        }
+    }
+    var reportDisplayName: String {
+        switch self {
+        case .minimal:  return "sedação leve"
+        case .moderate:  return "sedação moderada"
+        case .deep:  return "sedação profunda"
         }
     }
 }
@@ -503,6 +590,13 @@ public enum SedationType: String, Codable, CaseIterable {
         case .combined:  return "Combinada"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+        case .intravenous:  return "com medicações intravenosa"
+        case .inalatory:  return "com medicações inalatória"
+        case .combined:  return "utilizando medicamentos inalatórios e intravenosos"
+        }
+    }
 }
 
 public enum IntraVenousSedationType: String, Codable, CaseIterable {
@@ -513,6 +607,12 @@ public enum IntraVenousSedationType: String, Codable, CaseIterable {
         switch self {
             case .tiva:  return "TIVA"
             case .intermitent:  return "Bôlus Intermitente"
+        }
+    }
+    var reportDisplayName: String {
+        switch self {
+            case .tiva:  return "com bomba de infusão para sedação alvo controlada"
+            case .intermitent:  return "utilizando bôlus intermitente para efeito satisfatório"
         }
     }
 }
@@ -532,6 +632,17 @@ public enum SedationOxygenSupplyKind: String, Codable, CaseIterable {
 
             }
         }
+    func reportDisplayName(for age: Int) -> String {
+            let isChild = age < 12
+            switch self {
+            case .cateterNasal:
+                return "oferta de oxigênio via cateter nasal"
+                
+            case .facialMask:
+                return isChild ? "oferta de oxigênio sob máscara facial em circuito Mappleson A" : "oferta de oxigênio sob máscara facial"
+
+            }
+        }    
 }
 
 
@@ -553,6 +664,18 @@ public enum BlockEquipmentKind: String, Codable, CaseIterable {
             return "Marcos Anatômicos"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+        case .usg:
+            return "utilização de ultrassonografia para correta visualização de estrutura nervosas"
+        case .usgAndNeuralStimulation:
+            return "utilização de ultrassonografia e neuroestimulação para correta visualização de estrutura nervosas e segurança para injeção de medicamentos"
+        case .neuralStimulationOnly:
+            return "utilização neuroestimulação para identificação de estruturas nervosas e segurança para injeção de medicamentos"
+        case .landmarks:
+            return "topografia de estruturas nervosas identificadas através de marcos anatômicos para bloqueio nervoso."
+        }
+    }
 }
 
 public enum MMSSTechnique: String, Codable, CaseIterable {
@@ -561,16 +684,16 @@ public enum MMSSTechnique: String, Codable, CaseIterable {
     case subclavian
     case axilar
     
-    var DisplayNameReport: String {
+    var reportDisplayName: String {
         switch self {
         case .interescalenical:
-            return "Bloqueio plexo braquial via Interescalênico"
+            return "bloqueio plexo braquial via Interescalênico"
         case .supraclavian:
-            return "Bloqueio plexo braquial via Supraclavicular"
+            return "bloqueio plexo braquial via Supraclavicular"
         case .subclavian:
-            return "Bloqueio plexo braquial via  Infraclavicular"
+            return "bloqueio plexo braquial via  Infraclavicular"
         case .axilar:
-            return "Bloqueio plexo braquial via  Axilar"
+            return "bloqueio plexo braquial via  Axilar"
         }
     }
     var DisplayName: String {
@@ -593,16 +716,16 @@ public enum MMIITechnique: String, Codable, CaseIterable {
     case sciatic_gluteal
     case sciatic_poplitean
     
-    var DisplayNameReport: String {
+    var reportDisplayName: String {
         switch self {
         case .femoral:
-            return "Bloqueio nervo femoral"
+            return "bloqueio nervo femoral"
         case .adutor:
-            return "Bloqueio plexo lombar ao nível Adutor"
+            return "bloqueio plexo lombar ao nível Adutor"
         case .sciatic_gluteal:
-            return "Bloqueio nervo ciático ao nível de glúteos"
+            return "bloqueio nervo ciático ao nível de glúteos"
         case . sciatic_poplitean:
-            return "Bloqueio nervo ciático ao nível de artéria poplítea"
+            return "bloqueio nervo ciático ao nível de artéria poplítea"
         }
     }
     var DisplayName: String {
@@ -628,22 +751,22 @@ public enum AbdominalToraxTechnique: String, Codable, CaseIterable {
     case paravertebral
     case ilioinguinal
     
-    var DisplayNameReport: String {
+    var reportDisplayName: String {
         switch self {
         case .tap:
-            return "Bloqueio ao nível de músculo transverso"
+            return "bloqueio ao nível de músculo transverso"
         case .quadrado_lombar:
-            return "Bloqueio ao nível de Quadrado lombar"
+            return "bloqueio ao nível de Quadrado lombar"
         case .pecs1:
-            return "PECs 1"
+            return "bloqueio de estruturas conhecidas como PECs 1"
         case .pecs2:
-            return "PECs 2"
+            return "bloqueio de estruturas conhecidas como PECs 2"
         case .serratus:
-            return "Serratus anterior"
+            return "bloqueio de nervos à topografia de músculo Serratus anterior"
         case .paravertebral:
-            return "Paravertebral"
+            return "bloqueio de estruturas nervosasà topografia paravertebral"
         case .ilioinguinal:
-            return "Iliopsoas e Inguinalis"
+            return "bloqueio de estruturas nervosas à topografia de região ilioinguinal"
         }
     }
     var DisplayName: String {
@@ -681,6 +804,16 @@ public enum BlockSide: String, Codable, CaseIterable {
             return "Bilateral"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+        case .left:
+            return "à esquerda"
+        case .right:
+            return "à direita"
+        case .bilateral:
+            return "bilateralmente"
+        }
+    }
 }
 
 public enum DestinationAnesthesia: String, Codable, CaseIterable {
@@ -695,6 +828,14 @@ public enum DestinationAnesthesia: String, Codable, CaseIterable {
             return "UTI"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+        case .rpa:
+            return "RPA"
+        case .uti:
+            return "UTI"
+        }
+    }
 }
 
 public enum EndAnesthesia: String, Codable, CaseIterable {
@@ -702,6 +843,14 @@ public enum EndAnesthesia: String, Codable, CaseIterable {
     case complication
     
     var DisplayName: String {
+        switch self {
+        case .noComplication:
+            return "Sem intercorrências"
+        case .complication:
+            return "Intercorrências"
+        }
+    }
+    var reportDisplayName: String {
         switch self {
         case .noComplication:
             return "Sem intercorrências"

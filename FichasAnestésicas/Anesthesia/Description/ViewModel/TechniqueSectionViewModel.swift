@@ -381,4 +381,186 @@ final class TechniquesSectionViewModel {
         }
     }
     
+    //GeneralAnesthesiaText
+    
+    func generateTechniqueGeneralAnesthesiaText(patientAge: Int) -> String {
+        var parts: [String] = []
+        
+        if let tubeAccess = tubeAcess?.reportDisplayName {
+            parts.append(tubeAccess)
+        }
+        
+        if let equipment = equipment?.reportDisplayName {
+            parts.append(equipment)
+        }
+        
+        if let visualizationMethod = visualizationMethod?.reportDisplayName {
+            parts.append(visualizationMethod)
+        }
+        
+        if let cormack = cormack?.reportDisplayName {
+            parts.append(cormack)
+        }
+
+        if let tubeRoute = tubeRoute?.reportDisplayName {
+            parts.append(tubeRoute)
+        }
+        
+        if let tubeType = tubeType?.reportDisplayName {
+            parts.append(tubeType)
+        }
+        
+        if let totNumber = totNumber {
+            parts.append("nº \(totNumber)")
+        }
+        
+        if let tubeCuff = tubeCuff?.reportDisplayName {
+            parts.append(tubeCuff)
+        }
+        
+        if let fixation = fixation {
+            parts.append("fixado a \(fixation)cm da rima labial")
+        }
+
+        guard !parts.isEmpty else { return "" }
+        
+        if tubeAcess == .previouslyInserted {
+            return "Anestesia geral: \(parts.joined(separator: ", ")), infusão de medicações descritas na seção de medicamentos."
+        } else {
+            return "Anestesia geral: pré-oxigenação O2 100%, infusão de medicações descritas na seção de medicamentos, \(parts.joined(separator: ", "))."
+        }
+    }
+    
+    //SedationAnesthesiaText
+    func generateTechniqueSedationAnesthesiaText(patientAge: Int) -> String {
+        var parts: [String] = []
+        
+        if let sedationTechnique = sedationTechnique?.reportDisplayName {
+            parts.append(sedationTechnique)
+        }
+        
+        if let sedationType = sedationType?.reportDisplayName {
+            parts.append(sedationType)
+        }
+        
+        if let intraVenousSedationType = intraVenousSedationType?.reportDisplayName {
+            parts.append(intraVenousSedationType)
+        }
+        
+        if let sedationOxygenSupply = sedationOxygenSupply?.reportDisplayName(for: patientAge) {
+            parts.append(sedationOxygenSupply)
+        }
+
+        guard !parts.isEmpty else { return "" }
+        return "Sedoanalgesia: \(parts.joined(separator: ", ")), infusão de medicações descritas na seção de medicamentos."
+        
+    }
+
+    func generateTechniqueSpinalAnesthesiaText(patientAge: Int) -> String {
+        var parts: [String] = []
+        
+        if let raquiPosition = raquiPosition?.reportDisplayName {
+            parts.append(raquiPosition)
+        }
+        let partAssepsia = "assepsia e antissepsia de mãos e de dorso do paciente, punção única de espaço subaracnóide via paramediana"
+            parts.append(partAssepsia)
+        
+        if let raquiNeedle = raquiNeedle?.reportDisplayName {
+            parts.append(raquiNeedle)
+        }
+        
+        if let raquiLevel = raquiLevel?.reportDisplayName {
+            parts.append(raquiLevel)
+        }
+        
+        if let raquiNeedleGauge = raquiNeedleGauge?.DisplayName{
+            parts.append(raquiNeedleGauge)
+        }
+    
+
+        guard !parts.isEmpty else { return "" }
+        return "Raquianestesia: \(parts.joined(separator: ", ")), LCR límpido, claro, sem presença de sangue, sem acidentes de punção. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores."
+        
+    }
+    
+    func generateTechniquePeriduralAnesthesiaText(patientAge: Int) -> String {
+        var parts: [String] = []
+        
+        if let periduralPosition = periduralPosition?.reportDisplayName {
+            parts.append(periduralPosition)
+        }
+        let partAssepsia = "assepsia e antissepsia de mãos e de dorso do paciente, punção única de espaço peridural via paramediana"
+            parts.append(partAssepsia)
+        
+        if let periduralNeedle = periduralNeedle?.reportDisplayName {
+            parts.append(periduralNeedle)
+        }
+        
+        if let periduralLevel = periduralLevel?.reportDisplayName {
+            parts.append(periduralLevel)
+        }
+        
+        if let periduralNeedleGauge = periduralNeedleGauge?.DisplayName{
+            parts.append(periduralNeedleGauge)
+        }
+        
+        if let periduralTechnique = periduralTechnique?.DisplayName{
+            parts.append(periduralTechnique)
+        }
+        
+        if let periduralCateterFixation = periduralCateterFixation {
+            parts.append("insiro cateter peridural sem intercorrências, fixado na marca de: \(periduralCateterFixation)cm da pele")
+        }
+    
+
+        guard !parts.isEmpty else { return "" }
+        return "Peridural: \(parts.joined(separator: ", ")),sem presença de sangue e sem acidentes de punção.Após injeção de dose teste com adrenalina. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores."
+        
+    }
+    
+    func generateTechniquePeripheralBlockAnesthesiaText(patientAge: Int) -> String {
+        var parts: [String] = []
+        
+        if let blockEquipment = blockEquipment?.reportDisplayName {
+            parts.append(blockEquipment)
+        }
+        
+        if let mmssTechnique = mmssTechnique?.reportDisplayName {
+            parts.append(mmssTechnique)
+        }
+        
+        if let mmiiTechnique = mmiiTechnique?.reportDisplayName {
+            parts.append(mmiiTechnique)
+        }
+        
+        if let abdominalToraxTechnique = abdominalToraxTechnique?.DisplayName{
+            parts.append(abdominalToraxTechnique)
+        }
+        
+        if let blockOthers = blockOthers {
+            parts.append("\(blockOthers)")
+        }
+        
+        if let blockSide = blockSide?.DisplayName{
+            parts.append(blockSide)
+        }
+        
+        guard !parts.isEmpty else { return "" }
+        return "Bloqueios de nervos periféricos: assepsia e antissepsia de mãos e do paciente \(parts.joined(separator: ", ")),sem presença de sangue e sem acidentes de punção.Após injeção de dose teste com adrenalina. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores. "
+        
+    }
+    
+    func generateTechniqueLocalAnesthesiaText(patientAge: Int) -> String {
+
+        var parts: [String] = []
+        
+        if localAnesthesia {
+            parts.append("anestesia local")
+        }
+    
+
+        guard !parts.isEmpty else { return "" }
+        return "Foi realizado\(parts.joined(separator: ", ")) pela equipe cirúrgica. Procedimento sem intercorrências "
+        
+    }
 }

@@ -20,7 +20,25 @@ struct CompletionSectionView: View {
                   destinationAnesthesiaPicker
                   endAnesthesiaPicker
                   if viewModel.completion.endAnesthesia == .complication {
-                      adverseEvolution
+                      ForEach(Array(viewModel.completion.complications.enumerated()), id: \.offset) { index, name in
+                          Toggle(isOn: Binding<Bool>(
+                              get: {
+                                  viewModel.completion.complications.indices.contains(index)
+                              },
+                              set: { newValue in
+                                  if newValue {
+                                      // Garantir presença (evitar duplicatas)
+                                      if !viewModel.completion.complications.contains(where: { $0.caseInsensitiveCompare(name) == .orderedSame }) {
+                                          viewModel.completion.complications.append(name)
+                                      }
+                                  } else {
+                                      viewModel.completion.removeComplications(at: index)
+                                  }
+                              }
+                          )) {
+                              Text(name)
+                          }
+                      }
                   }
                   
 

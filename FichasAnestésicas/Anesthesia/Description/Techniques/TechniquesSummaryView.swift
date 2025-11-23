@@ -30,24 +30,30 @@ struct TechniquesSummaryView: View {
     }
 
   var body: some View {
-    HStack(spacing: 15) {
-      Image(systemName: "pill.circle.fill")
-        .resizable()
-        .scaledToFit()
-        .frame(width: 40, height: 40)
-        .foregroundColor(.purple)
-
-      VStack(alignment: .leading) {
-        Text("Técnicas Anestésicas")
-          .font(.headline)
-        Text(techniqueSummary)
-          .font(.caption)
-          .foregroundColor(.secondary)
+      HStack(spacing: 15) {
+          Image(systemName: "pill.circle.fill")
+              .resizable()
+              .scaledToFit()
+              .frame(width: 40, height: 40)
+              .foregroundColor(.purple)
+          
+          VStack(alignment: .leading) {
+              Text("Técnicas Anestésicas")
+                  .font(.headline)
+              Text(techniqueSummary)
+                  .font(.caption)
+                  .foregroundColor(.secondary)
+              Text(viewModel.techniques.generateTechniqueSedationAnesthesiaText(patientAge: viewModel.patientAge))
+              Text(viewModel.techniques.generateTechniqueSpinalAnesthesiaText(patientAge: viewModel.patientAge))
+              Text(viewModel.techniques.generateTechniquePeriduralAnesthesiaText(patientAge: viewModel.patientAge))
+              Text(viewModel.techniques.generateTechniquePeripheralBlockAnesthesiaText(patientAge: viewModel.patientAge))
+              Text(viewModel.techniques.generateTechniqueLocalAnesthesiaText(patientAge: viewModel.patientAge))
+              Text(viewModel.techniques.generateTechniqueGeneralAnesthesiaText(patientAge: viewModel.patientAge))
+          }
+          Spacer()
+          Image(systemName: "chevron.right")
+              .foregroundColor(.secondary)
       }
-      Spacer()
-      Image(systemName: "chevron.right")
-        .foregroundColor(.secondary)
-    }
     .contentShape(Rectangle())
     .onTapGesture {
       isPresented = true

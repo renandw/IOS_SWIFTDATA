@@ -40,7 +40,7 @@ final class AdmissionSectionViewModel {
 
     private func updateFiO2() {
         if oxygenSupply == .ambientAir {
-            fiO2Fraction = 21
+            fiO2Fraction = nil
         }
     }
 
@@ -82,5 +82,51 @@ final class AdmissionSectionViewModel {
         hemodynamic = .stable
         veinAccess = .inOpRoom
         veinGauge = .g22
+    }
+    
+    
+    func generateAdmissionText(patientAge: Int) -> String {
+        var parts: [String] = []
+        
+        if let airway = airway?.reportDisplayName {
+            parts.append(airway)
+        }
+        
+        if let consciousness = consciousness?.reportDisplayName(for: patientAge) {
+            parts.append(consciousness)
+        }
+        
+        if let ventilatory = ventilatory?.reportDisplayName {
+            parts.append(ventilatory)
+        }
+        
+        if let mechanicalVentilation = mechanicalVentilation?.reportDisplayName {
+            parts.append(mechanicalVentilation)
+        }
+        
+        if let oxygenSupply = oxygenSupply?.reportDisplayName {
+            parts.append(oxygenSupply)
+        }
+        
+        if let fiO2Fraction = fiO2Fraction {
+            parts.append("FiO2 \(Int(fiO2Fraction))%")
+        }
+        
+        if let hemodynamic = hemodynamic?.reportDisplayName {
+            parts.append(hemodynamic)
+        }
+        
+        if let veinAccess = veinAccess?.reportDisplayName(for: patientAge) {
+            parts.append(veinAccess)
+        }
+        
+        if let veinGauge = veinGauge?.reportDisplayName {
+            parts.append(veinGauge)
+        }
+        
+        guard !parts.isEmpty else { return "" }
+        
+        let base = patientAge < 12 ? "Paciente pediátrico admitido em sala cirúrgica" : "Paciente admitido em sala cirúrgica"
+        return "\(base), \(parts.joined(separator: ", "))."
     }
 }
