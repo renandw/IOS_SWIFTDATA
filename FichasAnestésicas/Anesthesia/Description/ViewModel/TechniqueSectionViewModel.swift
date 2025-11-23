@@ -257,6 +257,8 @@ final class TechniquesSectionViewModel {
             tubeRoute = nil
             visualizationMethod = nil
             cormack = nil
+            equipment = nil
+            totNumber = nil
         }
     }
     func tubeTypeAramadoVisibility(){
