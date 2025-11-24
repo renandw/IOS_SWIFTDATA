@@ -29,7 +29,7 @@ struct CompletionSummaryView: View {
 
   var body: some View {
       HStack(spacing: 15) {
-          Image(systemName: "document.circle.fill")
+          Image(systemName: "flag.pattern.checkered.circle.fill")
               .resizable()
               .scaledToFit()
               .frame(width: 40, height: 40)

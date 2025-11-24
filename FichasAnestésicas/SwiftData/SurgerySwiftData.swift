@@ -38,9 +38,10 @@ final class Surgery {
     @Relationship var patient: Patient
     @Relationship(deleteRule: .cascade, inverse: \Financial.surgery) var financial: Financial?
     @Relationship(deleteRule: .cascade, inverse: \Anesthesia.surgery) var anesthesia: Anesthesia?
+    @Relationship(deleteRule: .cascade, inverse: \PreAnesthesia.surgery) var preanesthesia: PreAnesthesia?
     @Relationship(deleteRule: .cascade) var shared: SharedPreAndAnesthesia?
     
-    init(surgeryId: String, date: Date, createdBy: User, createdAt: Date, updatedAt: Date? = nil, updatedBy: User? = nil, lastActivityAt: Date, insuranceName: String, insuranceNumber: String, start: Date? = nil, end: Date? = nil, auxiliarySurgeons: [String]? = nil, mainSurgeon: String, hospital: String, weight: Double, proposedProcedure: String, completeProcedure: String? = nil, statusRaw: String, typeRaw: String, cbhpmProcedures: [CbhpmProcedure]? = nil, patient: Patient, financial: Financial? = nil) {
+    init(surgeryId: String, date: Date, createdBy: User, createdAt: Date, updatedAt: Date? = nil, updatedBy: User? = nil, lastActivityAt: Date, insuranceName: String, insuranceNumber: String, start: Date? = nil, end: Date? = nil, auxiliarySurgeons: [String]? = nil, mainSurgeon: String, hospital: String, weight: Double, proposedProcedure: String, completeProcedure: String? = nil, statusRaw: String, typeRaw: String, cbhpmProcedures: [CbhpmProcedure]? = nil, patient: Patient, financial: Financial? = nil, preanesthesia: PreAnesthesia? = nil) {
         self.surgeryId = surgeryId
         self.date = date
         self.createdBy = createdBy
@@ -63,6 +64,7 @@ final class Surgery {
         self.cbhpmProcedures = cbhpmProcedures
         self.patient = patient
         self.financial = financial
+        self.preanesthesia = preanesthesia
     }
 }
 
