@@ -456,14 +456,12 @@ final class TechniquesSectionViewModel {
         
     }
 
-    func generateTechniqueSpinalAnesthesiaText(patientAge: Int) -> String {
+    func generateTechniqueSpinalAnesthesiaText() -> String {
         var parts: [String] = []
         
         if let raquiPosition = raquiPosition?.reportDisplayName {
             parts.append(raquiPosition)
         }
-        let partAssepsia = "assepsia e antissepsia de mãos e de dorso do paciente, punção única de espaço subaracnóide via paramediana"
-            parts.append(partAssepsia)
         
         if let raquiNeedle = raquiNeedle?.reportDisplayName {
             parts.append(raquiNeedle)
@@ -473,24 +471,25 @@ final class TechniquesSectionViewModel {
             parts.append(raquiLevel)
         }
         
-        if let raquiNeedleGauge = raquiNeedleGauge?.DisplayName{
+        if let raquiNeedleGauge = raquiNeedleGauge?.DisplayName {
             parts.append(raquiNeedleGauge)
         }
-    
 
+        // Se não houver nenhum dado preenchido, não retorna texto
         guard !parts.isEmpty else { return "" }
-        return "Raquianestesia: \(parts.joined(separator: ", ")), LCR límpido, claro, sem presença de sangue, sem acidentes de punção. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores."
         
+        let partAssepsia = "assepsia e antissepsia de mãos e de dorso do paciente, punção única de espaço subaracnóide via paramediana"
+        parts.insert(partAssepsia, at: min(1, parts.count))
+
+        return "Raquianestesia: \(parts.joined(separator: ", ")), LCR límpido, claro, sem presença de sangue, sem acidentes de punção. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores."
     }
     
-    func generateTechniquePeriduralAnesthesiaText(patientAge: Int) -> String {
+    func generateTechniquePeriduralAnesthesiaText() -> String {
         var parts: [String] = []
         
         if let periduralPosition = periduralPosition?.reportDisplayName {
             parts.append(periduralPosition)
         }
-        let partAssepsia = "assepsia e antissepsia de mãos e de dorso do paciente, punção única de espaço peridural via paramediana"
-            parts.append(partAssepsia)
         
         if let periduralNeedle = periduralNeedle?.reportDisplayName {
             parts.append(periduralNeedle)
@@ -500,22 +499,25 @@ final class TechniquesSectionViewModel {
             parts.append(periduralLevel)
         }
         
-        if let periduralNeedleGauge = periduralNeedleGauge?.DisplayName{
+        if let periduralNeedleGauge = periduralNeedleGauge?.DisplayName {
             parts.append(periduralNeedleGauge)
         }
         
-        if let periduralTechnique = periduralTechnique?.DisplayName{
+        if let periduralTechnique = periduralTechnique?.DisplayName {
             parts.append(periduralTechnique)
         }
         
         if let periduralCateterFixation = periduralCateterFixation {
             parts.append("insiro cateter peridural sem intercorrências, fixado na marca de: \(periduralCateterFixation)cm da pele")
         }
-    
-
-        guard !parts.isEmpty else { return "" }
-        return "Peridural: \(parts.joined(separator: ", ")),sem presença de sangue e sem acidentes de punção.Após injeção de dose teste com adrenalina. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores."
         
+        // Se não houver nenhum dado preenchido, não retorna texto
+        guard !parts.isEmpty else { return "" }
+        
+        let partAssepsia = "assepsia e antissepsia de mãos e de dorso do paciente, punção única de espaço peridural via paramediana"
+        parts.insert(partAssepsia, at: min(1, parts.count))
+
+        return "Peridural: \(parts.joined(separator: ", ")),sem presença de sangue e sem acidentes de punção.Após injeção de dose teste com adrenalina. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores."
     }
     
     func generateTechniquePeripheralBlockAnesthesiaText(patientAge: Int) -> String {

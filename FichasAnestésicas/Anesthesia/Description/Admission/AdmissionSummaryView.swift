@@ -63,7 +63,6 @@ struct AdmissionSummaryView: View {
         Text(admissionSummary)
           .font(.caption)
           .foregroundColor(.secondary)
-          Text(viewModel.admission.generateAdmissionText(patientAge: viewModel.patientAge))
       }
       Spacer()
       Image(systemName: "chevron.right")

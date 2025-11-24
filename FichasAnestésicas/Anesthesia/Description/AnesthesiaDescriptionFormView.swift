@@ -16,6 +16,7 @@ struct AnesthesiaDescriptionFormView: View {
     @State private var isTechniquesSheetPresented: Bool = false
     @State private var isCompletionSheetPresented: Bool = false
     @State private var newCustomMonitoring: String = ""
+    @State private var newComplications: String = ""
     
     init(viewModel: AnesthesiaDescriptionViewModel) {
         self.viewModel = viewModel
@@ -63,8 +64,6 @@ struct AnesthesiaDescriptionFormView: View {
                         Text("Técnicas Anestésicas")
                         Spacer()
                         Button {
-                            viewModel.monitoring.applyMonitoringSuggestion(hasGeneralAnesthesia: viewModel.hasGeneralAnesthesia)
-                            viewModel.admission.applyAdmissionSuggestion()
                             viewModel.techniques.applyTechinquesSuggestion(
                                 hasGeneralAnesthesia: viewModel.hasGeneralAnesthesia,
                                 hasSpinalAnesthesia: viewModel.hasSpinalAnesthesia,
@@ -98,6 +97,31 @@ struct AnesthesiaDescriptionFormView: View {
                         .buttonStyle(.borderless)
                         .controlSize(.mini)
                         .foregroundStyle(.tint)
+                    }
+                }
+                if viewModel.completion.veryEndDescriptionText == nil {
+                    Button("Gerar Texto Para Análise") {
+                        viewModel.buildFinalDescription()
+                    }
+                }
+                Section {
+                    if viewModel.completion.standardEnd == true && viewModel.completion.veryEndDescriptionText != nil {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Texto Final")
+                                .font(.headline)
+                            
+                            TextEditor(text: Binding(
+                                get: { viewModel.completion.veryEndDescriptionText ?? "" },
+                                set: { viewModel.completion.veryEndDescriptionText = $0 }
+                            ))
+                            .frame(minHeight: 140)
+                            .scrollContentBackground(.hidden)
+                            .padding(6)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(.quaternary, lineWidth: 1)
+                            )
+                        }
                     }
                 }
             }
@@ -167,7 +191,10 @@ struct AnesthesiaDescriptionFormView: View {
             TechniquesSectionView(viewModel: viewModel)
         }
         .sheet(isPresented: $isCompletionSheetPresented) {
-            CompletionSectionView(viewModel: viewModel)
+            CompletionSectionView(
+                viewModel: viewModel,
+                newComplications: $newComplications
+            )
         }
     }
     

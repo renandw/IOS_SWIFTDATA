@@ -43,12 +43,6 @@ struct TechniquesSummaryView: View {
               Text(techniqueSummary)
                   .font(.caption)
                   .foregroundColor(.secondary)
-              Text(viewModel.techniques.generateTechniqueSedationAnesthesiaText(patientAge: viewModel.patientAge))
-              Text(viewModel.techniques.generateTechniqueSpinalAnesthesiaText(patientAge: viewModel.patientAge))
-              Text(viewModel.techniques.generateTechniquePeriduralAnesthesiaText(patientAge: viewModel.patientAge))
-              Text(viewModel.techniques.generateTechniquePeripheralBlockAnesthesiaText(patientAge: viewModel.patientAge))
-              Text(viewModel.techniques.generateTechniqueLocalAnesthesiaText(patientAge: viewModel.patientAge))
-              Text(viewModel.techniques.generateTechniqueGeneralAnesthesiaText(patientAge: viewModel.patientAge))
           }
           Spacer()
           Image(systemName: "chevron.right")

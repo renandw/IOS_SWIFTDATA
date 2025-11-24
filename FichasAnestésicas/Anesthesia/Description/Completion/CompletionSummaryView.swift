@@ -15,9 +15,6 @@ struct CompletionSummaryView: View {
     private var completionSummary: String {
         var result: [String] = []
 
-        if viewModel.completion.standardEnd{
-          result.append("Encerramento padrão")
-        }
         if let endAnesthesia = viewModel.completion.endAnesthesia?.DisplayName {
             result.append("\(endAnesthesia)")
         }
@@ -26,9 +23,6 @@ struct CompletionSummaryView: View {
         }
         if let adverseEvolution = viewModel.completion.adverseEvolution {
           result.append("\(adverseEvolution)")
-        }
-        if let finalDescription = viewModel.completion.finalDescription {
-            result.append("\(finalDescription)")
         }
         return result.joined(separator: ", ")
       }
@@ -47,7 +41,6 @@ struct CompletionSummaryView: View {
               Text(completionSummary)
                   .font(.caption)
                   .foregroundColor(.secondary)
-              Text(viewModel.completion.generateCompletionText())
           }
           Spacer()
           Image(systemName: "chevron.right")

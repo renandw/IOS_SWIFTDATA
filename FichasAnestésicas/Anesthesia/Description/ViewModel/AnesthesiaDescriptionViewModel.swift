@@ -11,16 +11,16 @@ import SwiftData
 
 @Observable
 final class AnesthesiaDescriptionViewModel: Identifiable {
-
+    
     // MARK: - Repositório e modelos
     
     private let repo: AnesthesiaDescriptionEntryRepository
     private let anesthesia: Anesthesia
     private let user: User
-
+    
     private(set) var entry: AnesthesiaDescriptionEntry
     private let isNew: Bool
-
+    
     // Indica se há anestesia geral com base nas técnicas selecionadas
     var hasGeneralAnesthesia: Bool {
         guard let shared = anesthesia.shared else { return false }
@@ -124,13 +124,14 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
         self.user = user
         self.repo = repo
         self.isNew = false
-
+        
+        
         monitoring.load(from: entry)
         admission.load(from: entry)
         techniques.load(from: entry)
         completion.load(from: entry)
     }
-
+    
     // MARK: - Inicializador (novo)
     init(
         newFor anesthesia: Anesthesia,
@@ -141,21 +142,21 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
             anesthesia: anesthesia,
             timestamp: Date()
         )
-
+        
         self.entry = newEntry
         self.anesthesia = anesthesia
         self.user = user
         self.repo = repo
         self.isNew = true
     }
-
+    
     // MARK: - Salvar (create ou update)
     func save() throws {
         monitoring.apply(to: entry)
         admission.apply(to: entry)
         techniques.apply(to: entry)
         completion.apply(to: entry)
-
+        
         if isNew {
             try repo.create(entry, for: anesthesia, by: user)
         } else {
@@ -167,5 +168,45 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
         try repo.delete(entry, for: anesthesia, by: user)
     }
     
+    func buildFinalDescription() {
+        let monitoringText = monitoring.generateMonitoringText()
+        let admissionText = admission.generateAdmissionText(patientAge: patientAge)
+        
+        var techniquesSections: [String] = []
+        if hasSpinalAnesthesia {
+            techniquesSections.append(techniques.generateTechniqueSpinalAnesthesiaText())
+        }
+        if hasPeriduralAnesthesia {
+            techniquesSections.append(techniques.generateTechniquePeriduralAnesthesiaText())
+        }
+        if hasPeripheralBlockAnesthesia {
+            techniquesSections.append(techniques.generateTechniquePeripheralBlockAnesthesiaText(patientAge: patientAge))
+        }
+        if hasLocalAnesthesia {
+            techniquesSections.append(techniques.generateTechniqueLocalAnesthesiaText(patientAge: patientAge))
+        }
+        if hasSedationAnesthesia {
+            techniquesSections.append(techniques.generateTechniqueSedationAnesthesiaText(patientAge: patientAge))
+        }
+        if hasGeneralAnesthesia {
+            techniquesSections.append(techniques.generateTechniqueGeneralAnesthesiaText(patientAge: patientAge))
+        }
+        let techniquesText = techniquesSections
+            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            .joined(separator: "\n\n")
+        
+        let completionText = completion.generateCompletionText()
+        
+        completion.monitoringText = monitoringText
+        completion.admissionText = admissionText
+        completion.techniquesText = techniquesText
+        completion.completionText = completionText
+        
+        let parts = [monitoringText, admissionText, techniquesText, completionText]
+            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        
+        completion.finalDescription = parts.joined(separator: "\n\n")
+        completion.veryEndDescriptionText = completion.finalDescription
+    }
 }
 

@@ -209,9 +209,15 @@ final class AnesthesiaDescriptionEntry {
     var destinationAnesthesia: DestinationAnesthesia? { get { destinationAnesthesiaRaw.flatMap(DestinationAnesthesia.init(rawValue:)) } set { destinationAnesthesiaRaw = newValue?.rawValue} }
     var endAnesthesiaRaw: String?
     var endAnesthesia: EndAnesthesia? { get { endAnesthesiaRaw.flatMap(EndAnesthesia.init(rawValue:)) } set { endAnesthesiaRaw = newValue?.rawValue} }
-    //var complications: [String]
+    var complications: [String]?
     var adverseEvolution: String?
     var finalDescription: String?
+    
+    var monitoringText: String?
+    var admissionText: String?
+    var techniquesText: String?
+    var completionText : String?
+    var veryEndDescriptionText: String?
 
 
     
@@ -289,9 +295,15 @@ final class AnesthesiaDescriptionEntry {
         standardEnd: Bool = false,
         destinationAnesthesia: DestinationAnesthesia? = nil,
         endAnesthesia: EndAnesthesia? = nil,
-        //complications: [String] = [],
+        complications: [String] = [],
         adverseEvolution: String? = nil,
-        finalDescription: String? = nil
+        finalDescription: String? = nil,
+        
+        monitoringText: String? = nil,
+        admissionText: String? = nil,
+        techniquesText: String? = nil,
+        completionText : String? = nil,
+        veryEndDescriptionText: String? = nil,
     ) {
         self.descriptionId = descriptionId
         self.anesthesia = anesthesia
@@ -359,9 +371,15 @@ final class AnesthesiaDescriptionEntry {
         self.standardEnd = standardEnd
         self.destinationAnesthesiaRaw = destinationAnesthesia?.rawValue
         self.endAnesthesiaRaw = endAnesthesia?.rawValue
-        //self.complications = complications
+        self.complications = complications
         self.adverseEvolution = adverseEvolution
         self.finalDescription = finalDescription
+        self.monitoringText = monitoringText
+        self.admissionText = admissionText
+        self.techniquesText = techniquesText
+        self.completionText = completionText
+        self.veryEndDescriptionText = veryEndDescriptionText
+        
     }
 }
 
