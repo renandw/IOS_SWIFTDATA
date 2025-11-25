@@ -15,7 +15,6 @@ final class PreAnesthesiaViewModel: Identifiable {
     private let sharedRepo: SharedPreAndAnesthesiaRepository
     private let preanesthesia: PreAnesthesia
     private let user: User
-    private let context: ModelContext
     
     
     private let isNew: Bool
@@ -25,38 +24,28 @@ final class PreAnesthesiaViewModel: Identifiable {
     var textField: String?
 
     
-    //    var monitoring = MonitoringSectionViewModel()
-    //    var admission = AdmissionSectionViewModel()
-    //    var techniques = TechniquesSectionViewModel()
-    //    var completion = CompletionSectionViewModel()
-    
     // MARK: init para edit
     init(
         preanesthesia: PreAnesthesia,
         user: User,
         repo: PreAnesthesiaRepository,
-        context: ModelContext
+        sharedRepo: SharedPreAndAnesthesiaRepository
     ) {
         self.preanesthesia = preanesthesia
-        self.sharedRepo = SwiftDataSharedPreAndAnesthesiaRepository(context: context)
+        self.sharedRepo = sharedRepo
         self.user = user
         self.repo = repo
-        self.context = context
         self.isNew = false
         
         load(from: preanesthesia)
-        
-        //        monitoring.load(from: preanesthesia)
-        //        admission.load(from: preanesthesia)
-        //        techniques.load(from: preanesthesia)
-        //        completion.load(from: preanesthesia)
+
     }
     // MARK: init para create
     init(
         newFor surgery: Surgery,
         user: User,
         repo: PreAnesthesiaRepository,
-        context: ModelContext
+        sharedRepo: SharedPreAndAnesthesiaRepository
     ) {
         let newEntry = PreAnesthesia(
             surgery: surgery,
@@ -67,8 +56,7 @@ final class PreAnesthesiaViewModel: Identifiable {
         self.preanesthesia = newEntry
         self.user = user
         self.repo = repo
-        self.context = context  // ← faltava
-        self.sharedRepo = SwiftDataSharedPreAndAnesthesiaRepository(context: context)  // ← faltava
+        self.sharedRepo = sharedRepo
         self.isNew = true
     }
     
@@ -91,19 +79,23 @@ final class PreAnesthesiaViewModel: Identifiable {
         try repo.delete(preanesthesia: preanesthesia, from: surgery)
     }
     
+    
+    
+    
     func load(from p: PreAnesthesia) {
         textField = p.textField
-        let shared = sharedRepo.get(for: p.surgery) ?? p.shared
-        if let shared {
+        
+        if let shared = p.shared {
             self.techniques = shared.techniques
             self.asa = shared.asa
         }
     }
     
+    
     func apply(to p: PreAnesthesia) {
         p.textField = textField
         
-        let shared = sharedRepo.ensure(for: p.surgery)  // ← "p.surgery"
+        let shared = sharedRepo.ensure(for: p.surgery)
         try? sharedRepo.update(shared, techniques: techniques, asa: asa)
         
     }
