@@ -17,7 +17,7 @@ import SwiftData
 @Observable
 final class ClearenceSectionViewModel {
     
-    var clearenceStatus: ClearenceStatus?
+    var clearenceStatus: ClearenceStatus? {didSet {recommendationsVisibility()}}
     var definitiveRecommendationForRevaluationStatus: [RecommendationForRevaluationStatus]?
     var futherRecommendationForRevaluation: [String] = []
 
@@ -34,14 +34,14 @@ final class ClearenceSectionViewModel {
         e.futherRecommendationForRevaluation = futherRecommendationForRevaluation.isEmpty ? nil : futherRecommendationForRevaluation
     }
     
-    func addCustomMonitoring(_ name: String) {
+    func addCustomRecommendation(_ name: String) {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         guard !futherRecommendationForRevaluation.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
         futherRecommendationForRevaluation.append(trimmed)
     }
     
-    func removeCustomMonitoring(at index: Int) {
+    func removeCustomRecommendation(at index: Int) {
         guard futherRecommendationForRevaluation.indices.contains(index) else { return }
         futherRecommendationForRevaluation.remove(at: index)
     }
@@ -50,6 +50,13 @@ final class ClearenceSectionViewModel {
         clearenceStatus = .able
         definitiveRecommendationForRevaluationStatus = nil
         futherRecommendationForRevaluation = []
+    }
+    
+    func recommendationsVisibility() {
+        if clearenceStatus == .able {
+            definitiveRecommendationForRevaluationStatus = nil
+            futherRecommendationForRevaluation = []
+        }
     }
     
     

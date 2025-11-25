@@ -55,8 +55,9 @@ struct PreAnesthesiaView: View {
                                         HStack {
                                             Text("Apto:")
                                             Spacer()
-                                            Text("Liberado sem ressalvas")
-                                                .foregroundStyle(Color(.systemGreen))
+                                            if let clearanceStatus = anesthesia.surgery.preanesthesia?.clearenceStatus {
+                                                Text("\(clearanceStatus.displayName)")
+                                            }
                                         }
                                     }
                                 }

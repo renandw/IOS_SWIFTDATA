@@ -5,13 +5,6 @@
 //  Created by Renan Wrobel on 24/11/25.
 //
 
-//
-//  AnesthesiaDescriptionFormView.swift
-//  FichasAnestésicas
-//
-//  Created by Renan Wrobel on 20/11/25.
-//
-
 import SwiftUI
 import Observation   // para @Bindable
 
@@ -33,44 +26,37 @@ struct PreAnesthesiaFormView: View {
         NavigationStack {
             Form {
                 Section {
-                    //
-                    //                } header: {
-                    //                    HStack {
-                    //                        Text("Asa")
-                    //                        Spacer()
-                    //                        TextField("Texto teste", text: Binding(
-                    //                            get: { viewModel.textField ?? "" },
-                    //                            set: { viewModel.textField = $0.isEmpty ? nil : $0 }
-                    //                        ))
-                    //
-                    //                    }
-                    //                }
                     clearenceStatusPicker
-                }
-                
-                Section {
-                    NavigationLink {
-                        RecommendationForRevaluationStatusView(selection: Binding<[RecommendationForRevaluationStatus]>(
-                            get: { viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? [] },
-                            set: { newArray in
-                                viewModel.clearence.definitiveRecommendationForRevaluationStatus = newArray.isEmpty ? nil : newArray
-                            }
-                        ))
-                    } label: {
-                        HStack {
-                            Text("Selecionar Recomendações")
-                            Spacer()
-                            Text({
-                                let items = viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? []
-                                return items.isEmpty ? "Nenhuma" : items.map(\.displayName).joined(separator: ", ")
-                            }())
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.trailing)
-                        }
-                    }
                 } header: {
-                    HStack {
-                        Text("Recomendações")
+                    Text("Liberação")
+                }
+                if viewModel.clearence.clearenceStatus != .able {
+                    Section {
+                        NavigationLink {
+                            RecommendationForRevaluationStatusView(
+                                selection: Binding(
+                                    get: { viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? [] },
+                                    set: { newArray in
+                                        viewModel.clearence.definitiveRecommendationForRevaluationStatus = newArray.isEmpty ? nil : newArray
+                                    }
+                                ),
+                                viewModel: viewModel
+                            )
+                        } label: {
+                            HStack {
+                                Text("Selecionar Recomendações")
+                                Spacer()
+                                let items = viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? []
+                                let subtitle = items.isEmpty ? "Nenhuma" : items.map(\.displayName).joined(separator: ", ")
+                                Text(subtitle)
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.trailing)
+                            }
+                        }
+                    } header: {
+                        HStack {
+                            Text("Recomendações")
+                        }
                     }
                 }
                 
@@ -159,7 +145,10 @@ struct PreAnesthesiaFormView: View {
 
 struct RecommendationForRevaluationStatusView: View {
     @Binding var selection: [RecommendationForRevaluationStatus]
-
+    @Bindable var viewModel: PreAnesthesiaViewModel
+    
+    @State private var newCustomRecommendation = ""
+    
     private var recommendations: [RecommendationForRevaluationStatus] {
         RecommendationForRevaluationStatus.allCases.sorted { a, b in
             a.displayName.localizedCaseInsensitiveCompare(b.displayName) == .orderedAscending
@@ -168,23 +157,62 @@ struct RecommendationForRevaluationStatusView: View {
 
     var body: some View {
         List {
-            ForEach(recommendations, id: \.self) { kind in
+            if viewModel.clearence.clearenceStatus == .able || viewModel.clearence.clearenceStatus == .reevaluate {
+                ForEach(recommendations, id: \.self) { kind in
+                    Button {
+                        toggle(kind)
+                    } label: {
+                        HStack {
+                            Text(kind.displayName)
+                            Spacer()
+                            if selection.contains(kind) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.blue)
+                            } else {
+                                Image(systemName: "circle.dashed")
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                    }
+                    .foregroundStyle(.primary)
+                }
+            }
+            ForEach(viewModel.clearence.futherRecommendationForRevaluation, id: \.self) { name in
                 Button {
-                    toggle(kind)
+                    if let index = viewModel.clearence.futherRecommendationForRevaluation.firstIndex(of: name) {
+                        viewModel.clearence.removeCustomRecommendation(at: index)
+                    }
                 } label: {
                     HStack {
-                        Text(kind.displayName)
+                        Text(name)
                         Spacer()
-                        if selection.contains(kind) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.blue)
-                        } else {
-                            Image(systemName: "circle.dashed")
-                                .foregroundStyle(.gray)
-                        }
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.blue)
                     }
                 }
                 .foregroundStyle(.primary)
+            }
+            
+            if viewModel.clearence.clearenceStatus == .unable || viewModel.clearence.clearenceStatus == .reevaluate {
+                Section {
+                    HStack {
+                        TextField("Adicionar recomendações", text: $newCustomRecommendation)
+                            .autocorrectionDisabled(true)
+                            .submitLabel(.done)
+                            .onSubmit {
+                                viewModel.clearence.addCustomRecommendation(newCustomRecommendation)
+                                newCustomRecommendation = ""
+                            }
+                        if !newCustomRecommendation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            Button {
+                                viewModel.clearence.addCustomRecommendation(newCustomRecommendation)
+                                newCustomRecommendation = ""
+                            } label: {
+                                Image(systemName: "plus.circle")
+                            }
+                        }
+                    }
+                }
             }
         }
         .navigationTitle("Recomendações")
@@ -207,4 +235,3 @@ struct RecommendationForRevaluationStatusView: View {
         }
     }
 }
-

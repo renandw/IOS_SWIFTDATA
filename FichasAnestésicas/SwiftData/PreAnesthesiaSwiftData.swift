@@ -35,10 +35,10 @@ final class PreAnesthesia {
     }
     
     
-    var definitibeRecommendationForRevaluationStatusRaw: [String]?
+    var definitiveRecommendationForRevaluationStatusRaw: [String]?
     var definitiveRecommendationForRevaluationStatus: [RecommendationForRevaluationStatus]? {
-        get { definitibeRecommendationForRevaluationStatusRaw?.compactMap(RecommendationForRevaluationStatus.init(rawValue:)) }
-        set { definitibeRecommendationForRevaluationStatusRaw = newValue?.map { $0.rawValue } }
+        get { definitiveRecommendationForRevaluationStatusRaw?.compactMap(RecommendationForRevaluationStatus.init(rawValue:)) }
+        set { definitiveRecommendationForRevaluationStatusRaw = newValue?.map { $0.rawValue } }
     }
     //deprecated
     var recommendationForRevaluationStatusRaw: String?
@@ -64,7 +64,7 @@ final class PreAnesthesia {
         
         //First section - clearence status
         clearenceStatus: ClearenceStatus? = nil,
-        definitibeRecommendationForRevaluationStatusRaw: RecommendationForRevaluationStatus? = nil,
+        definitiveRecommendationForRevaluationStatusRaw: RecommendationForRevaluationStatus? = nil,
         //deprecated
         recommendationForRevaluationStatus: RecommendationForRevaluationStatus? = nil,
         //enddeprecated
@@ -86,7 +86,7 @@ final class PreAnesthesia {
         
         //First section - clearence status
         self.clearenceStatusRaw = clearenceStatus?.rawValue
-        self.definitibeRecommendationForRevaluationStatusRaw = definitibeRecommendationForRevaluationStatusRaw.map { [$0.rawValue] }
+        self.definitiveRecommendationForRevaluationStatusRaw = definitiveRecommendationForRevaluationStatusRaw.map { [$0.rawValue] }
         //deprecated
         self.recommendationForRevaluationStatusRaw = recommendationForRevaluationStatus?.rawValue
         //end deprecated
