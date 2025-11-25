@@ -33,11 +33,20 @@ final class PreAnesthesia {
         get { clearenceStatusRaw.flatMap(ClearenceStatus.init(rawValue:)) }
         set { clearenceStatusRaw = newValue?.rawValue }
     }
+    
+    
+    var definitibeRecommendationForRevaluationStatusRaw: [String]?
+    var definitiveRecommendationForRevaluationStatus: [RecommendationForRevaluationStatus]? {
+        get { definitibeRecommendationForRevaluationStatusRaw?.compactMap(RecommendationForRevaluationStatus.init(rawValue:)) }
+        set { definitibeRecommendationForRevaluationStatusRaw = newValue?.map { $0.rawValue } }
+    }
+    //deprecated
     var recommendationForRevaluationStatusRaw: String?
     var recommendationForRevaluationStatus: RecommendationForRevaluationStatus? {
         get { recommendationForRevaluationStatusRaw.flatMap(RecommendationForRevaluationStatus.init(rawValue:)) }
         set { recommendationForRevaluationStatusRaw = newValue?.rawValue }
     }
+    //end deprecated
     var futherRecommendationForRevaluation: [String]?
     
     init(
@@ -55,7 +64,10 @@ final class PreAnesthesia {
         
         //First section - clearence status
         clearenceStatus: ClearenceStatus? = nil,
+        definitibeRecommendationForRevaluationStatusRaw: RecommendationForRevaluationStatus? = nil,
+        //deprecated
         recommendationForRevaluationStatus: RecommendationForRevaluationStatus? = nil,
+        //enddeprecated
         futherRecommendationForRevaluation: [String] = []
         
     ) {
@@ -74,7 +86,10 @@ final class PreAnesthesia {
         
         //First section - clearence status
         self.clearenceStatusRaw = clearenceStatus?.rawValue
+        self.definitibeRecommendationForRevaluationStatusRaw = definitibeRecommendationForRevaluationStatusRaw.map { [$0.rawValue] }
+        //deprecated
         self.recommendationForRevaluationStatusRaw = recommendationForRevaluationStatus?.rawValue
+        //end deprecated
         self.futherRecommendationForRevaluation = futherRecommendationForRevaluation
     }
 }

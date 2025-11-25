@@ -18,19 +18,19 @@ import SwiftData
 final class ClearenceSectionViewModel {
     
     var clearenceStatus: ClearenceStatus?
-    var recommendationForRevaluationStatus: RecommendationForRevaluationStatus?
+    var definitiveRecommendationForRevaluationStatus: [RecommendationForRevaluationStatus]?
     var futherRecommendationForRevaluation: [String] = []
 
     func load(from e: PreAnesthesia) {
         clearenceStatus = e.clearenceStatus
-        recommendationForRevaluationStatus = e.recommendationForRevaluationStatus
+        definitiveRecommendationForRevaluationStatus = e.definitiveRecommendationForRevaluationStatus
         futherRecommendationForRevaluation = e.futherRecommendationForRevaluation ?? []
 
     }
 
     func apply(to e: PreAnesthesia) {
         e.clearenceStatus = clearenceStatus
-        e.recommendationForRevaluationStatus = recommendationForRevaluationStatus
+        e.definitiveRecommendationForRevaluationStatus = definitiveRecommendationForRevaluationStatus
         e.futherRecommendationForRevaluation = futherRecommendationForRevaluation.isEmpty ? nil : futherRecommendationForRevaluation
     }
     
@@ -48,7 +48,7 @@ final class ClearenceSectionViewModel {
     
     func applyClearenceSuggestion(hasGeneralAnesthesia: Bool) {
         clearenceStatus = .able
-        recommendationForRevaluationStatus = nil
+        definitiveRecommendationForRevaluationStatus = nil
         futherRecommendationForRevaluation = []
     }
     

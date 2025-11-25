@@ -51,21 +51,19 @@ struct PreAnesthesiaFormView: View {
                 Section {
                     NavigationLink {
                         RecommendationForRevaluationStatusView(selection: Binding<[RecommendationForRevaluationStatus]>(
-                            get: {
-                                if let value = viewModel.clearence.recommendationForRevaluationStatus { return [value] }
-                                return []
-                            },
+                            get: { viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? [] },
                             set: { newArray in
-                                viewModel.clearence.recommendationForRevaluationStatus = newArray.first
+                                viewModel.clearence.definitiveRecommendationForRevaluationStatus = newArray.isEmpty ? nil : newArray
                             }
                         ))
                     } label: {
                         HStack {
                             Text("Selecionar Recomendações")
                             Spacer()
-                            Text(viewModel.techniques.isEmpty
-                                 ? "Nenhuma"
-                                 : viewModel.techniques.map(\.rawValue).joined(separator: ", "))
+                            Text({
+                                let items = viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? []
+                                return items.isEmpty ? "Nenhuma" : items.map(\.displayName).joined(separator: ", ")
+                            }())
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.trailing)
                         }
