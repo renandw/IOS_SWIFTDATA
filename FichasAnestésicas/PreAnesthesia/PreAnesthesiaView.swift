@@ -19,27 +19,82 @@ struct PreAnesthesiaView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if let preanesthesia = anesthesia.surgery.preanesthesia {
+                if anesthesia.surgery.preanesthesia != nil {
                     ScrollView {
-                        VStack(alignment: .leading) {
-                            Section("Descrição") {
-                                Button {
-                                    presentEditForm(for: preanesthesia)
-                                } label: {
-                                    HStack {
-                                        VStack(alignment: .leading) {
-                                            Text(preanesthesia.createdAt, style: .date)
-                                                .font(.headline)
-                                            if let textField = preanesthesia.textField{
-                                                Text(textField)
+                        VStack(alignment: .leading, spacing: 12) {
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    if anesthesia.surgery.patient.sex == .male {
+                                        Image(systemName: "figure.stand")
+                                            .foregroundStyle(anesthesia.surgery.patient.sex.sexColor)
+                                    } else {
+                                        Image(systemName: "figure.stand.dress")
+                                            .foregroundStyle(anesthesia.surgery.patient.sex.sexColor)
+                                    }
+                                    Text("APA")
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+                                    
+                                    Spacer()    
+                                    
+                                    if let status = anesthesia.surgery.preanesthesia?.status{
+                                        status.badgeView
+                                    }
+
+                                }
+                                Divider()
+                                VStack(alignment: .leading) {
+                                    VStack(alignment: .leading) {
+                                        HStack {
+                                            Text("Classificação ASA:")
+                                            Spacer()
+                                            if let asa = anesthesia.shared?.asa {
+                                                asa.badgeView
                                             }
                                         }
-                                        Spacer()
-                                        Image(systemName: "chevron.right")
-                                            .foregroundStyle(.tertiary)
+                                        HStack {
+                                            Text("Apto:")
+                                            Spacer()
+                                            Text("Liberado sem ressalvas")
+                                                .foregroundStyle(Color(.systemGreen))
+                                        }
                                     }
                                 }
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding()
+                            .background(.thinMaterial)
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Image(systemName: "stethoscope")
+                                        .foregroundStyle(.green)
+                                    Text("Comorbidades")
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+                                    
+                                    Spacer()
+                                }
+                                Divider()
+                                VStack(alignment: .leading) {
+                                    VStack(alignment: .leading) {
+                                        HStack {
+                                            Text("Cardiovasculares:")
+                                        }
+                                        HStack {
+                                            Text("Respiratórias:")
+                                            Spacer()
+                                            Text("Asma")
+                                        }
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding()
+                            .background(.thinMaterial)
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
                         }
                         .padding(.horizontal)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -113,11 +168,12 @@ struct PreAnesthesiaView: View {
         // Ajuste a forma de obter o usuário conforme a API real do seu SessionManager
         if let user = session.currentUser {
             let repo = SwiftDataPreAnesthesiaRepository(context: modelContext)
+            let sharedRepo = SwiftDataSharedPreAndAnesthesiaRepository(context: modelContext)
             let vm = PreAnesthesiaViewModel(
                 newFor: anesthesia.surgery,
                 user: user,
                 repo: repo,
-                context: modelContext
+                sharedRepo: sharedRepo
             )
             formViewModel = vm
             isPresentingForm = true
@@ -127,11 +183,12 @@ struct PreAnesthesiaView: View {
     private func presentEditForm(for preanesthesia: PreAnesthesia) {
         if let user = session.currentUser {
             let repo = SwiftDataPreAnesthesiaRepository(context: modelContext)
+            let sharedRepo = SwiftDataSharedPreAndAnesthesiaRepository(context: modelContext)
             let vm = PreAnesthesiaViewModel(
                 preanesthesia: preanesthesia,
                 user: user,
                 repo: repo,
-                context: modelContext
+                sharedRepo: sharedRepo
             )
             formViewModel = vm
             isPresentingForm = true

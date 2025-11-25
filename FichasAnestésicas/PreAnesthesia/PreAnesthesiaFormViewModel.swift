@@ -22,7 +22,8 @@ final class PreAnesthesiaViewModel: Identifiable {
     var techniques: [AnesthesiaTechniqueKind] = []
     var asa: ASAClassification?
     var textField: String?
-
+    
+    var clearence = ClearenceSectionViewModel()
     
     // MARK: init para edit
     init(
@@ -37,8 +38,9 @@ final class PreAnesthesiaViewModel: Identifiable {
         self.repo = repo
         self.isNew = false
         
+        clearence.load(from: preanesthesia)
         load(from: preanesthesia)
-
+        
     }
     // MARK: init para create
     init(
@@ -58,10 +60,16 @@ final class PreAnesthesiaViewModel: Identifiable {
         self.repo = repo
         self.sharedRepo = sharedRepo
         self.isNew = true
+        
+        if let shared = surgery.shared {
+                self.techniques = shared.techniques
+                self.asa = shared.asa
+            }
     }
     
     // MARK: - Save (create ou update)
     func save() throws {
+        clearence.apply(to: preanesthesia)
         apply(to: preanesthesia)
         
         let surgery = preanesthesia.surgery
@@ -84,18 +92,17 @@ final class PreAnesthesiaViewModel: Identifiable {
     
     func load(from p: PreAnesthesia) {
         textField = p.textField
-        
-        if let shared = p.shared {
+        let shared = sharedRepo.get(for: p.surgery) ?? p.shared
+        if let shared {
             self.techniques = shared.techniques
             self.asa = shared.asa
         }
     }
     
-    
     func apply(to p: PreAnesthesia) {
         p.textField = textField
         
-        let shared = sharedRepo.ensure(for: p.surgery)
+        let shared = sharedRepo.ensure(for: p.surgery)  // ← "p.surgery"
         try? sharedRepo.update(shared, techniques: techniques, asa: asa)
         
     }

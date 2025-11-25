@@ -17,7 +17,7 @@ final class PreAnesthesia {
     var updatedBy: User?
     var createdAt: Date
     var updatedAt: Date?
-    
+    //for test only - it worked
     var textField: String?
     
     var statusRaw: String?
@@ -25,6 +25,20 @@ final class PreAnesthesia {
         get { statusRaw.flatMap(Status.init(rawValue:)) }
         set { statusRaw = newValue?.rawValue }
     }
+    
+    //First section - clearence status
+    
+    var clearenceStatusRaw: String?
+    var clearenceStatus: ClearenceStatus? {
+        get { clearenceStatusRaw.flatMap(ClearenceStatus.init(rawValue:)) }
+        set { clearenceStatusRaw = newValue?.rawValue }
+    }
+    var recommendationForRevaluationStatusRaw: String?
+    var recommendationForRevaluationStatus: RecommendationForRevaluationStatus? {
+        get { recommendationForRevaluationStatusRaw.flatMap(RecommendationForRevaluationStatus.init(rawValue:)) }
+        set { recommendationForRevaluationStatusRaw = newValue?.rawValue }
+    }
+    var futherRecommendationForRevaluation: [String]?
     
     init(
         preanesthesiaId: String = UUID().uuidString,
@@ -37,7 +51,13 @@ final class PreAnesthesia {
         
         textField: String? = nil,
         
-        statusRaw: String? = nil
+        statusRaw: String? = nil,
+        
+        //First section - clearence status
+        clearenceStatus: ClearenceStatus? = nil,
+        recommendationForRevaluationStatus: RecommendationForRevaluationStatus? = nil,
+        futherRecommendationForRevaluation: [String] = []
+        
     ) {
         self.preanesthesiaId = preanesthesiaId
         self.surgery = surgery
@@ -51,5 +71,10 @@ final class PreAnesthesia {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.statusRaw = statusRaw
+        
+        //First section - clearence status
+        self.clearenceStatusRaw = clearenceStatus?.rawValue
+        self.recommendationForRevaluationStatusRaw = recommendationForRevaluationStatus?.rawValue
+        self.futherRecommendationForRevaluation = futherRecommendationForRevaluation
     }
 }

@@ -29,6 +29,7 @@ final class SwiftDataPreAnesthesiaRepository: PreAnesthesiaRepository {
         preanesthesia.createdAt = now
         preanesthesia.updatedAt = now
         preanesthesia.updatedBy = user
+        preanesthesia.status = .inProgress
         
         
         surgery.preanesthesia = preanesthesia
@@ -52,8 +53,7 @@ final class SwiftDataPreAnesthesiaRepository: PreAnesthesiaRepository {
     func delete(preanesthesia: PreAnesthesia, from surgery: Surgery) throws {
         surgery.lastActivityAt = Date()
         surgery.preanesthesia = nil
-        surgery.start = nil
-        surgery.end = nil
+        preanesthesia.status = nil
         context.delete(preanesthesia)
         try context.save()
     }

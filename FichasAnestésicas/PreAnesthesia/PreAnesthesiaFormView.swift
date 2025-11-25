@@ -34,17 +34,48 @@ struct PreAnesthesiaFormView: View {
             Form {
                 Section {
                     //
+                    //                } header: {
+                    //                    HStack {
+                    //                        Text("Asa")
+                    //                        Spacer()
+                    //                        TextField("Texto teste", text: Binding(
+                    //                            get: { viewModel.textField ?? "" },
+                    //                            set: { viewModel.textField = $0.isEmpty ? nil : $0 }
+                    //                        ))
+                    //
+                    //                    }
+                    //                }
+                    clearenceStatusPicker
+                }
+                
+                Section {
+                    NavigationLink {
+                        RecommendationForRevaluationStatusView(selection: Binding<[RecommendationForRevaluationStatus]>(
+                            get: {
+                                if let value = viewModel.clearence.recommendationForRevaluationStatus { return [value] }
+                                return []
+                            },
+                            set: { newArray in
+                                viewModel.clearence.recommendationForRevaluationStatus = newArray.first
+                            }
+                        ))
+                    } label: {
+                        HStack {
+                            Text("Selecionar Recomendações")
+                            Spacer()
+                            Text(viewModel.techniques.isEmpty
+                                 ? "Nenhuma"
+                                 : viewModel.techniques.map(\.rawValue).joined(separator: ", "))
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.trailing)
+                        }
+                    }
                 } header: {
                     HStack {
-                        Text("Asa")
-                        Spacer()
-                        TextField("Texto teste", text: Binding(
-                            get: { viewModel.textField ?? "" },
-                            set: { viewModel.textField = $0.isEmpty ? nil : $0 }
-                        ))
-                        
+                        Text("Recomendações")
                     }
                 }
+                
                 Section {
                     NavigationLink {
                         AnesthesiaTechniquePickerView(selection: $viewModel.techniques)
@@ -56,7 +87,7 @@ struct PreAnesthesiaFormView: View {
                                  ? "Nenhuma"
                                  : viewModel.techniques.map(\.rawValue).joined(separator: ", "))
                             .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.trailing)
+                            .multilineTextAlignment(.trailing)
                         }
                     }
                 } header: {
@@ -112,7 +143,69 @@ struct PreAnesthesiaFormView: View {
             }
         }
         .sheet(isPresented: $isMonitoringSheetPresented) {
-           Text("Vamos ver se funciona")
+            Text("Vamos ver se funciona")
+        }
+    }
+    
+    
+    private var clearenceStatusPicker: some View {
+        Picker("Liberação", selection: $viewModel.clearence.clearenceStatus) {
+            Text("Não informado").tag(nil as ClearenceStatus?)
+            ForEach(ClearenceStatus.allCases, id: \.self) { (kind: ClearenceStatus) in
+                Text(kind.displayName)
+                    .tag(Optional(kind))
+            }
+        }
+    }
+}
+
+struct RecommendationForRevaluationStatusView: View {
+    @Binding var selection: [RecommendationForRevaluationStatus]
+
+    private var recommendations: [RecommendationForRevaluationStatus] {
+        RecommendationForRevaluationStatus.allCases.sorted { a, b in
+            a.displayName.localizedCaseInsensitiveCompare(b.displayName) == .orderedAscending
+        }
+    }
+
+    var body: some View {
+        List {
+            ForEach(recommendations, id: \.self) { kind in
+                Button {
+                    toggle(kind)
+                } label: {
+                    HStack {
+                        Text(kind.displayName)
+                        Spacer()
+                        if selection.contains(kind) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.blue)
+                        } else {
+                            Image(systemName: "circle.dashed")
+                                .foregroundStyle(.gray)
+                        }
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+        }
+        .navigationTitle("Recomendações")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu("Opções", systemImage: "gear") {
+                    Button("Selecionar tudo") { selection = recommendations }
+                    Button("Limpar seleção", role: .destructive) { selection.removeAll() }
+                }
+            }
+        }
+    }
+
+    private func toggle(_ kind: RecommendationForRevaluationStatus) {
+        if let idx = selection.firstIndex(of: kind) {
+            selection.remove(at: idx)
+        } else {
+            selection.append(kind)
         }
     }
 }
