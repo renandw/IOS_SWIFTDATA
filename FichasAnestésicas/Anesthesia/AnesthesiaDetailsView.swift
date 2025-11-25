@@ -144,7 +144,7 @@ struct SectionContent: View {
         case .identificationSection:
             IdentificationView(anesthesia: anesthesia, patient: patient, surgery: surgery, ageContext: .inSurgery(surgery))
         case .apaSection:
-            ContentUnavailableView("APA To be implemented", image: "plus")
+            PreAnesthesiaView(anesthesia: anesthesia)
         case .medicationsSection:
             MedicationsView(anesthesia: anesthesia)
         case .vitalSignsSection:

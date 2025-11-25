@@ -18,6 +18,8 @@ final class PreAnesthesia {
     var createdAt: Date
     var updatedAt: Date?
     
+    var textField: String?
+    
     var statusRaw: String?
     var status: Status? {
         get { statusRaw.flatMap(Status.init(rawValue:)) }
@@ -32,6 +34,9 @@ final class PreAnesthesia {
         updatedBy: User? = nil,
         createdAt: Date,
         updatedAt: Date? = nil,
+        
+        textField: String? = nil,
+        
         statusRaw: String? = nil
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -40,6 +45,9 @@ final class PreAnesthesia {
         self.statusRaw = statusRaw
         self.createdBy = createdBy
         self.updatedBy = updatedBy
+        
+        self.textField = textField
+        
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.statusRaw = statusRaw

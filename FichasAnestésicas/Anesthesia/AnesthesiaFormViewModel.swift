@@ -100,7 +100,11 @@ final class AnesthesiaFormViewModel: ObservableObject {
     
     
 
-    init(surgery: Surgery, user: User, context: ModelContext) {
+    init(
+        surgery: Surgery,
+        user: User,
+        context: ModelContext
+    ) {
         self.surgery = surgery
         self.user = user
         self.context = context
