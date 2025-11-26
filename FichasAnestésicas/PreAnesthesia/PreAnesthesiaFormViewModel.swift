@@ -24,6 +24,7 @@ final class PreAnesthesiaViewModel: Identifiable {
     var textField: String?
     
     var clearence = ClearenceSectionViewModel()
+    var comorbities = ComorbitiesSectionViewModel()
     
     // MARK: init para edit
     init(
@@ -39,6 +40,7 @@ final class PreAnesthesiaViewModel: Identifiable {
         self.isNew = false
         
         clearence.load(from: preanesthesia)
+        comorbities.load(from: preanesthesia)
         load(from: preanesthesia)
         
     }
@@ -70,6 +72,7 @@ final class PreAnesthesiaViewModel: Identifiable {
     // MARK: - Save (create ou update)
     func save() throws {
         clearence.apply(to: preanesthesia)
+        comorbities.apply(to: preanesthesia)
         apply(to: preanesthesia)
         
         let surgery = preanesthesia.surgery

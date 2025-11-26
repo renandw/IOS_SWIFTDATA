@@ -53,7 +53,7 @@ final class ClearenceSectionViewModel {
     }
     
     func recommendationsVisibility() {
-        if clearenceStatus == .able {
+        if clearenceStatus == .able || clearenceStatus == .unable {
             definitiveRecommendationForRevaluationStatus = nil
             futherRecommendationForRevaluation = []
         }

@@ -27,14 +27,11 @@ final class PreAnesthesia {
     }
     
     //First section - clearence status
-    
     var clearenceStatusRaw: String?
     var clearenceStatus: ClearenceStatus? {
         get { clearenceStatusRaw.flatMap(ClearenceStatus.init(rawValue:)) }
         set { clearenceStatusRaw = newValue?.rawValue }
     }
-    
-    
     var definitiveRecommendationForRevaluationStatusRaw: [String]?
     var definitiveRecommendationForRevaluationStatus: [RecommendationForRevaluationStatus]? {
         get { definitiveRecommendationForRevaluationStatusRaw?.compactMap(RecommendationForRevaluationStatus.init(rawValue:)) }
@@ -48,6 +45,21 @@ final class PreAnesthesia {
     }
     //end deprecated
     var futherRecommendationForRevaluation: [String]?
+    
+    //Second Section - Comorbities Booleans
+    var isPregnant: Bool?
+    var isInfant: Bool?
+    var cardiacComorbities: Bool?
+    var respiratoryComorbities: Bool?
+    var endocrineComorbities: Bool?
+    var gastrointestinalComorbities: Bool?
+    var hematologicalComorbities: Bool?
+    var musculoskeletalComorbities: Bool?
+    var genitourologicalComorbities: Bool?
+    var neurologicalComorbities: Bool?
+    var geneticSyndrome: Bool?
+    
+    
     
     init(
         preanesthesiaId: String = UUID().uuidString,
@@ -68,7 +80,20 @@ final class PreAnesthesia {
         //deprecated
         recommendationForRevaluationStatus: RecommendationForRevaluationStatus? = nil,
         //enddeprecated
-        futherRecommendationForRevaluation: [String] = []
+        futherRecommendationForRevaluation: [String] = [],
+        
+        //SecondSection - comorbities
+        isPregnant: Bool = false,
+        isInfant: Bool = false,
+        cardiacComorbities: Bool = false,
+        respiratoryComorbities: Bool = false,
+        endocrineComorbities: Bool = false,
+        gastrointestinalComorbities: Bool = false,
+        hematologicalComorbities: Bool = false,
+        musculoskeletalComorbities: Bool = false,
+        genitourologicalComorbities: Bool = false,
+        neurologicalComorbities: Bool = false,
+        geneticSyndrome: Bool = false
         
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -91,5 +116,18 @@ final class PreAnesthesia {
         self.recommendationForRevaluationStatusRaw = recommendationForRevaluationStatus?.rawValue
         //end deprecated
         self.futherRecommendationForRevaluation = futherRecommendationForRevaluation
+        
+        //Second Section - comorbities bool
+        self.isPregnant = isPregnant
+        self.isInfant = isInfant
+        self.cardiacComorbities = cardiacComorbities
+        self.respiratoryComorbities = respiratoryComorbities
+        self.endocrineComorbities = endocrineComorbities
+        self.gastrointestinalComorbities = gastrointestinalComorbities
+        self.hematologicalComorbities = hematologicalComorbities
+        self.musculoskeletalComorbities = musculoskeletalComorbities
+        self.genitourologicalComorbities = genitourologicalComorbities
+        self.neurologicalComorbities = neurologicalComorbities
+        self.geneticSyndrome = geneticSyndrome
     }
 }

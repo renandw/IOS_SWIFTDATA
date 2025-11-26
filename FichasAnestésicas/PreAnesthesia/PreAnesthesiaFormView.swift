@@ -30,7 +30,7 @@ struct PreAnesthesiaFormView: View {
                 } header: {
                     Text("Liberação")
                 }
-                if viewModel.clearence.clearenceStatus != .able {
+                if [.unable, .reevaluate].contains(viewModel.clearence.clearenceStatus) {
                     Section {
                         NavigationLink {
                             RecommendationForRevaluationStatusView(
@@ -56,6 +56,17 @@ struct PreAnesthesiaFormView: View {
                     } header: {
                         HStack {
                             Text("Recomendações")
+                        }
+                    }
+                }
+                Section {
+                    NavigationLink {
+                        ComorbitiesFormView(viewModel: viewModel)
+                    } label : {
+                        HStack {
+                            Text("Selecionar Comorbidades")
+                            Spacer()
+                            
                         }
                     }
                 }
