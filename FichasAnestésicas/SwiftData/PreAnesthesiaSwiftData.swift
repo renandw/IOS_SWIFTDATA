@@ -47,17 +47,17 @@ final class PreAnesthesia {
     var futherRecommendationForRevaluation: [String]?
     
     //Second Section - Comorbities Booleans
-    var isPregnant: Bool?
-    var isInfant: Bool?
-    var cardiacComorbities: Bool?
-    var respiratoryComorbities: Bool?
-    var endocrineComorbities: Bool?
-    var gastrointestinalComorbities: Bool?
-    var hematologicalComorbities: Bool?
-    var musculoskeletalComorbities: Bool?
-    var genitourologicalComorbities: Bool?
-    var neurologicalComorbities: Bool?
-    var geneticSyndrome: Bool?
+    var isPregnant: Bool
+    var isInfant: Bool
+    var cardiacComorbities: Bool
+    var respiratoryComorbities: Bool
+    var endocrineComorbities: Bool
+    var gastrointestinalComorbities: Bool
+    var hematologicalComorbities: Bool
+    var musculoskeletalComorbities: Bool
+    var genitourologicalComorbities: Bool
+    var neurologicalComorbities: Bool
+    var geneticSyndrome: Bool
     
     
     

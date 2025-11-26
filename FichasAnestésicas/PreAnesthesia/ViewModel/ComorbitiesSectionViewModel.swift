@@ -22,21 +22,29 @@ final class ComorbitiesSectionViewModel {
     var neurologicalComorbities = false
     var geneticSyndrome = false
     
-    func load(from e: PreAnesthesia) {
-        isPregnant = e.isPregnant ?? false
-        isInfant = e.isInfant ?? false
-        cardiacComorbities = e.cardiacComorbities ?? false
-        respiratoryComorbities = e.respiratoryComorbities ?? false
-        endocrineComorbities = e.endocrineComorbities ?? false
-        gastrointestinalComorbities = e.gastrointestinalComorbities ?? false
-        hematologicalComorbities = e.hematologicalComorbities ?? false
-        musculoskeletalComorbities = e.musculoskeletalComorbities ?? false
-        genitourologicalComorbities = e.genitourologicalComorbities ?? false
-        neurologicalComorbities = e.neurologicalComorbities ?? false
-        geneticSyndrome = e.geneticSyndrome ?? false
+    
+    func load(from e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
+        isInfantVisibility(patientAge: patientAge)
+        isPregnantVisibility(patientSex: patientSex)
+        
+        isPregnant = e.isPregnant
+        isInfant = e.isInfant
+        cardiacComorbities = e.cardiacComorbities
+        respiratoryComorbities = e.respiratoryComorbities
+        endocrineComorbities = e.endocrineComorbities
+        gastrointestinalComorbities = e.gastrointestinalComorbities
+        hematologicalComorbities = e.hematologicalComorbities
+        musculoskeletalComorbities = e.musculoskeletalComorbities
+        genitourologicalComorbities = e.genitourologicalComorbities
+        neurologicalComorbities = e.neurologicalComorbities
+        geneticSyndrome = e.geneticSyndrome
     }
     
-    func apply(to e: PreAnesthesia) {
+    func apply(to e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
+        
+        isInfantVisibility(patientAge: patientAge)
+        isPregnantVisibility(patientSex: patientSex)
+        
         e.isPregnant = isPregnant
         e.isInfant = isInfant
         e.cardiacComorbities = cardiacComorbities
@@ -48,6 +56,19 @@ final class ComorbitiesSectionViewModel {
         e.genitourologicalComorbities = genitourologicalComorbities
         e.neurologicalComorbities = neurologicalComorbities
         e.geneticSyndrome = geneticSyndrome
+    }
+    
+    func isPregnantVisibility(patientSex: Sex) {
+        if patientSex == .male {
+            isPregnant = false
+        }
+    }
+    func isInfantVisibility(patientAge: Int) {
+        if patientAge > 1 {
+            isInfant = false
+        } else {
+            isInfant = true
+        }
     }
 }
 

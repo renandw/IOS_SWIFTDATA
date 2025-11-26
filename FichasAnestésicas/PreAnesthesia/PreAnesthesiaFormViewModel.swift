@@ -23,6 +23,18 @@ final class PreAnesthesiaViewModel: Identifiable {
     var asa: ASAClassification?
     var textField: String?
     
+    var patientSex : Sex {
+        let surgery = preanesthesia.surgery
+        let sex = surgery.patient.sex
+        return sex
+    }
+    
+    var patientAge: Int {
+        let surgery = preanesthesia.surgery
+        let birthDate = surgery.patient.birthDate
+        return AgeContext.inSurgery(surgery).ageInYears(from: birthDate)
+    }
+    
     var clearence = ClearenceSectionViewModel()
     var comorbities = ComorbitiesSectionViewModel()
     
@@ -40,7 +52,7 @@ final class PreAnesthesiaViewModel: Identifiable {
         self.isNew = false
         
         clearence.load(from: preanesthesia)
-        comorbities.load(from: preanesthesia)
+        comorbities.load(from: preanesthesia, patientSex: patientSex, patientAge: patientAge)
         load(from: preanesthesia)
         
     }
@@ -64,15 +76,19 @@ final class PreAnesthesiaViewModel: Identifiable {
         self.isNew = true
         
         if let shared = surgery.shared {
-                self.techniques = shared.techniques
-                self.asa = shared.asa
-            }
+            self.techniques = shared.techniques
+            self.asa = shared.asa
+        }
+        let sex = surgery.patient.sex
+        let age = AgeContext.inSurgery(surgery).ageInYears(from: surgery.patient.birthDate)
+        comorbities.isInfantVisibility(patientAge: age)
+        comorbities.isPregnantVisibility(patientSex: sex)
     }
     
     // MARK: - Save (create ou update)
     func save() throws {
         clearence.apply(to: preanesthesia)
-        comorbities.apply(to: preanesthesia)
+        comorbities.apply(to: preanesthesia, patientSex: patientSex, patientAge: patientAge)
         apply(to: preanesthesia)
         
         let surgery = preanesthesia.surgery

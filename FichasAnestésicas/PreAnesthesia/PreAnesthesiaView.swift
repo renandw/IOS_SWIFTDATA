@@ -80,6 +80,18 @@ struct PreAnesthesiaView: View {
                                 Divider()
                                 VStack(alignment: .leading) {
                                     VStack(alignment: .leading) {
+                                        if let isInfant = anesthesia.surgery.preanesthesia?.isInfant{
+                                            if isInfant == true {
+                                                Text("Menor de um ano")
+                                            }
+                                        }
+                                        if let isPregnant = anesthesia.surgery.preanesthesia?.isPregnant{
+                                            if isPregnant == true {
+                                                Text("IsPregnant is true")
+                                            } else {
+                                                Text("IsPregnant is false")
+                                            }
+                                        }
                                         HStack {
                                             Text("Cardiovasculares:")
                                         }

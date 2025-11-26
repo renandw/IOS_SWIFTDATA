@@ -12,8 +12,13 @@ struct ComorbitiesFormView: View {
 
     var body: some View {
         List {
-            isPregnant
-            isInfant
+            if viewModel.patientSex == .female && viewModel.patientAge > 12 {
+                isPregnant
+            }
+            if viewModel.patientAge < 1{
+                Text("\(viewModel.patientAge)")
+                isInfant
+            }
             cardiacComorbities
             respiratoryComorbities
             endocrinesComorbities
@@ -24,7 +29,7 @@ struct ComorbitiesFormView: View {
             neurologicalComorbities
             geneticSyndrome
         }
-        .navigationTitle("Recomendações")
+        .navigationTitle("Comorbidades")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
 //            ToolbarItem(placement: .navigationBarTrailing) {
@@ -39,77 +44,77 @@ struct ComorbitiesFormView: View {
     private var isPregnant: some View {
         Toggle(
             "Gestante",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "figure.seated.side.right.child.lap",
             isOn: $viewModel.comorbities.isPregnant
         )
     }
     private var isInfant: some View {
         Toggle(
             "Menor de um ano",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "figure.child.circle.fill",
             isOn: $viewModel.comorbities.isInfant
         )
     }
     private var cardiacComorbities: some View {
         Toggle(
             "Comorbidades Cardiológicas",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "heart.circle.fill",
             isOn: $viewModel.comorbities.cardiacComorbities
         )
     }
     private var respiratoryComorbities: some View {
         Toggle(
             "Comorbidades Respiratórias",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "lungs",
             isOn: $viewModel.comorbities.respiratoryComorbities
         )
     }
     private var endocrinesComorbities: some View {
         Toggle(
             "Comorbidades Endócrinas",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "syringe.fill",
             isOn: $viewModel.comorbities.endocrineComorbities
         )
     }
     private var musculoskeletalComorbities: some View {
         Toggle(
             "Comorbidades Musculoesqueléticas",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "figure.run.circle.fill",
             isOn: $viewModel.comorbities.musculoskeletalComorbities
         )
     }
     private var gastrointestinalComorbities: some View {
         Toggle(
             "Comorbidades Gastrointestinais",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "fork.knife.circle",
             isOn: $viewModel.comorbities.gastrointestinalComorbities
         )
     }
     private var hematilogicalComorbities: some View {
         Toggle(
             "Comorbidades Hematológicas",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "ivfluid.bag",
             isOn: $viewModel.comorbities.hematologicalComorbities
         )
     }
     private var neurologicalComorbities: some View {
         Toggle(
             "Comorbidades Neurológicas",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "brain.head.profile.fill",
             isOn: $viewModel.comorbities.neurologicalComorbities
         )
     }
     private var genitourologicalComorbities: some View {
         Toggle(
             "Comorbidades Genitourológicas",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "toilet.fill",
             isOn: $viewModel.comorbities.genitourologicalComorbities
         )
     }
     private var geneticSyndrome: some View {
         Toggle(
             "Síndromes Genéticas",
-            systemImage: "flag.pattern.checkered",
+            systemImage: "apple.meditate.circle.fill",
             isOn: $viewModel.comorbities.geneticSyndrome
         )
     }
