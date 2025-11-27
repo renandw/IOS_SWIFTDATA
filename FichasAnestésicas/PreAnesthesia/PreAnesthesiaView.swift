@@ -10,127 +10,21 @@ import SwiftData
 struct PreAnesthesiaView: View {
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
-
+    
     @Bindable var anesthesia: Anesthesia
-
+    
     @State private var isPresentingForm = false
     @State private var formViewModel: PreAnesthesiaViewModel?
-
+    
     var body: some View {
         NavigationStack {
             Group {
-                if anesthesia.surgery.preanesthesia != nil {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 12) {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    if anesthesia.surgery.patient.sex == .male {
-                                        Image(systemName: "figure.stand")
-                                            .foregroundStyle(anesthesia.surgery.patient.sex.sexColor)
-                                    } else {
-                                        Image(systemName: "figure.stand.dress")
-                                            .foregroundStyle(anesthesia.surgery.patient.sex.sexColor)
-                                    }
-                                    Text("APA")
-                                        .font(.title3)
-                                        .fontWeight(.semibold)
-                                    
-                                    Spacer()    
-                                    
-                                    if let status = anesthesia.surgery.preanesthesia?.status{
-                                        status.badgeView
-                                    }
-
-                                }
-                                Divider()
-                                VStack(alignment: .leading) {
-                                    VStack(alignment: .leading) {
-                                        HStack {
-                                            Text("Classificação ASA:")
-                                            Spacer()
-                                            if let asa = anesthesia.shared?.asa {
-                                                asa.badgeView
-                                            }
-                                        }
-                                        HStack {
-                                            Text("Apto:")
-                                            Spacer()
-                                            if let clearanceStatus = anesthesia.surgery.preanesthesia?.clearenceStatus {
-                                                Text("\(clearanceStatus.displayName)")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-                            .background(.thinMaterial)
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Image(systemName: "stethoscope")
-                                        .foregroundStyle(.green)
-                                    Text("Comorbidades")
-                                        .font(.title3)
-                                        .fontWeight(.semibold)
-                                    
-                                    Spacer()
-                                }
-                                Divider()
-                                VStack(alignment: .leading) {
-                                    VStack(alignment: .leading) {
-                                        if let isInfant = anesthesia.surgery.preanesthesia?.isInfant{
-                                            if isInfant == true {
-                                                Text("Menor de um ano")
-                                            }
-                                        }
-                                        if let isPregnant = anesthesia.surgery.preanesthesia?.isPregnant{
-                                            if isPregnant == true {
-                                                Text("IsPregnant is true")
-                                            } else {
-                                                Text("IsPregnant is false")
-                                            }
-                                        }
-                                        HStack {
-                                            Text("Cardiovasculares:")
-                                        }
-                                        HStack {
-                                            Text("Respiratórias:")
-                                            Spacer()
-                                            Text("Asma")
-                                        }
-                                    }
-                                }
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-                            .background(.thinMaterial)
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-
-                        }
-                        .padding(.horizontal)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
+                let surgery = anesthesia.surgery
+                let pre = surgery.preanesthesia
+                if pre != nil {
+                    contentWhenAvailable
                 } else {
-                    ContentUnavailableView(
-                        "Sem Avaliação Pré-Anestésica",
-                        systemImage: "text.document.fill",
-                        description: Text("Crie uma avaliação para ver aqui.")
-                    )
-                    .overlay(
-                        VStack {
-                            Spacer()
-                            Button(action: {
-                                presentNewForm()
-                            }) {
-                                Label("Adicionar Descrição", systemImage: "plus")
-                            }
-                            .buttonStyle(.glass)
-                            .tint(.blue)
-                            .padding()
-                        }
-                    )
+                    contentUnavailable
                 }
             }
             .navigationTitle("Descrição da anestesia")
@@ -142,12 +36,154 @@ struct PreAnesthesiaView: View {
                     token: "AnesthesiaDescriptionView.topbar.buttons.\(anesthesia.surgery.preanesthesia == nil)"
                 )
             )
-
             .sheet(item: $formViewModel) { vm in
                 PreAnesthesiaFormView(viewModel: vm)
             }
         }
     }
+    
+    private var contentWhenAvailable: some View {
+        let surgery = anesthesia.surgery
+        let pre = surgery.preanesthesia
+        return ScrollView {
+            VStack(alignment: .leading, spacing: 12) {
+                apaCard(surgery: surgery)
+                comorbiditiesCard(preanesthesia: pre)
+            }
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+    
+    private var contentUnavailable: some View {
+        ContentUnavailableView(
+            "Sem Avaliação Pré-Anestésica",
+            systemImage: "text.document.fill",
+            description: Text("Crie uma avaliação para ver aqui.")
+        )
+        .overlay(
+            VStack {
+                Spacer()
+                Button(action: { presentNewForm() }) {
+                    Label("Adicionar Descrição", systemImage: "plus")
+                }
+                .buttonStyle(.glass)
+                .tint(.blue)
+                .padding()
+            }
+        )
+    }
+    
+    private func apaCard(surgery: Surgery) -> some View {
+        let patientSex = surgery.patient.sex
+        let pre = surgery.preanesthesia
+        return VStack(alignment: .leading) {
+            HStack {
+                if patientSex == .male {
+                    Image(systemName: "figure.stand")
+                        .foregroundStyle(patientSex.sexColor)
+                } else {
+                    Image(systemName: "figure.stand.dress")
+                        .foregroundStyle(patientSex.sexColor)
+                }
+                Text("APA")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                Spacer()
+                if let status = pre?.status { status.badgeView }
+            }
+            Divider()
+            VStack(alignment: .leading) {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Classificação ASA:")
+                        Spacer()
+                        if let asa = anesthesia.shared?.asa { asa.badgeView }
+                    }
+                    HStack {
+                        Text("Apto:")
+                        Spacer()
+                        if let clearanceStatus = pre?.clearenceStatus {
+                            Text("\(clearanceStatus.displayName)")
+                        }
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+    
+    private func comorbiditiesCard(preanesthesia: PreAnesthesia?) -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Image(systemName: "stethoscope")
+                    .foregroundStyle(.green)
+                Text("Comorbidades")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                Spacer()
+            }
+            Divider()
+            VStack(alignment: .leading) {
+                VStack(alignment: .leading) {
+                    if let isInfant = preanesthesia?.isInfant, isInfant {
+                        Text("Menor de um ano")
+                        Divider()
+                    }
+                    
+                    if let isPregnant = preanesthesia?.isPregnant, isPregnant {
+                        Text("Gestante")
+                        Divider()
+                    }
+                    
+                    if preanesthesia?.cardiacComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Cardiovasculares:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let cardiacDetails = preanesthesia?.cardiacComorbitiesDetails, !cardiacDetails.isEmpty {
+                                        ForEach(cardiacDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customCardiacDetails = preanesthesia?.cardiacComorbitiesCustomDetails, !customCardiacDetails.isEmpty {
+                                        ForEach(customCardiacDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let cardiacDetailsText = preanesthesia?.cardiacComorbitiesDetailsText, !cardiacDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(cardiacDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
+                }
+            }
+        }
+        
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+    
     private var topBarButtons: some View {
         HStack(spacing: 8) {
             
@@ -174,9 +210,9 @@ struct PreAnesthesiaView: View {
             }
         }
     }
-
+    
     // MARK: - Helpers
-
+    
     private func presentNewForm() {
         // Ajuste a forma de obter o usuário conforme a API real do seu SessionManager
         if let user = session.currentUser {
@@ -192,7 +228,7 @@ struct PreAnesthesiaView: View {
             isPresentingForm = true
         }
     }
-
+    
     private func presentEditForm(for preanesthesia: PreAnesthesia) {
         if let user = session.currentUser {
             let repo = SwiftDataPreAnesthesiaRepository(context: modelContext)

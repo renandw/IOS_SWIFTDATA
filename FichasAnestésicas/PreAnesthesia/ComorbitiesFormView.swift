@@ -9,6 +9,8 @@ import SwiftUI
 struct ComorbitiesFormView: View {
     @Environment(\.dismiss) private var dismiss
     
+    @Binding var selectionIsPregnantComorbities: [PregnantComorbities]
+    @State private var newCustomIsPregnantComorbities = ""
     @Binding var selectionIsInfantComorbities: [InfantComorbities]
     @State private var newCustomIsInfantComorbities = ""
     @Binding var selection: [CardiologicComorbities]
@@ -22,6 +24,9 @@ struct ComorbitiesFormView: View {
                 if viewModel.patientSex == .female && viewModel.patientAge > 12 {
                     Section {
                         isPregnant
+                        if viewModel.comorbities.isPregnant == true {
+                            isPregnantContent
+                        }
                     } header: {
                         Text("Gestação")
                     }
@@ -65,7 +70,7 @@ struct ComorbitiesFormView: View {
                     Text("Hematológicas")
                 }
                 Section {
-                    Text("Imunológicas - a ser implementado")
+                    imunologicalComorbities
                 } header: {
                     Text("Imunológicas")
                 }
@@ -114,6 +119,116 @@ struct ComorbitiesFormView: View {
             isOn: $viewModel.comorbities.isPregnant
         )
     }
+    
+    private var isPregnantComorbitiesDetails: [PregnantComorbities] {
+        PregnantComorbities.allCases.sorted { a, b in
+            a.displayName.localizedCaseInsensitiveCompare(b.displayName) == .orderedAscending
+        }
+    }
+    
+    private func togglePregnantComorbities(_ kind: PregnantComorbities) {
+        if let idx = selectionIsPregnantComorbities.firstIndex(of: kind) {
+            selectionIsPregnantComorbities.remove(at: idx)
+        } else {
+            selectionIsPregnantComorbities.append(kind)
+        }
+    }
+    
+    private var isPregnantContent: some View {
+        Group {
+            isPregnantAge
+            ForEach(isPregnantComorbitiesDetails, id: \.self) { kind in
+                Button {
+                    togglePregnantComorbities(kind)
+                } label: {
+                    HStack {
+                        Text(kind.displayName)
+                        Spacer()
+                        if selectionIsPregnantComorbities.contains(kind) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.blue)
+                        } else {
+                            Image(systemName: "circle.dashed")
+                                .foregroundStyle(.gray)
+                        }
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+            ForEach(viewModel.comorbities.isPregnantCustomDetails, id: \.self) { name in
+                Button {
+                    if let index = viewModel.comorbities.isPregnantCustomDetails.firstIndex(of: name) {
+                        viewModel.comorbities.removePregnantCustomDetails(at: index)
+                    }
+                } label: {
+                    HStack {
+                        Text(name)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.blue)
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+            HStack {
+                TextField("Adicionar Comorbidades", text: $newCustomIsPregnantComorbities)
+                    .autocorrectionDisabled(true)
+                    .submitLabel(.done)
+                    .onSubmit {
+                        viewModel.comorbities.addPregnantCustomDetails(newCustomIsPregnantComorbities)
+                        newCustomIsPregnantComorbities = ""
+                    }
+                if !newCustomIsPregnantComorbities.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Button {
+                        viewModel.comorbities.addPregnantCustomDetails(newCustomIsPregnantComorbities)
+                        newCustomIsPregnantComorbities = ""
+                    } label: {
+                        Image(systemName: "plus.circle")
+                    }
+                }
+                
+            }
+            if viewModel.comorbities.isPregnantCustomDetails.isEmpty == false || viewModel.comorbities.isPregnantComorbitiesDetails != nil{
+                isPregnantDetailsText
+            }
+        }
+    }
+    private var isPregnantDetailsText: some View {
+        HStack {
+            Text("Detalhes")
+            TextField(
+                "nasc: 32sem, 2d, 1,5kg",
+                text: Binding<String>(
+                    get: { viewModel.comorbities.isInfantDetailsText ?? "" },
+                    set: { newValue in
+                        viewModel.comorbities.isPregnantDetailsText = newValue.isEmpty ? nil : newValue
+                    }
+                )
+            )
+            .multilineTextAlignment(.trailing)
+        }
+    }
+    private var isPregnantAge: some View {
+        HStack {
+            Text("Idade Gestacional")
+            TextField(
+                "IG: 32 semanas e 3 dias",
+                text: Binding<String>(
+                    get: { viewModel.comorbities.isPregnantAge ?? "" },
+                    set: { newValue in
+                        viewModel.comorbities.isPregnantAge = newValue.isEmpty ? nil : newValue
+                    }
+                )
+            )
+            .multilineTextAlignment(.trailing)
+        }
+    }
+    
+    
+    
+    
+    
+    
     //is infant
     private var isInfant: some View {
         Toggle(
@@ -342,6 +457,13 @@ struct ComorbitiesFormView: View {
             "Hematológicas",
             systemImage: "ivfluid.bag",
             isOn: $viewModel.comorbities.hematologicalComorbities
+        )
+    }
+    private var imunologicalComorbities: some View {
+        Toggle(
+            "Imunológicas",
+            systemImage: "ivfluid.bag.fill",
+            isOn: $viewModel.comorbities.imunologicalComorbities
         )
     }
     private var neurologicalComorbities: some View {

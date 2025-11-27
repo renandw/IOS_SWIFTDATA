@@ -54,12 +54,22 @@ final class PreAnesthesia {
     var endocrineComorbities: Bool
     var gastrointestinalComorbities: Bool
     var hematologicalComorbities: Bool
+    var imunologicalComorbities: Bool?
     var musculoskeletalComorbities: Bool
     var genitourologicalComorbities: Bool
     var neurologicalComorbities: Bool
     var geneticSyndrome: Bool
     
     //one by one
+    var isPregnantComorbitiesDetailsRaw: [String]?
+    var isPregnantComorbitiesDetails: [PregnantComorbities]? {
+        get { isPregnantComorbitiesDetailsRaw?.compactMap(PregnantComorbities.init(rawValue:))}
+        set { isPregnantComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var isPregnantDetailsText: String?
+    var isPregnantAge: String?
+    var isPregnantCustomDetails: [String]?
+    
     var isInfantComorbitiesDetailsRaw: [String]?
     var isInfantComorbitiesDetails: [InfantComorbities]? {
         get { isInfantComorbitiesDetailsRaw?.compactMap(InfantComorbities.init(rawValue:))}
@@ -105,12 +115,17 @@ final class PreAnesthesia {
         endocrineComorbities: Bool = false,
         gastrointestinalComorbities: Bool = false,
         hematologicalComorbities: Bool = false,
+        imunologicalComorbities: Bool = false,
         musculoskeletalComorbities: Bool = false,
         genitourologicalComorbities: Bool = false,
         neurologicalComorbities: Bool = false,
         geneticSyndrome: Bool = false,
         
         //one by one
+        isPregnantComorbitiesDetails: PregnantComorbities? = nil,
+        isPregnantDetailsText: String? = nil,
+        isPregnantAge: String? = nil,
+        isPregnantCustomDetails: [String]? = [],
         isInfantComorbitiesDetails: InfantComorbities? = nil,
         isInfantDetailsText: String? = nil,
         isInfantCustomDetails: [String]? = [],
@@ -149,11 +164,16 @@ final class PreAnesthesia {
         self.endocrineComorbities = endocrineComorbities
         self.gastrointestinalComorbities = gastrointestinalComorbities
         self.hematologicalComorbities = hematologicalComorbities
+        self.imunologicalComorbities = imunologicalComorbities
         self.musculoskeletalComorbities = musculoskeletalComorbities
         self.genitourologicalComorbities = genitourologicalComorbities
         self.neurologicalComorbities = neurologicalComorbities
         self.geneticSyndrome = geneticSyndrome
         //one by one
+        self.isPregnantComorbitiesDetailsRaw = isPregnantComorbitiesDetails.map { [$0.rawValue] }
+        self.isPregnantDetailsText = isPregnantDetailsText
+        self.isPregnantAge = isPregnantAge
+        self.isPregnantCustomDetails = isPregnantCustomDetails
         self.isInfantComorbitiesDetailsRaw = isInfantComorbitiesDetails.map { [$0.rawValue] }
         self.isInfantCustomDetails = isInfantCustomDetails
         self.isInfantDetailsText = isInfantDetailsText

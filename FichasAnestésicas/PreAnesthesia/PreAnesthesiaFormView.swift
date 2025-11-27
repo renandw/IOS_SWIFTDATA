@@ -56,6 +56,12 @@ struct PreAnesthesiaFormView: View {
                 Section {
                     NavigationLink {
                         ComorbitiesFormView(
+                            selectionIsPregnantComorbities: Binding(
+                                get: { viewModel.comorbities.isPregnantComorbitiesDetails ?? [] },
+                                set: { newArray in
+                                    viewModel.comorbities.isPregnantComorbitiesDetails = newArray.isEmpty ? nil : newArray
+                                }
+                            ),
                             selectionIsInfantComorbities: Binding(
                                 get: { viewModel.comorbities.isInfantComorbitiesDetails ?? [] },
                                 set: { newArray in

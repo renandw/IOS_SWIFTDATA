@@ -95,7 +95,7 @@ public enum CardiologicComorbities: String, Codable, CaseIterable {
     var displayName: String {
         switch self {
         case .hypercholesterolemia:      "Dislipidemia"
-        case .hypertension:              "Hipertensão Arterial Sistêmica"
+        case .hypertension:              "HAS"
         case .isquemicCardiopathy:       "Miocardiopatia Isquêmica"
         case .arryhtmia:                 "Arritmia"
         case .valvopathy:                "Valvopatia"
@@ -152,3 +152,27 @@ public enum InfantComorbities: String, Codable, CaseIterable {
         }
     }
 }
+
+public enum PregnantComorbities: String, Codable, CaseIterable {
+    case diabetesGestationalis
+    case hypartensionGestationalis
+    case ectopicGestationalis
+    case hellpSyndrome
+    case eclapsisGestationalis
+    case placentaPrevia
+    case prematureLabor
+    
+    var displayName: String {
+        switch self {
+        case .diabetesGestationalis:           "Diabetes Gestacional"
+        case .hypartensionGestationalis:       "Hipertensão Gestacional"
+        case .ectopicGestationalis:            "Gestação Ectópica"
+        case .hellpSyndrome:                   "Síndrome Hellp"
+        case .eclapsisGestationalis:           "Ecâmpsia"
+        case .placentaPrevia:                  "Acretismo Placentário"
+        case .prematureLabor:                  "Trabalho de Parto Prematuro"
+        }
+    }
+}
+
+
