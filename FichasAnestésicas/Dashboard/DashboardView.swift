@@ -214,10 +214,150 @@ struct QuickActionCard: View {
 
 
 
-//#Preview {
-//    DashboardView()
-//        .environment(SessionManager())
-//        .modelContainer(for: [User.self, Patient.self])
-//}
-
-
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: User.self, Patient.self, Surgery.self, Anesthesia.self,
+        configurations: config
+    )
+    
+    let context = container.mainContext
+    
+    // Criar user
+    let user = User(
+        userId: "57614FE9-0E1D-488C-B176-D59CD809684E",
+        name: "Renan Dantas Wrobel",
+        crm: "12345",
+        emailAddress: "renan@example.com",
+        createdAt: Date()
+    )
+    context.insert(user)
+    
+    // Criar pacientes
+    let patient1 = Patient(
+        patientId: UUID().uuidString,
+        cns: "123456789012345",
+        name: "João Silva",
+        birthDate: Date().addingTimeInterval(-365*24*3600*30), // 30 anos
+        sex: .male,
+        createdBy: user
+    )
+    
+    let patient2 = Patient(
+        patientId: UUID().uuidString,
+        cns: "987654321098765",
+        name: "Maria Santos",
+        birthDate: Date().addingTimeInterval(-365*24*3600*45), // 45 anos
+        sex: .female,
+        createdBy: user
+    )
+    
+    let patient3 = Patient(
+        patientId: UUID().uuidString,
+        cns: "456789123456789",
+        name: "Pedro Costa",
+        birthDate: Date().addingTimeInterval(-365*24*3600*25),
+        sex: .male,
+        createdBy: user
+    )
+    
+    context.insert(patient1)
+    context.insert(patient2)
+    context.insert(patient3)
+    
+    // Criar cirurgias e anestesias do MÊS ATUAL
+    let cal = Calendar.current
+    let now = Date()
+    
+    // 3 anestesias no mês atual (2 pacientes diferentes)
+    for i in 1...3 {
+        let daysAgo = Double(i * 5) // 5, 10, 15 dias atrás
+        let surgeryDate = cal.date(byAdding: .day, value: -Int(daysAgo), to: now)!
+        
+        let surgery = Surgery(
+            surgeryId: UUID().uuidString,
+            date: surgeryDate,
+            createdBy: user,
+            createdAt: surgeryDate,
+            lastActivityAt: surgeryDate,
+            insuranceName: "Unimed",
+            insuranceNumber: "123456",
+            start: surgeryDate,
+            end: cal.date(byAdding: .hour, value: 2, to: surgeryDate),
+            mainSurgeon: "Dr. Silva",
+            hospital: "Hospital São Lucas",
+            weight: 70.0,
+            proposedProcedure: "Peripectomia",
+            statusRaw: "completed",
+            typeRaw: "elective",
+            patient: i == 3 ? patient1 : (i == 2 ? patient2 : patient1) // patient1 aparece 2x
+        )
+        context.insert(surgery)
+        
+        let anesthesia = Anesthesia(
+            anesthesiaId: UUID().uuidString,
+            surgery: surgery,
+            anesthesiaDescription: nil,
+            anesthesiaTechniqueRaw: ["general"],
+            medications: [],
+            vitalSigns: [],
+            start: surgeryDate,
+            end: cal.date(byAdding: .hour, value: 2, to: surgeryDate),
+            statusRaw: "completed",
+            createdBy: user,
+            createdAt: surgeryDate,
+            positionRaw: ["supine"]
+        )
+        context.insert(anesthesia)
+    }
+    
+    // 2 anestesias do MÊS ANTERIOR (1 paciente diferente)
+    let lastMonth = cal.date(byAdding: .month, value: -1, to: now)!
+    for i in 1...2 {
+        let surgeryDate = cal.date(byAdding: .day, value: i * 7, to: lastMonth)!
+        
+        let surgery = Surgery(
+            surgeryId: UUID().uuidString,
+            date: surgeryDate,
+            createdBy: user,
+            createdAt: surgeryDate,
+            lastActivityAt: surgeryDate,
+            insuranceName: "Bradesco",
+            insuranceNumber: "789012",
+            start: surgeryDate,
+            mainSurgeon: "Dr. Oliveira",
+            hospital: "Hospital Santa Casa",
+            weight: 65.0,
+            proposedProcedure: "Colecistectomia",
+            statusRaw: "completed",
+            typeRaw: "urgent",
+            patient: patient3
+        )
+        context.insert(surgery)
+        
+        let anesthesia = Anesthesia(
+            anesthesiaId: UUID().uuidString,
+            surgery: surgery,
+            anesthesiaDescription: nil,
+            anesthesiaTechniqueRaw: ["spinal"],
+            medications: [],
+            vitalSigns: [],
+            start: surgeryDate,
+            end: cal.date(byAdding: .hour, value: 1, to: surgeryDate),
+            statusRaw: "completed",
+            createdBy: user,
+            createdAt: surgeryDate,
+            positionRaw: ["supine"]
+        )
+        context.insert(anesthesia)
+    }
+    
+    try? context.save()
+    
+    let session = SessionManager()
+    session.currentUser = user
+    
+    return DashboardView(userId: user.userId)
+        .environment(session)
+        .modelContainer(container)
+}

@@ -27,38 +27,31 @@ struct PreAnesthesiaFormView: View {
             Form {
                 Section {
                     clearenceStatusPicker
-                    NavigationLink {
-                        RecommendationForRevaluationStatusView(
-                            selection: Binding(
-                                get: { viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? [] },
-                                set: { newArray in
-                                    viewModel.clearence.definitiveRecommendationForRevaluationStatus = newArray.isEmpty ? nil : newArray
-                                }
-                            ),
-                            viewModel: viewModel
-                        )
-                    } label: {
-                        HStack {
-                            Text("Selecionar Recomendações")
-                            Spacer()
-                            let items = viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? []
-                            let subtitle = items.isEmpty ? "Nenhuma" : items.map(\.displayName).joined(separator: ", ")
-                            Text(subtitle)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.trailing)
+                    if [.unable, .reevaluate].contains(viewModel.clearence.clearenceStatus) {
+                        NavigationLink {
+                            RecommendationForRevaluationStatusView(
+                                selection: Binding(
+                                    get: { viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? [] },
+                                    set: { newArray in
+                                        viewModel.clearence.definitiveRecommendationForRevaluationStatus = newArray.isEmpty ? nil : newArray
+                                    }
+                                ),
+                                viewModel: viewModel
+                            )
+                        } label: {
+                            HStack {
+                                Text("Selecionar Recomendações")
+                                Spacer()
+                                let items = viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? []
+                                let subtitle = items.isEmpty ? "Nenhuma" : items.map(\.displayName).joined(separator: ", ")
+                                Text(subtitle)
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.trailing)
+                            }
                         }
                     }
-
                 } header: {
                     Text("Liberação")
-                }
-                if [.unable, .reevaluate].contains(viewModel.clearence.clearenceStatus) {
-                    Section {
-                    } header: {
-                        HStack {
-                            Text("Recomendações")
-                        }
-                    }
                 }
                 Section {
                     NavigationLink {
@@ -70,6 +63,8 @@ struct PreAnesthesiaFormView: View {
                             
                         }
                     }
+                } header: {
+                    Text("Comorbidades")
                 }
                 
                 Section {
@@ -88,7 +83,7 @@ struct PreAnesthesiaFormView: View {
                     }
                 } header: {
                     HStack {
-                        Text("Técnicas")
+                        Text("Técnicas Anestésicas")
                     }
                 }
                 Section {
@@ -105,7 +100,7 @@ struct PreAnesthesiaFormView: View {
                     }
                 } header: {
                     HStack {
-                        Text("ASA")
+                        Text("Classificação ASA")
                     }
                 }
             }

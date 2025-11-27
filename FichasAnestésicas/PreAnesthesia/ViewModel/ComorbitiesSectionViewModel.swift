@@ -64,7 +64,7 @@ final class ComorbitiesSectionViewModel {
         }
     }
     func isInfantVisibility(patientAge: Int) {
-        if patientAge > 1 {
+        if patientAge > 2 {
             isInfant = false
         } else {
             isInfant = true
