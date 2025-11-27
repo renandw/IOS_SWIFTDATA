@@ -59,7 +59,22 @@ final class PreAnesthesia {
     var neurologicalComorbities: Bool
     var geneticSyndrome: Bool
     
+    //one by one
+    var isInfantComorbitiesDetailsRaw: [String]?
+    var isInfantComorbitiesDetails: [InfantComorbities]? {
+        get { isInfantComorbitiesDetailsRaw?.compactMap(InfantComorbities.init(rawValue:))}
+        set { isInfantComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var isInfantDetailsText: String?
+    var isInfantCustomDetails: [String]?
     
+    var cardiacComorbitiesDetailsRaw: [String]?
+    var cardiacComorbitiesDetails: [CardiologicComorbities]? {
+        get { cardiacComorbitiesDetailsRaw?.compactMap(CardiologicComorbities.init(rawValue:))}
+        set { cardiacComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var cardiacComorbitiesDetailsText: String?
+    var cardiacComorbitiesCustomDetails: [String]?
     
     init(
         preanesthesiaId: String = UUID().uuidString,
@@ -93,7 +108,16 @@ final class PreAnesthesia {
         musculoskeletalComorbities: Bool = false,
         genitourologicalComorbities: Bool = false,
         neurologicalComorbities: Bool = false,
-        geneticSyndrome: Bool = false
+        geneticSyndrome: Bool = false,
+        
+        //one by one
+        isInfantComorbitiesDetails: InfantComorbities? = nil,
+        isInfantDetailsText: String? = nil,
+        isInfantCustomDetails: [String]? = [],
+        cardiacComorbitiesDetails: CardiologicComorbities? = nil,
+        cardiacComorbitiesDetailsText: String? = nil,
+        cardiacComorbitiesCustomDetails: [String]? = [],
+        
         
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -129,5 +153,12 @@ final class PreAnesthesia {
         self.genitourologicalComorbities = genitourologicalComorbities
         self.neurologicalComorbities = neurologicalComorbities
         self.geneticSyndrome = geneticSyndrome
+        //one by one
+        self.isInfantComorbitiesDetailsRaw = isInfantComorbitiesDetails.map { [$0.rawValue] }
+        self.isInfantCustomDetails = isInfantCustomDetails
+        self.isInfantDetailsText = isInfantDetailsText
+        self.cardiacComorbitiesDetailsRaw = cardiacComorbitiesDetails.map { [$0.rawValue] }
+        self.cardiacComorbitiesCustomDetails = cardiacComorbitiesCustomDetails
+        self.cardiacComorbitiesDetailsText = cardiacComorbitiesDetailsText
     }
 }

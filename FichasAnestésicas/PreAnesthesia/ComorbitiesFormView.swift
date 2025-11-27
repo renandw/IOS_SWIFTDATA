@@ -7,6 +7,12 @@
 import SwiftUI
 
 struct ComorbitiesFormView: View {
+    @Environment(\.dismiss) private var dismiss
+    
+    @Binding var selectionIsInfantComorbities: [InfantComorbities]
+    @State private var newCustomIsInfantComorbities = ""
+    @Binding var selection: [CardiologicComorbities]
+    @State private var newCustomCardiacComorbities = ""
     
     @Bindable var viewModel: PreAnesthesiaViewModel
 
@@ -20,15 +26,21 @@ struct ComorbitiesFormView: View {
                         Text("Gestação")
                     }
                 }
-                if viewModel.patientAge < 2{
+                if viewModel.patientAge < 1{
                     Section {
                         isInfant
+                        if viewModel.comorbities.isInfant == true {
+                            isInfantContent
+                        }
                     } header: {
-                        Text("Lactente")
+                        Text("Menor de um ano")
                     }
                 }
                 Section {
                     cardiacComorbities
+                    if viewModel.comorbities.cardiacComorbities == true {
+                        cardicacComorbitiesContent
+                    }
                 } header: {
                     Text("Cardíacas")
                 }
@@ -81,12 +93,17 @@ struct ComorbitiesFormView: View {
             .navigationTitle("Comorbidades")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                //            ToolbarItem(placement: .navigationBarTrailing) {
-                //                Menu("Opções", systemImage: "gear") {
-                //                    Button("Selecionar tudo") { selection = recommendations }
-                //                    Button("Limpar seleção", role: .destructive) { selection.removeAll() }
-                //                }
-                //            }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Salvar", systemImage: "checkmark") {
+                        do {
+                            try viewModel.save()
+                            dismiss()
+                        }
+                        catch {
+                            print("Erro ao salvar AnesthesiaDescriptionEntry: \(error)")
+                        }
+                    }
+                }
             }
         }
     }
@@ -97,13 +114,104 @@ struct ComorbitiesFormView: View {
             isOn: $viewModel.comorbities.isPregnant
         )
     }
+    //is infant
     private var isInfant: some View {
         Toggle(
-            "Lactente",
+            "Menor de um ano",
             systemImage: "figure.child.circle.fill",
             isOn: $viewModel.comorbities.isInfant
         )
     }
+    
+    private var isInfantComorbitiesDetails: [InfantComorbities] {
+        InfantComorbities.allCases.sorted { a, b in
+            a.displayName.localizedCaseInsensitiveCompare(b.displayName) == .orderedAscending
+        }
+    }
+    
+    private func toggleInfantComorbities(_ kind: InfantComorbities) {
+        if let idx = selectionIsInfantComorbities.firstIndex(of: kind) {
+            selectionIsInfantComorbities.remove(at: idx)
+        } else {
+            selectionIsInfantComorbities.append(kind)
+        }
+    }
+    
+    private var isInfantContent: some View {
+        Group {
+            ForEach(isInfantComorbitiesDetails, id: \.self) { kind in
+                Button {
+                    toggleInfantComorbities(kind)
+                } label: {
+                    HStack {
+                        Text(kind.displayName)
+                        Spacer()
+                        if selectionIsInfantComorbities.contains(kind) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.blue)
+                        } else {
+                            Image(systemName: "circle.dashed")
+                                .foregroundStyle(.gray)
+                        }
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+            ForEach(viewModel.comorbities.isInfantCustomDetails, id: \.self) { name in
+                Button {
+                    if let index = viewModel.comorbities.isInfantCustomDetails.firstIndex(of: name) {
+                        viewModel.comorbities.removeInfantCustomDetails(at: index)
+                    }
+                } label: {
+                    HStack {
+                        Text(name)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.blue)
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+            HStack {
+                TextField("Adicionar Comorbidades", text: $newCustomIsInfantComorbities)
+                    .autocorrectionDisabled(true)
+                    .submitLabel(.done)
+                    .onSubmit {
+                        viewModel.comorbities.addInfantCustomDetails(newCustomIsInfantComorbities)
+                        newCustomIsInfantComorbities = ""
+                    }
+                if !newCustomIsInfantComorbities.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Button {
+                        viewModel.comorbities.addInfantCustomDetails(newCustomIsInfantComorbities)
+                        newCustomIsInfantComorbities = ""
+                    } label: {
+                        Image(systemName: "plus.circle")
+                    }
+                }
+                
+            }
+            if viewModel.comorbities.isInfantCustomDetails.isEmpty == false || viewModel.comorbities.isInfantComorbitiesDetails != nil{
+                isInfantDetailsText
+            }
+        }
+    }
+    private var isInfantDetailsText: some View {
+        HStack {
+            Text("Detalhes")
+            TextField(
+                "nasc: 32sem, 2d, 1,5kg",
+                text: Binding<String>(
+                    get: { viewModel.comorbities.isInfantDetailsText ?? "" },
+                    set: { newValue in
+                        viewModel.comorbities.isInfantDetailsText = newValue.isEmpty ? nil : newValue
+                    }
+                )
+            )
+            .multilineTextAlignment(.trailing)
+        }
+    }
+    
+    //Cardiac
     private var cardiacComorbities: some View {
         Toggle(
             "Cardiológicas",
@@ -111,6 +219,96 @@ struct ComorbitiesFormView: View {
             isOn: $viewModel.comorbities.cardiacComorbities
         )
     }
+    
+    private var cardicacComorbitiesContent: some View {
+        Group {
+            ForEach(cardiacComorbitiesDetails, id: \.self) { kind in
+                Button {
+                    toggle(kind)
+                } label: {
+                    HStack {
+                        Text(kind.displayName)
+                        Spacer()
+                        if selection.contains(kind) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.blue)
+                        } else {
+                            Image(systemName: "circle.dashed")
+                                .foregroundStyle(.gray)
+                        }
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+            ForEach(viewModel.comorbities.cardiacComorbitiesCustomDetails, id: \.self) { name in
+                Button {
+                    if let index = viewModel.comorbities.cardiacComorbitiesCustomDetails.firstIndex(of: name) {
+                        viewModel.comorbities.removeCardiacComorbitiesCustomDetails(at: index)
+                    }
+                } label: {
+                    HStack {
+                        Text(name)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.blue)
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+            HStack {
+                TextField("Adicionar Comorbidades", text: $newCustomCardiacComorbities)
+                    .autocorrectionDisabled(true)
+                    .submitLabel(.done)
+                    .onSubmit {
+                        viewModel.comorbities.addCardiacComorbitiesCustomDetails(newCustomCardiacComorbities)
+                        newCustomCardiacComorbities = ""
+                    }
+                if !newCustomIsInfantComorbities.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Button {
+                        viewModel.comorbities.addCardiacComorbitiesCustomDetails(newCustomCardiacComorbities)
+                        newCustomCardiacComorbities = ""
+                    } label: {
+                        Image(systemName: "plus.circle")
+                    }
+                }
+                
+            }
+            if viewModel.comorbities.cardiacComorbitiesCustomDetails.isEmpty == false || viewModel.comorbities.cardiacComorbitiesDetails != nil{
+                cardiacDetailsText
+            }
+        }
+    }
+    
+    private var cardiacComorbitiesDetails: [CardiologicComorbities] {
+        CardiologicComorbities.allCases.sorted { a, b in
+            a.displayName.localizedCaseInsensitiveCompare(b.displayName) == .orderedAscending
+        }
+    }
+    
+    private func toggle(_ kind: CardiologicComorbities) {
+        if let idx = selection.firstIndex(of: kind) {
+            selection.remove(at: idx)
+        } else {
+            selection.append(kind)
+        }
+    }
+    
+    private var cardiacDetailsText: some View {
+        HStack {
+            Text("Detalhes")
+            TextField(
+                "insuficiência mitral moderada",
+                text: Binding<String>(
+                    get: { viewModel.comorbities.cardiacComorbitiesDetailsText ?? "" },
+                    set: { newValue in
+                        viewModel.comorbities.cardiacComorbitiesDetailsText = newValue.isEmpty ? nil : newValue
+                    }
+                )
+            )
+            .multilineTextAlignment(.trailing)
+        }
+    }
+    
     private var respiratoryComorbities: some View {
         Toggle(
             "Respiratórias",
@@ -167,5 +365,8 @@ struct ComorbitiesFormView: View {
             isOn: $viewModel.comorbities.geneticSyndrome
         )
     }
+    
+    
+    
     
 }

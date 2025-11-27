@@ -55,7 +55,21 @@ struct PreAnesthesiaFormView: View {
                 }
                 Section {
                     NavigationLink {
-                        ComorbitiesFormView(viewModel: viewModel)
+                        ComorbitiesFormView(
+                            selectionIsInfantComorbities: Binding(
+                                get: { viewModel.comorbities.isInfantComorbitiesDetails ?? [] },
+                                set: { newArray in
+                                    viewModel.comorbities.isInfantComorbitiesDetails = newArray.isEmpty ? nil : newArray
+                                }
+                                ),
+                            selection: Binding(
+                                get: { viewModel.comorbities.cardiacComorbitiesDetails ?? [] },
+                                set: { newArray in
+                                    viewModel.comorbities.cardiacComorbitiesDetails = newArray.isEmpty ? nil : newArray
+                                }
+                            ),
+                            viewModel: viewModel
+                        )
                     } label : {
                         HStack {
                             Text("Selecionar Comorbidades")
@@ -104,7 +118,7 @@ struct PreAnesthesiaFormView: View {
                     }
                 }
             }
-            .navigationTitle("Descrição Anestésica")
+            .navigationTitle("Avaliação Pré-Anestésica")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

@@ -80,3 +80,75 @@ public enum RecommendationForRevaluationStatus: String, Codable, CaseIterable {
         }
     }
 }
+
+public enum CardiologicComorbities: String, Codable, CaseIterable {
+    case hypercholesterolemia
+    case hypertension
+    case isquemicCardiopathy
+    case arryhtmia
+    case valvopathy
+    case heartFailure
+    case congenitalHeartDisease
+    case pericarditis
+    case cardiomyopathy
+    
+    var displayName: String {
+        switch self {
+        case .hypercholesterolemia:      "Dislipidemia"
+        case .hypertension:              "Hipertensão Arterial Sistêmica"
+        case .isquemicCardiopathy:       "Miocardiopatia Isquêmica"
+        case .arryhtmia:                 "Arritmia"
+        case .valvopathy:                "Valvopatia"
+        case .heartFailure:              "Insuficiência Cardíaca"
+        case .congenitalHeartDisease:    "Cardiopatia Congênita"
+        case .pericarditis:              "Pericardite"
+        case .cardiomyopathy:            "Miocardiopatia"
+        }
+    }
+    var reportDisplayName: String {
+        switch self {
+        case .hypercholesterolemia:      "Dislipidemia"
+        case .hypertension:              "Hipertensão Arterial Sistêmica"
+        case .isquemicCardiopathy:       "Miocardiopatia Isquêmica"
+        case .arryhtmia:                 "Arritmia"
+        case .valvopathy:                "Valvopatia"
+        case .heartFailure:              "Insuficiência Cardíaca"
+        case .congenitalHeartDisease:    "Cardiopatia Congênita"
+        case .pericarditis:              "Pericardite"
+        case .cardiomyopathy:            "Miocardiopatia"
+        }
+    }
+}
+
+public enum InfantComorbities: String, Codable, CaseIterable {
+    case prematureBirth
+    case lowWeightAtBirth
+    case fetalGrowthRestriction
+    case fetalAbnormality
+    case cSectionBirth
+    case naturalBirth
+    case birthComplications
+    
+    var displayName: String {
+        switch self {
+        case .prematureBirth:           "Prematuridade"
+        case .lowWeightAtBirth:         "Baixo Peso ao Nascer"
+        case .fetalGrowthRestriction:   "Crescimento Fetal Restrito"
+        case .fetalAbnormality:         "Mal formação fetal"
+        case .cSectionBirth:            "Parto Cesárea"
+        case .naturalBirth:             "Parto Natural"
+        case .birthComplications:       "Complicações do Parto"
+        }
+    }
+    var reportDisplayName: String {
+        switch self {
+        case .prematureBirth:           "Prematuridade"
+        case .lowWeightAtBirth:         "Baixo Peso ao Nascer"
+        case .fetalGrowthRestriction:   "Restrição de Crescimento Fetal"
+        case .fetalAbnormality:         "Mal formação fetal"
+        case .cSectionBirth:            "Parto Cesárea"
+        case .naturalBirth:             "Parto Natural"
+        case .birthComplications:       "Complicações do Parto"
+        }
+    }
+}

@@ -17,11 +17,6 @@ struct RootView: View {
         }
         .task {
             session.loadCurrentUser(using: context)
-            if let user = session.currentUser {
-                        print("✅ User carregado: \(user.name) - ID: \(user.userId)")
-            } else {
-                print("⚠️ Nenhum user carregado")   
-            }
         }
     }
 }
