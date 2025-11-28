@@ -128,6 +128,7 @@ public enum InfantComorbities: String, Codable, CaseIterable {
     case cSectionBirth
     case naturalBirth
     case birthComplications
+    case healthy
     
     var displayName: String {
         switch self {
@@ -138,6 +139,7 @@ public enum InfantComorbities: String, Codable, CaseIterable {
         case .cSectionBirth:            "Parto Cesárea"
         case .naturalBirth:             "Parto Natural"
         case .birthComplications:       "Complicações do Parto"
+        case .healthy:                  "Saudável"
         }
     }
     var reportDisplayName: String {
@@ -149,6 +151,7 @@ public enum InfantComorbities: String, Codable, CaseIterable {
         case .cSectionBirth:            "Parto Cesárea"
         case .naturalBirth:             "Parto Natural"
         case .birthComplications:       "Complicações do Parto"
+        case .healthy:                   "Saudável"
         }
     }
 }
@@ -204,9 +207,9 @@ public enum EndocrineComorbities: String, Codable, CaseIterable {
     case diabetesType2
     case hypothyroidism
     case cushingSyndrome
-    case polycysticOvarySyndrome
     case hyperthyroidism
     case methabolicSyndrome
+    case hypogonadism
     
     var displayName: String {
         switch self {
@@ -214,9 +217,9 @@ public enum EndocrineComorbities: String, Codable, CaseIterable {
         case .diabetesType2:                  "Diabetes T2"
         case .hypothyroidism:                 "Hipotiroidismo"
         case .cushingSyndrome:                "Síndrome de Cushing"
-        case .polycysticOvarySyndrome:        "Síndrome de Ovários Policísticos"
         case .hyperthyroidism:                "Hipertireoidismo"
         case .methabolicSyndrome:             "Síndrome Metabólica"
+        case .hypogonadism:                   "Hipogonadismo"
         }
     }
 }
@@ -318,6 +321,136 @@ public enum MusculoskeletalComorbities: String, Codable, CaseIterable {
         case .myastheniaGravis:               "Miastenia Gravis"
         case .osteoporosis:                   "Osteoporose"
         case .fibromyalgia:                   "Fibromialgia"
+        }
+    }
+}
+
+public enum GenitourinaryComorbities: String, Codable, CaseIterable {
+    case chronicKidneyDisease
+    case dialysis
+    case kidneyTransplant
+    case nephroticSyndrome
+    case anatomyAlterations
+    case urolithiasis
+    case polycysticKidneyDisease
+    case glomerulonephritis
+    case acuteKidneyInjury
+    case neurogenicBladder
+    case pyelonephritis
+    case sdt
+    
+    var displayName: String {
+        switch self {
+        case .chronicKidneyDisease:           "Doença Renal Crônica"
+        case .dialysis:                       "Diálise"
+        case .kidneyTransplant:               "Transplante Renal"
+        case .nephroticSyndrome:              "Síndrome Nefrótica"
+        case .anatomyAlterations:             "Mal Formações Anatómicas"
+        case .urolithiasis:                   "Urolitíase"
+        case .polycysticKidneyDisease:        "Doença Renal Policística"
+        case .glomerulonephritis:             "Glomerulonefrite"
+        case .acuteKidneyInjury:              "Lesão Renal Aguda"
+        case .neurogenicBladder:              "Bexiga Neurogênica"
+        case .pyelonephritis:                 "Pielonefrite Crônica"
+        case .sdt:                            "DST"
+        }
+    }
+}
+
+public enum GynecologicComorbities: String, Codable, CaseIterable {
+    case polycysticOvarySyndrome
+    case endometriosis
+    case uterineFibroids
+    case pelvicInflammatoryDisease
+    case menorrhagia
+    case pelvicOrganProlapse
+    case chronicPelvicPain
+    case ovariancCysts
+    case adenomyosis
+    
+    var displayName: String {
+        switch self {
+        case .polycysticOvarySyndrome:        "Síndrome de Ovários Policísticos"
+        case .endometriosis:                  "Endometriose"
+        case .uterineFibroids:                "Miomatose"
+        case .pelvicInflammatoryDisease:      "Doença Inflamatória Pélvica"
+        case .menorrhagia:                    "Menorragia"
+        case .pelvicOrganProlapse:            "Prolapso de Órgãos Pélvicos"
+        case .chronicPelvicPain:              "Dor Pélvica Crônica"
+        case .ovariancCysts:                  "Cistos Ovarianos"
+        case .adenomyosis:                    "Adenomiose"
+        }
+    }
+}
+
+public enum AndrologicComorbities: String, Codable, CaseIterable {
+    case benignProstaticHyperplasia
+    case varicocele
+    case hydrocele
+    case peyronie
+    case urethralStricture
+    
+    var displayName: String {
+        switch self {
+        case .benignProstaticHyperplasia:     "Hiperplasia Prostática Benigna"
+        case .varicocele:                     "Varicocele"
+        case .hydrocele:                      "Hidrocele"
+        case .peyronie:                       "Doença de Peyronie"
+        case .urethralStricture:              "Estenose Uretral"
+        }
+    }
+}
+
+public enum NeurologicalComorbities: String, Codable, CaseIterable {
+    case stroke
+    case transientIschemicAttack
+    case epilepsy
+    case parkinsonsDisease
+    case multipleSclerosis
+    case alzheimersDisease
+    case guillainBarreSyndrome
+    case cerebralAneurysm
+    case arteriovenousMalformation
+    case spinalCordInjury
+    case hydrocephalus
+    
+    var displayName: String {
+        switch self {
+        case .stroke:                         "AVC"
+        case .transientIschemicAttack:        "AIT"
+        case .epilepsy:                       "Epilepsia"
+        case .parkinsonsDisease:              "Doença de Parkinson"
+        case .multipleSclerosis:              "Esclerose Múltipla"
+        case .alzheimersDisease:              "Doença de Alzheimer"
+        case .guillainBarreSyndrome:          "Síndrome de Guillain-Barré"
+        case .cerebralAneurysm:               "Aneurisma Cerebral"
+        case .arteriovenousMalformation:      "Malformação Arteriovenosa"
+        case .spinalCordInjury:               "Lesão Medular"
+        case .hydrocephalus:                  "Hidrocefalia"
+        }
+    }
+}
+
+public enum GeneticSyndrome: String, Codable, CaseIterable {
+    case downSyndrome
+    case turnerSyndrome
+    case klinefelterSyndrome
+    case marfanSyndrome
+    case pierreRobinSequence
+    case achondroplasia
+    case osteogenesisImperfecta
+    case malignantHyperthermia
+    
+    var displayName: String {
+        switch self {
+        case .downSyndrome:                   "Síndrome de Down"
+        case .turnerSyndrome:                 "Síndrome de Turner"
+        case .klinefelterSyndrome:            "Síndrome de Klinefelter"
+        case .marfanSyndrome:                 "Síndrome de Marfan"
+        case .pierreRobinSequence:            "Sequência de Pierre Robin"
+        case .achondroplasia:                 "Acondroplasia"
+        case .osteogenesisImperfecta:         "Osteogênese Imperfeita"
+        case .malignantHyperthermia:          "Hipertermia Maligna"
         }
     }
 }

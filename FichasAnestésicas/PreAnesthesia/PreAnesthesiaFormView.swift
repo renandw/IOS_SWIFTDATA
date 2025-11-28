@@ -56,60 +56,6 @@ struct PreAnesthesiaFormView: View {
                 Section {
                     NavigationLink {
                         ComorbitiesFormView(
-                            selectionIsPregnantComorbities: Binding(
-                                get: { viewModel.comorbities.isPregnantComorbitiesDetails ?? [] },
-                                set: { newArray in
-                                    viewModel.comorbities.isPregnantComorbitiesDetails = newArray.isEmpty ? nil : newArray
-                                }
-                            ),
-                            selectionIsInfantComorbities: Binding(
-                                get: { viewModel.comorbities.isInfantComorbitiesDetails ?? [] },
-                                set: { newArray in
-                                    viewModel.comorbities.isInfantComorbitiesDetails = newArray.isEmpty ? nil : newArray
-                                }
-                                ),
-                            selection: Binding(
-                                get: { viewModel.comorbities.cardiacComorbitiesDetails ?? [] },
-                                set: { newArray in
-                                    viewModel.comorbities.cardiacComorbitiesDetails = newArray.isEmpty ? nil : newArray
-                                }
-                            ),
-                            selectionRespiratory: Binding(
-                                get: { viewModel.comorbities.respiratoryComorbitiesDetails ?? [] },
-                                set: { newArray in
-                                    viewModel.comorbities.respiratoryComorbitiesDetails = newArray.isEmpty ? nil : newArray
-                                }
-                            ),
-                            selectionEndocrine: Binding(
-                                get: { viewModel.comorbities.endocrineComorbitiesDetails ?? [] },
-                                set: { newArray in
-                                    viewModel.comorbities.endocrineComorbitiesDetails = newArray.isEmpty ? nil : newArray
-                                }
-                            ),
-                            selectionGastrointestinal: Binding(
-                                get: { viewModel.comorbities.gastrointestinalComorbitiesDetails ?? [] },
-                                set: { newArray in
-                                    viewModel.comorbities.gastrointestinalComorbitiesDetails = newArray.isEmpty ? nil : newArray
-                                }
-                            ),
-                            selectionHematological: Binding(
-                                get: { viewModel.comorbities.hematologicalComorbitiesDetails ?? [] },
-                                set: { newArray in
-                                    viewModel.comorbities.hematologicalComorbitiesDetails = newArray.isEmpty ? nil : newArray
-                                }
-                            ),
-                            selectionImunological: Binding(
-                                get: { viewModel.comorbities.imunologicalComorbitiesDetails ?? [] },
-                                set: { newArray in
-                                    viewModel.comorbities.imunologicalComorbitiesDetails = newArray.isEmpty ? nil : newArray
-                                }
-                            ),
-                            selectionMusculoskeletal: Binding(
-                                get: { viewModel.comorbities.musculoskeletalComorbitiesDetails ?? [] },
-                                set: { newArray in
-                                    viewModel.comorbities.musculoskeletalComorbitiesDetails = newArray.isEmpty ? nil : newArray
-                                }
-                            ),
                             viewModel: viewModel
                         )
                     } label : {
@@ -298,3 +244,4 @@ struct RecommendationForRevaluationStatusView: View {
         }
     }
 }
+

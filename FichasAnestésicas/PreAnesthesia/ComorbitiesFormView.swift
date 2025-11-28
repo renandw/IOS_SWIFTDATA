@@ -25,7 +25,9 @@ struct ComorbiditiesSection<T: ComorbiditiesType>: View {
     
     var body: some View {
         Section {
-            Toggle(title, systemImage: icon, isOn: $isEnabled)
+            Toggle(isOn: $isEnabled) {
+                Label(title, systemImage: icon)
+            }
             
             if isEnabled {
                 // Conteúdo extra (ex: idade gestacional)
@@ -121,48 +123,30 @@ struct ComorbiditiesSection<T: ComorbiditiesType>: View {
 struct ComorbitiesFormView: View {
     @Environment(\.dismiss) private var dismiss
     
-    // Pregnancy
-    @Binding var selectionIsPregnantComorbities: [PregnantComorbities]
-    
-    // Infant
-    @Binding var selectionIsInfantComorbities: [InfantComorbities]
-    
-    // Cardiac
-    @Binding var selection: [CardiologicComorbities]
-    
-    // Respiratory
-    @Binding var selectionRespiratory: [RespiratoryComorbities]
-    
-    // Endocrine
-    @Binding var selectionEndocrine: [EndocrineComorbities]
-    
-    // Gastrointestinal
-    @Binding var selectionGastrointestinal: [GastrointestinalComorbities]
-    
-    // Hematological
-    @Binding var selectionHematological: [HematologicComorbities]
-    
-    // Hematological
-    @Binding var selectionImunological: [ImmunologicComorbities]
-    
-    // musculoskeletal
-    @Binding var selectionMusculoskeletal: [MusculoskeletalComorbities]
-    
-    
-    
-    
     @Bindable var viewModel: PreAnesthesiaViewModel
+    
+    private func binding<T>(get: @escaping () -> [T]?, set: @escaping ([T]?) -> Void) -> Binding<[T]> {
+        Binding(
+            get: { get() ?? [] },
+            set: { newArray in set(newArray.isEmpty ? nil : newArray) }
+        )
+    }
 
     var body: some View {
         NavigationStack {
             Form {
+                Section("Paciente Saudável") {
+                    Toggle("Sem Comorbidades", systemImage: "toilet.fill",
+                           isOn: $viewModel.comorbities.healthyPatient)
+                }
+                
                 // Gestação (condicional)
                 if viewModel.patientSex == .female && viewModel.patientAge > 12 {
                     ComorbiditiesSection(
                         title: "Gestante",
                         icon: "figure.seated.side.right.child.lap",
                         isEnabled: $viewModel.comorbities.isPregnant,
-                        selection: $selectionIsPregnantComorbities,
+                        selection: binding(get: { viewModel.comorbities.isPregnantComorbitiesDetails }, set: { viewModel.comorbities.isPregnantComorbitiesDetails = $0 }),
                         customDetails: $viewModel.comorbities.isPregnantCustomDetails,
                         detailsText: $viewModel.comorbities.isPregnantDetailsText,
                         extraContent: {
@@ -177,7 +161,7 @@ struct ComorbitiesFormView: View {
                         title: "Menor de um ano",
                         icon: "figure.child.circle.fill",
                         isEnabled: $viewModel.comorbities.isInfant,
-                        selection: $selectionIsInfantComorbities,
+                        selection: binding(get: { viewModel.comorbities.isInfantComorbitiesDetails }, set: { viewModel.comorbities.isInfantComorbitiesDetails = $0 }),
                         customDetails: $viewModel.comorbities.isInfantCustomDetails,
                         detailsText: $viewModel.comorbities.isInfantDetailsText
                     )
@@ -188,7 +172,7 @@ struct ComorbitiesFormView: View {
                     title: "Cardíacas",
                     icon: "heart.circle.fill",
                     isEnabled: $viewModel.comorbities.cardiacComorbities,
-                    selection: $selection,
+                    selection: binding(get: { viewModel.comorbities.cardiacComorbitiesDetails }, set: { viewModel.comorbities.cardiacComorbitiesDetails = $0 }),
                     customDetails: $viewModel.comorbities.cardiacComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.cardiacComorbitiesDetailsText
                 )
@@ -198,7 +182,7 @@ struct ComorbitiesFormView: View {
                     title: "Respiratórias",
                     icon: "lungs.fill",
                     isEnabled: $viewModel.comorbities.respiratoryComorbities,
-                    selection: $selectionRespiratory,
+                    selection: binding(get: { viewModel.comorbities.respiratoryComorbitiesDetails }, set: { viewModel.comorbities.respiratoryComorbitiesDetails = $0 }),
                     customDetails: $viewModel.comorbities.respiratoryComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.respiratoryComorbitiesDetailsText
                 )
@@ -208,7 +192,7 @@ struct ComorbitiesFormView: View {
                     title: "Endócrinas e Metabólicas",
                     icon: "syringe.fill",
                     isEnabled: $viewModel.comorbities.endocrineComorbities,
-                    selection: $selectionEndocrine,
+                    selection: binding(get: { viewModel.comorbities.endocrineComorbitiesDetails }, set: { viewModel.comorbities.endocrineComorbitiesDetails = $0 }),
                     customDetails: $viewModel.comorbities.endocrineComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.endocrineComorbitiesDetailsText
                 )
@@ -218,7 +202,7 @@ struct ComorbitiesFormView: View {
                     title: "Gastrointestinais",
                     icon: "fork.knife.circle.fill",
                     isEnabled: $viewModel.comorbities.gastrointestinalComorbities,
-                    selection: $selectionGastrointestinal,
+                    selection: binding(get: { viewModel.comorbities.gastrointestinalComorbitiesDetails }, set: { viewModel.comorbities.gastrointestinalComorbitiesDetails = $0 }),
                     customDetails: $viewModel.comorbities.gastrointestinalComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.gastrointestinalComorbitiesDetailsText
                 )
@@ -227,7 +211,7 @@ struct ComorbitiesFormView: View {
                     title: "Hematológicas",
                     icon: "ivfluid.bag",
                     isEnabled: $viewModel.comorbities.hematologicalComorbities,
-                    selection: $selectionHematological,
+                    selection: binding(get: { viewModel.comorbities.hematologicalComorbitiesDetails }, set: { viewModel.comorbities.hematologicalComorbitiesDetails = $0 }),
                     customDetails: $viewModel.comorbities.hematologicalComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.hematologicalComorbitiesDetailsText
                 )
@@ -235,7 +219,7 @@ struct ComorbitiesFormView: View {
                     title: "Imunológicas",
                     icon: "ivfluid.bag.fill",
                     isEnabled: $viewModel.comorbities.imunologicalComorbities,
-                    selection: $selectionImunological,
+                    selection: binding(get: { viewModel.comorbities.imunologicalComorbitiesDetails }, set: { viewModel.comorbities.imunologicalComorbitiesDetails = $0 }),
                     customDetails: $viewModel.comorbities.imunologicalComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.imunologicalComorbitiesDetailsText
                 )
@@ -243,25 +227,54 @@ struct ComorbitiesFormView: View {
                     title: "Musculoesqueléticas",
                     icon: "figure.run.circle.fill",
                     isEnabled: $viewModel.comorbities.musculoskeletalComorbities,
-                    selection: $selectionMusculoskeletal,
+                    selection: binding(get: { viewModel.comorbities.musculoskeletalComorbitiesDetails }, set: { viewModel.comorbities.musculoskeletalComorbitiesDetails = $0 }),
                     customDetails: $viewModel.comorbities.musculoskeletalComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.musculoskeletalComorbitiesDetailsText
                 )
-                
-                Section("Genitourinárias") {
-                    Toggle("Genitourológicas", systemImage: "toilet.fill",
-                           isOn: $viewModel.comorbities.genitourologicalComorbities)
+                ComorbiditiesSection(
+                    title: "Genitourológicas",
+                    icon: "toilet.fill",
+                    isEnabled: $viewModel.comorbities.genitourologicalComorbities,
+                    selection: binding(get: { viewModel.comorbities.genitourologicalComorbitiesDetails }, set: { viewModel.comorbities.genitourologicalComorbitiesDetails = $0 }),
+                    customDetails: $viewModel.comorbities.genitourologicalComorbitiesCustomDetails,
+                    detailsText: $viewModel.comorbities.genitourologicalComorbitiesDetailsText
+                )
+                if viewModel.patientSex == .female {
+                    ComorbiditiesSection(
+                        title: "Ginecológicas",
+                        icon: "figure.stand.dress",
+                        isEnabled: $viewModel.comorbities.gynecologicalComorbities,
+                        selection: binding(get: { viewModel.comorbities.gynecologicalComorbitiesDetails }, set: { viewModel.comorbities.gynecologicalComorbitiesDetails = $0 }),
+                        customDetails: $viewModel.comorbities.gynecologicalComorbitiesCustomDetails,
+                        detailsText: $viewModel.comorbities.gynecologicalComorbitiesDetailsText
+                    )
                 }
-                
-                Section("Neurológicas") {
-                    Toggle("Neurológicas", systemImage: "brain.head.profile.fill",
-                           isOn: $viewModel.comorbities.neurologicalComorbities)
+                if viewModel.patientSex == .male {
+                    ComorbiditiesSection(
+                        title: "Andrológicas",
+                        icon: "figure.stand",
+                        isEnabled: $viewModel.comorbities.androgenicalComorbities,
+                        selection: binding(get: { viewModel.comorbities.androgenicalComorbitiesDetails }, set: { viewModel.comorbities.androgenicalComorbitiesDetails = $0 }),
+                        customDetails: $viewModel.comorbities.androgenicalComorbitiesCustomDetails,
+                        detailsText: $viewModel.comorbities.androgenicalComorbitiesDetailsText
+                    )
                 }
-                
-                Section("Síndromes Genéticas") {
-                    Toggle("Síndromes Genéticas", systemImage: "apple.meditate.circle.fill",
-                           isOn: $viewModel.comorbities.geneticSyndrome)
-                }
+                ComorbiditiesSection(
+                    title: "Neurológicas",
+                    icon: "brain.head.profile.fill",
+                    isEnabled: $viewModel.comorbities.neurologicalComorbities,
+                    selection: binding(get: { viewModel.comorbities.neurologicalComorbitiesDetails }, set: { viewModel.comorbities.neurologicalComorbitiesDetails = $0 }),
+                    customDetails: $viewModel.comorbities.neurologicalComorbitiesCustomDetails,
+                    detailsText: $viewModel.comorbities.neurologicalComorbitiesDetailsText
+                )
+                ComorbiditiesSection(
+                    title: "Síndromes Genéticas",
+                    icon: "apple.meditate.circle.fill",
+                    isEnabled: $viewModel.comorbities.geneticSyndrome,
+                    selection: binding(get: { viewModel.comorbities.geneticSyndromeComorbitiesDetails }, set: { viewModel.comorbities.geneticSyndromeComorbitiesDetails = $0 }),
+                    customDetails: $viewModel.comorbities.geneticSyndromeComorbitiesCustomDetails,
+                    detailsText: $viewModel.comorbities.geneticSyndromeComorbitiesDetailsText
+                )
             }
             .navigationTitle("Comorbidades")
             .navigationBarTitleDisplayMode(.inline)
@@ -299,19 +312,15 @@ struct ComorbitiesFormView: View {
 extension PregnantComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
-
 extension InfantComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
-
 extension CardiologicComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
-
 extension RespiratoryComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
-
 extension EndocrineComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
@@ -327,4 +336,18 @@ extension ImmunologicComorbities: ComorbiditiesType {
 extension MusculoskeletalComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
-
+extension GenitourinaryComorbities: ComorbiditiesType {
+    public var id: Self { self }
+}
+extension GynecologicComorbities: ComorbiditiesType {
+    public var id: Self { self }
+}
+extension AndrologicComorbities: ComorbiditiesType {
+    public var id: Self { self }
+}
+extension NeurologicalComorbities: ComorbiditiesType {
+    public var id: Self { self }
+}
+extension GeneticSyndrome: ComorbiditiesType {
+    public var id: Self { self }
+}

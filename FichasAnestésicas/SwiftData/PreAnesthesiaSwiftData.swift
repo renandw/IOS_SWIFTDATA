@@ -57,8 +57,11 @@ final class PreAnesthesia {
     var imunologicalComorbities: Bool?
     var musculoskeletalComorbities: Bool
     var genitourologicalComorbities: Bool
+    var gynecologicalComorbities: Bool?
+    var androgenicalComorbities: Bool?
     var neurologicalComorbities: Bool
     var geneticSyndrome: Bool
+    var healthyPatient: Bool?
     
     //one by one
     var isPregnantComorbitiesDetailsRaw: [String]?
@@ -134,6 +137,46 @@ final class PreAnesthesia {
     var musculoskeletalComorbitiesDetailsText: String?
     var musculoskeletalComorbitiesCustomDetails: [String]?
     
+    var genitourologicalComorbitiesDetailsRaw: [String]?
+    var genitourologicalComorbitiesDetails: [GenitourinaryComorbities]? {
+        get { genitourologicalComorbitiesDetailsRaw?.compactMap(GenitourinaryComorbities.init(rawValue:))}
+        set { genitourologicalComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var genitourologicalComorbitiesDetailsText: String?
+    var genitourologicalComorbitiesCustomDetails: [String]?
+    
+    var gynecologicalComorbitiesDetailsRaw: [String]?
+    var gynecologicalComorbitiesDetails: [GynecologicComorbities]? {
+        get { gynecologicalComorbitiesDetailsRaw?.compactMap(GynecologicComorbities.init(rawValue:))}
+        set { gynecologicalComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var gynecologicalComorbitiesDetailsText: String?
+    var gynecologicalComorbitiesCustomDetails: [String]?
+    
+    var androgenicalComorbitiesDetailsRaw: [String]?
+    var androgenicalComorbitiesDetails: [AndrologicComorbities]? {
+        get { androgenicalComorbitiesDetailsRaw?.compactMap(AndrologicComorbities.init(rawValue:))}
+        set { androgenicalComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var androgenicalComorbitiesDetailsText: String?
+    var androgenicalComorbitiesCustomDetails: [String]?
+    
+    var neurologicalComorbitiesDetailsRaw: [String]?
+    var neurologicalComorbitiesDetails: [NeurologicalComorbities]? {
+        get { neurologicalComorbitiesDetailsRaw?.compactMap(NeurologicalComorbities.init(rawValue:))}
+        set { neurologicalComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var neurologicalComorbitiesDetailsText: String?
+    var neurologicalComorbitiesCustomDetails: [String]?
+    
+    var geneticSyndromeComorbitiesDetailsRaw: [String]?
+    var geneticSyndromeComorbitiesDetails: [GeneticSyndrome]? {
+        get { geneticSyndromeComorbitiesDetailsRaw?.compactMap(GeneticSyndrome.init(rawValue:))}
+        set { geneticSyndromeComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var geneticSyndromeComorbitiesDetailsText: String?
+    var geneticSyndromeComorbitiesCustomDetails: [String]?
+    
     init(
         preanesthesiaId: String = UUID().uuidString,
         surgery: Surgery,
@@ -166,8 +209,11 @@ final class PreAnesthesia {
         imunologicalComorbities: Bool = false,
         musculoskeletalComorbities: Bool = false,
         genitourologicalComorbities: Bool = false,
+        gynecologicalComorbities: Bool? = false,
+        androgenicalComorbities: Bool? = false,
         neurologicalComorbities: Bool = false,
         geneticSyndrome: Bool = false,
+        healthyPatient: Bool = false,
         
         //one by one
         isPregnantComorbitiesDetails: PregnantComorbities? = nil,
@@ -198,7 +244,21 @@ final class PreAnesthesia {
         musculoskeletalComorbitiesDetails: MusculoskeletalComorbities? = nil,
         musculoskeletalComorbitiesDetailsText: String? = nil,
         musculoskeletalComorbitiesCustomDetails: [String]? = [],
-        
+        genitourologicalComorbitiesDetails: GenitourinaryComorbities? = nil,
+        genitourologicalComorbitiesDetailsText: String? = nil,
+        genitourologicalComorbitiesCustomDetails: [String]? = [],
+        gynecologicalComorbitiesDetails: GynecologicComorbities? = nil,
+        gynecologicalComorbitiesDetailsText: String? = nil,
+        gynecologicalComorbitiesCustomDetails: [String]? = [],
+        androgenicalComorbitiesDetails: AndrologicComorbities? = nil,
+        androgenicalComorbitiesDetailsText: String? = nil,
+        androgenicalComorbitiesCustomDetails: [String]? = [],
+        neurologicalComorbitiesDetails: NeurologicalComorbities? = nil,
+        neurologicalComorbitiesDetailsText: String? = nil,
+        neurologicalComorbitiesCustomDetails: [String]? = [],
+        geneticSyndromeComorbitiesDetails: GeneticSyndrome? = nil,
+        geneticSyndromeComorbitiesDetailsText: String? = nil,
+        geneticSyndromeComorbitiesCustomDetails: [String]? = []
         
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -233,8 +293,11 @@ final class PreAnesthesia {
         self.imunologicalComorbities = imunologicalComorbities
         self.musculoskeletalComorbities = musculoskeletalComorbities
         self.genitourologicalComorbities = genitourologicalComorbities
+        self.gynecologicalComorbities = gynecologicalComorbities
+        self.androgenicalComorbities = androgenicalComorbities
         self.neurologicalComorbities = neurologicalComorbities
         self.geneticSyndrome = geneticSyndrome
+        self.healthyPatient = healthyPatient
         //one by one
         self.isPregnantComorbitiesDetailsRaw = isPregnantComorbitiesDetails.map { [$0.rawValue] }
         self.isPregnantDetailsText = isPregnantDetailsText
@@ -264,6 +327,21 @@ final class PreAnesthesia {
         self.musculoskeletalComorbitiesDetailsRaw = musculoskeletalComorbitiesDetails.map { [$0.rawValue] }
         self.musculoskeletalComorbitiesDetailsText = musculoskeletalComorbitiesDetailsText
         self.musculoskeletalComorbitiesCustomDetails = musculoskeletalComorbitiesCustomDetails
-        
+        self.genitourologicalComorbitiesDetailsRaw = genitourologicalComorbitiesDetails.map { [$0.rawValue] }
+        self.genitourologicalComorbitiesDetailsText = genitourologicalComorbitiesDetailsText
+        self.genitourologicalComorbitiesCustomDetails = genitourologicalComorbitiesCustomDetails
+        self.gynecologicalComorbitiesDetailsRaw = gynecologicalComorbitiesDetails.map { [$0.rawValue] }
+        self.gynecologicalComorbitiesDetailsText = gynecologicalComorbitiesDetailsText
+        self.gynecologicalComorbitiesCustomDetails = gynecologicalComorbitiesCustomDetails
+        self.androgenicalComorbitiesDetailsRaw = androgenicalComorbitiesDetails.map { [$0.rawValue] }
+        self.androgenicalComorbitiesDetailsText = androgenicalComorbitiesDetailsText
+        self.androgenicalComorbitiesCustomDetails = androgenicalComorbitiesCustomDetails
+        self.neurologicalComorbitiesDetailsRaw = neurologicalComorbitiesDetails.map { [$0.rawValue] }
+        self.neurologicalComorbitiesDetailsText = neurologicalComorbitiesDetailsText
+        self.neurologicalComorbitiesCustomDetails = neurologicalComorbitiesCustomDetails
+        self.geneticSyndromeComorbitiesDetailsRaw = geneticSyndromeComorbitiesDetails.map { [$0.rawValue] }
+        self.geneticSyndromeComorbitiesDetailsText = geneticSyndromeComorbitiesDetailsText
+        self.geneticSyndromeComorbitiesCustomDetails = geneticSyndromeComorbitiesCustomDetails
     }
 }
+
