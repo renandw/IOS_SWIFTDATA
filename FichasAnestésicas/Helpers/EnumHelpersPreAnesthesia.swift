@@ -486,3 +486,32 @@ public enum SurgeryHistorySpeciality: String, Codable, CaseIterable {
         }
     }
 }
+
+public enum AnesthesiaComplicationsHistory: String, Codable, CaseIterable {
+    case nausea
+    case laryngospasm
+    case broncospasm
+    case cardiacArrest
+    case neuropraxia
+    case allergicReaction
+    case spinalHeadache
+    case difficultIntubation
+    case shishivering
+    case bronchoaspiration
+    
+    var displayName: String {
+        switch self {
+        case .nausea:                       "Náusea e Vômitos"
+        case .laryngospasm:                 "Laringoespasmo"
+        case .broncospasm:                  "Broncoespasmo"
+        case .cardiacArrest:                "Parada Cardíaca"
+        case .neuropraxia:                  "Neuropraxia"
+        case .allergicReaction:             "Reação Alérgica"
+        case .spinalHeadache:               "Cefaléia pós Raqui"
+        case .difficultIntubation:          "Intubação Difícil"
+        case .shishivering:                 "Tremores"
+        case .bronchoaspiration:            "Bronchoaspiração"
+        }
+    }
+    
+}

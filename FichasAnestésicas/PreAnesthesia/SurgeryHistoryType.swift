@@ -152,6 +152,17 @@ struct SurgeryHistoryTypeFormView: View {
                     customDetails: $viewModel.surgeryHistory.surgeryHistoryCustomDetails,
                     detailsText: $viewModel.surgeryHistory.surgeryHistoryDetailsText
                 )
+                if viewModel.surgeryHistory.surgeryHistory {
+                    SurgeryHistoryTypeSection(
+                        title: "Anestesias Prévias?",
+                        icon: "syringe.fill",
+                        isEnabled: $viewModel.surgeryHistory.anesthesiaHistory,
+                        selection: binding(get: { viewModel.surgeryHistory.anesthesiaHistoryDetails }, set: { viewModel.surgeryHistory.anesthesiaHistoryDetails = $0 }),
+                        customDetails: $viewModel.surgeryHistory.anesthesiaHistoryCustomDetails,
+                        detailsText: $viewModel.surgeryHistory.anesthesiaHistoryDetailsText
+                    )
+                }
+                
                 
                 
             }
@@ -175,6 +186,9 @@ struct SurgeryHistoryTypeFormView: View {
 
 // MARK: - Extensões para conformidade com o protocolo
 extension SurgeryHistorySpeciality: SurgeryHistoryType {
+    public var id: Self { self }
+}
+extension AnesthesiaComplicationsHistory: SurgeryHistoryType {
     public var id: Self { self }
 }
 

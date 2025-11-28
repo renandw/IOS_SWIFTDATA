@@ -14,15 +14,19 @@ final class SurgeryHistorySectionViewModel {
     //to be implemented
     var surgeryHistory = false {
         didSet {
-            if surgeryHistory == true && oldValue == false {
+            if surgeryHistory == false && oldValue == true {
                 surgeryHistoryVisibility()
             }
         }
     }
+    var anesthesiaHistory = false
     
     var surgeryHistoryDetails: [SurgeryHistorySpeciality]?
     var surgeryHistoryCustomDetails: [String] = []
     var surgeryHistoryDetailsText: String?
+    var anesthesiaHistoryDetails: [AnesthesiaComplicationsHistory]?
+    var anesthesiaHistoryCustomDetails: [String] = []
+    var anesthesiaHistoryDetailsText: String?
     
     func load(from e: PreAnesthesia) {
         surgeryHistory = e.surgeryHistory ?? false
@@ -30,6 +34,9 @@ final class SurgeryHistorySectionViewModel {
         surgeryHistoryDetails = e.surgeryHistoryDetails ?? []
         surgeryHistoryCustomDetails = e.surgeryHistoryCustomDetails ?? []
         surgeryHistoryDetailsText = e.surgeryHistoryDetailsText
+        anesthesiaHistoryDetails = e.anesthesiaHistoryDetails ?? []
+        anesthesiaHistoryCustomDetails = e.anesthesiaHistoryCustomDetails ?? []
+        anesthesiaHistoryDetailsText = e.anesthesiaHistoryDetailsText
     }
     
     func apply(to e: PreAnesthesia) {
@@ -38,6 +45,9 @@ final class SurgeryHistorySectionViewModel {
         e.surgeryHistoryDetails = surgeryHistoryDetails
         e.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails
         e.surgeryHistoryDetailsText = surgeryHistoryDetailsText
+        e.anesthesiaHistoryDetails = anesthesiaHistoryDetails
+        e.anesthesiaHistoryCustomDetails = anesthesiaHistoryCustomDetails
+        e.anesthesiaHistoryDetailsText = anesthesiaHistoryDetailsText
     }
     
     func surgeryHistoryVisibility() {
@@ -47,17 +57,24 @@ final class SurgeryHistorySectionViewModel {
             surgeryHistoryDetails = []
         }
     }
+    func anesthesiaHistoryVisibility() {
+        if anesthesiaHistory == false {
+            anesthesiaHistoryCustomDetails = []
+            anesthesiaHistoryDetailsText = ""
+            anesthesiaHistoryDetails = []
+        }
+    }
     
-    //to be uncommented when available
-//    func addGeneticSyndromeComorbitiesCustomDetails(_ name: String) {
-//        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-//        guard !trimmed.isEmpty else { return }
-//        guard !geneticSyndromeComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-//        geneticSyndromeComorbitiesCustomDetails.append(trimmed)
-//    }
-//    func removeGeneticSyndromeComorbitiesCustomDetails(at index: Int) {
-//        guard geneticSyndromeComorbitiesCustomDetails.indices.contains(index) else { return }
-//        geneticSyndromeComorbitiesCustomDetails.remove(at: index)
-//    }
+    
+    func addSurgeryHistoryCustomDetails(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !surgeryHistoryCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+        surgeryHistoryCustomDetails.append(trimmed)
+    }
+    func removeSurgeryHistoryCustomDetails(at index: Int) {
+        guard surgeryHistoryCustomDetails.indices.contains(index) else { return }
+        surgeryHistoryCustomDetails.remove(at: index)
+    }
 }
 
