@@ -49,6 +49,7 @@ struct PreAnesthesiaView: View {
             VStack(alignment: .leading, spacing: 12) {
                 apaCard(surgery: surgery)
                 comorbiditiesCard(preanesthesia: pre)
+                surgeryHistoryCard(preanesthesia: pre)
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -127,7 +128,7 @@ struct PreAnesthesiaView: View {
                 Spacer()
             }
             Divider()
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading) {
                     if let healthyPatient = preanesthesia?.healthyPatient, healthyPatient {
                         VStack(alignment: .trailing, spacing: 12) {
@@ -646,6 +647,79 @@ struct PreAnesthesiaView: View {
         .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
+    
+    
+    private func surgeryHistoryCard(preanesthesia: PreAnesthesia?) -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Image(systemName: "scissors")
+                    .foregroundStyle(.green)
+                Text("Cirurgias Prévias")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                Spacer()
+            }
+            Divider()
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading) {
+                    if let surgeryHistory = preanesthesia?.surgeryHistory, !surgeryHistory {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Paciente nunca realizou cirurgias")
+                                    .font(.headline)
+                                Spacer()
+                            }
+                        }
+                    }
+                    
+                    
+                    
+                    if preanesthesia?.surgeryHistory == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Cardiológicas:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let surgeryHistoryDetails = preanesthesia?.surgeryHistoryDetails, !surgeryHistoryDetails.isEmpty {
+                                        ForEach(surgeryHistoryDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customSurgeryHistoryDetails = preanesthesia?.surgeryHistoryCustomDetails, !customSurgeryHistoryDetails.isEmpty {
+                                        ForEach(customSurgeryHistoryDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let surgeryHistoryDetailsText = preanesthesia?.surgeryHistoryDetailsText, !surgeryHistoryDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(surgeryHistoryDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
+                }
+            }
+        }
+        
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    
     
     private var topBarButtons: some View {
         HStack(spacing: 8) {

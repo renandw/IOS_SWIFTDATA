@@ -68,6 +68,21 @@ struct PreAnesthesiaFormView: View {
                 } header: {
                     Text("Comorbidades")
                 }
+                Section {
+                    NavigationLink {
+                        SurgeryHistoryTypeFormView(
+                            viewModel: viewModel
+                        )
+                    } label : {
+                        HStack {
+                            Text("Selecionar Cirurgias")
+                            Spacer()
+                            
+                        }
+                    }
+                } header: {
+                    Text("Histórico Cirúrgico")
+                }
                 
                 Section {
                     NavigationLink {

@@ -24,7 +24,13 @@ final class ComorbitiesSectionViewModel {
     var androgenicalComorbities = false { didSet { androgenicalComorbitiesVisibility() } }
     var neurologicalComorbities = false {didSet { neurologicalComorbitiesVisibility() } }
     var geneticSyndrome = false {didSet { geneticSyndromeVisibility() } }
-    var healthyPatient = false {didSet { healthyPatientComorbities() } }
+    var healthyPatient = false {
+        didSet {
+            if healthyPatient == true && oldValue == false {
+                healthyPatientComorbities()
+            }
+        }
+    }
     
     //one by one
     var isPregnantComorbitiesDetails: [PregnantComorbities]?
@@ -348,6 +354,12 @@ final class ComorbitiesSectionViewModel {
         androgenicalComorbities = false
         neurologicalComorbities = false
         geneticSyndrome = false
+        if isInfant == true {
+            isInfantComorbitiesDetails = [.healthy]
+        }
+        if isPregnant == true {
+            isPregnantComorbitiesDetails = [.healthy]
+        }
     }
     
     func addPregnantCustomDetails(_ name: String) {
@@ -491,3 +503,4 @@ final class ComorbitiesSectionViewModel {
         geneticSyndromeComorbitiesCustomDetails.remove(at: index)
     }
 }
+

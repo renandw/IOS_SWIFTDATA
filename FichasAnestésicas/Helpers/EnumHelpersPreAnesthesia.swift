@@ -164,6 +164,7 @@ public enum PregnantComorbities: String, Codable, CaseIterable {
     case eclapsisGestationalis
     case placentaPrevia
     case prematureLabor
+    case healthy
     
     var displayName: String {
         switch self {
@@ -174,6 +175,7 @@ public enum PregnantComorbities: String, Codable, CaseIterable {
         case .eclapsisGestationalis:           "Ecâmpsia"
         case .placentaPrevia:                  "Acretismo Placentário"
         case .prematureLabor:                  "Trabalho de Parto Prematuro"
+        case .healthy:                         "Saudável"
         }
     }
 }
@@ -451,6 +453,36 @@ public enum GeneticSyndrome: String, Codable, CaseIterable {
         case .achondroplasia:                 "Acondroplasia"
         case .osteogenesisImperfecta:         "Osteogênese Imperfeita"
         case .malignantHyperthermia:          "Hipertermia Maligna"
+        }
+    }
+}
+
+public enum SurgeryHistorySpeciality: String, Codable, CaseIterable {
+    case general
+    case orthopedics
+    case cardiac
+    case neurosurgery
+    case urology
+    case gynecology
+    case dentistry
+    case ophthalmology
+    case headAndNeck
+    case oncology
+    case thorax
+    
+    var displayName: String {
+        switch self {
+        case .general:                       "Cirurgia Geral"
+        case .orthopedics:                   "Cirugia Ortopédica"
+        case .cardiac:                       "Cirurgia Cardíaca"
+        case .neurosurgery:                  "Neurocirurgia"
+        case .urology:                       "Cirurgia Urológica"
+        case .gynecology:                    "Cirurgia Ginecológica"
+        case .dentistry:                     "Bucomaxilofacial"
+        case .ophthalmology:                 "Cirurgia Oftalmológica"
+        case .headAndNeck:                   "Cirurgia do Cabeça e Pescoço"
+        case .oncology:                      "Cirurgia Oncológica"
+        case .thorax:                        "Cirurgia Torácica"
         }
     }
 }
