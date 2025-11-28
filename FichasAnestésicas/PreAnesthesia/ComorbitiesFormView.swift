@@ -136,7 +136,13 @@ struct ComorbitiesFormView: View {
     // Endocrine
     @Binding var selectionEndocrine: [EndocrineComorbities]
     
+    // Gastrointestinal
     @Binding var selectionGastrointestinal: [GastrointestinalComorbities]
+    
+    // Hematological
+    @Binding var selectionHematological: [HematologicComorbities]
+    
+    
     
     
     @Bindable var viewModel: PreAnesthesiaViewModel
@@ -201,6 +207,7 @@ struct ComorbitiesFormView: View {
                     detailsText: $viewModel.comorbities.endocrineComorbitiesDetailsText
                 )
                 
+                //Gastrointestinal
                 ComorbiditiesSection(
                     title: "Gastrointestinais",
                     icon: "fork.knife.circle.fill",
@@ -208,6 +215,15 @@ struct ComorbitiesFormView: View {
                     selection: $selectionGastrointestinal,
                     customDetails: $viewModel.comorbities.gastrointestinalComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.gastrointestinalComorbitiesDetailsText
+                )
+                
+                ComorbiditiesSection(
+                    title: "Hematológicas",
+                    icon: "ivfluid.bag",
+                    isEnabled: $viewModel.comorbities.hematologicalComorbities,
+                    selection: $selectionHematological,
+                    customDetails: $viewModel.comorbities.hematologicalComorbitiesCustomDetails,
+                    detailsText: $viewModel.comorbities.hematologicalComorbitiesDetailsText
                 )
                 
                 Section("Hematológicas") {
@@ -295,3 +311,8 @@ extension EndocrineComorbities: ComorbiditiesType {
 extension GastrointestinalComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
+extension HematologicComorbities: ComorbiditiesType {
+    public var id: Self { self }
+}
+
+

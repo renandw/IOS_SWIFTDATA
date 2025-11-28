@@ -315,6 +315,41 @@ struct PreAnesthesiaView: View {
                         }
                         Divider()
                     }
+                    if preanesthesia?.hematologicalComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Hematológicas:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let hematologicalDetails = preanesthesia?.hematologicalComorbitiesDetails, !hematologicalDetails.isEmpty {
+                                        ForEach(hematologicalDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customHematologicalDetails = preanesthesia?.hematologicalComorbitiesCustomDetails, !customHematologicalDetails.isEmpty {
+                                        ForEach(customHematologicalDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let hematologicalDetailsText = preanesthesia?.hematologicalComorbitiesDetailsText, !hematologicalDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(hematologicalDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
                 }
             }
         }

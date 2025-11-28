@@ -92,6 +92,12 @@ struct PreAnesthesiaFormView: View {
                                     viewModel.comorbities.gastrointestinalComorbitiesDetails = newArray.isEmpty ? nil : newArray
                                 }
                             ),
+                            selectionHematological: Binding(
+                                get: { viewModel.comorbities.hematologicalComorbitiesDetails ?? [] },
+                                set: { newArray in
+                                    viewModel.comorbities.hematologicalComorbitiesDetails = newArray.isEmpty ? nil : newArray
+                                }
+                            ),
                             viewModel: viewModel
                         )
                     } label : {

@@ -110,6 +110,14 @@ final class PreAnesthesia {
     var gastrointestinalComorbitiesDetailsText: String?
     var gastrointestinalComorbitiesCustomDetails: [String]?
     
+    var hematologicalComorbitiesDetailsRaw: [String]?
+    var hematologicalComorbitiesDetails: [HematologicComorbities]? {
+        get { hematologicalComorbitiesDetailsRaw?.compactMap(HematologicComorbities.init(rawValue:))}
+        set { hematologicalComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var hematologicalComorbitiesDetailsText: String?
+    var hematologicalComorbitiesCustomDetails: [String]?
+    
     init(
         preanesthesiaId: String = UUID().uuidString,
         surgery: Surgery,
@@ -165,6 +173,9 @@ final class PreAnesthesia {
         gastrointestinalComorbitiesDetails: GastrointestinalComorbities? = nil,
         gastrointestinalComorbitiesDetailsText: String? = nil,
         gastrointestinalComorbitiesCustomDetails: [String]? = [],
+        hematologicalComorbitiesDetails: HematologicComorbities? = nil,
+        hematologicalComorbitiesDetailsText: String? = nil,
+        hematologicalComorbitiesCustomDetails: [String]? = [],
         
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -221,6 +232,9 @@ final class PreAnesthesia {
         self.gastrointestinalComorbitiesDetailsRaw = gastrointestinalComorbitiesDetails.map { [$0.rawValue] }
         self.gastrointestinalComorbitiesDetailsText = gastrointestinalComorbitiesDetailsText
         self.gastrointestinalComorbitiesCustomDetails = gastrointestinalComorbitiesCustomDetails
+        self.hematologicalComorbitiesDetailsRaw = hematologicalComorbitiesDetails.map { [$0.rawValue] }
+        self.hematologicalComorbitiesDetailsText = hematologicalComorbitiesDetailsText
+        self.hematologicalComorbitiesCustomDetails = hematologicalComorbitiesCustomDetails
         
     }
 }

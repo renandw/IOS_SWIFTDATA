@@ -247,3 +247,31 @@ public enum GastrointestinalComorbities: String, Codable, CaseIterable {
         }
     }
 }
+
+public enum HematologicComorbities: String, Codable, CaseIterable {
+    case anemia
+    case sickleCell
+    case thalassemia
+    case hemophilias
+    case vonWillebrandDisease
+    case thrombocytopenia
+    case anticoagulantUse
+    case thrombophilia
+    case leukemia
+    case lymphoma
+    
+    var displayName: String {
+        switch self {
+        case .anemia:                         "Anemia"
+        case .sickleCell:                     "Anemia Falciforme"
+        case .thalassemia:                    "Talassemia"
+        case .hemophilias:                    "Hemofilia"
+        case .vonWillebrandDisease:           "Doença de von Willebrand"
+        case .thrombocytopenia:               "Trombocitopenia"
+        case .anticoagulantUse:               "Uso de Anticoagulantes"
+        case .thrombophilia:                  "Trombofilia"
+        case .leukemia:                       "Leucemia"
+        case .lymphoma:                       "Linfoma"
+        }
+    }
+}

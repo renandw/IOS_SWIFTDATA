@@ -16,7 +16,7 @@ final class ComorbitiesSectionViewModel {
     var respiratoryComorbities = false { didSet {respiratoryComorbitiesVisibility() } }
     var endocrineComorbities = false { didSet { endocrineComorbitiesVisibility() } }
     var gastrointestinalComorbities = false {didSet { gastrointestinalComorbitiesVisibility() } }
-    var hematologicalComorbities = false
+    var hematologicalComorbities = false {didSet { hematologicalComorbitiesVisibility() } }
     var imunologicalComorbities = false
     var musculoskeletalComorbities = false
     var genitourologicalComorbities = false
@@ -48,6 +48,11 @@ final class ComorbitiesSectionViewModel {
     var gastrointestinalComorbitiesDetails: [GastrointestinalComorbities]?
     var gastrointestinalComorbitiesCustomDetails: [String] = []
     var gastrointestinalComorbitiesDetailsText: String?
+    
+    var hematologicalComorbitiesDetails: [HematologicComorbities]?
+    var hematologicalComorbitiesCustomDetails: [String] = []
+    var hematologicalComorbitiesDetailsText: String?
+    
     
     func load(from e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
         isInfantVisibility(patientAge: patientAge)
@@ -85,6 +90,10 @@ final class ComorbitiesSectionViewModel {
         gastrointestinalComorbitiesDetails = e.gastrointestinalComorbitiesDetails ?? []
         gastrointestinalComorbitiesCustomDetails = e.gastrointestinalComorbitiesCustomDetails ?? []
         gastrointestinalComorbitiesDetailsText = e.gastrointestinalComorbitiesDetailsText
+        hematologicalComorbitiesDetails = e.hematologicalComorbitiesDetails ?? []
+        hematologicalComorbitiesCustomDetails = e.hematologicalComorbitiesCustomDetails ?? []
+        hematologicalComorbitiesDetailsText = e.hematologicalComorbitiesDetailsText
+        
     }
     
     func apply(to e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
@@ -125,6 +134,10 @@ final class ComorbitiesSectionViewModel {
         e.gastrointestinalComorbitiesDetails = gastrointestinalComorbitiesDetails
         e.gastrointestinalComorbitiesCustomDetails = gastrointestinalComorbitiesCustomDetails
         e.gastrointestinalComorbitiesDetailsText = gastrointestinalComorbitiesDetailsText
+        e.hematologicalComorbitiesDetails = hematologicalComorbitiesDetails
+        e.hematologicalComorbitiesCustomDetails = hematologicalComorbitiesCustomDetails
+        e.hematologicalComorbitiesDetailsText = hematologicalComorbitiesDetailsText
+        
     }
     
     func isPregnantVisibility(patientSex: Sex) {
@@ -185,6 +198,14 @@ final class ComorbitiesSectionViewModel {
             gastrointestinalComorbitiesCustomDetails = []
         }
     }
+    func hematologicalComorbitiesVisibility() {
+        if hematologicalComorbities == false {
+            hematologicalComorbitiesDetails = []
+            hematologicalComorbitiesDetailsText = ""
+            hematologicalComorbitiesCustomDetails = []
+        }
+    }
+    
     
     
     func addPregnantCustomDetails(_ name: String) {
@@ -247,6 +268,17 @@ final class ComorbitiesSectionViewModel {
         guard gastrointestinalComorbitiesCustomDetails.indices.contains(index) else { return }
         gastrointestinalComorbitiesCustomDetails.remove(at: index)
     }
+    func addHematologicalComorbitiesCustomDetails(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !hematologicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+        hematologicalComorbitiesCustomDetails.append(trimmed)
+    }
+    func removeHematologicalComorbitiesCustomDetails(at index: Int) {
+        guard hematologicalComorbitiesCustomDetails.indices.contains(index) else { return }
+        hematologicalComorbitiesCustomDetails.remove(at: index)
+    }
+    
     
 }
 
