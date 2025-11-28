@@ -12,7 +12,13 @@ import SwiftData
 final class SurgeryHistorySectionViewModel {
 
     //to be implemented
-    var surgeryHistory = false
+    var surgeryHistory = false {
+        didSet {
+            if surgeryHistory == true && oldValue == false {
+                surgeryHistoryVisibility()
+            }
+        }
+    }
     
     var surgeryHistoryDetails: [SurgeryHistorySpeciality]?
     var surgeryHistoryCustomDetails: [String] = []
@@ -32,6 +38,14 @@ final class SurgeryHistorySectionViewModel {
         e.surgeryHistoryDetails = surgeryHistoryDetails
         e.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails
         e.surgeryHistoryDetailsText = surgeryHistoryDetailsText
+    }
+    
+    func surgeryHistoryVisibility() {
+        if surgeryHistory == false {
+            surgeryHistoryCustomDetails = []
+            surgeryHistoryDetailsText = ""
+            surgeryHistoryDetails = []
+        }
     }
     
     //to be uncommented when available

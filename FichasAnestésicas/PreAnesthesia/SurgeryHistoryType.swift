@@ -13,7 +13,7 @@ protocol SurgeryHistoryType: CaseIterable, Hashable, Identifiable where ID == Se
 }
 
 // MARK: - Componente Genérico Reutilizável
-struct SurgeryHistoryTypeSection<T: ComorbiditiesType>: View {
+struct SurgeryHistoryTypeSection<T: SurgeryHistoryType>: View {
     let title: String
     let icon: String
     @Binding var isEnabled: Bool
@@ -143,14 +143,14 @@ struct SurgeryHistoryTypeFormView: View {
         NavigationStack {
             Form {
                 
-                // Cardíacas
-                ComorbiditiesSection(
+                // Cirurgias Prévias
+                SurgeryHistoryTypeSection(
                     title: "Cirurgias Prévias?",
                     icon: "scissors.circle.fill",
-                    isEnabled: $viewModel.comorbities.cardiacComorbities,
-                    selection: binding(get: { viewModel.comorbities.cardiacComorbitiesDetails }, set: { viewModel.comorbities.cardiacComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.cardiacComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.cardiacComorbitiesDetailsText
+                    isEnabled: $viewModel.surgeryHistory.surgeryHistory,
+                    selection: binding(get: { viewModel.surgeryHistory.surgeryHistoryDetails }, set: { viewModel.surgeryHistory.surgeryHistoryDetails = $0 }),
+                    customDetails: $viewModel.surgeryHistory.surgeryHistoryCustomDetails,
+                    detailsText: $viewModel.surgeryHistory.surgeryHistoryDetailsText
                 )
                 
                 

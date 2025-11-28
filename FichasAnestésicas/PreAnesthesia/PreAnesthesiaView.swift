@@ -662,22 +662,22 @@ struct PreAnesthesiaView: View {
             Divider()
             VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading) {
-                    if let surgeryHistory = preanesthesia?.surgeryHistory, !surgeryHistory {
-                        VStack(alignment: .trailing, spacing: 12) {
-                            HStack(alignment: .top) {
-                                Text("Paciente nunca realizou cirurgias")
-                                    .font(.headline)
-                                Spacer()
-                            }
-                        }
-                    }
+                    if preanesthesia?.surgeryHistory == false {
+                          Text("Paciente nunca realizou cirurgias")
+                      } else if preanesthesia?.surgeryHistory == true {
+                          // Mostrar lista/detalhes de cirurgias
+                      } else {
+                          Text("Histórico cirúrgico não informado")
+                              .foregroundStyle(.secondary)
+                              .font(.subheadline)
+                      }
                     
                     
                     
                     if preanesthesia?.surgeryHistory == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
-                                Text("Cardiológicas:")
+                                Text("Cirurgias prévias:")
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
