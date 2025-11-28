@@ -195,6 +195,15 @@ final class PreAnesthesia {
     var anesthesiaHistoryDetailsText: String?
     var anesthesiaHistoryCustomDetails: [String]?
     
+    
+    var socialHabitsAndEnvironmentDetailsRaw: [String]?
+    var socialHabitsAndEnvironmentDetails: [SocialHabitsAndEnvironment]? {
+        get { socialHabitsAndEnvironmentDetailsRaw?.compactMap(SocialHabitsAndEnvironment.init(rawValue:))}
+        set { socialHabitsAndEnvironmentDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var socialHabitsAndEnvironmentDetailsText: String?
+    var socialHabitsAndEnvironmentCustomDetails: [String]?
+    
     init(
         preanesthesiaId: String = UUID().uuidString,
         surgery: Surgery,
@@ -289,6 +298,11 @@ final class PreAnesthesia {
         anesthesiaHistoryDetailsText: String? = nil,
         anesthesiaHistoryCustomDetails: [String]? = [],
         
+        
+        socialHabitsAndEnvironmentDetails: SocialHabitsAndEnvironment? = nil,
+        socialHabitsAndEnvironmentDetailsText: String? = nil,
+        socialHabitsAndEnvironmentCustomDetails: [String]? = [],
+        
     ) {
         self.preanesthesiaId = preanesthesiaId
         self.surgery = surgery
@@ -379,6 +393,10 @@ final class PreAnesthesia {
         self.anesthesiaHistoryDetailsRaw = anesthesiaHistoryDetails.map { [$0.rawValue] }
         self.anesthesiaHistoryDetailsText = anesthesiaHistoryDetailsText
         self.anesthesiaHistoryCustomDetails = anesthesiaHistoryCustomDetails
+        
+        self.socialHabitsAndEnvironmentDetailsRaw = socialHabitsAndEnvironmentDetails.map { [$0.rawValue] }
+        self.socialHabitsAndEnvironmentDetailsText = socialHabitsAndEnvironmentDetailsText
+        self.socialHabitsAndEnvironmentCustomDetails = socialHabitsAndEnvironmentCustomDetails
     }
 }
 

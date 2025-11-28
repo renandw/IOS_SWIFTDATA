@@ -98,6 +98,21 @@ struct PreAnesthesiaFormView: View {
                 } header: {
                     Text("Histórico Anestésico")
                 }
+                Section {
+                    NavigationLink {
+                        SocialHabitsAndEnvironmentFormView(
+                            viewModel: viewModel
+                        )
+                    } label : {
+                        HStack {
+                            Text("Hábitos e Ambiente")
+                            Spacer()
+                            
+                        }
+                    }
+                } header: {
+                    Text("Hábitos e Ambiente")
+                }
                 
                 Section {
                     NavigationLink {

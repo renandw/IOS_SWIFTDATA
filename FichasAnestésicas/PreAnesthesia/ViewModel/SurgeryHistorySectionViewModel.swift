@@ -27,6 +27,8 @@ final class SurgeryHistorySectionViewModel {
     var anesthesiaHistoryDetails: [AnesthesiaComplicationsHistory]?
     var anesthesiaHistoryCustomDetails: [String] = []
     var anesthesiaHistoryDetailsText: String?
+
+    
     
     func load(from e: PreAnesthesia) {
         surgeryHistory = e.surgeryHistory ?? false

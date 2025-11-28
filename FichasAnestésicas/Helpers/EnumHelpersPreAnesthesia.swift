@@ -189,6 +189,7 @@ public enum RespiratoryComorbities: String, Codable, CaseIterable {
     case DPCO
     case fibrosis
     case estenosisAirway
+    case sleepDisorders
     
     var displayName: String {
         switch self {
@@ -200,6 +201,7 @@ public enum RespiratoryComorbities: String, Codable, CaseIterable {
         case .DPCO:                           "DPOC"
         case .fibrosis:                       "Fibrose Pulmonar"
         case .estenosisAirway:                "Estenose Via Respiratória"
+        case .sleepDisorders:                 "Distúrbios do Sono"
         }
     }
 }
@@ -513,5 +515,27 @@ public enum AnesthesiaComplicationsHistory: String, Codable, CaseIterable {
         case .bronchoaspiration:            "Bronchoaspiração"
         }
     }
+}
+
+public enum SocialHabitsAndEnvironment: String, Codable, CaseIterable {
+    // Substâncias
+    case alcoholConsumption
+    case drugUse
+    case tobaccoUse
+    case tobaccoExposure
+    case sedentaryLifestyle         // Sedentarismo
+    case airPollutionExposure       // Exposição à poluição
     
+    
+    var displayName: String {
+        switch self {
+            // Substâncias
+        case .alcoholConsumption:       "Consumo de Álcool"
+        case .drugUse:                  "Uso de Drogas"
+        case .tobaccoUse:               "Tabagismo"
+        case .tobaccoExposure:          "Tabagismo Passivo"
+        case .sedentaryLifestyle:       "Sedentarismo"
+        case .airPollutionExposure:     "Exposição à Poluição"
+        }
+    }
 }
