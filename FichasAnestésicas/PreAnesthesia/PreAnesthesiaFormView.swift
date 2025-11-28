@@ -83,6 +83,21 @@ struct PreAnesthesiaFormView: View {
                 } header: {
                     Text("Histórico Cirúrgico")
                 }
+                Section {
+                    NavigationLink {
+                        AnesthesiaHistoryTypeFormView(
+                            viewModel: viewModel
+                        )
+                    } label : {
+                        HStack {
+                            Text("Selecionar Anestesias")
+                            Spacer()
+                            
+                        }
+                    }
+                } header: {
+                    Text("Histórico Anestésico")
+                }
                 
                 Section {
                     NavigationLink {
