@@ -27,7 +27,7 @@ struct PreAnesthesiaView: View {
                     contentUnavailable
                 }
             }
-            .navigationTitle("Descrição da anestesia")
+            .navigationTitle("Avaliação Pré-Anestésica")
             .preference(
                 key: CustomTopBarButtonPreferenceKey.self,
                 value: CustomTopBarButtonPreference(
@@ -134,15 +134,51 @@ struct PreAnesthesiaView: View {
                         Divider()
                     }
                     
-                    if let isPregnant = preanesthesia?.isPregnant, isPregnant {
-                        Text("Gestante")
+                    if preanesthesia?.isPregnant == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Gestante:")
+                                    .font(.headline)
+                                if let isPregnantAge = preanesthesia?.isPregnantAge, !isPregnantAge.isEmpty {
+                                    Text(isPregnantAge)
+                                        .font(.headline)
+                                }
+                                    
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let isPregnantDetails = preanesthesia?.isPregnantComorbitiesDetails, !isPregnantDetails.isEmpty {
+                                        ForEach(isPregnantDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customIsPregnantDetails = preanesthesia?.isPregnantCustomDetails, !customIsPregnantDetails.isEmpty {
+                                        ForEach(customIsPregnantDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let isPregnantDetailsText = preanesthesia?.isPregnantDetailsText, !isPregnantDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(isPregnantDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
                         Divider()
                     }
                     
                     if preanesthesia?.cardiacComorbities == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
-                                Text("Cardiovasculares:")
+                                Text("Cardiológicas:")
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
@@ -168,6 +204,111 @@ struct PreAnesthesiaView: View {
                                         .font(.caption)
                                     Spacer()
                                     Text(cardiacDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
+                    if preanesthesia?.respiratoryComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Respiratórias:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let respiratoryDetails = preanesthesia?.respiratoryComorbitiesDetails, !respiratoryDetails.isEmpty {
+                                        ForEach(respiratoryDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customRespiratoryDetails = preanesthesia?.respiratoryComorbitiesCustomDetails, !customRespiratoryDetails.isEmpty {
+                                        ForEach(customRespiratoryDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let respiratoryDetailsText = preanesthesia?.respiratoryComorbitiesDetailsText, !respiratoryDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(respiratoryDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
+                    if preanesthesia?.endocrineComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Endócrinas:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let endocrineDetails = preanesthesia?.endocrineComorbitiesDetails, !endocrineDetails.isEmpty {
+                                        ForEach(endocrineDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customEndocrineDetails = preanesthesia?.endocrineComorbitiesCustomDetails, !customEndocrineDetails.isEmpty {
+                                        ForEach(customEndocrineDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let endocrineDetailsText = preanesthesia?.endocrineComorbitiesDetailsText, !endocrineDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(endocrineDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
+                    if preanesthesia?.gastrointestinalComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Respiratórias:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let gastrointestinalDetails = preanesthesia?.gastrointestinalComorbitiesDetails, !gastrointestinalDetails.isEmpty {
+                                        ForEach(gastrointestinalDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customGastrointestinalDetails = preanesthesia?.gastrointestinalComorbitiesCustomDetails, !customGastrointestinalDetails.isEmpty {
+                                        ForEach(customGastrointestinalDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let gastrointestinalDetailsText = preanesthesia?.gastrointestinalComorbitiesDetailsText, !gastrointestinalDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(gastrointestinalDetailsText)
                                         .font(.caption)
                                 }
                             }

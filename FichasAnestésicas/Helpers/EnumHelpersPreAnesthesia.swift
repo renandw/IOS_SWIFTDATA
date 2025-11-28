@@ -175,4 +175,75 @@ public enum PregnantComorbities: String, Codable, CaseIterable {
     }
 }
 
+public enum RespiratoryComorbities: String, Codable, CaseIterable {
+    case asthma
+    case chronicBronchitis
+    case emphysema
+    case pneumonia
+    case tuberculosis
+    case DPCO
+    case fibrosis
+    case estenosisAirway
+    
+    var displayName: String {
+        switch self {
+        case .asthma:                         "Asma"
+        case .chronicBronchitis:              "Bronquite Crónica"
+        case .emphysema:                      "Emfísema"
+        case .pneumonia:                      "Pneumonia"
+        case .tuberculosis:                   "Tuberculose"
+        case .DPCO:                           "DPOC"
+        case .fibrosis:                       "Fibrose Pulmonar"
+        case .estenosisAirway:                "Estenose Via Respiratória"
+        }
+    }
+}
 
+public enum EndocrineComorbities: String, Codable, CaseIterable {
+    case diabetesType1
+    case diabetesType2
+    case hypothyroidism
+    case cushingSyndrome
+    case polycysticOvarySyndrome
+    case hyperthyroidism
+    case methabolicSyndrome
+    
+    var displayName: String {
+        switch self {
+        case .diabetesType1:                  "Diabetes T1"
+        case .diabetesType2:                  "Diabetes T2"
+        case .hypothyroidism:                 "Hipotiroidismo"
+        case .cushingSyndrome:                "Síndrome de Cushing"
+        case .polycysticOvarySyndrome:        "Síndrome de Ovários Policísticos"
+        case .hyperthyroidism:                "Hipertireoidismo"
+        case .methabolicSyndrome:             "Síndrome Metabólica"
+        }
+    }
+}
+
+public enum GastrointestinalComorbities: String, Codable, CaseIterable {
+    case gastroesophagealReflux
+    case crohnsDisease
+    case colelitiasis
+    case celiacDisease
+    case fattyLiverDisease
+    case cirrosis
+    case diverticulitis
+    case gastroparesis
+    case varisisEsofagea
+    
+    var displayName: String {
+        switch self {
+        case .gastroesophagealReflux:         "Refluxo Gastroesofágico"
+        case .crohnsDisease:                  "Doença de Crohn"
+        case .colelitiasis:                   "Colelitíase"
+        case .celiacDisease:                  "Doença Celíaca"
+        case .fattyLiverDisease:              "Esteatose Hepática"
+        case .cirrosis:                       "Cirrose Hepática"
+        case .diverticulitis:                 "Diverticulite"
+        case .gastroparesis:                  "Gastroparesia"
+        case .varisisEsofagea:                "Varizes Esofágicas"
+            
+        }
+    }
+}

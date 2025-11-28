@@ -86,6 +86,30 @@ final class PreAnesthesia {
     var cardiacComorbitiesDetailsText: String?
     var cardiacComorbitiesCustomDetails: [String]?
     
+    var respiratoryComorbitiesDetailsRaw: [String]?
+    var respiratoryComorbitiesDetails: [RespiratoryComorbities]? {
+        get { respiratoryComorbitiesDetailsRaw?.compactMap(RespiratoryComorbities.init(rawValue:))}
+        set { respiratoryComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var respiratoryComorbitiesDetailsText: String?
+    var respiratoryComorbitiesCustomDetails: [String]?
+    
+    var endocrineComorbitiesDetailsRaw: [String]?
+    var endocrineComorbitiesDetails: [EndocrineComorbities]? {
+        get { endocrineComorbitiesDetailsRaw?.compactMap(EndocrineComorbities.init(rawValue:))}
+        set { endocrineComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var endocrineComorbitiesDetailsText: String?
+    var endocrineComorbitiesCustomDetails: [String]?
+    
+    var gastrointestinalComorbitiesDetailsRaw: [String]?
+    var gastrointestinalComorbitiesDetails: [GastrointestinalComorbities]? {
+        get { gastrointestinalComorbitiesDetailsRaw?.compactMap(GastrointestinalComorbities.init(rawValue:))}
+        set { gastrointestinalComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var gastrointestinalComorbitiesDetailsText: String?
+    var gastrointestinalComorbitiesCustomDetails: [String]?
+    
     init(
         preanesthesiaId: String = UUID().uuidString,
         surgery: Surgery,
@@ -132,7 +156,15 @@ final class PreAnesthesia {
         cardiacComorbitiesDetails: CardiologicComorbities? = nil,
         cardiacComorbitiesDetailsText: String? = nil,
         cardiacComorbitiesCustomDetails: [String]? = [],
-        
+        respiratoryComorbitiesDetails: RespiratoryComorbities? = nil,
+        respiratoryComorbitiesDetailsText: String? = nil,
+        respiratoryComorbitiesCustomDetails: [String]? = [],
+        endocrineComorbitiesDetails: EndocrineComorbities? = nil,
+        endocrineComorbitiesDetailsText: String? = nil,
+        endocrineComorbitiesCustomDetails: [String]? = [],
+        gastrointestinalComorbitiesDetails: GastrointestinalComorbities? = nil,
+        gastrointestinalComorbitiesDetailsText: String? = nil,
+        gastrointestinalComorbitiesCustomDetails: [String]? = [],
         
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -180,5 +212,15 @@ final class PreAnesthesia {
         self.cardiacComorbitiesDetailsRaw = cardiacComorbitiesDetails.map { [$0.rawValue] }
         self.cardiacComorbitiesCustomDetails = cardiacComorbitiesCustomDetails
         self.cardiacComorbitiesDetailsText = cardiacComorbitiesDetailsText
+        self.respiratoryComorbitiesDetailsRaw = respiratoryComorbitiesDetails.map { [$0.rawValue] }
+        self.respiratoryComorbitiesDetailsText = respiratoryComorbitiesDetailsText
+        self.respiratoryComorbitiesCustomDetails = respiratoryComorbitiesCustomDetails
+        self.endocrineComorbitiesDetailsRaw = endocrineComorbitiesDetails.map { [$0.rawValue] }
+        self.endocrineComorbitiesDetailsText = endocrineComorbitiesDetailsText
+        self.endocrineComorbitiesCustomDetails = endocrineComorbitiesCustomDetails
+        self.gastrointestinalComorbitiesDetailsRaw = gastrointestinalComorbitiesDetails.map { [$0.rawValue] }
+        self.gastrointestinalComorbitiesDetailsText = gastrointestinalComorbitiesDetailsText
+        self.gastrointestinalComorbitiesCustomDetails = gastrointestinalComorbitiesCustomDetails
+        
     }
 }

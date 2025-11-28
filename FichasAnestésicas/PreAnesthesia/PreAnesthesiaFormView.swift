@@ -74,6 +74,24 @@ struct PreAnesthesiaFormView: View {
                                     viewModel.comorbities.cardiacComorbitiesDetails = newArray.isEmpty ? nil : newArray
                                 }
                             ),
+                            selectionRespiratory: Binding(
+                                get: { viewModel.comorbities.respiratoryComorbitiesDetails ?? [] },
+                                set: { newArray in
+                                    viewModel.comorbities.respiratoryComorbitiesDetails = newArray.isEmpty ? nil : newArray
+                                }
+                            ),
+                            selectionEndocrine: Binding(
+                                get: { viewModel.comorbities.endocrineComorbitiesDetails ?? [] },
+                                set: { newArray in
+                                    viewModel.comorbities.endocrineComorbitiesDetails = newArray.isEmpty ? nil : newArray
+                                }
+                            ),
+                            selectionGastrointestinal: Binding(
+                                get: { viewModel.comorbities.gastrointestinalComorbitiesDetails ?? [] },
+                                set: { newArray in
+                                    viewModel.comorbities.gastrointestinalComorbitiesDetails = newArray.isEmpty ? nil : newArray
+                                }
+                            ),
                             viewModel: viewModel
                         )
                     } label : {
