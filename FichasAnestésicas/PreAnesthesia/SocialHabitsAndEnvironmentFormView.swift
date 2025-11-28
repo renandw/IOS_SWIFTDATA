@@ -147,7 +147,13 @@ struct SocialHabitsAndEnvironmentFormView: View {
                     customDetails: $viewModel.socialHabitsAndEnvironment.socialHabitsAndEnvironmentCustomDetails,
                     detailsText: $viewModel.socialHabitsAndEnvironment.socialHabitsAndEnvironmentDetailsText
                 )
-                
+                SocialHabitsAndEnvironmentTypeSection(
+                    title: "Riscos para Náusea e Vômito",
+                    icon: "person.wave.2",
+                    selection: binding(get: { viewModel.socialHabitsAndEnvironment.apfelScoreDetails }, set: { viewModel.socialHabitsAndEnvironment.apfelScoreDetails = $0 }),
+                    customDetails: $viewModel.socialHabitsAndEnvironment.socialHabitsAndEnvironmentCustomDetails,
+                    detailsText: $viewModel.socialHabitsAndEnvironment.socialHabitsAndEnvironmentDetailsText
+                )
                 
                 
             }
@@ -174,3 +180,6 @@ extension SocialHabitsAndEnvironment: SocialHabitsAndEnvironmentType {
     public var id: Self { self }
 }
 
+extension ApfelScore: SocialHabitsAndEnvironmentType {
+    public var id: Self { self }
+}

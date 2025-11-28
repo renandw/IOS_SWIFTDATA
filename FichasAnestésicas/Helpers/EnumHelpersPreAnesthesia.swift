@@ -539,3 +539,46 @@ public enum SocialHabitsAndEnvironment: String, Codable, CaseIterable {
         }
     }
 }
+
+enum ApfelScore: String, Codable, CaseIterable {
+    case tobaccoUse
+    case femaleSex
+    case historyPONV
+    case historyMotionSickness
+    case postoperativeOpioids
+    
+    var displayName: String {
+        switch self {
+            // Substâncias
+        case .femaleSex:                "Feminino"
+        case .tobaccoUse:               "Tabagismo"
+        case .historyPONV:              "História de NVPO"
+        case .historyMotionSickness:    "Cinetose"
+        case .postoperativeOpioids:     "Uso de opióide"
+        }
+    }
+}
+
+
+extension SocialHabitsAndEnvironment {
+    func toApfelScore() -> ApfelScore? {
+        switch self {
+        case .tobaccoUse:
+            return .tobaccoUse
+        default:
+            return nil
+        }
+    }
+}
+
+extension ApfelScore {
+    func toSocialHabits() -> SocialHabitsAndEnvironment? {
+        switch self {
+        case .tobaccoUse:
+            return .tobaccoUse
+        default:
+            return nil
+        }
+    }
+}
+
