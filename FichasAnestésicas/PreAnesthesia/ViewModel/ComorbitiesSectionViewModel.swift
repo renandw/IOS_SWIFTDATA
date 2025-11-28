@@ -17,7 +17,7 @@ final class ComorbitiesSectionViewModel {
     var endocrineComorbities = false { didSet { endocrineComorbitiesVisibility() } }
     var gastrointestinalComorbities = false {didSet { gastrointestinalComorbitiesVisibility() } }
     var hematologicalComorbities = false {didSet { hematologicalComorbitiesVisibility() } }
-    var imunologicalComorbities = false
+    var imunologicalComorbities = false {didSet {imunologicalComorbitiesVisibility() } }
     var musculoskeletalComorbities = false
     var genitourologicalComorbities = false
     var neurologicalComorbities = false
@@ -52,6 +52,14 @@ final class ComorbitiesSectionViewModel {
     var hematologicalComorbitiesDetails: [HematologicComorbities]?
     var hematologicalComorbitiesCustomDetails: [String] = []
     var hematologicalComorbitiesDetailsText: String?
+    
+    var imunologicalComorbitiesDetails: [ImmunologicComorbities]?
+    var imunologicalComorbitiesCustomDetails: [String] = []
+    var imunologicalComorbitiesDetailsText: String?
+    
+    var musculoskeletalComorbitiesDetails: [MusculoskeletalComorbities]?
+    var musculoskeletalComorbitiesCustomDetails: [String] = []
+    var musculoskeletalComorbitiesDetailsText: String?
     
     
     func load(from e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
@@ -93,6 +101,12 @@ final class ComorbitiesSectionViewModel {
         hematologicalComorbitiesDetails = e.hematologicalComorbitiesDetails ?? []
         hematologicalComorbitiesCustomDetails = e.hematologicalComorbitiesCustomDetails ?? []
         hematologicalComorbitiesDetailsText = e.hematologicalComorbitiesDetailsText
+        imunologicalComorbitiesDetails = e.imunologicalComorbitiesDetails ?? []
+        imunologicalComorbitiesCustomDetails = e.imunologicalComorbitiesCustomDetails ?? []
+        imunologicalComorbitiesDetailsText = e.imunologicalComorbitiesDetailsText
+        musculoskeletalComorbitiesDetails = e.musculoskeletalComorbitiesDetails ?? []
+        musculoskeletalComorbitiesCustomDetails = e.musculoskeletalComorbitiesCustomDetails ?? []
+        musculoskeletalComorbitiesDetailsText = e.musculoskeletalComorbitiesDetailsText
         
     }
     
@@ -137,6 +151,12 @@ final class ComorbitiesSectionViewModel {
         e.hematologicalComorbitiesDetails = hematologicalComorbitiesDetails
         e.hematologicalComorbitiesCustomDetails = hematologicalComorbitiesCustomDetails
         e.hematologicalComorbitiesDetailsText = hematologicalComorbitiesDetailsText
+        e.imunologicalComorbitiesDetails = imunologicalComorbitiesDetails
+        e.imunologicalComorbitiesCustomDetails = imunologicalComorbitiesCustomDetails
+        e.imunologicalComorbitiesDetailsText = imunologicalComorbitiesDetailsText
+        e.musculoskeletalComorbitiesDetails = musculoskeletalComorbitiesDetails
+        e.musculoskeletalComorbitiesCustomDetails = musculoskeletalComorbitiesCustomDetails
+        e.musculoskeletalComorbitiesDetailsText = musculoskeletalComorbitiesDetailsText
         
     }
     
@@ -203,6 +223,20 @@ final class ComorbitiesSectionViewModel {
             hematologicalComorbitiesDetails = []
             hematologicalComorbitiesDetailsText = ""
             hematologicalComorbitiesCustomDetails = []
+        }
+    }
+    func imunologicalComorbitiesVisibility() {
+        if imunologicalComorbities == false {
+            imunologicalComorbitiesDetails = []
+            imunologicalComorbitiesDetailsText = ""
+            imunologicalComorbitiesCustomDetails = []
+        }
+    }
+    func musculoskeletalComorbitiesVisibility() {
+        if musculoskeletalComorbities == false {
+            musculoskeletalComorbitiesDetails = []
+            musculoskeletalComorbitiesDetailsText = ""
+            musculoskeletalComorbitiesCustomDetails = []
         }
     }
     
@@ -277,6 +311,28 @@ final class ComorbitiesSectionViewModel {
     func removeHematologicalComorbitiesCustomDetails(at index: Int) {
         guard hematologicalComorbitiesCustomDetails.indices.contains(index) else { return }
         hematologicalComorbitiesCustomDetails.remove(at: index)
+    }
+    
+    func addImunologicalComorbitiesCustomDetails(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !imunologicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+        imunologicalComorbitiesCustomDetails.append(trimmed)
+    }
+    func removeImunologicalComorbitiesCustomDetails(at index: Int) {
+        guard imunologicalComorbitiesCustomDetails.indices.contains(index) else { return }
+        imunologicalComorbitiesCustomDetails.remove(at: index)
+    }
+    
+    func addmMsculoskeletalComorbitiesCustomDetails(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !imunologicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+        imunologicalComorbitiesCustomDetails.append(trimmed)
+    }
+    func removeMusculoskeletalComorbitiesCustomDetails(at index: Int) {
+        guard musculoskeletalComorbitiesCustomDetails.indices.contains(index) else { return }
+        musculoskeletalComorbitiesCustomDetails.remove(at: index)
     }
     
     

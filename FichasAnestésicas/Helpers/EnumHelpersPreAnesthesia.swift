@@ -275,3 +275,49 @@ public enum HematologicComorbities: String, Codable, CaseIterable {
         }
     }
 }
+
+public enum ImmunologicComorbities: String, Codable, CaseIterable {
+    case lupus
+    case rheumatoidArthritis
+    case organTransplant
+    case immunosuppressiveTherapy
+    case multipleMyeloma
+    case vasculitis
+    case psoriasis
+    case inflammatoryBowelDisease
+    
+    var displayName: String {
+        switch self {
+        case .lupus:                          "Lúpus Eritematoso Sistêmico"
+        case .rheumatoidArthritis:            "Artrite Reumatoide"
+        case .organTransplant:                "Transplante de Órgão"
+        case .immunosuppressiveTherapy:       "Terapia Imunossupressora"
+        case .multipleMyeloma:                "Mieloma Múltiplo"
+        case .vasculitis:                     "Vasculite"
+        case .psoriasis:                      "Psoríase"
+        case .inflammatoryBowelDisease:       "Doença Inflamatória Intestinal"
+        }
+    }
+}
+
+public enum MusculoskeletalComorbities: String, Codable, CaseIterable {
+    case osteoarthritis
+    case ankylosingSpondylitis
+    case kyphoscoliosis
+    case muscularDystrophy
+    case myastheniaGravis
+    case osteoporosis
+    case fibromyalgia
+    
+    var displayName: String {
+        switch self {
+        case .osteoarthritis:                 "Osteoartrite"
+        case .ankylosingSpondylitis:          "Espondilite Anquilosante"
+        case .kyphoscoliosis:                 "Cifoescoliose"
+        case .muscularDystrophy:              "Distrofia Muscular"
+        case .myastheniaGravis:               "Miastenia Gravis"
+        case .osteoporosis:                   "Osteoporose"
+        case .fibromyalgia:                   "Fibromialgia"
+        }
+    }
+}

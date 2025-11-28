@@ -350,6 +350,76 @@ struct PreAnesthesiaView: View {
                         }
                         Divider()
                     }
+                    if preanesthesia?.imunologicalComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Imunológicas:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let imunologicalDetails = preanesthesia?.imunologicalComorbitiesDetails, !imunologicalDetails.isEmpty {
+                                        ForEach(imunologicalDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customImunologicalDetails = preanesthesia?.imunologicalComorbitiesCustomDetails, !customImunologicalDetails.isEmpty {
+                                        ForEach(customImunologicalDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let imunologicalDetailsText = preanesthesia?.imunologicalComorbitiesDetailsText, !imunologicalDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(imunologicalDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
+                    if preanesthesia?.musculoskeletalComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Musculoesqueléticas:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let musculoskeletalDetails = preanesthesia?.musculoskeletalComorbitiesDetails, !musculoskeletalDetails.isEmpty {
+                                        ForEach(musculoskeletalDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customMusculoskeletalDetails = preanesthesia?.musculoskeletalComorbitiesCustomDetails, !customMusculoskeletalDetails.isEmpty {
+                                        ForEach(customMusculoskeletalDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let musculoskeletalDetailsText = preanesthesia?.musculoskeletalComorbitiesDetailsText, !musculoskeletalDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(musculoskeletalDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
                 }
             }
         }
@@ -368,6 +438,8 @@ struct PreAnesthesiaView: View {
                     presentEditForm(for: preanesthesia)
                 }) {
                     Image(systemName: "pencil")
+                        .font(.system(size: 16, weight: .regular))
+                        .frame(width: 20, height: 20)
                 }
                 .accessibilityLabel("Editar Descrição")
                 .buttonStyle(.glass)

@@ -92,6 +92,8 @@ struct AnesthesiaDescriptionView: View {
                     presentEditForm(for: anesthesiaDescription)
                 }) {
                     Image(systemName: "pencil")
+                        .font(.system(size: 16, weight: .regular))
+                        .frame(width: 20, height: 20)
                 }
                 .accessibilityLabel("Editar Descrição")
                 .buttonStyle(.glass)

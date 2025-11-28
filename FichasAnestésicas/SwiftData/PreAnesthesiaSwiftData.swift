@@ -118,6 +118,22 @@ final class PreAnesthesia {
     var hematologicalComorbitiesDetailsText: String?
     var hematologicalComorbitiesCustomDetails: [String]?
     
+    var imunologicalComorbitiesDetailsRaw: [String]?
+    var imunologicalComorbitiesDetails: [ImmunologicComorbities]? {
+        get { imunologicalComorbitiesDetailsRaw?.compactMap(ImmunologicComorbities.init(rawValue:))}
+        set { imunologicalComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var imunologicalComorbitiesDetailsText: String?
+    var imunologicalComorbitiesCustomDetails: [String]?
+    
+    var musculoskeletalComorbitiesDetailsRaw: [String]?
+    var musculoskeletalComorbitiesDetails: [MusculoskeletalComorbities]? {
+        get { musculoskeletalComorbitiesDetailsRaw?.compactMap(MusculoskeletalComorbities.init(rawValue:))}
+        set { musculoskeletalComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var musculoskeletalComorbitiesDetailsText: String?
+    var musculoskeletalComorbitiesCustomDetails: [String]?
+    
     init(
         preanesthesiaId: String = UUID().uuidString,
         surgery: Surgery,
@@ -176,6 +192,13 @@ final class PreAnesthesia {
         hematologicalComorbitiesDetails: HematologicComorbities? = nil,
         hematologicalComorbitiesDetailsText: String? = nil,
         hematologicalComorbitiesCustomDetails: [String]? = [],
+        imunologicalComorbitiesDetails: ImmunologicComorbities? = nil,
+        imunologicalComorbitiesDetailsText: String? = nil,
+        imunologicalComorbitiesCustomDetails: [String]? = [],
+        musculoskeletalComorbitiesDetails: MusculoskeletalComorbities? = nil,
+        musculoskeletalComorbitiesDetailsText: String? = nil,
+        musculoskeletalComorbitiesCustomDetails: [String]? = [],
+        
         
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -235,6 +258,12 @@ final class PreAnesthesia {
         self.hematologicalComorbitiesDetailsRaw = hematologicalComorbitiesDetails.map { [$0.rawValue] }
         self.hematologicalComorbitiesDetailsText = hematologicalComorbitiesDetailsText
         self.hematologicalComorbitiesCustomDetails = hematologicalComorbitiesCustomDetails
+        self.imunologicalComorbitiesDetailsRaw = imunologicalComorbitiesDetails.map { [$0.rawValue] }
+        self.imunologicalComorbitiesDetailsText = imunologicalComorbitiesDetailsText
+        self.imunologicalComorbitiesCustomDetails = imunologicalComorbitiesCustomDetails
+        self.musculoskeletalComorbitiesDetailsRaw = musculoskeletalComorbitiesDetails.map { [$0.rawValue] }
+        self.musculoskeletalComorbitiesDetailsText = musculoskeletalComorbitiesDetailsText
+        self.musculoskeletalComorbitiesCustomDetails = musculoskeletalComorbitiesCustomDetails
         
     }
 }

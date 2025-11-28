@@ -142,6 +142,12 @@ struct ComorbitiesFormView: View {
     // Hematological
     @Binding var selectionHematological: [HematologicComorbities]
     
+    // Hematological
+    @Binding var selectionImunological: [ImmunologicComorbities]
+    
+    // musculoskeletal
+    @Binding var selectionMusculoskeletal: [MusculoskeletalComorbities]
+    
     
     
     
@@ -225,21 +231,22 @@ struct ComorbitiesFormView: View {
                     customDetails: $viewModel.comorbities.hematologicalComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.hematologicalComorbitiesDetailsText
                 )
-                
-                Section("Hematológicas") {
-                    Toggle("Hematológicas", systemImage: "ivfluid.bag",
-                           isOn: $viewModel.comorbities.hematologicalComorbities)
-                }
-                
-                Section("Imunológicas") {
-                    Toggle("Imunológicas", systemImage: "ivfluid.bag.fill",
-                           isOn: $viewModel.comorbities.imunologicalComorbities)
-                }
-                
-                Section("Músculoesquelético") {
-                    Toggle("Musculoesqueléticas", systemImage: "figure.run.circle.fill",
-                           isOn: $viewModel.comorbities.musculoskeletalComorbities)
-                }
+                ComorbiditiesSection(
+                    title: "Imunológicas",
+                    icon: "ivfluid.bag.fill",
+                    isEnabled: $viewModel.comorbities.imunologicalComorbities,
+                    selection: $selectionImunological,
+                    customDetails: $viewModel.comorbities.imunologicalComorbitiesCustomDetails,
+                    detailsText: $viewModel.comorbities.imunologicalComorbitiesDetailsText
+                )
+                ComorbiditiesSection(
+                    title: "Musculoesqueléticas",
+                    icon: "figure.run.circle.fill",
+                    isEnabled: $viewModel.comorbities.musculoskeletalComorbities,
+                    selection: $selectionMusculoskeletal,
+                    customDetails: $viewModel.comorbities.musculoskeletalComorbitiesCustomDetails,
+                    detailsText: $viewModel.comorbities.musculoskeletalComorbitiesDetailsText
+                )
                 
                 Section("Genitourinárias") {
                     Toggle("Genitourológicas", systemImage: "toilet.fill",
@@ -314,5 +321,10 @@ extension GastrointestinalComorbities: ComorbiditiesType {
 extension HematologicComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
-
+extension ImmunologicComorbities: ComorbiditiesType {
+    public var id: Self { self }
+}
+extension MusculoskeletalComorbities: ComorbiditiesType {
+    public var id: Self { self }
+}
 
