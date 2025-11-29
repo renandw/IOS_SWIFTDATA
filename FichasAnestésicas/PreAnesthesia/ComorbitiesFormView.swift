@@ -136,7 +136,7 @@ struct ComorbitiesFormView: View {
         NavigationStack {
             Form {
                 Section("Paciente Saudável") {
-                    Toggle("Sem Comorbidades", systemImage: "toilet.fill",
+                    Toggle("Sem Comorbidades", systemImage: "heart.fill",
                            isOn: $viewModel.comorbities.healthyPatient)
                 }
                 
@@ -288,6 +288,7 @@ struct ComorbitiesFormView: View {
                             print("Erro ao salvar: \(error)")
                         }
                     }
+                    .disabled(!viewModel.comorbities.canSave)
                 }
             }
         }

@@ -22,6 +22,7 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
         socialHabitsAndEnvironmentDetails = e.socialHabitsAndEnvironmentDetails ?? []
         socialHabitsAndEnvironmentCustomDetails = e.socialHabitsAndEnvironmentCustomDetails ?? []
         socialHabitsAndEnvironmentDetailsText = e.socialHabitsAndEnvironmentDetailsText
+        apfelScoreDetails = e.apfelScoreDetails ?? []
     }
     
     func apply(to e: PreAnesthesia) {
@@ -29,6 +30,7 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
         e.socialHabitsAndEnvironmentDetails = socialHabitsAndEnvironmentDetails
         e.socialHabitsAndEnvironmentCustomDetails = socialHabitsAndEnvironmentCustomDetails
         e.socialHabitsAndEnvironmentDetailsText = socialHabitsAndEnvironmentDetailsText
+        e.apfelScoreDetails = apfelScoreDetails
     }
     
     
@@ -38,7 +40,7 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
         guard !syncing else { return }
         syncing = true
 
-        var social = socialHabitsAndEnvironmentDetails ?? []
+        let social = socialHabitsAndEnvironmentDetails ?? []
         var apfel = apfelScoreDetails ?? []
 
         if social.contains(.tobaccoUse) {
@@ -60,7 +62,7 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
         syncing = true
 
         var social = socialHabitsAndEnvironmentDetails ?? []
-        var apfel = apfelScoreDetails ?? []
+        let apfel = apfelScoreDetails ?? []
 
         if apfel.contains(.tobaccoUse) {
             if !social.contains(.tobaccoUse) {

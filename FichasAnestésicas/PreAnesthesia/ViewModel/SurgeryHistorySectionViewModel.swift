@@ -19,7 +19,13 @@ final class SurgeryHistorySectionViewModel {
             }
         }
     }
-    var anesthesiaHistory = false
+    var anesthesiaHistory = false {
+        didSet {
+            if anesthesiaHistory == false && oldValue == true {
+                anesthesiaHistoryVisibility()
+            }
+        }
+    }
     
     var surgeryHistoryDetails: [SurgeryHistorySpeciality]?
     var surgeryHistoryCustomDetails: [String] = []

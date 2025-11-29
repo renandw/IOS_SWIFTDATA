@@ -204,6 +204,12 @@ final class PreAnesthesia {
     var socialHabitsAndEnvironmentDetailsText: String?
     var socialHabitsAndEnvironmentCustomDetails: [String]?
     
+    var apfelScoreDetailsRaw: [String]?
+    var apfelScoreDetails: [ApfelScore]? {
+        get { apfelScoreDetailsRaw?.compactMap(ApfelScore.init(rawValue:))}
+        set { apfelScoreDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    
     init(
         preanesthesiaId: String = UUID().uuidString,
         surgery: Surgery,
@@ -303,6 +309,8 @@ final class PreAnesthesia {
         socialHabitsAndEnvironmentDetailsText: String? = nil,
         socialHabitsAndEnvironmentCustomDetails: [String]? = [],
         
+        apfelScoreDetails: ApfelScore? = nil,
+        
     ) {
         self.preanesthesiaId = preanesthesiaId
         self.surgery = surgery
@@ -397,6 +405,7 @@ final class PreAnesthesia {
         self.socialHabitsAndEnvironmentDetailsRaw = socialHabitsAndEnvironmentDetails.map { [$0.rawValue] }
         self.socialHabitsAndEnvironmentDetailsText = socialHabitsAndEnvironmentDetailsText
         self.socialHabitsAndEnvironmentCustomDetails = socialHabitsAndEnvironmentCustomDetails
+        self.apfelScoreDetailsRaw = apfelScoreDetails.map { [$0.rawValue] }
     }
 }
 

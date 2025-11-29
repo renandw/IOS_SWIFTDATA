@@ -113,6 +113,21 @@ struct PreAnesthesiaFormView: View {
                 } header: {
                     Text("Hábitos e Ambiente")
                 }
+                Section {
+                    NavigationLink {
+                        ApfelScoreFormView(
+                            viewModel: viewModel
+                        )
+                    } label : {
+                        HStack {
+                            Text("Fatores de Risco NVPO")
+                            Spacer()
+                            
+                        }
+                    }
+                } header: {
+                    Text("Fatores de Risco NVPO")
+                }
                 
                 Section {
                     NavigationLink {

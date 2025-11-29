@@ -502,5 +502,85 @@ final class ComorbitiesSectionViewModel {
         guard geneticSyndromeComorbitiesCustomDetails.indices.contains(index) else { return }
         geneticSyndromeComorbitiesCustomDetails.remove(at: index)
     }
+    
+    
+    
+    func applyHealthyPatient() {
+        
+        cardiacComorbities = false
+        respiratoryComorbities = false
+        endocrineComorbities = false
+        gastrointestinalComorbities = false
+        hematologicalComorbities = false
+        imunologicalComorbities = false
+        musculoskeletalComorbities = false
+        genitourologicalComorbities = false
+        gynecologicalComorbities = false
+        androgenicalComorbities = false
+        neurologicalComorbities = false
+        geneticSyndrome = false
+        
+        
+        if isInfant {
+            isInfantComorbitiesDetails = [.healthy]
+        }
+        
+        
+        if isPregnant {
+            isPregnantComorbitiesDetails = [.healthy]
+        }
+    }
+    
+    var hasAnyInfo: Bool {
+        return healthyPatient ||
+               cardiacComorbities || respiratoryComorbities ||
+               endocrineComorbities || gastrointestinalComorbities ||
+               hematologicalComorbities || imunologicalComorbities ||
+               musculoskeletalComorbities || genitourologicalComorbities ||
+               gynecologicalComorbities || androgenicalComorbities ||
+               neurologicalComorbities || geneticSyndrome
+    }
+    
+    var canSave: Bool {
+        
+        guard hasAnyInfo else { return false }
+        
+        if healthyPatient {
+            if isInfant && !(isInfantComorbitiesDetails == [.healthy]) { return false }
+            if isPregnant && !(isPregnantComorbitiesDetails == [.healthy]) { return false }
+            
+            return !cardiacComorbities &&
+                   !respiratoryComorbities &&
+                   !endocrineComorbities &&
+                   !gastrointestinalComorbities &&
+                   !hematologicalComorbities &&
+                   !imunologicalComorbities &&
+                   !musculoskeletalComorbities &&
+                   !genitourologicalComorbities &&
+                   !gynecologicalComorbities &&
+                   !androgenicalComorbities &&
+                   !neurologicalComorbities &&
+                   !geneticSyndrome
+        } else {
+            if isInfant && (isInfantComorbitiesDetails?.isEmpty ?? true) && isInfantCustomDetails.isEmpty { return false }
+            if isPregnant && (isPregnantComorbitiesDetails?.isEmpty ?? true) && isPregnantCustomDetails.isEmpty { return false }
+            if cardiacComorbities && (cardiacComorbitiesDetails?.isEmpty ?? true) && cardiacComorbitiesCustomDetails.isEmpty { return false }
+            if respiratoryComorbities && (respiratoryComorbitiesDetails?.isEmpty ?? true) && respiratoryComorbitiesCustomDetails.isEmpty { return false }
+            if endocrineComorbities && (endocrineComorbitiesDetails?.isEmpty ?? true) && endocrineComorbitiesCustomDetails.isEmpty { return false }
+            if gastrointestinalComorbities && (gastrointestinalComorbitiesDetails?.isEmpty ?? true) && gastrointestinalComorbitiesCustomDetails.isEmpty { return false }
+            if hematologicalComorbities && (hematologicalComorbitiesDetails?.isEmpty ?? true) && hematologicalComorbitiesCustomDetails.isEmpty { return false }
+            if imunologicalComorbities && (imunologicalComorbitiesDetails?.isEmpty ?? true) && imunologicalComorbitiesCustomDetails.isEmpty { return false }
+            if musculoskeletalComorbities && (musculoskeletalComorbitiesDetails?.isEmpty ?? true) && musculoskeletalComorbitiesCustomDetails.isEmpty { return false }
+            if genitourologicalComorbities && (genitourologicalComorbitiesDetails?.isEmpty ?? true) && genitourologicalComorbitiesCustomDetails.isEmpty { return false }
+            if gynecologicalComorbities && (gynecologicalComorbitiesDetails?.isEmpty ?? true) && gynecologicalComorbitiesCustomDetails.isEmpty { return false }
+            if androgenicalComorbities && (androgenicalComorbitiesDetails?.isEmpty ?? true) && androgenicalComorbitiesCustomDetails.isEmpty { return false }
+            if neurologicalComorbities && (neurologicalComorbitiesDetails?.isEmpty ?? true) && neurologicalComorbitiesCustomDetails.isEmpty { return false }
+            if geneticSyndrome && (geneticSyndromeComorbitiesDetails?.isEmpty ?? true) && geneticSyndromeComorbitiesCustomDetails.isEmpty { return false }
+            
+            return true
+        }
+    }
+    
+    
 }
 
