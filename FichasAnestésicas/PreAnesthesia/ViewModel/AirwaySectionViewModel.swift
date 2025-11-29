@@ -36,4 +36,23 @@ final class AirwaySectionViewModel {
         e.difficultAirwayEvaluationDetailsText = difficultAirwayEvaluationDetailsText
         
     }
+    
+    func addDifficultEvaluationCustomDetails(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !difficultAirwayEvaluationCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+        difficultAirwayEvaluationCustomDetails.append(trimmed)
+    }
+    func removeDifficultEvaluationCustomDetails(at index: Int) {
+        guard difficultAirwayEvaluationCustomDetails.indices.contains(index) else { return }
+        difficultAirwayEvaluationCustomDetails.remove(at: index)
+    }
+    
+    var canSave: Bool {
+        mallampatiClassification != nil
+    }
+    
+    func applyHealthyPatient() {
+        mallampatiClassification = .I
+    }
 }

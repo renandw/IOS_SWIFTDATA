@@ -211,10 +211,14 @@ final class PreAnesthesia {
         set { apfelScoreDetailsRaw = newValue?.map { $0.rawValue}}
     }
     
-    var mallampatiClassificationRaw: String?
+    var mallampatiClassificationRaw: [String]?
     var mallampatiClassification: MallampatiClassification? {
-        get { mallampatiClassificationRaw.flatMap(MallampatiClassification.init(rawValue:)) }
-        set { mallampatiClassificationRaw = newValue?.rawValue }
+        get {
+            mallampatiClassificationRaw?.first.flatMap { MallampatiClassification(rawValue: $0) }
+        }
+        set {
+            mallampatiClassificationRaw = newValue.map { [$0.rawValue] }
+        }
     }
     
     var difficultAirwayEvaluationRaw: [String]?
@@ -338,7 +342,7 @@ final class PreAnesthesia {
         socialHabitsAndEnvironmentCustomDetails: [String]? = [],
         
         apfelScoreDetails: ApfelScore? = nil,
-        mallampatiClassification: MallampatiClassification? = nil,
+        mallampatiClassification: [MallampatiClassification]? = nil,
         difficultAirwayEvaluation: [DifficultAirwayEvaluation]? = nil,
         difficultAirwayEvaluationDetailsText: String? = nil,
         difficultAirwayEvaluationCustomDetails: [String]? = [],
@@ -443,7 +447,7 @@ final class PreAnesthesia {
         self.socialHabitsAndEnvironmentCustomDetails = socialHabitsAndEnvironmentCustomDetails
         self.apfelScoreDetailsRaw = apfelScoreDetails.map { [$0.rawValue] }
         
-        self.mallampatiClassificationRaw = mallampatiClassification?.rawValue
+        self.mallampatiClassificationRaw = mallampatiClassification?.map { $0.rawValue }
         self.difficultAirwayEvaluationRaw = difficultAirwayEvaluation?.map { $0.rawValue }
         self.difficultAirwayEvaluationDetailsText = difficultAirwayEvaluationDetailsText
         self.difficultAirwayEvaluationCustomDetails = difficultAirwayEvaluationCustomDetails

@@ -602,28 +602,22 @@ public enum MallampatiClassification: String, Codable, CaseIterable {
 public enum DifficultAirwayEvaluation: String, Codable, CaseIterable {
     case previousHistory
     case anatomy
-    case sleepApnea
     case tyromentonian
     case esternalmentonian
     case interIncisive
-    case neck
     case neckMobility
     case obesity
-    case tongue
     case noTeeth
     
     var displayName: String {
         switch self {
         case .previousHistory:      "História prévia VA difícil"
-        case .anatomy:              "Alterações faciais ou articulares"
-        case .sleepApnea:           "Apneia do sono"
+        case .anatomy:              "Alterações osteofaciais"
         case .tyromentonian:        "Distância tireomentoniana"
         case .esternalmentonian:    "Distância esternomentoniana"
         case .interIncisive:        "Distância entre incisivos"
-        case .neck:                 "Pescoço curto"
         case .neckMobility:         "Movibilidade do pescoço reduzida"
         case .obesity:              "Obesidade"
-        case .tongue:               "Língua grande"
         case .noTeeth:              "Edentado"
         }
     }
