@@ -135,6 +135,12 @@ struct ComorbitiesFormView: View {
     var body: some View {
         NavigationStack {
             Form {
+                
+                if let message = viewModel.comorbities.validationMessage {
+                    Text(message)
+                        .foregroundColor(.red)
+                }
+                
                 Section("Paciente Saudável") {
                     Toggle("Sem Comorbidades", systemImage: "heart.fill",
                            isOn: $viewModel.comorbities.healthyPatient)

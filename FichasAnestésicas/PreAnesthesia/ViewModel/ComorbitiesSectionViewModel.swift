@@ -244,6 +244,7 @@ final class ComorbitiesSectionViewModel {
             isInfant = false
         } else {
             isInfant = true
+            isInfantComorbitiesDetails = [.healthy]
         }
     }
     
@@ -579,6 +580,71 @@ final class ComorbitiesSectionViewModel {
             
             return true
         }
+    }
+    
+    var validationMessage: String? {
+        if !hasAnyInfo {
+            return "Selecione se paciente saudável ou aponte um sistema com comorbidades"
+        }
+        
+        if healthyPatient {
+                if isInfant && !(isInfantComorbitiesDetails == [.healthy]) {
+                    return "Paciente saudável: marque apenas 'Saudável' em Infantil"
+                }
+                if isPregnant && !(isPregnantComorbitiesDetails == [.healthy]) {
+                    return "Paciente saudável: marque apenas 'Saudável' em Gestante"
+                }
+                if cardiacComorbities || respiratoryComorbities /* ... outras */ {
+                    return "Paciente saudável não pode ter outras comorbidades"
+                }
+            } else {
+                if isInfant && (isInfantComorbitiesDetails?.isEmpty ?? true) && isInfantCustomDetails.isEmpty {
+                    return "Adicione detalhes para Infantil"
+                }
+                if isPregnant && (isPregnantComorbitiesDetails?.isEmpty ?? true) && isPregnantCustomDetails.isEmpty {
+                    return "Adicione detalhes para Gestante"
+                }
+                if cardiacComorbities && (cardiacComorbitiesDetails?.isEmpty ?? true) && cardiacComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades cardíacas"
+                }
+                if respiratoryComorbities && (respiratoryComorbitiesDetails?.isEmpty ?? true) && respiratoryComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades respiratórias"
+                }
+                if endocrineComorbities && (endocrineComorbitiesDetails?.isEmpty ?? true) && endocrineComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades endócrinas"
+                }
+                if gastrointestinalComorbities && (gastrointestinalComorbitiesDetails?.isEmpty ?? true) && gastrointestinalComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades do trato gastrointestinais"
+                }
+                if hematologicalComorbities && (hematologicalComorbitiesDetails?.isEmpty ?? true) && hematologicalComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades hematológicas"
+                }
+                if imunologicalComorbities && (imunologicalComorbitiesDetails?.isEmpty ?? true) && imunologicalComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades imunológicas"
+                }
+                if musculoskeletalComorbities && (musculoskeletalComorbitiesDetails?.isEmpty ?? true) && musculoskeletalComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades do sistema muscular e articulares"
+                }
+                if genitourologicalComorbities && (genitourologicalComorbitiesDetails?.isEmpty ?? true) && genitourologicalComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades do sistema genitourinário"
+                }
+                if gynecologicalComorbities && (gynecologicalComorbitiesDetails?.isEmpty ?? true) && gynecologicalComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades ginecológicas"
+                }
+                if androgenicalComorbities && (androgenicalComorbitiesDetails?.isEmpty ?? true) && androgenicalComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades androgenológicas"
+                }
+                if neurologicalComorbities && (neurologicalComorbitiesDetails?.isEmpty ?? true) && neurologicalComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para comorbidades neurológicas"
+                }
+                if geneticSyndrome && (geneticSyndromeComorbitiesDetails?.isEmpty ?? true) && geneticSyndromeComorbitiesCustomDetails.isEmpty {
+                    return "Adicione detalhes para Síndromes Genéticas"
+                }
+        }
+        return nil
+    }
+    var showValidationMessage: Bool {
+        validationMessage != nil
     }
     
     
