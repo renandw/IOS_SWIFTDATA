@@ -64,6 +64,7 @@ final class PreAnesthesia {
     var healthyPatient: Bool?
     var surgeryHistory: Bool?
     var anesthesiaHistory: Bool?
+    var hasAllergies: Bool?
     
     //one by one
     var isPregnantComorbitiesDetailsRaw: [String]?
@@ -210,6 +211,32 @@ final class PreAnesthesia {
         set { apfelScoreDetailsRaw = newValue?.map { $0.rawValue}}
     }
     
+    var mallampatiClassificationRaw: String?
+    var mallampatiClassification: MallampatiClassification? {
+        get { mallampatiClassificationRaw.flatMap(MallampatiClassification.init(rawValue:)) }
+        set { mallampatiClassificationRaw = newValue?.rawValue }
+    }
+    
+    var difficultAirwayEvaluationRaw: [String]?
+    var difficultAirwayEvaluation: [DifficultAirwayEvaluation]? {
+        get { difficultAirwayEvaluationRaw?.compactMap(DifficultAirwayEvaluation.init(rawValue:))}
+        set { difficultAirwayEvaluationRaw = newValue?.map { $0.rawValue}}
+    }
+    
+    var difficultAirwayEvaluationDetailsText: String?
+    var difficultAirwayEvaluationCustomDetails: [String]?
+    
+    var dailyMedicationsRaw: [String]?
+    var dailyMedications: [DailyMedications]? {
+        get { dailyMedicationsRaw?.compactMap(DailyMedications.init(rawValue:))}
+        set { dailyMedicationsRaw = newValue?.map { $0.rawValue}}
+    }
+    
+    var dailyMedicationsRawDetailsText: String?
+    var dailyMedicationsRawCustomDetails: [String]?
+    
+    
+    
     init(
         preanesthesiaId: String = UUID().uuidString,
         surgery: Surgery,
@@ -247,6 +274,7 @@ final class PreAnesthesia {
         neurologicalComorbities: Bool = false,
         geneticSyndrome: Bool = false,
         healthyPatient: Bool = false,
+        hasAllergies: Bool? = false,
         
         
         surgeryHistory: Bool = false,
@@ -310,6 +338,13 @@ final class PreAnesthesia {
         socialHabitsAndEnvironmentCustomDetails: [String]? = [],
         
         apfelScoreDetails: ApfelScore? = nil,
+        mallampatiClassification: MallampatiClassification? = nil,
+        difficultAirwayEvaluation: [DifficultAirwayEvaluation]? = nil,
+        difficultAirwayEvaluationDetailsText: String? = nil,
+        difficultAirwayEvaluationCustomDetails: [String]? = [],
+        dailyMedications: [DailyMedications]? = nil,
+        dailyMedicationsRawDetailsText: String? = nil,
+        dailyMedicationsRawCustomDetails: [String]? = []
         
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -349,6 +384,7 @@ final class PreAnesthesia {
         self.neurologicalComorbities = neurologicalComorbities
         self.geneticSyndrome = geneticSyndrome
         self.healthyPatient = healthyPatient
+        self.hasAllergies = hasAllergies
         self.surgeryHistory = surgeryHistory
         self.anesthesiaHistory = anesthesiaHistory
         //one by one
@@ -406,6 +442,14 @@ final class PreAnesthesia {
         self.socialHabitsAndEnvironmentDetailsText = socialHabitsAndEnvironmentDetailsText
         self.socialHabitsAndEnvironmentCustomDetails = socialHabitsAndEnvironmentCustomDetails
         self.apfelScoreDetailsRaw = apfelScoreDetails.map { [$0.rawValue] }
+        
+        self.mallampatiClassificationRaw = mallampatiClassification?.rawValue
+        self.difficultAirwayEvaluationRaw = difficultAirwayEvaluation?.map { $0.rawValue }
+        self.difficultAirwayEvaluationDetailsText = difficultAirwayEvaluationDetailsText
+        self.difficultAirwayEvaluationCustomDetails = difficultAirwayEvaluationCustomDetails
+        self.dailyMedicationsRaw = dailyMedications?.map { $0.rawValue }
+        self.dailyMedicationsRawDetailsText = dailyMedicationsRawDetailsText
+        self.dailyMedicationsRawCustomDetails = dailyMedicationsRawCustomDetails
     }
 }
 

@@ -136,9 +136,11 @@ struct ComorbitiesFormView: View {
         NavigationStack {
             Form {
                 
-                if let message = viewModel.comorbities.validationMessage {
-                    Text(message)
-                        .foregroundColor(.red)
+                ForEach(viewModel.comorbities.validationMessages, id: \.self) { message in
+                    Text(message).foregroundStyle(.red)
+                }
+                Button("Preset Paciente Saudável") {
+                    viewModel.comorbities.applyHealthyPatient()
                 }
                 
                 Section("Paciente Saudável") {

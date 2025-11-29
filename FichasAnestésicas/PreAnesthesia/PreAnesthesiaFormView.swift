@@ -131,6 +131,22 @@ struct PreAnesthesiaFormView: View {
                 
                 Section {
                     NavigationLink {
+                        AirwaySectionView(
+                            viewModel: viewModel
+                        )
+                    } label : {
+                        HStack {
+                            Text("Preditores de via aérea difícil")
+                            Spacer()
+                            
+                        }
+                    }
+                } header: {
+                    Text("Avaliação Via Aérea")
+                }
+                
+                Section {
+                    NavigationLink {
                         AnesthesiaTechniquePickerView(selection: $viewModel.techniques)
                     } label: {
                         HStack {

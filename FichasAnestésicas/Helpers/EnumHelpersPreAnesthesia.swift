@@ -582,3 +582,74 @@ extension ApfelScore {
     }
 }
 
+
+public enum MallampatiClassification: String, Codable, CaseIterable {
+    case I
+    case II
+    case III
+    case IV
+    
+    var displayName: String {
+        switch self {
+        case .I: "I"
+        case .II: "II"
+        case .III: "III"
+        case .IV: "IV"
+        }
+    }
+}
+
+public enum DifficultAirwayEvaluation: String, Codable, CaseIterable {
+    case previousHistory
+    case anatomy
+    case sleepApnea
+    case tyromentonian
+    case esternalmentonian
+    case interIncisive
+    case neck
+    case neckMobility
+    case obesity
+    case tongue
+    case noTeeth
+    
+    var displayName: String {
+        switch self {
+        case .previousHistory:      "História prévia VA difícil"
+        case .anatomy:              "Alterações faciais ou articulares"
+        case .sleepApnea:           "Apneia do sono"
+        case .tyromentonian:        "Distância tireomentoniana"
+        case .esternalmentonian:    "Distância esternomentoniana"
+        case .interIncisive:        "Distância entre incisivos"
+        case .neck:                 "Pescoço curto"
+        case .neckMobility:         "Movibilidade do pescoço reduzida"
+        case .obesity:              "Obesidade"
+        case .tongue:               "Língua grande"
+        case .noTeeth:              "Edentado"
+        }
+    }
+}
+
+public enum DailyMedications: String, Codable, CaseIterable {
+    case antiDiabetes
+    case antiHypertension
+    case antiCholesterol
+    case imunossupressor
+    case anticoncepcional
+    case antiConvulsant
+    case antiInflammatory
+    case antiCoagulant
+    
+    var displayName: String {
+        switch self {
+        case .antiDiabetes:          "Antidiabéticos"
+        case .antiHypertension:      "Anti-hipertensivos"
+        case .antiCholesterol:       "Antidislipidêmicos"
+        case .imunossupressor:       "Imunossupressores"
+        case .anticoncepcional:      "Anticoncepcionais orais"
+        case .antiConvulsant:        "Anticonvulsivantes"
+        case .antiInflammatory:      "Anti-inflamatórios"
+        case .antiCoagulant:         "Anticoagulantes"
+        }
+    }
+}
+
