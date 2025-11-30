@@ -175,12 +175,12 @@ struct PreAnesthesiaFormView: View {
                         LabsAndImageExamsFormView(viewModel: viewModel)
                     } label: {
                         HStack {
-                            Text("Medicamentos e Alergias")
+                            Text("Exames laboratoriais e de imagem")
                             Spacer()
                         }
                     }
                 }header: {
-                    Text("Medicamentos e Alergias")
+                    Text("Exames complementares")
                 }
                 Section {
                     NavigationLink {

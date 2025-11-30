@@ -1,6 +1,6 @@
 //
 //  LabsAndImageExamsFormView.swift
-//  FichasAnestésicas
+//  FichasAnestésicas
 //
 //  Created by Renan Wrobel on 29/11/25.
 //
@@ -12,9 +12,6 @@ struct LabsAndImageExamsFormView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var viewModel: PreAnesthesiaViewModel
     
-    @State private var selectedExamType: ImagingExamType?
-    @State private var showingAddExamSheet = false
-    
     var body: some View {
         NavigationStack {
             Form {
@@ -22,15 +19,13 @@ struct LabsAndImageExamsFormView: View {
                     laboratoryExamsContent
                 }
                 
-                Section {
-                    imagingExamsContent
-                } header: {
-                    Text("Exames de Imagem")
-                } footer: {
-                    Button {
-                        showingAddExamSheet = true
-                    } label: {
-                        Label("Adicionar Exame de Imagem", systemImage: "plus.circle")
+                Section("Exames de Imagem") {
+                    imagingExamTogglesContent
+                }
+                
+                if !viewModel.labsAndImage.imagingExams.isEmpty {
+                    Section("Achados dos Exames") {
+                        imagingExamsContent
                     }
                 }
             }
@@ -47,9 +42,6 @@ struct LabsAndImageExamsFormView: View {
                         }
                     }
                 }
-            }
-            .sheet(isPresented: $showingAddExamSheet) {
-                addExamTypeSheet
             }
         }
     }
@@ -123,90 +115,45 @@ struct LabsAndImageExamsFormView: View {
         }
     }
     
-    // MARK: - Imaging Exams
+    // MARK: - Imaging Exam Toggles
     
-    private var imagingExamsContent: some View {
-        Group {
-            if viewModel.labsAndImage.imagingExams.isEmpty {
-                Text("Nenhum exame de imagem adicionado")
-                    .foregroundStyle(.secondary)
-            } else {
-                ForEach(viewModel.labsAndImage.imagingExams) { exam in
-                    NavigationLink {
-                        ImagingExamDetailView(
-                            viewModel: viewModel,
-                            exam: exam
-                        )
-                    } label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(exam.type.displayName)
-                                .font(.headline)
-                            if !exam.findings.isEmpty || exam.customFinding != nil {
-                                Text(examSummary(for: exam))
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(2)
-                            }
+    private var imagingExamTogglesContent: some View {
+        ForEach(ImagingExamType.allCases, id: \.self) { type in
+            Toggle(isOn: Binding(
+                get: {
+                    viewModel.labsAndImage.imagingExams.contains { $0.type == type }
+                },
+                set: { isOn in
+                    if isOn {
+                        viewModel.labsAndImage.addImagingExam(type: type)
+                    } else {
+                        if let index = viewModel.labsAndImage.imagingExams.firstIndex(where: { $0.type == type }) {
+                            viewModel.labsAndImage.removeImagingExam(at: index)
                         }
                     }
                 }
-                .onDelete { indexSet in
-                    indexSet.forEach { index in
-                        viewModel.labsAndImage.removeImagingExam(at: index)
-                    }
-                }
+            )) {
+                Text(type.displayName)
+                
             }
         }
     }
     
-    private var addExamTypeSheet: some View {
-        NavigationStack {
-            List(ImagingExamType.allCases, id: \.self) { type in
-                Button {
-                    viewModel.labsAndImage.addImagingExam(type: type)
-                    showingAddExamSheet = false
-                } label: {
-                    Text(type.displayName)
-                }
-            }
-            .navigationTitle("Selecionar Exame")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") {
-                        showingAddExamSheet = false
-                    }
-                }
-            }
-        }
-    }
+    // MARK: - Imaging Exams
     
-    private func examSummary(for exam: ImagingExam) -> String {
-        var parts: [String] = []
-        
-        if !exam.findings.isEmpty {
-            let findingNames = exam.findings.compactMap { finding -> String? in
-                switch finding {
-                case .chestXRay(let f): return f.displayName
-                case .ecg(let f): return f.displayName
-                case .echocardiogram(let f): return f.displayName
-                }
-            }
-            parts.append(contentsOf: findingNames)
+    private var imagingExamsContent: some View {
+        ForEach(viewModel.labsAndImage.imagingExams) { exam in
+            ImagingExamDisclosureGroup(
+                viewModel: viewModel,
+                exam: exam
+            )
         }
-        
-        if let custom = exam.customFinding, !custom.isEmpty {
-            parts.append(custom)
-        }
-        
-        return parts.isEmpty ? "Sem achados registrados" : parts.joined(separator: ", ")
     }
 }
 
-// MARK: - Imaging Exam Detail View
+// MARK: - Imaging Exam Disclosure Group
 
-struct ImagingExamDetailView: View {
-    @Environment(\.dismiss) private var dismiss
+struct ImagingExamDisclosureGroup: View {
     @Bindable var viewModel: PreAnesthesiaViewModel
     let exam: ImagingExam
     
@@ -214,25 +161,15 @@ struct ImagingExamDetailView: View {
     @State private var customFinding: String = ""
     
     var body: some View {
-        Form {
-            Section("Achados") {
-                findingsContent
-            }
+        DisclosureGroup {
+            findingsContent
             
-            Section("Achado Customizado") {
-                TextField("Descrever achado", text: $customFinding, axis: .vertical)
-                    .lineLimit(3...6)
-            }
-        }
-        .navigationTitle(exam.type.displayName)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Salvar") {
-                    saveFindings()
-                    dismiss()
-                }
-            }
+            TextField("Achado customizado", text: $customFinding, axis: .vertical)
+                .lineLimit(2...4)
+                .onChange(of: selectedFindings) { saveFindings() }
+                .onChange(of: customFinding) { saveFindings() }
+        } label: {
+            Text(exam.type.displayName)
         }
         .onAppear {
             loadCurrentFindings()
