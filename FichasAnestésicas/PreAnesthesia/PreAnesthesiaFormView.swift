@@ -172,6 +172,18 @@ struct PreAnesthesiaFormView: View {
                 }
                 Section {
                     NavigationLink {
+                        LabsAndImageExamsFormView(viewModel: viewModel)
+                    } label: {
+                        HStack {
+                            Text("Medicamentos e Alergias")
+                            Spacer()
+                        }
+                    }
+                }header: {
+                    Text("Medicamentos e Alergias")
+                }
+                Section {
+                    NavigationLink {
                         AnesthesiaTechniquePickerView(selection: $viewModel.techniques)
                     } label: {
                         HStack {
