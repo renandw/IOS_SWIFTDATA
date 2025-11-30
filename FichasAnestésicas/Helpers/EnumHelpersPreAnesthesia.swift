@@ -647,3 +647,98 @@ public enum DailyMedications: String, Codable, CaseIterable {
     }
 }
 
+struct LaboratoryExams: Codable {
+    var hemoglobin: Double?
+    var urea: Double?
+    var creatinine: Double?
+    var sodium: Double?
+    var potassium: Double?
+    var inr: Double?
+    var glucose: Double?
+}
+
+
+public enum ImagingExamType: String, Codable, CaseIterable {
+    case chestXRay
+    case ecg
+    case echocardiogram
+    
+    var displayName: String {
+        switch self {
+        case .chestXRay:            "Raio-X de Tórax"
+        case .ecg:                  "ECG"
+        case .echocardiogram:       "Ecocardiograma"
+        }
+    }
+}
+
+public enum ChestXRayFinding: String, CaseIterable, Codable {
+    case normal
+    case cardiomegaly
+    case pulmonaryCongestion
+    case infiltrate
+    case pleuralEffusion
+    case atelectasis
+    
+    var displayName: String {
+        switch self {
+        case .normal:                "Normal"
+        case .cardiomegaly:          "Cardiomegalia"
+        case .pulmonaryCongestion:   "Congestão Pulmonar"
+        case .infiltrate:            "Infiltração"
+        case .pleuralEffusion:       "Euforia Pléura"
+        case .atelectasis:           "Atelectasia Pulmonar"
+        }
+    }
+}
+
+public enum ecgFinding: String, CaseIterable, Codable {
+    case normal
+    case sinusRhythm
+    case atrialFibrillation
+    case bre
+    case bavt
+    
+    var displayName: String {
+        switch self {
+        case .normal:                "Normal"
+        case .sinusRhythm:           "Ritmo Sinusoidal"
+        case .atrialFibrillation:    "Fibrilação Atrial"
+        case .bre:                   "Bloqueio de Ramo Esquerdo"
+        case .bavt:                  "BAVT"
+        }
+    }
+}
+public enum echocardiogramFinding: String, CaseIterable, Codable {
+    case normal
+    case mitralInsufficiency
+    case aorticInsufficiency
+    case mitralStenoses
+    case aorticStenoses
+    case lowFE
+    
+    var displayName: String {
+        switch self {
+        case .normal:                "Normal"
+        case .mitralInsufficiency:   "Insuficiência Mitral"
+        case .aorticInsufficiency:   "Insuficiência Aórtica"
+        case .mitralStenoses:        "Estenose Mitral"
+        case .aorticStenoses:        "Estenose Aórtica"
+        case .lowFE:                 "Fração de Ejeção Baixa"
+        }
+    }
+}
+
+enum ImagingFinding: Codable {
+    case chestXRay(ChestXRayFinding)
+    case ecg(ecgFinding)
+    case echocardiogram(echocardiogramFinding)
+}
+
+
+struct ImagingExam: Codable, Identifiable {
+    var id = UUID()
+    var type: ImagingExamType
+    var findings: [ImagingFinding] = []
+    var customFinding: String? = nil
+}

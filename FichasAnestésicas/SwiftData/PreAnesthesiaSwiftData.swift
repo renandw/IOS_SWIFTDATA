@@ -241,6 +241,8 @@ final class PreAnesthesia {
     
     var allergiesMedicationsCustomDetails: [String]?
     
+    var laboratoryExams: LaboratoryExams?
+    
     
     
     init(
@@ -352,10 +354,8 @@ final class PreAnesthesia {
         dailyMedications: [DailyMedications]? = nil,
         dailyMedicationsRawDetailsText: String? = nil,
         dailyMedicationsRawCustomDetails: [String]? = [],
-        allergiesMedicationsCustomDetails: [String]? = []
-        
-        
-        
+        allergiesMedicationsCustomDetails: [String]? = [],
+        laboratoryExams: LaboratoryExams? = nil
     ) {
         self.preanesthesiaId = preanesthesiaId
         self.surgery = surgery
@@ -461,6 +461,7 @@ final class PreAnesthesia {
         self.dailyMedicationsDetailsText = dailyMedicationsDetailsText
         self.dailyMedicationsCustomDetails = dailyMedicationsCustomDetails
         self.allergiesMedicationsCustomDetails = allergiesMedicationsCustomDetails
+        self.laboratoryExams = laboratoryExams
     }
 }
 
