@@ -236,8 +236,10 @@ final class PreAnesthesia {
         set { dailyMedicationsRaw = newValue?.map { $0.rawValue}}
     }
     
-    var dailyMedicationsRawDetailsText: String?
-    var dailyMedicationsRawCustomDetails: [String]?
+    var dailyMedicationsDetailsText: String?
+    var dailyMedicationsCustomDetails: [String]?
+    
+    var allergiesMedicationsCustomDetails: [String]?
     
     
     
@@ -346,9 +348,13 @@ final class PreAnesthesia {
         difficultAirwayEvaluation: [DifficultAirwayEvaluation]? = nil,
         difficultAirwayEvaluationDetailsText: String? = nil,
         difficultAirwayEvaluationCustomDetails: [String]? = [],
+        
         dailyMedications: [DailyMedications]? = nil,
         dailyMedicationsRawDetailsText: String? = nil,
-        dailyMedicationsRawCustomDetails: [String]? = []
+        dailyMedicationsRawCustomDetails: [String]? = [],
+        allergiesMedicationsCustomDetails: [String]? = []
+        
+        
         
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -452,8 +458,9 @@ final class PreAnesthesia {
         self.difficultAirwayEvaluationDetailsText = difficultAirwayEvaluationDetailsText
         self.difficultAirwayEvaluationCustomDetails = difficultAirwayEvaluationCustomDetails
         self.dailyMedicationsRaw = dailyMedications?.map { $0.rawValue }
-        self.dailyMedicationsRawDetailsText = dailyMedicationsRawDetailsText
-        self.dailyMedicationsRawCustomDetails = dailyMedicationsRawCustomDetails
+        self.dailyMedicationsDetailsText = dailyMedicationsDetailsText
+        self.dailyMedicationsCustomDetails = dailyMedicationsCustomDetails
+        self.allergiesMedicationsCustomDetails = allergiesMedicationsCustomDetails
     }
 }
 

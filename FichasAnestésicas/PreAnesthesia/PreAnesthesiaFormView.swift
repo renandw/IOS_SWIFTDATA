@@ -150,7 +150,26 @@ struct PreAnesthesiaFormView: View {
                 } header: {
                     Text("Avaliação Via Aérea")
                 }
-                
+                Section {
+                    NavigationLink {
+                        MedicationsAndAllergiesFormView(
+                            viewModel: viewModel,
+                            selection: Binding(
+                                get: { viewModel.medicationAndAllergies.dailyMedications ?? [] },
+                                set: { newArray in
+                                    viewModel.medicationAndAllergies.dailyMedications = newArray.isEmpty ? nil : newArray
+                                }
+                            )
+                        )
+                    } label: {
+                        HStack {
+                            Text("Medicamentos e Alergias")
+                            Spacer()
+                        }
+                    }
+                }header: {
+                    Text("Medicamentos e Alergias")
+                }
                 Section {
                     NavigationLink {
                         AnesthesiaTechniquePickerView(selection: $viewModel.techniques)

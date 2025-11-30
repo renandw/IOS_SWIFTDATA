@@ -40,6 +40,7 @@ final class PreAnesthesiaViewModel: Identifiable {
     var surgeryHistory = SurgeryHistorySectionViewModel()
     var socialHabitsAndEnvironment = SocialHabitsAndEnvironmentSectionViewModel()
     var airway = AirwaySectionViewModel()
+    var medicationAndAllergies = MedicationsAndAllergiesSectionViewModel()
     
     // MARK: init para edit
     init(
@@ -59,6 +60,7 @@ final class PreAnesthesiaViewModel: Identifiable {
         surgeryHistory.load(from: preanesthesia)
         socialHabitsAndEnvironment.load(from: preanesthesia)
         airway.load(from: preanesthesia)
+        medicationAndAllergies.load(from: preanesthesia)
         load(from: preanesthesia)
         
     }
@@ -98,6 +100,7 @@ final class PreAnesthesiaViewModel: Identifiable {
         surgeryHistory.apply(to: preanesthesia)
         socialHabitsAndEnvironment.apply(to: preanesthesia)
         airway.apply(to: preanesthesia)
+        medicationAndAllergies.apply(to: preanesthesia)
         apply(to: preanesthesia)
         
         let surgery = preanesthesia.surgery
