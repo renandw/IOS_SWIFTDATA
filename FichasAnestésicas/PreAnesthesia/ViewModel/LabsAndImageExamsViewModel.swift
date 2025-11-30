@@ -22,6 +22,7 @@ final class LabsAndImageExamsSectionViewModel {
     
     // Imaging Exams
     var imagingExams: [ImagingExam] = []
+    var customImagingExams: [String] = []
     
     func load(from e: PreAnesthesia) {
         // Load laboratory exams
@@ -32,6 +33,7 @@ final class LabsAndImageExamsSectionViewModel {
         potassium  = e.laboratoryExams?.potassium
         inr        = e.laboratoryExams?.inr
         glucose    = e.laboratoryExams?.glucose
+        customImagingExams = e.customImagingExams ?? []
         
         // Load imaging exams
         imagingExams = e.imagingExams ?? []
@@ -39,6 +41,7 @@ final class LabsAndImageExamsSectionViewModel {
     
     func apply(to e: PreAnesthesia) {
         // Apply laboratory exams
+        e.customImagingExams = customImagingExams
         e.laboratoryExams = LaboratoryExams(
             hemoglobin: hemoglobin,
             urea: urea,
@@ -75,4 +78,16 @@ final class LabsAndImageExamsSectionViewModel {
             imagingExams[index].customFinding = customFinding
         }
     }
+    
+    func addCustomImagingExams(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !customImagingExams.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+        customImagingExams.append(trimmed)
+    }
+    func removeCustomImagingExams(at index: Int) {
+        guard customImagingExams.indices.contains(index) else { return }
+        customImagingExams.remove(at: index)
+    }
+    
 }

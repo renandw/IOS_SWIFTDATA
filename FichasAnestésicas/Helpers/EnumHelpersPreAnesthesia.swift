@@ -665,9 +665,9 @@ public enum ImagingExamType: String, Codable, CaseIterable {
     
     var displayName: String {
         switch self {
-        case .chestXRay:            "Raio-X de Tórax"
-        case .ecg:                  "ECG"
-        case .echocardiogram:       "Ecocardiograma"
+        case .chestXRay:            "Radiografia de Tórax"
+        case .ecg:                  "Eletrocardiograma - ECG"
+        case .echocardiogram:       "Ecocardiograma - ECO"
         }
     }
 }

@@ -27,6 +27,7 @@ struct ComorbiditiesSection<T: ComorbiditiesType>: View {
         Section {
             Toggle(isOn: $isEnabled) {
                 Label(title, systemImage: icon)
+                    .fontWeight(Font.Weight.medium)
             }
             
             if isEnabled {
@@ -146,6 +147,7 @@ struct ComorbitiesFormView: View {
                 Section("Paciente Saudável") {
                     Toggle("Sem Comorbidades", systemImage: "heart.fill",
                            isOn: $viewModel.comorbities.healthyPatient)
+                    .fontWeight(Font.Weight.medium)
                 }
                 
                 // Gestação (condicional)

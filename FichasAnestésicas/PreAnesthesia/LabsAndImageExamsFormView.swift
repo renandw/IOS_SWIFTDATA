@@ -11,6 +11,7 @@ import Observation
 struct LabsAndImageExamsFormView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var viewModel: PreAnesthesiaViewModel
+    @State private var newCustomImageExam = ""
     
     var body: some View {
         NavigationStack {
@@ -20,13 +21,11 @@ struct LabsAndImageExamsFormView: View {
                 }
                 
                 Section("Exames de Imagem") {
-                    imagingExamTogglesContent
+                    imagingExamsWithFindingsContent
                 }
                 
-                if !viewModel.labsAndImage.imagingExams.isEmpty {
-                    Section("Achados dos Exames") {
-                        imagingExamsContent
-                    }
+                Section("Outros") {
+                    customImagingExams
                 }
             }
             .navigationTitle("Exames Lab. e Imagem")
@@ -42,6 +41,44 @@ struct LabsAndImageExamsFormView: View {
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    private var customImagingExams: some View {
+        Group {
+            ForEach(viewModel.labsAndImage.customImagingExams, id: \.self) { name in
+                Button {
+                    if let index = viewModel.labsAndImage.customImagingExams.firstIndex(of: name) {
+                        viewModel.labsAndImage.removeImagingExam(at: index)
+                    }
+                } label: {
+                    HStack {
+                        Text(name)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.blue)
+                    }
+                }
+                .foregroundStyle(.primary)
+            }
+            HStack {
+                TextField("Tomografia", text: $newCustomImageExam)
+                    .autocorrectionDisabled(true)
+                    .submitLabel(.done)
+                    .onSubmit {
+                        viewModel.labsAndImage.addCustomImagingExams(newCustomImageExam)
+                        newCustomImageExam = ""
+                    }
+                if !newCustomImageExam.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Button {
+                        viewModel.labsAndImage.addCustomImagingExams(newCustomImageExam)
+                        newCustomImageExam = ""
+                    } label: {
+                        Image(systemName: "plus.circle")
+                    }
+                }
+                
             }
         }
     }
@@ -115,45 +152,41 @@ struct LabsAndImageExamsFormView: View {
         }
     }
     
-    // MARK: - Imaging Exam Toggles
+    // MARK: - Imaging Exams with Findings
     
-    private var imagingExamTogglesContent: some View {
+    private var imagingExamsWithFindingsContent: some View {
         ForEach(ImagingExamType.allCases, id: \.self) { type in
-            Toggle(isOn: Binding(
-                get: {
-                    viewModel.labsAndImage.imagingExams.contains { $0.type == type }
-                },
-                set: { isOn in
-                    if isOn {
-                        viewModel.labsAndImage.addImagingExam(type: type)
-                    } else {
-                        if let index = viewModel.labsAndImage.imagingExams.firstIndex(where: { $0.type == type }) {
-                            viewModel.labsAndImage.removeImagingExam(at: index)
+            Section {
+                Toggle(isOn: Binding(
+                    get: {
+                        viewModel.labsAndImage.imagingExams.contains { $0.type == type }
+                    },
+                    set: { isOn in
+                        if isOn {
+                            viewModel.labsAndImage.addImagingExam(type: type)
+                        } else {
+                            if let index = viewModel.labsAndImage.imagingExams.firstIndex(where: { $0.type == type }) {
+                                viewModel.labsAndImage.removeImagingExam(at: index)
+                            }
                         }
                     }
+                )) {
+                    Text(type.displayName)
+                        .fontWeight(.medium)
                 }
-            )) {
-                Text(type.displayName)
-                
+
+                if let exam = viewModel.labsAndImage.imagingExams.first(where: { $0.type == type }) {
+                    ImagingExamFindingsView(viewModel: viewModel, exam: exam)
+                }
             }
-        }
-    }
-    
-    // MARK: - Imaging Exams
-    
-    private var imagingExamsContent: some View {
-        ForEach(viewModel.labsAndImage.imagingExams) { exam in
-            ImagingExamDisclosureGroup(
-                viewModel: viewModel,
-                exam: exam
-            )
         }
     }
 }
 
-// MARK: - Imaging Exam Disclosure Group
 
-struct ImagingExamDisclosureGroup: View {
+// MARK: - Imaging Exam Findings View
+
+struct ImagingExamFindingsView: View {
     @Bindable var viewModel: PreAnesthesiaViewModel
     let exam: ImagingExam
     
@@ -161,16 +194,15 @@ struct ImagingExamDisclosureGroup: View {
     @State private var customFinding: String = ""
     
     var body: some View {
-        DisclosureGroup {
+        
             findingsContent
             
-            TextField("Achado customizado", text: $customFinding, axis: .vertical)
+            TextField("Descrever alteração", text: $customFinding, axis: .vertical)
                 .lineLimit(2...4)
+                //.textFieldStyle(.roundedBorder)
                 .onChange(of: selectedFindings) { saveFindings() }
                 .onChange(of: customFinding) { saveFindings() }
-        } label: {
-            Text(exam.type.displayName)
-        }
+        
         .onAppear {
             loadCurrentFindings()
         }
@@ -206,6 +238,7 @@ struct ImagingExamDisclosureGroup: View {
             }
         )) {
             Text(displayName)
+                .font(.subheadline)
         }
     }
     

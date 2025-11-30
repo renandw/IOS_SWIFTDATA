@@ -244,6 +244,7 @@ final class PreAnesthesia {
     var laboratoryExams: LaboratoryExams?
     
     var imagingExams: [ImagingExam]?
+    var customImagingExams: [String]?
     
     
     
@@ -358,7 +359,9 @@ final class PreAnesthesia {
         dailyMedicationsRawCustomDetails: [String]? = [],
         allergiesMedicationsCustomDetails: [String]? = [],
         laboratoryExams: LaboratoryExams? = nil,
-        imagingExams: [ImagingExam]? = nil
+        imagingExams: [ImagingExam]? = nil,
+        customImagingExams: [String]? = [],
+        
     ) {
         self.preanesthesiaId = preanesthesiaId
         self.surgery = surgery
@@ -466,6 +469,7 @@ final class PreAnesthesia {
         self.allergiesMedicationsCustomDetails = allergiesMedicationsCustomDetails
         self.laboratoryExams = laboratoryExams
         self.imagingExams = imagingExams
+        self.customImagingExams = customImagingExams
     }
 }
 
