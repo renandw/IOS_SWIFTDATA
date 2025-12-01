@@ -98,14 +98,32 @@ struct PreAnesthesiaView: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Text("Classificação ASA:")
+                        .fontWeight(.semibold)
                         Spacer()
                         if let asa = anesthesia.shared?.asa { asa.badgeView }
                     }
                     HStack {
                         Text("Apto:")
+                        .fontWeight(.semibold)
                         Spacer()
                         if let clearanceStatus = pre?.clearenceStatus {
                             Text("\(clearanceStatus.displayName)")
+                        }
+                    }
+                    VStack(alignment: .leading) {
+                        Text("Recomendações:")
+                        .fontWeight(.semibold)
+                        HStack(alignment: .top) {
+                            if let recommendations = pre?.definitiveRecommendationForRevaluationStatus, !recommendations.isEmpty {
+                                let joined = recommendations.map { $0.reportDisplayName }.joined(separator: "; ")
+                                Text(joined)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                        HStack(alignment: .top) {
+                            if let customRecommendations = pre?.futherRecommendationForRevaluation, !customRecommendations.isEmpty {
+                                Text(customRecommendations.joined(separator: "; "))
+                            }
                         }
                     }
                 }

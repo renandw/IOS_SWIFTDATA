@@ -24,9 +24,14 @@ struct LabsAndImageExamsFormView: View {
                     imagingExamsWithFindingsContent
                 }
                 
-                Section("Outros") {
+                Section("Outros Exames") {
                     customImagingExams
                 }
+                
+                Button("Paciente Saudável") {
+                    viewModel.labsAndImage.applyHealthyPatient()
+                }
+                
             }
             .navigationTitle("Exames Lab. e Imagem")
             .navigationBarTitleDisplayMode(.inline)
@@ -94,6 +99,7 @@ struct LabsAndImageExamsFormView: View {
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
+                Text("g/dL")
             }
             
             HStack {
@@ -103,6 +109,7 @@ struct LabsAndImageExamsFormView: View {
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
+                Text("mg/dL")
             }
             
             HStack {
@@ -112,6 +119,7 @@ struct LabsAndImageExamsFormView: View {
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
+                Text("mEq/L")
             }
             
             HStack {
@@ -121,6 +129,7 @@ struct LabsAndImageExamsFormView: View {
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
+                Text("mEq/L")    
             }
             
             HStack {
@@ -130,6 +139,7 @@ struct LabsAndImageExamsFormView: View {
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
+                Text("mEq/L")    
             }
             
             HStack {
@@ -148,6 +158,8 @@ struct LabsAndImageExamsFormView: View {
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
+                Text("mg/dL")
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -227,19 +239,22 @@ struct ImagingExamFindingsView: View {
     }
     
     private func findingToggle(_ displayName: String, rawValue: String) -> some View {
-        Toggle(isOn: Binding(
-            get: { selectedFindings.contains(rawValue) },
-            set: { isSelected in
-                if isSelected {
-                    selectedFindings.insert(rawValue)
-                } else {
-                    selectedFindings.remove(rawValue)
-                }
+        Button {
+            if selectedFindings.contains(rawValue) {
+                selectedFindings.remove(rawValue)
+            } else {
+                selectedFindings.insert(rawValue)
             }
-        )) {
-            Text(displayName)
-                .font(.subheadline)
+        } label: {
+            HStack {
+                Text(displayName)
+                    .font(.subheadline)
+                Spacer()
+                Image(systemName: selectedFindings.contains(rawValue) ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(selectedFindings.contains(rawValue) ? .blue : .secondary)
+            }
         }
+        .foregroundStyle(.primary)
     }
     
     private func loadCurrentFindings() {
@@ -280,3 +295,4 @@ struct ImagingExamFindingsView: View {
         )
     }
 }
+

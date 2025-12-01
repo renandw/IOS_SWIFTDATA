@@ -246,6 +246,8 @@ final class PreAnesthesia {
     var imagingExams: [ImagingExam]?
     var customImagingExams: [String]?
     
+    var physicalExaminationDetailsText: String?
+    
     
     
     init(
@@ -361,6 +363,7 @@ final class PreAnesthesia {
         laboratoryExams: LaboratoryExams? = nil,
         imagingExams: [ImagingExam]? = nil,
         customImagingExams: [String]? = [],
+        physicalExaminationDetailsText: String? = nil,
         
     ) {
         self.preanesthesiaId = preanesthesiaId
@@ -470,6 +473,7 @@ final class PreAnesthesia {
         self.laboratoryExams = laboratoryExams
         self.imagingExams = imagingExams
         self.customImagingExams = customImagingExams
+        self.physicalExaminationDetailsText = physicalExaminationDetailsText
     }
 }
 

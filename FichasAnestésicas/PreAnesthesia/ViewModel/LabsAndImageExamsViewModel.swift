@@ -90,4 +90,34 @@ final class LabsAndImageExamsSectionViewModel {
         customImagingExams.remove(at: index)
     }
     
+    func applyHealthyPatient() {
+        hemoglobin = 12.3
+        urea = 11.02
+        creatinine = 0.9
+        sodium = 142
+        potassium = 3.9
+        inr = 1.14
+        glucose = 91
+
+        // Imaging exams: set Chest X-Ray and ECG as Normal
+        let chestNormal = ImagingExam(type: .chestXRay,
+                                      findings: [.chestXRay(.normal)],
+                                      customFinding: nil)
+        let ecgNormal = ImagingExam(type: .ecg,
+                                    findings: [.ecg(.normal)],
+                                    customFinding: nil)
+
+        func upsert(_ exam: ImagingExam) {
+            if let idx = imagingExams.firstIndex(where: { $0.type == exam.type }) {
+                imagingExams[idx].findings = exam.findings
+                imagingExams[idx].customFinding = nil
+            } else {
+                imagingExams.append(exam)
+            }
+        }
+
+        upsert(chestNormal)
+        upsert(ecgNormal)
+    }
+    
 }

@@ -27,7 +27,7 @@ struct PreAnesthesiaFormView: View {
             Form {
                 Section {
                     clearenceStatusPicker
-                    if [.unable, .reevaluate].contains(viewModel.clearence.clearenceStatus) {
+                    if [.unable, .reevaluate, .able].contains(viewModel.clearence.clearenceStatus) {
                         NavigationLink {
                             RecommendationForRevaluationStatusView(
                                 selection: Binding(
@@ -51,7 +51,7 @@ struct PreAnesthesiaFormView: View {
                         }
                     }
                 } header: {
-                    Text("Liberação")
+                    Text("Parecer da Avaliação")
                 }
                 Section {
                     NavigationLink {
@@ -80,10 +80,6 @@ struct PreAnesthesiaFormView: View {
                             
                         }
                     }
-                } header: {
-                    Text("Histórico Cirúrgico")
-                }
-                Section {
                     NavigationLink {
                         AnesthesiaHistoryTypeFormView(
                             viewModel: viewModel
@@ -95,9 +91,21 @@ struct PreAnesthesiaFormView: View {
                             
                         }
                     }
+                    NavigationLink {
+                        ApfelScoreFormView(
+                            viewModel: viewModel
+                        )
+                    } label : {
+                        HStack {
+                            Text("Fatores de Risco NVPO")
+                            Spacer()
+                            
+                        }
+                    }
                 } header: {
-                    Text("Histórico Anestésico")
+                    Text("Histórico Cirúrgico-Anestésico")
                 }
+ 
                 Section {
                     NavigationLink {
                         SocialHabitsAndEnvironmentFormView(
@@ -113,23 +121,16 @@ struct PreAnesthesiaFormView: View {
                 } header: {
                     Text("Hábitos e Ambiente")
                 }
+
                 Section {
                     NavigationLink {
-                        ApfelScoreFormView(
-                            viewModel: viewModel
-                        )
-                    } label : {
+                        PhysicalExaminationFormView(viewModel: viewModel)
+                    } label: {
                         HStack {
-                            Text("Fatores de Risco NVPO")
+                            Text("Exame Físico")
                             Spacer()
-                            
                         }
                     }
-                } header: {
-                    Text("Fatores de Risco NVPO")
-                }
-                
-                Section {
                     NavigationLink {
                         AirwaySectionView(
                             viewModel: viewModel,
@@ -142,15 +143,11 @@ struct PreAnesthesiaFormView: View {
                         )
                     } label : {
                         HStack {
-                            Text("Preditores de via aérea difícil")
+                            Text("Avaliação Via Aérea")
                             Spacer()
                             
                         }
                     }
-                } header: {
-                    Text("Avaliação Via Aérea")
-                }
-                Section {
                     NavigationLink {
                         MedicationsAndAllergiesFormView(
                             viewModel: viewModel,
@@ -167,10 +164,7 @@ struct PreAnesthesiaFormView: View {
                             Spacer()
                         }
                     }
-                }header: {
-                    Text("Medicamentos e Alergias")
-                }
-                Section {
+                    
                     NavigationLink {
                         LabsAndImageExamsFormView(viewModel: viewModel)
                     } label: {
@@ -180,8 +174,9 @@ struct PreAnesthesiaFormView: View {
                         }
                     }
                 }header: {
-                    Text("Exames complementares")
+                    Text("Exame Físico e Complementares")
                 }
+
                 Section {
                     NavigationLink {
                         AnesthesiaTechniquePickerView(selection: $viewModel.techniques)
@@ -196,12 +191,6 @@ struct PreAnesthesiaFormView: View {
                             .multilineTextAlignment(.trailing)
                         }
                     }
-                } header: {
-                    HStack {
-                        Text("Técnicas Anestésicas")
-                    }
-                }
-                Section {
                     NavigationLink {
                         ASAPickerView(selection: $viewModel.asa)
                     } label: {
@@ -215,7 +204,7 @@ struct PreAnesthesiaFormView: View {
                     }
                 } header: {
                     HStack {
-                        Text("Classificação ASA")
+                        Text("Técnicas Anestésicas e Classificação ASA")
                     }
                 }
             }
