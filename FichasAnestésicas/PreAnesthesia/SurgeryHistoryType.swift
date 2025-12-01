@@ -74,7 +74,7 @@ struct SurgeryHistoryTypeSection<T: SurgeryHistoryType>: View {
                 
                 // Campo adicionar custom
                 HStack {
-                    TextField("Adicionar Especialidades", text: $newCustomItem)
+                    TextField("Adicionar", text: $newCustomItem)
                         .autocorrectionDisabled(true)
                         .submitLabel(.done)
                         .onSubmit {
@@ -154,7 +154,7 @@ struct SurgeryHistoryTypeFormView: View {
                 )
                 if viewModel.surgeryHistory.surgeryHistory {
                     SurgeryHistoryTypeSection(
-                        title: "Anestesias Prévias?",
+                        title: "Anestesias Prévias",
                         icon: "syringe.fill",
                         isEnabled: $viewModel.surgeryHistory.anesthesiaHistory,
                         selection: binding(get: { viewModel.surgeryHistory.anesthesiaHistoryDetails }, set: { viewModel.surgeryHistory.anesthesiaHistoryDetails = $0 }),

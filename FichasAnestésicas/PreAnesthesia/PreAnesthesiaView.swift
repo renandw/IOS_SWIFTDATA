@@ -50,6 +50,7 @@ struct PreAnesthesiaView: View {
                 apaCard(surgery: surgery)
                 comorbiditiesCard(preanesthesia: pre)
                 surgeryHistoryCard(preanesthesia: pre)
+                apfelCard(preanesthesia: pre)
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -96,33 +97,39 @@ struct PreAnesthesiaView: View {
             Divider()
             VStack(alignment: .leading) {
                 VStack(alignment: .leading) {
-                    HStack {
-                        Text("Classificação ASA:")
-                        .fontWeight(.semibold)
-                        Spacer()
-                        if let asa = anesthesia.shared?.asa { asa.badgeView }
-                    }
-                    HStack {
-                        Text("Apto:")
-                        .fontWeight(.semibold)
-                        Spacer()
-                        if let clearanceStatus = pre?.clearenceStatus {
-                            Text("\(clearanceStatus.displayName)")
+                    if anesthesia.shared?.asa != nil {
+                        HStack {
+                            Text("Classificação ASA:")
+                                .fontWeight(.semibold)
+                            Spacer()
+                            if let asa = anesthesia.shared?.asa { asa.badgeView }
                         }
                     }
-                    VStack(alignment: .leading) {
-                        Text("Recomendações:")
-                        .fontWeight(.semibold)
-                        HStack(alignment: .top) {
-                            if let recommendations = pre?.definitiveRecommendationForRevaluationStatus, !recommendations.isEmpty {
-                                let joined = recommendations.map { $0.reportDisplayName }.joined(separator: "; ")
-                                Text(joined)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                    if anesthesia.surgery.preanesthesia?.clearenceStatus != nil {
+                        HStack {
+                            Text("Apto:")
+                                .fontWeight(.semibold)
+                            Spacer()
+                            if let clearanceStatus = pre?.clearenceStatus {
+                                Text("\(clearanceStatus.displayName)")
                             }
                         }
-                        HStack(alignment: .top) {
-                            if let customRecommendations = pre?.futherRecommendationForRevaluation, !customRecommendations.isEmpty {
-                                Text(customRecommendations.joined(separator: "; "))
+                        if anesthesia.surgery.preanesthesia?.definitiveRecommendationForRevaluationStatus != nil || anesthesia.surgery.preanesthesia?.futherRecommendationForRevaluation != nil {
+                            VStack(alignment: .leading) {
+                                Text("Recomendações:")
+                                    .fontWeight(.semibold)
+                                HStack(alignment: .top) {
+                                    if let recommendations = pre?.definitiveRecommendationForRevaluationStatus, !recommendations.isEmpty {
+                                        let joined = recommendations.map { $0.reportDisplayName }.joined(separator: "; ")
+                                        Text(joined)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                }
+                                HStack(alignment: .top) {
+                                    if let customRecommendations = pre?.futherRecommendationForRevaluation, !customRecommendations.isEmpty {
+                                        Text(customRecommendations.joined(separator: "; "))
+                                    }
+                                }
                             }
                         }
                     }
@@ -151,7 +158,7 @@ struct PreAnesthesiaView: View {
                     if let healthyPatient = preanesthesia?.healthyPatient, healthyPatient {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
-                                Text("Paciente Saudável - Sem comorbidades")
+                                Text("Paciente Sem Comorbidades")
                                     .font(.headline)
                                 Spacer()
                             }
@@ -202,7 +209,7 @@ struct PreAnesthesiaView: View {
                                     Text(isPregnantAge)
                                         .font(.headline)
                                 }
-                                    
+                                
                                 Spacer()
                                 VStack(alignment: .trailing) {
                                     if let isPregnantDetails = preanesthesia?.isPregnantComorbitiesDetails, !isPregnantDetails.isEmpty {
@@ -678,55 +685,168 @@ struct PreAnesthesiaView: View {
                 Spacer()
             }
             Divider()
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 26) {
                 VStack(alignment: .leading) {
-                    if preanesthesia?.surgeryHistory == false {
-                          Text("Paciente nunca realizou cirurgias")
-                      } else if preanesthesia?.surgeryHistory == true {
-                          // Mostrar lista/detalhes de cirurgias
-                      } else {
-                          Text("Histórico cirúrgico não informado")
-                              .foregroundStyle(.secondary)
-                              .font(.subheadline)
-                      }
-                    
-                    
-                    
+
                     if preanesthesia?.surgeryHistory == true {
-                        VStack(alignment: .trailing, spacing: 12) {
-                            HStack(alignment: .top) {
-                                Text("Cirurgias prévias:")
+                        VStack(alignment: .leading, spacing: 12) {
+                            
+                            // Mostrar mensagem padrão quando todos os campos estiverem vazios
+                            let hasDetailsList = !(preanesthesia?.surgeryHistoryDetails?.isEmpty ?? true)
+                            let hasCustomList = !((preanesthesia?.surgeryHistoryCustomDetails ?? []).isEmpty)
+                            let hasText = !(preanesthesia?.surgeryHistoryDetailsText?.isEmpty ?? true)
+                            
+                            if !hasDetailsList && !hasCustomList && !hasText {
+                                Text("Não houve eventos adversos em anestesias prévias")
                                     .font(.headline)
-                                Spacer()
-                                VStack(alignment: .trailing) {
-                                    if let surgeryHistoryDetails = preanesthesia?.surgeryHistoryDetails, !surgeryHistoryDetails.isEmpty {
-                                        ForEach(surgeryHistoryDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                            } else {
+                                Text("Cirurgias Prévias:")
+                                    .font(.headline)
+                                
+                                VStack(alignment: .leading, spacing: 8) {
+                                        HStack(alignment: .center) {
+                                            if let surgeryHistoryDetails = preanesthesia?.surgeryHistoryDetails, !surgeryHistoryDetails.isEmpty {
+                                                ForEach(surgeryHistoryDetails, id: \.self) { comorbidity in
+                                                    Text(comorbidity.displayName)
+                                                    Text("•")
+                                                }
+                                            }
+                                            
+                                            if let customSurgeryHistoryDetails = preanesthesia?.surgeryHistoryCustomDetails, !customSurgeryHistoryDetails.isEmpty {
+                                                ForEach(customSurgeryHistoryDetails, id: \.self) { customComorbity in
+                                                    Text(customComorbity)
+                                                }
+                                            }
+                                        }
+                                    HStack(alignment: .top, spacing: 8) {
+                                        if let surgeryHistoryDetailsText = preanesthesia?.surgeryHistoryDetailsText, !surgeryHistoryDetailsText.isEmpty {
+                                            Text("Detalhes:")
+                                                .fontWeight(.semibold)
+                                                .font(.caption)
+                                            Spacer()
+                                            Text(surgeryHistoryDetailsText)
+                                                .font(.caption)
                                         }
                                     }
-                                    if let customSurgeryHistoryDetails = preanesthesia?.surgeryHistoryCustomDetails, !customSurgeryHistoryDetails.isEmpty {
-                                        ForEach(customSurgeryHistoryDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let surgeryHistoryDetailsText = preanesthesia?.surgeryHistoryDetailsText, !surgeryHistoryDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(surgeryHistoryDetailsText)
-                                        .font(.caption)
+                                    .padding(.bottom, 8)
                                 }
                             }
                         }
-                        Divider()
+                    } else if preanesthesia?.surgeryHistory == false {
+                        Text("Paciente não tem histórico de ter realizado cirurgias")
+                    } else {
+                        Text("Histórico cirúrgico não informado")
+                            .foregroundStyle(.secondary)
+                            .font(.subheadline)
                     }
+                    
+                    if preanesthesia?.anesthesiaHistory == true {
+                        VStack(alignment: .leading, spacing: 12) {
+                            
+                            // Mostrar mensagem padrão quando todos os campos estiverem vazios
+                            let hasDetailsList = !(preanesthesia?.anesthesiaHistoryDetails?.isEmpty ?? true)
+                            let hasCustomList = !((preanesthesia?.anesthesiaHistoryCustomDetails ?? []).isEmpty)
+                            let hasText = !(preanesthesia?.anesthesiaHistoryDetailsText?.isEmpty ?? true)
+                            
+                            if !hasDetailsList && !hasCustomList && !hasText {
+                                Text("Sem eventos adversos em anestesias prévias")
+                                    .font(.headline)
+                            } else {
+                                Text("Eventos adversos prévios:")
+                                    .font(.headline)
+                                
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack(alignment: .center) {
+                                        if let anesthesiaHistoryDetails = preanesthesia?.anesthesiaHistoryDetails, !anesthesiaHistoryDetails.isEmpty {
+                                            ForEach(anesthesiaHistoryDetails, id: \.self) { comorbidity in
+                                                Text(comorbidity.displayName)
+                                                Text("•")
+                                            }
+                                        }
+                                        if let customAnesthesiaHistoryDetails = preanesthesia?.anesthesiaHistoryCustomDetails, !customAnesthesiaHistoryDetails.isEmpty {
+                                            ForEach(customAnesthesiaHistoryDetails, id: \.self) { customComorbity in
+                                                Text(customComorbity)
+                                            }
+                                        }
+                                        HStack { }
+                                    }
+                                }
+                                
+                                HStack(alignment: .top) {
+                                    if let anesthesiaHistoryDetailsText = preanesthesia?.anesthesiaHistoryDetailsText, !anesthesiaHistoryDetailsText.isEmpty {
+                                        Text("Detalhes:")
+                                            .fontWeight(.semibold)
+                                            .font(.caption)
+                                        Spacer()
+                                        Text(anesthesiaHistoryDetailsText)
+                                            .font(.caption)
+                                    }
+                                }
+                            }
+                        }
+                    } else if preanesthesia?.anesthesiaHistory == false {
+                        Text("Paciente não tem histórico anestésico")
+                    } else {
+                        Text("Histórico anestésico não informado")
+                            .foregroundStyle(.secondary)
+                            .font(.subheadline)
+                    }
+                    
+                    Divider()
+                }
+            }
+        }
+        
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+    
+    private func apfelCard(preanesthesia: PreAnesthesia?) -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Image(systemName: "person.and.background.striped.horizontal")
+                    .foregroundStyle(.green)
+                Text("Avaliação NVPO")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                Spacer()
+            }
+            Divider()
+            VStack(alignment: .leading, spacing: 26) {
+                VStack(alignment: .leading) {
+                    
+                    let apfelDetais = !(preanesthesia?.apfelScoreDetails?.isEmpty ?? true)
+                    if !apfelDetais {
+                        Text("Não há fatores de risco para náusea e vômitos perioperatórios.")
+                            .font(.headline)
+                    } else {
+                        VStack(alignment: .leading) {
+                            HStack(spacing: 4){
+                                Text("\(preanesthesia?.apfelScoreDetails?.count ?? 0)" )
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                Text("Fatores de risco")
+                                    .font(.subheadline)
+                            }
+                            Text("Fatores de risco:")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack(alignment: .center) {
+                                    if let apfel = preanesthesia?.apfelScoreDetails, !apfel.isEmpty {
+                                        ForEach(apfel, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                            Text("•")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Divider()
                 }
             }
         }

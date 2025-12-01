@@ -60,7 +60,7 @@ final class PreAnesthesiaViewModel: Identifiable {
         clearence.load(from: preanesthesia)
         comorbities.load(from: preanesthesia, patientSex: patientSex, patientAge: patientAge)
         surgeryHistory.load(from: preanesthesia)
-        socialHabitsAndEnvironment.load(from: preanesthesia)
+        socialHabitsAndEnvironment.load(from: preanesthesia, patientSex: patientSex)
         airway.load(from: preanesthesia)
         medicationAndAllergies.load(from: preanesthesia)
         labsAndImage.load(from: preanesthesia)
@@ -91,10 +91,9 @@ final class PreAnesthesiaViewModel: Identifiable {
             self.techniques = shared.techniques
             self.asa = shared.asa
         }
-        let sex = surgery.patient.sex
-        let age = AgeContext.inSurgery(surgery).ageInYears(from: surgery.patient.birthDate)
-        comorbities.isInfantVisibility(patientAge: age)
-        comorbities.isPregnantVisibility(patientSex: sex)
+        comorbities.isInfantVisibility(patientAge: patientAge)
+        comorbities.isPregnantVisibility(patientSex: patientSex)
+        socialHabitsAndEnvironment.ifFemaleApply(patientSex: patientSex)
     }
     
     // MARK: - Save (create ou update)

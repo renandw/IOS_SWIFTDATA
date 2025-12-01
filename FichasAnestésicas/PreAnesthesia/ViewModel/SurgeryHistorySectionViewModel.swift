@@ -16,6 +16,8 @@ final class SurgeryHistorySectionViewModel {
         didSet {
             if surgeryHistory == false && oldValue == true {
                 surgeryHistoryVisibility()
+            } else {
+                whenSurgeryHistory()
             }
         }
     }
@@ -38,6 +40,7 @@ final class SurgeryHistorySectionViewModel {
     
     func load(from e: PreAnesthesia) {
         surgeryHistory = e.surgeryHistory ?? false
+        anesthesiaHistory = e.anesthesiaHistory ?? false
         
         surgeryHistoryDetails = e.surgeryHistoryDetails ?? []
         surgeryHistoryCustomDetails = e.surgeryHistoryCustomDetails ?? []
@@ -49,6 +52,7 @@ final class SurgeryHistorySectionViewModel {
     
     func apply(to e: PreAnesthesia) {
         e.surgeryHistory = surgeryHistory
+        e.anesthesiaHistory = anesthesiaHistory
         
         e.surgeryHistoryDetails = surgeryHistoryDetails
         e.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails
@@ -62,9 +66,13 @@ final class SurgeryHistorySectionViewModel {
         if surgeryHistory == false {
             surgeryHistoryCustomDetails = []
             surgeryHistoryDetailsText = ""
-            surgeryHistoryDetails = []
+            surgeryHistoryDetails = nil
         }
     }
+    func whenSurgeryHistory() {
+        anesthesiaHistory = true
+    }
+    
     func anesthesiaHistoryVisibility() {
         if anesthesiaHistory == false {
             anesthesiaHistoryCustomDetails = []

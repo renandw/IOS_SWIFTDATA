@@ -80,15 +80,18 @@ struct PreAnesthesiaFormView: View {
                             
                         }
                     }
-                    NavigationLink {
-                        AnesthesiaHistoryTypeFormView(
-                            viewModel: viewModel
-                        )
-                    } label : {
-                        HStack {
-                            Text("Selecionar Anestesias")
-                            Spacer()
-                            
+                    if viewModel.surgeryHistory.surgeryHistory {
+                        
+                        NavigationLink {
+                            AnesthesiaHistoryTypeFormView(
+                                viewModel: viewModel
+                            )
+                        } label : {
+                            HStack {
+                                Text("Selecionar Complicações Anestésicas")
+                                Spacer()
+                                
+                            }
                         }
                     }
                     NavigationLink {
@@ -304,23 +307,22 @@ struct RecommendationForRevaluationStatusView: View {
                 .foregroundStyle(.primary)
             }
             
-            if viewModel.clearence.clearenceStatus == .unable || viewModel.clearence.clearenceStatus == .reevaluate {
-                Section {
-                    HStack {
-                        TextField("Adicionar recomendações", text: $newCustomRecommendation)
-                            .autocorrectionDisabled(true)
-                            .submitLabel(.done)
-                            .onSubmit {
-                                viewModel.clearence.addCustomRecommendation(newCustomRecommendation)
-                                newCustomRecommendation = ""
-                            }
-                        if !newCustomRecommendation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                            Button {
-                                viewModel.clearence.addCustomRecommendation(newCustomRecommendation)
-                                newCustomRecommendation = ""
-                            } label: {
-                                Image(systemName: "plus.circle")
-                            }
+            
+            Section {
+                HStack {
+                    TextField("Adicionar recomendações", text: $newCustomRecommendation)
+                        .autocorrectionDisabled(true)
+                        .submitLabel(.done)
+                        .onSubmit {
+                            viewModel.clearence.addCustomRecommendation(newCustomRecommendation)
+                            newCustomRecommendation = ""
+                        }
+                    if !newCustomRecommendation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        Button {
+                            viewModel.clearence.addCustomRecommendation(newCustomRecommendation)
+                            newCustomRecommendation = ""
+                        } label: {
+                            Image(systemName: "plus.circle")
                         }
                     }
                 }

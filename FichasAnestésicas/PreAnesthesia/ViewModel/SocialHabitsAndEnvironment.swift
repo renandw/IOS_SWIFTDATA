@@ -17,12 +17,13 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
     
     
     
-    func load(from e: PreAnesthesia) {
-        
+    func load(from e: PreAnesthesia, patientSex: Sex) {
         socialHabitsAndEnvironmentDetails = e.socialHabitsAndEnvironmentDetails ?? []
         socialHabitsAndEnvironmentCustomDetails = e.socialHabitsAndEnvironmentCustomDetails ?? []
         socialHabitsAndEnvironmentDetailsText = e.socialHabitsAndEnvironmentDetailsText
         apfelScoreDetails = e.apfelScoreDetails ?? []
+        
+        ifFemaleApply(patientSex: patientSex)
     }
     
     func apply(to e: PreAnesthesia) {
@@ -31,6 +32,15 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
         e.socialHabitsAndEnvironmentCustomDetails = socialHabitsAndEnvironmentCustomDetails
         e.socialHabitsAndEnvironmentDetailsText = socialHabitsAndEnvironmentDetailsText
         e.apfelScoreDetails = apfelScoreDetails
+    }
+    
+    func ifFemaleApply(patientSex: Sex) {
+        guard patientSex == .female else { return }
+        var apfel = apfelScoreDetails ?? []
+        if !apfel.contains(.femaleSex) {
+            apfel.append(.femaleSex)
+        }
+        apfelScoreDetails = apfel
     }
     
     
@@ -77,5 +87,8 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
 
         syncing = false
     }
+    
+    
+    
 
 }
