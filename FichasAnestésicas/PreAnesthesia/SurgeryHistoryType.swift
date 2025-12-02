@@ -178,6 +178,7 @@ struct SurgeryHistoryTypeFormView: View {
                             print("Erro ao salvar: \(error)")
                         }
                     }
+                    .disabled(!viewModel.surgeryHistory.canSave)
                 }
             }
         }

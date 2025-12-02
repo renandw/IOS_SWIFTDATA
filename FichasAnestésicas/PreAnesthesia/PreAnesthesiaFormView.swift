@@ -75,7 +75,7 @@ struct PreAnesthesiaFormView: View {
                         )
                     } label : {
                         HStack {
-                            Text("Selecionar Cirurgias")
+                            Text("Cirurgias Prévias")
                             Spacer()
                             
                         }
@@ -88,7 +88,7 @@ struct PreAnesthesiaFormView: View {
                             )
                         } label : {
                             HStack {
-                                Text("Selecionar Complicações Anestésicas")
+                                Text("Complicações Anestésicas")
                                 Spacer()
                                 
                             }
@@ -217,12 +217,24 @@ struct PreAnesthesiaFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Salvar", systemImage: "checkmark") {
                         do {
+                            viewModel.finishStatus()
                             try viewModel.save()
+                            
                             dismiss()
                         }
                         catch {
                             print("Erro ao salvar AnesthesiaDescriptionEntry: \(error)")
                         }
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Paciente Hígido", systemImage: "sparkle.text.clipboard.fill") {
+                        viewModel.clearence.applyHealthyPatient()
+                        viewModel.comorbities.applyHealthyPatient()
+                        viewModel.labsAndImage.applyHealthyPatient()
+                        viewModel.medicationAndAllergies.applyHealthyPatient()
+                        viewModel.physicalExamination.applyPatientHealthy()
+                        viewModel.airway.applyHealthyPatient()
                     }
                 }
                 ToolbarItem(placement: .cancellationAction) {
@@ -260,7 +272,7 @@ struct PreAnesthesiaFormView: View {
 struct RecommendationForRevaluationStatusView: View {
     @Binding var selection: [RecommendationForRevaluationStatus]
     @Bindable var viewModel: PreAnesthesiaViewModel
-    
+    @Environment(\.dismiss) private var dismiss
     @State private var newCustomRecommendation = ""
     
     private var recommendations: [RecommendationForRevaluationStatus] {
@@ -332,10 +344,13 @@ struct RecommendationForRevaluationStatusView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Menu("Opções", systemImage: "gear") {
-                    Button("Selecionar tudo") { selection = recommendations }
-                    Button("Limpar seleção", role: .destructive) { selection.removeAll() }
+//                Menu("Opções", systemImage: "gear") {
+//                    Button("Selecionar tudo") { selection = recommendations }
+//                    Button("Limpar seleção", role: .destructive) { selection.removeAll() }
+                Button("Salvar alterações", systemImage: "checkmark") {
+                    dismiss()
                 }
+                .disabled(!viewModel.clearence.canSave)
             }
         }
     }

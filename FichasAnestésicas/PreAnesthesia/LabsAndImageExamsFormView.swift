@@ -95,7 +95,16 @@ struct LabsAndImageExamsFormView: View {
             HStack {
                 Text("Hemoglobina")
                 Spacer()
-                TextField("g/dL", value: $viewModel.labsAndImage.hemoglobin, format: .number)
+                TextField("g/dL", value: $viewModel.labsAndImage.hemoglobin, format: .number.precision(.fractionLength(1...1)))
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 80)
+                Text("g/dL")
+            }
+            HStack {
+                Text("Hematócrito")
+                Spacer()
+                TextField("g/dL", value: $viewModel.labsAndImage.hct, format: .number.precision(.fractionLength(1...1)))
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
@@ -105,7 +114,7 @@ struct LabsAndImageExamsFormView: View {
             HStack {
                 Text("Ureia")
                 Spacer()
-                TextField("mg/dL", value: $viewModel.labsAndImage.urea, format: .number)
+                TextField("mg/dL", value: $viewModel.labsAndImage.urea, format: .number.precision(.fractionLength(1...1)))
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
@@ -115,7 +124,7 @@ struct LabsAndImageExamsFormView: View {
             HStack {
                 Text("Creatinina")
                 Spacer()
-                TextField("mg/dL", value: $viewModel.labsAndImage.creatinine, format: .number)
+                TextField("mg/dL", value: $viewModel.labsAndImage.creatinine, format: .number.precision(.fractionLength(1...1)))
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
@@ -135,7 +144,7 @@ struct LabsAndImageExamsFormView: View {
             HStack {
                 Text("Potássio")
                 Spacer()
-                TextField("mEq/L", value: $viewModel.labsAndImage.potassium, format: .number)
+                TextField("mEq/L", value: $viewModel.labsAndImage.potassium, format: .number.precision(.fractionLength(1...1)))
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)

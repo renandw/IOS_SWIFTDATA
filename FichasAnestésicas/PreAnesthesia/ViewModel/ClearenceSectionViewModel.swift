@@ -59,6 +59,18 @@ final class ClearenceSectionViewModel {
         }
     }
     
+    var canSave: Bool {
+        let hasClearence = clearenceStatus != nil
+        let hasCustomRecommendations = !futherRecommendationForRevaluation.isEmpty
+        let hasDefinitiveRecommendations = (definitiveRecommendationForRevaluationStatus?.isEmpty == false)
+        return hasClearence || hasCustomRecommendations || hasDefinitiveRecommendations
+    }
+    
+    func applyHealthyPatient() {
+        clearenceStatus = .able
+        definitiveRecommendationForRevaluationStatus = [.adaptedFasting]
+        futherRecommendationForRevaluation = []
+    }
     
 //    func generateMonitoringText() -> String {
 //        var items: [String] = []
@@ -73,3 +85,4 @@ final class ClearenceSectionViewModel {
 //        return "Checklist de materiais de anestesia. Monitorização: \(items.joined(separator: ", "))."
 //    }
 }
+

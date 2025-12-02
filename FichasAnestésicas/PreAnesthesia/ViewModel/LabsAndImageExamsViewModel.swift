@@ -13,6 +13,7 @@ final class LabsAndImageExamsSectionViewModel {
     
     // Laboratory Exams
     var hemoglobin: Double?
+    var hct: Double?
     var urea: Double?
     var creatinine: Double?
     var sodium: Double?
@@ -27,6 +28,7 @@ final class LabsAndImageExamsSectionViewModel {
     func load(from e: PreAnesthesia) {
         // Load laboratory exams
         hemoglobin = e.laboratoryExams?.hemoglobin
+        hct        = e.laboratoryExams?.hct
         urea       = e.laboratoryExams?.urea
         creatinine = e.laboratoryExams?.creatinine
         sodium     = e.laboratoryExams?.sodium
@@ -91,13 +93,14 @@ final class LabsAndImageExamsSectionViewModel {
     }
     
     func applyHealthyPatient() {
-        hemoglobin = 12.3
-        urea = 11.02
-        creatinine = 0.9
-        sodium = 142
-        potassium = 3.9
-        inr = 1.14
-        glucose = 91
+        hemoglobin = Double.random(in: 11.3...13.9)
+        hct = Double.random(in: 39.0...46.0)
+        urea = Double.random(in: 18.0...40.0)
+        creatinine = Double.random(in: 0.7...1.1)
+        sodium = Double(Int.random(in: 135...145))
+        potassium = Double.random(in: 3.5...4.5)
+        inr = Double.random(in: 1.1...1.4)
+        glucose = Double(Int.random(in: 81...93))
 
         // Imaging exams: set Chest X-Ray and ECG as Normal
         let chestNormal = ImagingExam(type: .chestXRay,

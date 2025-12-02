@@ -11,6 +11,11 @@ import SwiftData
 @Observable
 final class SurgeryHistorySectionViewModel {
 
+    weak var socialHabitsVM: SocialHabitsAndEnvironmentSectionViewModel?
+    
+    
+    
+    
     //to be implemented
     var surgeryHistory = false {
         didSet {
@@ -32,7 +37,9 @@ final class SurgeryHistorySectionViewModel {
     var surgeryHistoryDetails: [SurgeryHistorySpeciality]?
     var surgeryHistoryCustomDetails: [String] = []
     var surgeryHistoryDetailsText: String?
-    var anesthesiaHistoryDetails: [AnesthesiaComplicationsHistory]?
+    var anesthesiaHistoryDetails: [AnesthesiaComplicationsHistory]? {
+        didSet { syncHistoryToApfel() }
+    }
     var anesthesiaHistoryCustomDetails: [String] = []
     var anesthesiaHistoryDetailsText: String?
 
@@ -81,6 +88,20 @@ final class SurgeryHistorySectionViewModel {
         }
     }
     
+    var canSave: Bool {
+        var ok = true
+        if surgeryHistory {
+            let hasDetails = (surgeryHistoryDetails?.isEmpty == false)
+            let hasCustom = !surgeryHistoryCustomDetails.isEmpty
+            let hasText = !(surgeryHistoryDetailsText ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            ok = ok && (hasDetails || hasCustom || hasText)
+        }
+        if anesthesiaHistory {
+            
+        }
+        return ok
+    }
+    
     
     func addSurgeryHistoryCustomDetails(_ name: String) {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -91,6 +112,32 @@ final class SurgeryHistorySectionViewModel {
     func removeSurgeryHistoryCustomDetails(at index: Int) {
         guard surgeryHistoryCustomDetails.indices.contains(index) else { return }
         surgeryHistoryCustomDetails.remove(at: index)
+    }
+    
+    
+    
+    
+    
+    
+    private var syncing = false
+
+    private func syncHistoryToApfel() {
+        guard !syncing, let socialVM = socialHabitsVM else { return }
+        syncing = true
+        
+        let history = anesthesiaHistoryDetails ?? []
+        var apfel = socialVM.apfelScoreDetails ?? []
+        
+        if history.contains(.nausea) {
+            if !apfel.contains(.historyPONV) {
+                apfel.append(.historyPONV)
+            }
+        } else {
+            apfel.removeAll { $0 == .historyPONV }
+        }
+        
+        socialVM.apfelScoreDetails = apfel
+        syncing = false
     }
 }
 

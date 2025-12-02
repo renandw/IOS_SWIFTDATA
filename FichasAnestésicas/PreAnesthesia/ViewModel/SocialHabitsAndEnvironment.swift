@@ -3,6 +3,7 @@ import SwiftData
 
 @Observable
 final class SocialHabitsAndEnvironmentSectionViewModel {
+    weak var surgeryHistoryVM: SurgeryHistorySectionViewModel?
 
     
     var socialHabitsAndEnvironmentDetails: [SocialHabitsAndEnvironment]? {
@@ -84,11 +85,25 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
 
         // Write back
         socialHabitsAndEnvironmentDetails = social
+        
+        if let historyVM = surgeryHistoryVM {
+            var history = historyVM.anesthesiaHistoryDetails ?? []
+            
+            if apfel.contains(.historyPONV) {
+                if !history.contains(.nausea) {
+                    history.append(.nausea)
+                }
+            } else {
+                history.removeAll { $0 == .nausea }
+            }
+            
+            historyVM.anesthesiaHistoryDetails = history
+        }
+
 
         syncing = false
     }
-    
-    
+
     
 
 }

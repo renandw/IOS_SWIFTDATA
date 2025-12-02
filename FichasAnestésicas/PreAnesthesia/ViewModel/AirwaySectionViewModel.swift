@@ -14,7 +14,7 @@ final class AirwaySectionViewModel {
     
     var mallampatiClassification: MallampatiClassification?
     
-    var difficultAirwayEvaluation: [DifficultAirwayEvaluation]?
+    var difficultAirwayEvaluation: [DifficultAirwayEvaluation]? {didSet {hasTraqueoVisibility()} }
     var difficultAirwayEvaluationCustomDetails: [String] = []
     var difficultAirwayEvaluationDetailsText: String?
     
@@ -49,10 +49,22 @@ final class AirwaySectionViewModel {
     }
     
     var canSave: Bool {
-        mallampatiClassification != nil
+        if difficultAirwayEvaluation?.contains(.traqueo) == true {
+            return true
+        }
+        return mallampatiClassification != nil
     }
     
+        
     func applyHealthyPatient() {
         mallampatiClassification = .I
+        difficultAirwayEvaluationCustomDetails = []
+        difficultAirwayEvaluationDetailsText = nil
+    }
+    
+    func hasTraqueoVisibility() {
+        if difficultAirwayEvaluation == [.traqueo] {
+            mallampatiClassification = nil
+        }
     }
 }

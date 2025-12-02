@@ -22,6 +22,7 @@ final class PreAnesthesiaViewModel: Identifiable {
     var techniques: [AnesthesiaTechniqueKind] = []
     var asa: ASAClassification?
     var textField: String?
+    var status: Status
     
     var patientSex : Sex {
         let surgery = preanesthesia.surgery
@@ -56,6 +57,9 @@ final class PreAnesthesiaViewModel: Identifiable {
         self.user = user
         self.repo = repo
         self.isNew = false
+        self.status = preanesthesia.status ?? .inProgress
+        surgeryHistory.socialHabitsVM = socialHabitsAndEnvironment
+        socialHabitsAndEnvironment.surgeryHistoryVM = surgeryHistory
         
         clearence.load(from: preanesthesia)
         comorbities.load(from: preanesthesia, patientSex: patientSex, patientAge: patientAge)
@@ -91,6 +95,7 @@ final class PreAnesthesiaViewModel: Identifiable {
             self.techniques = shared.techniques
             self.asa = shared.asa
         }
+        self.status = preanesthesia.status ?? .inProgress
         comorbities.isInfantVisibility(patientAge: patientAge)
         comorbities.isPregnantVisibility(patientSex: patientSex)
         socialHabitsAndEnvironment.ifFemaleApply(patientSex: patientSex)
@@ -137,9 +142,23 @@ final class PreAnesthesiaViewModel: Identifiable {
     
     func apply(to p: PreAnesthesia) {
         p.textField = textField
+        p.status = status
         
         let shared = sharedRepo.ensure(for: p.surgery)  // ← "p.surgery"
         try? sharedRepo.update(shared, techniques: techniques, asa: asa)
         
+    }
+    
+    func finishStatus() {
+        if comorbities.canSave &&
+            airway.canSave &&
+            clearence.canSave &&
+            surgeryHistory.canSave &&
+            medicationAndAllergies.canSave &&
+            physicalExamination.canSave {
+            status = .finished
+        } else {
+            status = .inProgress
+        }
     }
 }

@@ -32,7 +32,10 @@ final class PhysicalExaminationSectionViewModel {
         physicalExaminationDetailsText = """
         Paciente não apresenta alterações dignas de nota ao exame físico.
         """
-        
+    }
+    
+    var canSave: Bool {
+        !(physicalExaminationDetailsText ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
 }

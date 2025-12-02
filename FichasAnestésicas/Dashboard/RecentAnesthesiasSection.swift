@@ -93,12 +93,16 @@ struct RecentAnesthesiaCard: View {
 
                     Spacer()
 
-                    Button("Ficha APA", systemImage: "square.and.arrow.up.fill") {
-                        //todo - compartilhar ficha anestésica
+                    if anesthesia.surgery.preanesthesia?.status == .finished {
+                        Button("Ficha APA", systemImage: "square.and.arrow.up.fill") {
+                            //todo - compartilhar ficha anestésica
+                        }
+                        .font(.caption)
+                        .buttonStyle(.glass)
+                        .tint(.blue)
                     }
-                    .font(.caption)
-                    .buttonStyle(.glass)
-                    .tint(.blue)
+                    
+
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

@@ -41,7 +41,7 @@ struct PhysicalExaminationFormView: View {
                           print("Erro ao salvar: \(error)")
                       }
                   }
-                  .disabled(!viewModel.medicationAndAllergies.canSave)
+                 // .disabled(!viewModel.physicalExamination.canSave)
               }
           }
       }

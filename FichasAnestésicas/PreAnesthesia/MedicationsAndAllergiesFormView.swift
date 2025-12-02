@@ -15,6 +15,7 @@ struct MedicationsAndAllergiesFormView: View {
     
     @Binding var selection: [DailyMedications]
     @State private var newCustomDailyMedication = ""
+    @State private var newAllergicMedication = ""
 
   var body: some View {
       NavigationStack {
@@ -76,17 +77,17 @@ struct MedicationsAndAllergiesFormView: View {
                 .foregroundStyle(.primary)
             }
             HStack {
-                TextField("Penicilina", text: $newCustomDailyMedication)
+                TextField("Penicilina", text: $newAllergicMedication)
                     .autocorrectionDisabled(true)
                     .submitLabel(.done)
                     .onSubmit {
-                        viewModel.medicationAndAllergies.addAllergiesMedicationsCustomDetails(newCustomDailyMedication)
-                        newCustomDailyMedication = ""
+                        viewModel.medicationAndAllergies.addAllergiesMedicationsCustomDetails(newAllergicMedication)
+                        newAllergicMedication = ""
                     }
-                if !newCustomDailyMedication.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                if !newAllergicMedication.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     Button {
-                        viewModel.medicationAndAllergies.addAllergiesMedicationsCustomDetails(newCustomDailyMedication)
-                        newCustomDailyMedication = ""
+                        viewModel.medicationAndAllergies.addAllergiesMedicationsCustomDetails(newAllergicMedication)
+                        newAllergicMedication = ""
                     } label: {
                         Image(systemName: "plus.circle")
                     }
@@ -114,7 +115,7 @@ struct MedicationsAndAllergiesFormView: View {
                     .foregroundStyle(.primary)
                 }
                 HStack {
-                    TextField("Medicação", text: $newCustomDailyMedication)
+                    TextField("Medicamentos em uso", text: $newCustomDailyMedication)
                         .autocorrectionDisabled(true)
                         .submitLabel(.done)
                         .onSubmit {

@@ -57,6 +57,7 @@ public enum RecommendationForRevaluationStatus: String, Codable, CaseIterable {
     case asmaControl
     case IVASevaluation
     case labsImgRevaluation
+    case adaptedFasting
     
     var displayName: String {
         switch self {
@@ -66,6 +67,7 @@ public enum RecommendationForRevaluationStatus: String, Codable, CaseIterable {
         case .asmaControl:                "Broncodilatadores"
         case .IVASevaluation:             "Reavaliação de IVAS"
         case .labsImgRevaluation:         "Reavaliação de exames"
+        case .adaptedFasting:             "Jejum"
         }
     }
     
@@ -77,6 +79,7 @@ public enum RecommendationForRevaluationStatus: String, Codable, CaseIterable {
         case .asmaControl:                "controle de quadro asmático com broncodilatadores em centro cirúrgico"
         case .IVASevaluation:             "reavaliação de quadro de IVAS em centro cirúrgico"
         case .labsImgRevaluation:         "reavaliar exames alterados em centro cirúrgico"
+        case .adaptedFasting:             "jejum conforme orientado em consulta médica"
         }
     }
 }
@@ -608,6 +611,7 @@ public enum DifficultAirwayEvaluation: String, Codable, CaseIterable {
     case neckMobility
     case obesity
     case noTeeth
+    case traqueo
     
     var displayName: String {
         switch self {
@@ -619,6 +623,7 @@ public enum DifficultAirwayEvaluation: String, Codable, CaseIterable {
         case .neckMobility:         "Movibilidade do pescoço reduzida"
         case .obesity:              "Obesidade"
         case .noTeeth:              "Edentado"
+        case .traqueo:              "Traqueostomia"
         }
     }
 }
@@ -649,6 +654,7 @@ public enum DailyMedications: String, Codable, CaseIterable {
 
 struct LaboratoryExams: Codable {
     var hemoglobin: Double?
+    var hct: Double?
     var urea: Double?
     var creatinine: Double?
     var sodium: Double?
