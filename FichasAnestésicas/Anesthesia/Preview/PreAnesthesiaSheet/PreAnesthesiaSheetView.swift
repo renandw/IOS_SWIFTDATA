@@ -19,6 +19,9 @@ struct PreanesthesiaSheetView: View {
             VStack(spacing: 1) {
                 PreAnestheticHeaderView(anesthesia: anesthesia)
                 PreAnestheticPatientInfoView(anesthesia: anesthesia)
+                ClearanceStatusView(anesthesia: anesthesia)
+                SpecialInfoView(anesthesia: anesthesia)
+                ComorbiditiesView(anesthesia: anesthesia)
                 Spacer()
             }
             .padding(padding)

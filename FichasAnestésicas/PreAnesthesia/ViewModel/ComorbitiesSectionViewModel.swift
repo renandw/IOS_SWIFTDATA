@@ -244,7 +244,7 @@ final class ComorbitiesSectionViewModel {
             isInfant = false
         } else {
             isInfant = true
-            isInfantComorbitiesDetails = [.healthy]
+            //isInfantComorbitiesDetails = [.healthy]
         }
     }
     

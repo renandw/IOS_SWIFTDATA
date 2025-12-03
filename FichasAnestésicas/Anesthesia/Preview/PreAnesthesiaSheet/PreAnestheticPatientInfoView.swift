@@ -12,13 +12,12 @@ struct PreAnestheticPatientInfoView: View {
     var body: some View {
         // Precompute lightweight values to simplify the view tree
         let patientName = anesthesia.surgery.patient.name
-        let surgeryDateText = anesthesia.surgery.date.formatted(.dateTime)
-        let age = AgeContext.inSurgery(anesthesia.surgery).ageInYears(from: anesthesia.surgery.patient.birthDate)
+        let surgeryDateText = anesthesia.surgery.date.formatted(date:.numeric, time: .omitted)
+        let age = AgeContext.inSurgery(anesthesia.surgery).ageString(from: anesthesia.surgery.patient.birthDate)
         let sex = anesthesia.surgery.patient.sex.sexStringDescription
         let weight = "\(anesthesia.surgery.weight) kg"
         let isSUS = anesthesia.surgery.type == .sus
         let procedureText = anesthesia.surgery.proposedProcedure
-        let proposedSurgeryText = anesthesia.surgery.completeProcedure ?? "--"
         let mainSurgeonText = anesthesia.surgery.mainSurgeon
         let cnsText = anesthesia.surgery.patient.cns
         let hospitalRecordText = anesthesia.surgery.insuranceNumber
@@ -51,11 +50,6 @@ struct PreAnestheticPatientInfoView: View {
 
                         Spacer()
 
-                        Text("**Data:** \(surgeryDateText)")
-                            .font(.system(size: 9))
-
-                        Spacer()
-
                         Text("**Idade:** \(age)")
                             .font(.system(size: 9))
 
@@ -63,12 +57,17 @@ struct PreAnestheticPatientInfoView: View {
 
                         Text("**Sexo:** \(sex)")
                             .font(.system(size: 9))
-                            .frame(width: 60, alignment: .leading)
+                            .frame(width: 80, alignment: .leading)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
                     // Second row: Peso + Identificação, com gaps por Spacer (intrínsecos)
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("**Data:** \(surgeryDateText)")
+                            .font(.system(size: 9))
+
+                        Spacer()
+                        
                         Text("**Peso:** \(weight)")
                             .font(.system(size: 9))
 
@@ -116,10 +115,16 @@ struct PreAnestheticPatientInfoView: View {
                         if anesthesia.surgery.type == .convenio {
                             Text("**Procedimento:** \(procedureText)")
                                 .font(.system(size: 9))
+                            
+                            Spacer()
+                            
+                            Text("**Cirurgião Principal:** \(mainSurgeonText)")
+                                .font(.system(size: 9))
                         } else {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("**Procedimento:** \(proposedSurgeryText)")
+                            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                                Text("**Procedimento:** \(procedureText)")
                                     .font(.system(size: 9))
+                                Spacer()
                                 Text("**Cirurgião Principal:** \(mainSurgeonText)")
                                     .font(.system(size: 9))
                             }

@@ -198,7 +198,7 @@ public enum RespiratoryComorbities: String, Codable, CaseIterable {
         switch self {
         case .asthma:                         "Asma"
         case .chronicBronchitis:              "Bronquite Crónica"
-        case .emphysema:                      "Emfísema"
+        case .emphysema:                      "Enfisema"
         case .pneumonia:                      "Pneumonia"
         case .tuberculosis:                   "Tuberculose"
         case .DPCO:                           "DPOC"
