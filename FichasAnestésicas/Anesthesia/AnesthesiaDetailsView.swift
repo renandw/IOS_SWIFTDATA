@@ -152,7 +152,7 @@ struct SectionContent: View {
         case .descriptionSection:
             AnesthesiaDescriptionView(anesthesia: anesthesia)
         case .previewSection:
-            ContentView()
+            ContentView(anesthesia: anesthesia)
             //ContentUnavailableView("Preview To be implemented", image: "plus")
         }
     }

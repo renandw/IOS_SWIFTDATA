@@ -75,16 +75,29 @@ struct PDFPreviewView<Content: View>: View {
 }
 
 struct ContentView: View {
+    @Bindable var anesthesia: Anesthesia
+    @State private var selectedTab = 0
+    
     var body: some View {
         NavigationStack {
-            PDFPreviewView(content: documentContent)
-                .navigationTitle("Documento")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        ShareLink("Exportar PDF", item: render())
-                    }
+            VStack {
+                Picker("Documentos", selection: $selectedTab) {
+                    Text("Documento 1").tag(0)
+                    Text("Documento 2").tag(1)
                 }
+                .pickerStyle(.segmented)
+                .padding()
+                PDFPreviewView(content: Group {
+                    if selectedTab == 0 {
+                        AnesthesiaSheetView(anesthesia: anesthesia)
+                    } else {
+                        PreanesthesiaSheetView(anesthesia: anesthesia)
+                    }
+                })
+                    .navigationTitle("Documento")
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            
         }
         .preference(
             key: CustomTopBarButtonPreferenceKey.self,
@@ -100,38 +113,10 @@ struct ContentView: View {
         )
     }
     
-    var documentContent: some View {
-        VStack(spacing: 30) {
-            Text("Meu Documento")
-                .font(.largeTitle)
-                .bold()
-                .foregroundStyle(.primary)
-            
-            Text("Este é um exemplo de documento que pode ser visualizado com zoom e depois exportado como PDF.")
-                .multilineTextAlignment(.center)
-                .padding()
-                .foregroundStyle(.primary)
-            
-            Rectangle()
-                .fill(Color.blue.gradient)
-                .frame(height: 200)
-                .overlay {
-                    Text("Conteúdo Visual")
-                        .foregroundStyle(.white)
-                        .font(.headline)
-                }
-            
-            Text("Mais conteúdo aqui...")
-                .padding()
-                .foregroundStyle(.primary)
-        }
-        .padding(40)
-        .frame(width: 595, height: 842) // Tamanho A4
-        .background(Color.pink)
-    }
     
     func render() -> URL {
-        let renderer = ImageRenderer(content: documentContent)
+        let content = selectedTab == 0 ? AnyView(AnesthesiaSheetView(anesthesia: anesthesia)) : AnyView(PreanesthesiaSheetView(anesthesia: anesthesia))
+        let renderer = ImageRenderer(content: content)
         renderer.scale = 3.0
         
         let url = URL.documentsDirectory.appending(path: "document.pdf")
