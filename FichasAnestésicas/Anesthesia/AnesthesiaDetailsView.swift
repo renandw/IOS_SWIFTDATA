@@ -18,7 +18,7 @@ enum anesthesiaDetailsSection: Int, CaseIterable, Hashable {
         case .medicationsSection:       return "Medicações"
         case .vitalSignsSection:        return "Sinais Vitais"
         case .descriptionSection:       return "Descrição Anestésica"
-        case .previewSection:           return "Pré-Visualização"
+        case .previewSection:           return "Visualização"
         }
     }
 

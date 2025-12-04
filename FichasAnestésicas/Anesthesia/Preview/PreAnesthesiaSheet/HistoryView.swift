@@ -48,16 +48,16 @@ struct HistoryView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     if hasSurgeryHistory == false {
                         Text("Nega cirurgias prévias")
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
                         Text("Cirurgias Prévias:")
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
                             .fontWeight(.semibold)
                                                         
-                        VStack(alignment: .leading, spacing: 8) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            VStack(alignment: .leading) {
+                                VStack(alignment: .leading, spacing: 2) {
                                     
                                     let defaultDetails = (anesthesia.surgery.preanesthesia?.surgeryHistoryDetails ?? []).map { $0.displayName }
                                     let customDetails = (anesthesia.surgery.preanesthesia?.surgeryHistoryCustomDetails ?? [])
@@ -65,18 +65,18 @@ struct HistoryView: View {
                                     
                                     if !allDetails.isEmpty {
                                         Text(allDetails.joined(separator: " • "))
-                                            .font(.system(size: 10))
+                                            .font(.system(size: 9))
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .fixedSize(horizontal: false, vertical: true)
                                     }
                                 }
-                                HStack(alignment: .top, spacing: 8) {
+                                HStack(alignment: .top, spacing: 2) {
                                     if let surgeryHistoryDetailsText = anesthesia.surgery.preanesthesia?.surgeryHistoryDetailsText, !surgeryHistoryDetailsText.isEmpty {
                                         Text("Detalhes:")
                                             .fontWeight(.semibold)
-                                            .font(.system(size: 10))
+                                            .font(.system(size: 9))
                                         Text(surgeryHistoryDetailsText)
-                                            .font(.system(size: 10))
+                                            .font(.system(size: 9))
                                     }
                                 }
                                 .padding(.bottom, 2)
@@ -87,7 +87,7 @@ struct HistoryView: View {
 
                     if hasAnesthesic == true && !hasAnesthesicComplications {
                         Text("Nega complicações anestésicas prévias")
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else if hasAnesthesic == true && hasAnesthesicComplications {
                         let defaultDetails = (anesthesia.surgery.preanesthesia?.anesthesiaHistoryDetails ?? []).map { $0.displayName }
@@ -96,7 +96,7 @@ struct HistoryView: View {
                         
                         if !allDetails.isEmpty {
                             Text(allDetails.joined(separator: " • "))
-                                .font(.system(size: 10))
+                                .font(.system(size: 9))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .fixedSize(horizontal: false, vertical: true)
                             
@@ -104,15 +104,15 @@ struct HistoryView: View {
                                 if let anesthesiaHistoryDetailsText = anesthesia.surgery.preanesthesia?.anesthesiaHistoryDetailsText, !anesthesiaHistoryDetailsText.isEmpty {
                                     Text("Detalhes:")
                                         .fontWeight(.semibold)
-                                        .font(.system(size: 10))
+                                        .font(.system(size: 9))
                                     Text(anesthesiaHistoryDetailsText)
-                                        .font(.system(size: 10))
+                                        .font(.system(size: 9))
                                 }
                             }
                         }
                     }
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 .padding(.horizontal, 12)
                 .background(Color.white)
                 .overlay(

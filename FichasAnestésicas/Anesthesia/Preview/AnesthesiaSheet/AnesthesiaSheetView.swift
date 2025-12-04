@@ -10,40 +10,33 @@ import SwiftUI
 
 struct AnesthesiaSheetView: View {
     let anesthesia: Anesthesia
-    
+
+    // A4 dimensions in points (72 DPI): 200mm ≈ 567pt, 287mm ≈ 813pt
+    private let pageWidth: CGFloat = 595
+    private let pageHeight: CGFloat = 842
+    private let padding: CGFloat = 28 // 10mm ≈ 28pt
+
     var body: some View {
-        VStack(spacing: 30) {
-            if anesthesia.surgery.preanesthesia != nil {
-                Text("\(anesthesia.surgery.patient.name)")
-                    .font(.largeTitle)
-                    .bold()
-                    .foregroundStyle(.primary)
+        VStack(spacing: 0) {
+            // Container with A4 dimensions
+            VStack(spacing: 4) {
+                AnesthesiaHeaderView(anesthesia: anesthesia)
+                //PatientInfoView(data: data)
+                //MedicationGroupsView(data: data)
+                //VitalSignsView2(data: data)
+                //AnesthesiaDescriptionView(data: data)
+                //TeamAndProceduresView(data: data)
+                Spacer()
+                //FooterView(data: data)
+                //AssinaturaGovBRView(data: data)
             }
-            Text("Meu Documento")
-                .font(.largeTitle)
-                .bold()
-                .foregroundStyle(.primary)
-            
-            Text("Este é um exemplo de documento que pode ser visualizado com zoom e depois exportado como PDF.")
-                .multilineTextAlignment(.center)
-                .padding()
-                .foregroundStyle(.primary)
-            
-            Rectangle()
-                .fill(Color.gray.gradient)
-                .frame(height: 200)
-                .overlay {
-                    Text("Conteúdo Visual")
-                        .foregroundStyle(.white)
-                        .font(.headline)
-                }
-            
-            Text("Mais conteúdo aqui...")
-                .padding()
-                .foregroundStyle(.primary)
+            .padding(padding)
+            .frame(width: pageWidth, height: pageHeight)
+            .background(Color.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 0)
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+            )
         }
-        .padding(40)
-        .frame(width: 595, height: 842)
-        .background(Color.pink)
     }
 }

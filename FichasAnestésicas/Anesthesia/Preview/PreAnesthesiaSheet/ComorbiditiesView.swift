@@ -156,11 +156,11 @@ struct ComorbiditiesView: View {
                         }
                     } else {
                         Text("Paciente nega diagnóstico prévio de alguma comorbidade")
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 .padding(.horizontal, 12)
                 .background(Color.white)
                 .overlay(

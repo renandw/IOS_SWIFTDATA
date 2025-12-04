@@ -35,10 +35,11 @@ struct AnestheticTechniqueView: View {
                 if !techniques.isEmpty {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("**Técnicas Anestésicas:** \(techniques.joined(separator: ", "))")
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
+                            .font(.system(size: 9))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 6)
                     .padding(.horizontal, 12)
                     .background(Color.white)
                     .overlay(

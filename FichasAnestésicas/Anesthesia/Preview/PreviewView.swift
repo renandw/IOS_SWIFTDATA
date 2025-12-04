@@ -81,12 +81,6 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Picker("Documentos", selection: $selectedTab) {
-                    Text("Documento 1").tag(0)
-                    Text("Documento 2").tag(1)
-                }
-                .pickerStyle(.segmented)
-                .padding()
                 PDFPreviewView(content: Group {
                     if selectedTab == 0 {
                         AnesthesiaSheetView(anesthesia: anesthesia)
@@ -94,21 +88,17 @@ struct ContentView: View {
                         PreanesthesiaSheetView(anesthesia: anesthesia)
                     }
                 })
-                    .navigationTitle("Documento")
-                    .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle("Documento")
+                .navigationBarTitleDisplayMode(.inline)
             }
             
         }
         .preference(
             key: CustomTopBarButtonPreferenceKey.self,
             value: CustomTopBarButtonPreference(
-                id: "Share.preview.topbar.buttons",
-                view: AnyView(
-                    ShareLink(item: render()) {
-                        Label("Compartilhar", systemImage: "square.and.arrow.up")
-                    }
-                ),
-                token: "Share.preview.topbar.buttons.v1"
+                id: "Document.preview.topbar.buttons",
+                view: AnyView(topBarButtons),
+                token: "Document.preview.topbar.buttons.v1"
             )
         )
     }
@@ -135,6 +125,28 @@ struct ContentView: View {
         }
         
         return url
+    }
+    
+    private var topBarButtons: some View {
+        HStack(spacing: 8) {
+            
+            Picker("", selection: $selectedTab) {
+                Text("FA").tag(0)
+                Text("APA").tag(1)
+            }
+            .pickerStyle(.segmented)
+            .frame(width: 150)
+            
+            // ShareLink
+            ShareLink(item: render()) {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.system(size: 16, weight: .regular))
+                    .frame(width: 20, height: 20)
+            }
+            .accessibilityLabel("Compartilhar")
+            .buttonStyle(.glass)
+            .tint(.blue)
+        }
     }
 }
 

@@ -62,7 +62,7 @@ struct AirwayEvaluationView: View {
                                             Text("Mallampati:")
                                                 .fontWeight(.semibold)
                                             Text(mallampatiDetails.displayName)
-                                                .font(.system(size: 10))
+                                                .font(.system(size: 9))
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                                 .fixedSize(horizontal: false, vertical: true)
                                         }
@@ -81,13 +81,13 @@ struct AirwayEvaluationView: View {
                                     HStack {
                                         Text("Preditores:")
                                             .fontWeight(.semibold)
-                                            .font(.system(size: 10))
+                                            .font(.system(size: 9))
                                         VStack(alignment: .leading, spacing: 8) {
                                             
                                             
                                             if !all.isEmpty {
                                                 Text(all.joined(separator: " • "))
-                                                    .font(.system(size: 10))
+                                                    .font(.system(size: 9))
                                                     .frame(maxWidth: .infinity, alignment: .leading)
                                                     .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
                                             }
@@ -97,10 +97,10 @@ struct AirwayEvaluationView: View {
                                         if let difficultAirwayEvaluationDetailsText = anesthesia.surgery.preanesthesia?.difficultAirwayEvaluationDetailsText, !difficultAirwayEvaluationDetailsText.isEmpty {
                                             Text("Detalhes:")
                                                 .fontWeight(.semibold)
-                                                .font(.system(size: 10))
+                                                .font(.system(size: 9))
                                             Spacer()
                                             Text(difficultAirwayEvaluationDetailsText)
-                                                .font(.system(size: 10))
+                                                .font(.system(size: 9))
                                         }
                                     }
                                 }
@@ -108,7 +108,7 @@ struct AirwayEvaluationView: View {
                         }
                     }
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 .padding(.horizontal, 12)
                 .background(Color.white)
                 .overlay(

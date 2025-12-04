@@ -48,7 +48,7 @@ struct SpecialInfoView: View {
                                 .font(.system(size: 10))
                             if let pregnantAge = anesthesia.surgery.preanesthesia?.isPregnantAge {
                                 Text(pregnantAge)
-                                    .font(.system(size: 10))
+                                    .font(.system(size: 9))
                             }
                             let defaultDetails = (anesthesia.surgery.preanesthesia?.isPregnantComorbitiesDetails ?? []).map { $0.displayName }
                             let customDetails = (anesthesia.surgery.preanesthesia?.isPregnantCustomDetails ?? [])
@@ -57,7 +57,7 @@ struct SpecialInfoView: View {
                             
                             if !allDetails.isEmpty {
                                 Text(allDetails.joined(separator: " • "))
-                                    .font(.system(size: 10))
+                                    .font(.system(size: 9))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .fixedSize(horizontal: false, vertical: true)
                             }
@@ -78,7 +78,7 @@ struct SpecialInfoView: View {
                             
                             if !allDetails.isEmpty {
                                 Text(allDetails.joined(separator: " • "))
-                                    .font(.system(size: 10))
+                                    .font(.system(size: 9))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .fixedSize(horizontal: false, vertical: true)
                             }
@@ -87,7 +87,7 @@ struct SpecialInfoView: View {
                         }
                     }
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 .padding(.horizontal, 12)
                 .background(Color.white)
                 .overlay(

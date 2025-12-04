@@ -39,14 +39,14 @@ struct ClearanceStatusView: View {
                         VStack(alignment: .trailing, spacing: 4) {
                             if let status = anesthesia.surgery.preanesthesia?.clearenceStatus {
                                 Text("**Parecer da Avaliação:** \(status.displayName)")
-                                    .font(.system(size: 10))
+                                    .font(.system(size: 9))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                         VStack(alignment: .leading, spacing: 4) {
                             if let asaText = anesthesia.surgery.shared?.asa?.displayName {
                                 Text("**Classificação ASA:** \(asaText)")
-                                    .font(.system(size: 10))
+                                    .font(.system(size: 9))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
@@ -64,11 +64,11 @@ struct ClearanceStatusView: View {
                                 Text("; \(custom.joined(separator: "; "))")
                             }
                         }
-                        .font(.system(size: 10))
+                        .font(.system(size: 9))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 .padding(.horizontal, 12)
                 .background(anesthesia.surgery.preanesthesia?.clearenceStatus?.color.opacity(0.05))
                 .overlay(

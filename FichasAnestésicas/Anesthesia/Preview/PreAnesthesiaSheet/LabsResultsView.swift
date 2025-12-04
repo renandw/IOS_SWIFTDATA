@@ -13,13 +13,14 @@ struct LabsResultsView: View {
 
         let labs = anesthesia.surgery.preanesthesia?.laboratoryExams
         let hasHemoglobin = labs?.hemoglobin != nil
+        let hasHematocrit = labs?.hct != nil
         let hasUrea = labs?.urea != nil
         let hasCreatinine = labs?.creatinine != nil
         let hasSodium = labs?.sodium != nil
         let hasPotassium = labs?.potassium != nil
         let hasInr = labs?.inr != nil
         let hasGlucose = labs?.glucose != nil
-        let hasAnyLabExam = hasHemoglobin || hasUrea || hasCreatinine || hasSodium || hasPotassium || hasInr || hasGlucose
+        let hasAnyLabExam = hasHemoglobin || hasHematocrit || hasUrea || hasCreatinine || hasSodium || hasPotassium || hasInr || hasGlucose
 
         return AnyView(
             VStack(spacing: 0) {
@@ -45,27 +46,28 @@ struct LabsResultsView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     if !hasAnyLabExam {
                         Text("Sem exames laboratoriais registrados")
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
                             .fontWeight(.semibold)
                         
                     } else {
-                        VStack(alignment: .leading, spacing: 4) {
+                        HStack(alignment: .top, spacing: 4) {
                             Text("Exames Laboratoriais:")
-                                .font(.system(size: 10))
+                                .font(.system(size: 9))
                                 .fontWeight(.semibold)
                             
                             let labItems: [String] = [
-                                labs?.hemoglobin.map { "Hemoglobina: \(String(format: "%.1f", $0)) g/dL" },
-                                labs?.urea.map { "Ureia: \(String(format: "%.0f", $0)) mg/dL" },
-                                labs?.creatinine.map { "Creatinina: \(String(format: "%.2f", $0)) mg/dL" },
-                                labs?.sodium.map { "Sódio: \(String(format: "%.0f", $0)) mEq/L" },
-                                labs?.potassium.map { "Potássio: \(String(format: "%.1f", $0)) mEq/L" },
+                                labs?.hemoglobin.map { "Hb: \(String(format: "%.1f", $0)) g/dL" },
+                                labs?.hemoglobin.map { "Ht: \(String(format: "%.1f", $0)) g/dL" },
+                                labs?.urea.map { "Ur: \(String(format: "%.0f", $0)) mg/dL" },
+                                labs?.creatinine.map { "Cr: \(String(format: "%.2f", $0)) mg/dL" },
+                                labs?.sodium.map { "Na: \(String(format: "%.0f", $0)) mEq/L" },
+                                labs?.potassium.map { "K: \(String(format: "%.1f", $0)) mEq/L" },
                                 labs?.inr.map { "INR: \(String(format: "%.2f", $0))" },
                                 labs?.glucose.map { "Glicemia: \(String(format: "%.0f", $0)) mg/dL" }
                             ].compactMap { $0 }
                             
                             Text(labItems.joined(separator: " • "))
-                                .font(.system(size: 10))
+                                .font(.system(size: 9))
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         
@@ -79,12 +81,12 @@ struct LabsResultsView: View {
                     
                     if !hasAnyImagingExam {
                         Text("Sem outros exames complementares registrados")
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
                             .fontWeight(.semibold)
                     } else {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Exames Complementares:")
-                                .font(.system(size: 10))
+                                .font(.system(size: 9))
                                 .fontWeight(.semibold)
                             
                             HStack(alignment: .top, spacing: 4) {
@@ -141,7 +143,7 @@ struct LabsResultsView: View {
                     }
                     
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 .padding(.horizontal, 12)
                 .background(Color.white)
                 .overlay(

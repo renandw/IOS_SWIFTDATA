@@ -37,14 +37,14 @@ struct PhysicalExamView: View {
                     .fill(Color.gray.opacity(0.2))
                 )
 
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(physicalExam)
-                        .font(.system(size: 10))
+                        .font(.system(size: 9))
                         .lineSpacing(2)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 .padding(.horizontal, 12)
                 .background(Color.white)
                 .overlay(

@@ -44,18 +44,18 @@ struct MedicationsAllergiesView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     if !(hasAllergies) {
                         Text("Sem história de alergias")
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else if hasCustomAllergiesDetails && hasAllergies {
                         HStack {
                             Text("Alergias à:")
-                                .font(.system(size: 10))
+                                .font(.system(size: 9))
                                 .fontWeight(.semibold)
                             let customDetails = (allergiesMedications)
                             if !customDetails.isEmpty {
                                 Text(customDetails.joined(separator: " • "))
-                                    .font(.system(size: 10))
+                                    .font(.system(size: 9))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
                             }
@@ -64,25 +64,25 @@ struct MedicationsAllergiesView: View {
                     
                     if !hasCustomMedicationDetails {
                         Text("Não faz uso de medicações")
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
                         VStack(alignment: .leading) {
                             Text("Medicamentos em uso:")
-                                .font(.system(size: 10))
+                                .font(.system(size: 9))
                                 .fontWeight(.semibold)
                             let customDetails = (dailyMedications)
                             if !customDetails.isEmpty {
                                 Text(customDetails.joined(separator: " • "))
-                                    .font(.system(size: 10))
+                                    .font(.system(size: 9))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
                             }
                         }
                     }
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
                 .padding(.horizontal, 12)
                 .background(Color.white)
                 .overlay(
