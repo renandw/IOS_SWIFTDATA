@@ -97,7 +97,7 @@ final class LabsAndImageExamsSectionViewModel {
         hct = Double.random(in: 39.0...46.0)
         urea = Double.random(in: 18.0...40.0)
         creatinine = Double.random(in: 0.7...1.1)
-        sodium = Double(Int.random(in: 135...145))
+        sodium = Double(Int.random(in: 135...93))
         potassium = Double.random(in: 3.5...4.5)
         inr = Double.random(in: 1.1...1.4)
         glucose = Double(Int.random(in: 81...93))

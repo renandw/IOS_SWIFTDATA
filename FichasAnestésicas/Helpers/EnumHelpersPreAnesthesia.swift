@@ -541,6 +541,17 @@ public enum SocialHabitsAndEnvironment: String, Codable, CaseIterable {
         case .airPollutionExposure:     "Exposição à Poluição"
         }
     }
+    var reportDisplayName: String {
+        switch self {
+            // Substâncias
+        case .alcoholConsumption:       "consumo de bebidas alcóolicas"
+        case .drugUse:                  "uso de drogas ilícitas"
+        case .tobaccoUse:               "hábito de tabagismo"
+        case .tobaccoExposure:          "exposição passiva frequente ao tabagismo"
+        case .sedentaryLifestyle:       "não pratica atividades físicas"
+        case .airPollutionExposure:     "exposição importante à ambientes poluídos"
+        }
+    }
 }
 
 enum ApfelScore: String, Codable, CaseIterable {
@@ -558,6 +569,16 @@ enum ApfelScore: String, Codable, CaseIterable {
         case .historyPONV:              "História de NVPO"
         case .historyMotionSickness:    "Cinetose"
         case .postoperativeOpioids:     "Uso de opióide"
+        }
+    }
+    var reportDisplayName: String {
+        switch self {
+            // Substâncias
+        case .femaleSex:                "sexo feminino"
+        case .tobaccoUse:               "hábito de tabagismo"
+        case .historyPONV:              "história prévia de NVPO"
+        case .historyMotionSickness:    "condição de cinetose"
+        case .postoperativeOpioids:     "uso de opióides no período perioperatório"
         }
     }
 }
@@ -623,7 +644,7 @@ public enum DifficultAirwayEvaluation: String, Codable, CaseIterable {
         case .neckMobility:         "Movibilidade do pescoço reduzida"
         case .obesity:              "Obesidade"
         case .noTeeth:              "Edentado"
-        case .traqueo:              "Traqueostomia"
+        case .traqueo:              "Via aérea definitiva"
         }
     }
 }

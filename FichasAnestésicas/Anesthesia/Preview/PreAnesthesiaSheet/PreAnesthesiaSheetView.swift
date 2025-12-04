@@ -22,6 +22,11 @@ struct PreanesthesiaSheetView: View {
                 ClearanceStatusView(anesthesia: anesthesia)
                 SpecialInfoView(anesthesia: anesthesia)
                 ComorbiditiesView(anesthesia: anesthesia)
+                HistoryView(anesthesia: anesthesia)
+                PhysicalExamView(anesthesia: anesthesia)
+                AirwayEvaluationView(anesthesia: anesthesia)
+                HabitsAndSocialView(anesthesia: anesthesia)
+                LabsResultsView(anesthesia: anesthesia)
                 Spacer()
             }
             .padding(padding)
