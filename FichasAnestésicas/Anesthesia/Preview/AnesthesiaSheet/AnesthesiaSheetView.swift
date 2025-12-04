@@ -21,7 +21,7 @@ struct AnesthesiaSheetView: View {
             // Container with A4 dimensions
             VStack(spacing: 4) {
                 AnesthesiaHeaderView(anesthesia: anesthesia)
-                //PatientInfoView(data: data)
+                AnesthesiaSheetPatientInfoView(anesthesia: anesthesia)
                 //MedicationGroupsView(data: data)
                 //VitalSignsView2(data: data)
                 //AnesthesiaDescriptionView(data: data)

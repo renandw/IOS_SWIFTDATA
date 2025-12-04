@@ -54,12 +54,14 @@ struct AirwayEvaluationView: View {
                     } else if hasAnyDetails {
                         VStack(alignment: .leading) {
                             Text("Avaliação de Vias Aéreas:")
+                                .font(.system(size: 9))
                                 .fontWeight(.semibold)
                             VStack(alignment: .leading, spacing: 8) {
                                 VStack(alignment: .leading, spacing: 8) {
                                     if let mallampatiDetails = anesthesia.surgery.preanesthesia?.mallampatiClassification {
                                         HStack {
                                             Text("Mallampati:")
+                                                .font(.system(size: 9))
                                                 .fontWeight(.semibold)
                                             Text(mallampatiDetails.displayName)
                                                 .font(.system(size: 9))
@@ -70,40 +72,45 @@ struct AirwayEvaluationView: View {
                                     }
                                 }
                             }
-                            
-                            VStack(alignment: .leading, spacing: 8) {
-                                let defaultEvaluations = (anesthesia.surgery.preanesthesia?.difficultAirwayEvaluation ?? []).filter { $0 != .traqueo }
-                                let defaultDetails = defaultEvaluations.map { $0.displayName }
-                                let customDetails = (anesthesia.surgery.preanesthesia?.difficultAirwayEvaluationCustomDetails ?? [])
-                                let all = defaultDetails + customDetails
-                                if !all.isEmpty {
-                                    
-                                    HStack {
-                                        Text("Preditores:")
-                                            .fontWeight(.semibold)
-                                            .font(.system(size: 9))
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            
-                                            
-                                            if !all.isEmpty {
-                                                Text(all.joined(separator: " • "))
+                            if hasDetails || hasCustomDetails || hasTextDetails {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    let defaultEvaluations = (anesthesia.surgery.preanesthesia?.difficultAirwayEvaluation ?? []).filter { $0 != .traqueo }
+                                    let defaultDetails = defaultEvaluations.map { $0.displayName }
+                                    let customDetails = (anesthesia.surgery.preanesthesia?.difficultAirwayEvaluationCustomDetails ?? [])
+                                    let all = defaultDetails + customDetails
+                                    if !all.isEmpty {
+                                        
+                                        HStack {
+                                            Text("Preditores:")
+                                                .fontWeight(.semibold)
+                                                .font(.system(size: 9))
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                
+                                                
+                                                if !all.isEmpty {
+                                                    Text(all.joined(separator: " • "))
+                                                        .font(.system(size: 9))
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                        .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
+                                                }
+                                            }
+                                        }
+                                        HStack(alignment: .top) {
+                                            if let difficultAirwayEvaluationDetailsText = anesthesia.surgery.preanesthesia?.difficultAirwayEvaluationDetailsText, !difficultAirwayEvaluationDetailsText.isEmpty {
+                                                Text("Detalhes:")
+                                                    .fontWeight(.semibold)
                                                     .font(.system(size: 9))
-                                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                                    .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
+                                                Spacer()
+                                                Text(difficultAirwayEvaluationDetailsText)
+                                                    .font(.system(size: 9))
                                             }
                                         }
                                     }
-                                    HStack(alignment: .top) {
-                                        if let difficultAirwayEvaluationDetailsText = anesthesia.surgery.preanesthesia?.difficultAirwayEvaluationDetailsText, !difficultAirwayEvaluationDetailsText.isEmpty {
-                                            Text("Detalhes:")
-                                                .fontWeight(.semibold)
-                                                .font(.system(size: 9))
-                                            Spacer()
-                                            Text(difficultAirwayEvaluationDetailsText)
-                                                .font(.system(size: 9))
-                                        }
-                                    }
                                 }
+                            } else {
+                                Text("Sem preditores via aérea difícil")
+                                    .font(.system(size: 9))
+                                    .fontWeight(.semibold)
                             }
                         }
                     }

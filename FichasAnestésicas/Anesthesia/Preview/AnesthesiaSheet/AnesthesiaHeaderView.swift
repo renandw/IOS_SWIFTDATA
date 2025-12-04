@@ -16,6 +16,9 @@ struct AnesthesiaHeaderView: View {
         let doctor = anesthesia.surgery.createdBy.name
         let doctorCRM = anesthesia.surgery.createdBy.crm
         let doctorRQE = anesthesia.surgery.createdBy.rqe ?? ""
+        let date = anesthesia.surgery.date.formatted(date: .numeric, time: .omitted)
+        let start = anesthesia.start?.formatted(date: .omitted, time: .shortened) ?? "-"
+        let end = anesthesia.end?.formatted(date: .omitted, time: .shortened) ?? "-"
         
         
         VStack(spacing: 8) {
@@ -24,6 +27,17 @@ struct AnesthesiaHeaderView: View {
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.primary)
                 Spacer()
+
+                Text("**Data:** \(date)")
+                    .font(.system(size: 11))
+                
+                Spacer()
+
+                Text("**Período:** \(start) → \(end)")
+                    .font(.system(size: 11))
+                
+                Spacer()
+            
                 Text(code)
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(.blue)
@@ -37,7 +51,7 @@ struct AnesthesiaHeaderView: View {
                     .font(.system(size: 10))
                     .foregroundColor(.secondary)
                 Spacer()
-                Text("**Responsável:** \(doctor)) - CRM \(doctorCRM)) - RQE \(doctorRQE))")
+                Text("**Responsável:** \(doctor) - CRM \(doctorCRM) - RQE \(doctorRQE)")
                     .font(.system(size: 10))
                     .foregroundColor(.secondary)
             }
