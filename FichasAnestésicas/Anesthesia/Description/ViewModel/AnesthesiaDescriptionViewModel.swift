@@ -193,7 +193,7 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
         }
         let techniquesText = techniquesSections
             .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-            .joined(separator: "\n\n")
+            .joined(separator: "\n")
         
         let completionText = completion.generateCompletionText()
         
@@ -205,7 +205,7 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
         let parts = [monitoringText, admissionText, techniquesText, completionText]
             .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
         
-        completion.finalDescription = parts.joined(separator: "\n\n")
+        completion.finalDescription = parts.joined(separator: "\n")
         completion.veryEndDescriptionText = completion.finalDescription
     }
 }

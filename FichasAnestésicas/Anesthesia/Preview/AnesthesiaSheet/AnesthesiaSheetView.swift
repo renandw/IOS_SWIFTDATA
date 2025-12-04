@@ -24,10 +24,10 @@ struct AnesthesiaSheetView: View {
                 AnesthesiaSheetPatientInfoView(anesthesia: anesthesia)
                 AnesthesiaSheetMedicationsView(anesthesia: anesthesia)
                 AnesthesiaSheetVitalSignsView(anesthesia: anesthesia)
-                //AnesthesiaDescriptionView(data: data)
-                //TeamAndProceduresView(data: data)
+                AnesthesiaSheetDescriptionView(anesthesia: anesthesia)
+                AnesthesiaSheetViewTeamAndProcedure(anesthesia: anesthesia)
                 Spacer()
-                //FooterView(data: data)
+                AnesthesiaSheetFooterView(anesthesia: anesthesia)
                 //AssinaturaGovBRView(data: data)
             }
             .padding(padding)
