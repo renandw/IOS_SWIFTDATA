@@ -102,7 +102,7 @@ private struct VitalChartContentPrint: View {
                         .annotation(position: .overlay) {
                             Image(systemName: "circle.fill")
                                 .foregroundStyle(.red)
-                                .font(.system(size: 10))
+                                .font(.system(size: 8))
                         }
                     }
                 }
@@ -119,7 +119,7 @@ private struct VitalChartContentPrint: View {
                             Image(systemName: "triangle.fill")
                                 .rotationEffect(.degrees(180))
                                 .foregroundStyle(.primary)
-                                .font(.system(size: 12))
+                                .font(.system(size: 9))
                         }
                     }
                 }
@@ -135,7 +135,7 @@ private struct VitalChartContentPrint: View {
                         .annotation(position: .overlay) {
                             Image(systemName: "triangle.fill")
                                 .foregroundStyle(.primary)
-                                .font(.system(size: 12))
+                                .font(.system(size: 9))
                         }
                     }
                 }
@@ -151,7 +151,7 @@ private struct VitalChartContentPrint: View {
                         .annotation(position: .overlay) {
                             Image(systemName: "square.fill")
                                 .foregroundStyle(.black)
-                                .font(.system(size: 8))
+                                .font(.system(size: 6))
                         }
                     }
                 }
@@ -167,7 +167,7 @@ private struct VitalChartContentPrint: View {
                         .annotation(position: .overlay) {
                             Image(systemName: "plus")
                                 .foregroundStyle(.green)
-                                .font(.system(size: 12))
+                                .font(.system(size: 9))
                         }
                     }
                 }
@@ -183,7 +183,7 @@ private struct VitalChartContentPrint: View {
                         .annotation(position: .overlay) {
                             Image(systemName: "circle.fill")
                                 .foregroundStyle(Color.blue.opacity(0.8))
-                                .font(.system(size: 12))
+                                .font(.system(size: 9))
                         }
                     }
                 }
@@ -214,7 +214,7 @@ private struct VitalChartContentPrint: View {
                 AxisMarks(position: .leading, values: .stride(by: 10)) { value in
                     AxisGridLine().foregroundStyle(Color.gray.opacity(0.3))
                     AxisValueLabel()
-                        .font(.system(size: 8))
+                        .font(.system(size: 7))
                 }
             }
             .chartYScale(domain: yDomain)
@@ -223,7 +223,7 @@ private struct VitalChartContentPrint: View {
                 AxisMarks(values: .automatic(desiredCount: 6)) { value in
                     AxisGridLine().foregroundStyle(Color.gray.opacity(0.3))
                     AxisValueLabel()
-                        .font(.system(size: 8))
+                        .font(.system(size: 7))
                 }
             }
             
@@ -236,7 +236,7 @@ private struct VitalChartContentPrint: View {
 /// Legenda compacta para impressão
 private struct VitalChartLegendPrint: View {
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 6) {
             LegendItemPrint(symbol: "circle.fill", color: .red, label: "FC")
             LegendItemPrint(symbol: "triangle.fill", color: .primary, label: "PAS", rotation: 180)
             LegendItemPrint(symbol: "triangle.fill", color: .primary, label: "PAD")
@@ -244,7 +244,7 @@ private struct VitalChartLegendPrint: View {
             LegendItemPrint(symbol: "plus", color: .green, label: "SpO₂")
             LegendItemPrint(symbol: "circle.fill", color: Color.blue.opacity(0.8), label: "EtCO₂")
         }
-        .font(.system(size: 8))
+        .font(.system(size: 4))
     }
 }
 

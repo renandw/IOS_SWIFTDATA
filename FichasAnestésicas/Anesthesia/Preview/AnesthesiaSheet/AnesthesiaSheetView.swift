@@ -12,8 +12,8 @@ struct AnesthesiaSheetView: View {
     let anesthesia: Anesthesia
 
     // A4 dimensions in points (72 DPI): 200mm ≈ 567pt, 287mm ≈ 813pt
-    private let pageWidth: CGFloat = 595
-    private let pageHeight: CGFloat = 842
+    private let pageWidth: CGFloat = 567
+    private let pageHeight: CGFloat = 813
     private let padding: CGFloat = 28 // 10mm ≈ 28pt
 
     var body: some View {

@@ -24,17 +24,17 @@ struct AnesthesiaHeaderView: View {
         VStack(spacing: 8) {
             HStack {
                 Text("FICHA ANESTÉSICA")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.primary)
                 Spacer()
 
                 Text("**Data:** \(date)")
-                    .font(.system(size: 11))
+                    .font(.system(size: 10))
                 
                 Spacer()
 
                 Text("**Período:** \(start) → \(end)")
-                    .font(.system(size: 11))
+                    .font(.system(size: 10))
                 
                 Spacer()
             

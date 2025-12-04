@@ -77,6 +77,14 @@ struct PDFPreviewView<Content: View>: View {
 struct ContentView: View {
     @Bindable var anesthesia: Anesthesia
     @State private var selectedTab = 0
+
+    var filenameAnesthesia: String {
+        "Ficha Anestésica - \(anesthesia.surgery.patient.name) - \(anesthesia.surgery.surgeryId)"
+    }
+
+    var filenamePreAnesthesia: String {
+        "Ficha Pré-Anestésica - \(anesthesia.surgery.patient.name) - \(anesthesia.surgery.surgeryId)"
+    }
     
     var body: some View {
         NavigationStack {
@@ -109,7 +117,9 @@ struct ContentView: View {
         let renderer = ImageRenderer(content: content)
         renderer.scale = 3.0
         
-        let url = URL.documentsDirectory.appending(path: "document.pdf")
+        let filename = selectedTab == 0 ? filenameAnesthesia : filenamePreAnesthesia
+        let sanitized = sanitizeFilename(filename)
+        let url = URL.documentsDirectory.appending(path: "\(sanitized).pdf")
         
         renderer.render { size, context in
             var box = CGRect(x: 0, y: 0, width: size.width, height: size.height)
@@ -126,6 +136,18 @@ struct ContentView: View {
         
         return url
     }
+    
+    func sanitizeFilename(_ s: String) -> String {
+        let invalid = CharacterSet(charactersIn: "/\\?%*|\"<>:")
+        let cleaned = s
+            .components(separatedBy: invalid)
+            .joined()
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return cleaned
+    }
+
+
     
     private var topBarButtons: some View {
         HStack(spacing: 8) {

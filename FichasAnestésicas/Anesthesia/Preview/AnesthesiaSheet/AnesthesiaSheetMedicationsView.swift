@@ -104,7 +104,7 @@ struct AnesthesiaSheetMedicationsView: View {
                         .fill(Color.blue)
                         .frame(width: 4)
                     Text("MEDICAÇÕES E FLUIDOS")
-                        .font(.system(size: 10, weight: .bold))
+                        .font(.system(size: 9, weight: .bold))
                         .foregroundColor(.secondary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)

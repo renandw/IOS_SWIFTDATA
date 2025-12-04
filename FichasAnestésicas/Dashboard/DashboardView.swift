@@ -20,6 +20,8 @@ struct DashboardView: View {
     @State private var navigateToTwoMonthPatients = false
     @State private var navigateToTwoMonthAnesthesia = false
     
+    
+    
     init(userId: String) {
         self.userId = userId
         _patients = Query(
@@ -110,6 +112,9 @@ struct QuickActionsSection: View {
     var onNewAnesthesia: () -> Void = {}
     var onMyPatients: () -> Void = {}
     var onFinancial: () -> Void = {}
+    
+    @State private var showingAnesthesiaWizard = false
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Ações Rápidas")
@@ -123,7 +128,7 @@ struct QuickActionsSection: View {
                     startPoint: .leading,
                     endPoint: .trailing
                 ),
-                onTap: onNewAnesthesia
+                //onTap: { showingAnesthesiaWizard = true }
             )
             
             QuickActionCard(
@@ -168,8 +173,12 @@ struct QuickActionsSection: View {
                 onTap: onMyPatients
             )
         }
+        .sheet(isPresented: $showingAnesthesiaWizard) {
+            AnesthesiaWizardView()
+        }
         .padding(.bottom, 16)
     }
+        
 }
 
 struct QuickActionCard: View {
