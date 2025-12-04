@@ -24,6 +24,7 @@ private struct Validator {
     }
 }
 
+
 @MainActor
 final class AnesthesiaFormViewModel: ObservableObject {
     @Published var anesthesia: Anesthesia?
@@ -111,7 +112,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
         self.repository = SwiftDataAnesthesiaRepository(context: context)
         self.sharedRepo = SwiftDataSharedPreAndAnesthesiaRepository(context: context)
         // Dados da cirurgia
-        self.surgeryDate = surgery.date
+        self.surgeryDate = Calendar.current.startOfDay(for: surgery.date)
         self.surgeryStart = surgery.start
         self.surgeryEnd = surgery.end
         loadAnesthesia()
