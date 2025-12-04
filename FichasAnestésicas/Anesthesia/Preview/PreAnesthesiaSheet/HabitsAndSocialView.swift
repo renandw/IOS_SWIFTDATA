@@ -16,9 +16,9 @@ struct HabitsAndSocialView: View {
         let hasRiskFactors = !(anesthesia.surgery.preanesthesia?.apfelScoreDetails?.isEmpty ?? false)
         let apfelScoreDetails = anesthesia.surgery.preanesthesia?.apfelScoreDetails ?? []
         let hasPONV = (anesthesia.surgery.preanesthesia?.apfelScoreDetails?.contains(where: { $0 == .historyPONV }) ?? false)
-        let hasSocialDetails = !(anesthesia.surgery.preanesthesia?.socialHabitsAndEnvironmentDetails?.isEmpty ?? false)
-        let hasSocialCustomDetails = !(anesthesia.surgery.preanesthesia?.socialHabitsAndEnvironmentCustomDetails?.isEmpty ?? false)
-        let hasSocialText = !(anesthesia.surgery.preanesthesia?.socialHabitsAndEnvironmentDetailsText?.isEmpty ?? false)
+        let hasSocialDetails = !(anesthesia.surgery.preanesthesia?.socialHabitsAndEnvironmentDetails?.isEmpty ?? true)
+        let hasSocialCustomDetails = !(anesthesia.surgery.preanesthesia?.socialHabitsAndEnvironmentCustomDetails?.isEmpty ?? true)
+        let hasSocialText = !(anesthesia.surgery.preanesthesia?.socialHabitsAndEnvironmentDetailsText?.isEmpty ?? true)
         let hasSocialAndEnvironment = hasSocialText || hasSocialCustomDetails || hasSocialDetails
 
         return AnyView(
@@ -50,7 +50,12 @@ struct HabitsAndSocialView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     
-                    if hasRiskFactors {
+                    if !hasRiskFactors {
+                        Text("Sem fatores de risco para náusea e vômitos no perioperatório.")
+                            .font(.system(size: 10))
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } else {
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
                             Text("**Fatores de Risco para Náuseas e Vômitos PO:**")
                                 .font(.system(size: 10))
@@ -64,7 +69,12 @@ struct HabitsAndSocialView: View {
                         }
                     }
                     
-                    if hasSocialAndEnvironment {
+                    if !hasSocialAndEnvironment {
+                        Text("Sem anotações relevantes quanto a hábitos sociais e ambiente.")
+                            .font(.system(size: 10))
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } else {
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
                             Text("Hábitos Sociais e Fatores Ambientais:")
                                 .font(.system(size: 10))
