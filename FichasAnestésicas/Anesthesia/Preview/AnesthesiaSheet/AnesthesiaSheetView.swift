@@ -19,11 +19,11 @@ struct AnesthesiaSheetView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Container with A4 dimensions
-            VStack(spacing: 4) {
+            VStack(spacing: 0) {
                 AnesthesiaHeaderView(anesthesia: anesthesia)
                 AnesthesiaSheetPatientInfoView(anesthesia: anesthesia)
-                //MedicationGroupsView(data: data)
-                //VitalSignsView2(data: data)
+                AnesthesiaSheetMedicationsView(anesthesia: anesthesia)
+                AnesthesiaSheetVitalSignsView(anesthesia: anesthesia)
                 //AnesthesiaDescriptionView(data: data)
                 //TeamAndProceduresView(data: data)
                 Spacer()
