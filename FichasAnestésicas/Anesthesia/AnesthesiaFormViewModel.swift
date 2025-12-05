@@ -1,10 +1,3 @@
-//
-//  AnesthesiaFormViewModel.swift
-//  FichasAnestésicas
-//
-//  Created by Renan Wrobel on 01/11/25.
-//
-
 import Foundation
 import SwiftData
 import SwiftUI
@@ -24,59 +17,25 @@ private struct Validator {
     }
 }
 
-
 @Observable
 final class AnesthesiaFormViewModel {
     var anesthesia: Anesthesia?
     var isEditing = false
     var errorMessage: String?
     var saveSuccess: Bool = false
-    // Anestesia resolvida (nova ou atualizada) para uso em fluxos externos (wizard)
     var resolvedAnesthesia: Anesthesia?
     
-    // Sugestões automáticas de horário
     var suggestedSurgeryStart: Date?
     var suggestedSurgeryEnd: Date?
 
-    var start: Date? {
-        didSet {
-            // Ao mudar início da anestesia, sugerir início da cirurgia = início da anestesia + 5min
-            guard oldValue != start else { return }
-            guard let start else { return }
-            let suggestion = Calendar.current.date(byAdding: .minute, value: 5, to: start)
-            suggestedSurgeryStart = suggestion
-            // Só aplica automaticamente se o usuário não tocou manualmente no campo de início da cirurgia
-            if touched["surgeryStart"] != true {
-                surgeryStart = suggestion
-            }
-            // Revalidar campos relacionados
-            validateAnesthesiaStart()
-            validateSurgeryStart()
-        }
-    }
-    var end: Date? {
-        didSet {
-            // Ao mudar término da anestesia, sugerir término da cirurgia = término da anestesia - 5min
-            guard oldValue != end else { return }
-            guard let end else { return }
-            let suggestion = Calendar.current.date(byAdding: .minute, value: -5, to: end)
-            suggestedSurgeryEnd = suggestion
-            // Só aplica automaticamente se o usuário não tocou manualmente no campo de término da cirurgia
-            if touched["surgeryEnd"] != true {
-                surgeryEnd = suggestion
-            }
-            // Revalidar campos relacionados
-            validateAnesthesiaEnd()
-            validateSurgeryEnd()
-        }
-    }
+    var start: Date?
+    var end: Date?
     var techniques: [AnesthesiaTechniqueKind] = []
     var asa: ASAClassification? = nil
     var position: [Positioning] = []
     var surgeryStart: Date?
     var surgeryEnd: Date?
     
-    /// Validações e mensagens de erros:
     var anesthesiaStartError: String?
     var anesthesiaEndError: String?
     var surgeryStartError: String?
@@ -101,8 +60,6 @@ final class AnesthesiaFormViewModel {
     private let context: ModelContext
     private var isNew = false
     let surgeryDate: Date
-    
-    
 
     init(
         surgery: Surgery,
@@ -114,7 +71,6 @@ final class AnesthesiaFormViewModel {
         self.context = context
         self.repository = SwiftDataAnesthesiaRepository(context: context)
         self.sharedRepo = SwiftDataSharedPreAndAnesthesiaRepository(context: context)
-        // Dados da cirurgia
         self.surgeryDate = Calendar.current.startOfDay(for: surgery.date)
         self.surgeryStart = surgery.start
         self.surgeryEnd = surgery.end
@@ -122,45 +78,34 @@ final class AnesthesiaFormViewModel {
     }
 
     func loadAnesthesia() {
-        
         let all = repository.getAll(for: surgery)
-
         anesthesia = all.first
         isNew = (anesthesia == nil)
+        
         if let anesthesia = anesthesia {
             self.start = anesthesia.start
             self.end = anesthesia.end
-            // Prefer shared techniques if available
             let shared = sharedRepo.get(for: surgery) ?? anesthesia.shared
-              if let shared {
-                  self.techniques = shared.techniques
-              }
-
-              if let shared {
-                  self.asa = shared.asa
-              } else {
-                  self.asa = nil
-              }
+            if let shared {
+                self.techniques = shared.techniques
+                self.asa = shared.asa
+            } else {
+                self.asa = nil
+            }
             self.position = anesthesia.position
         }
         
-        
         self.surgeryStart = surgery.start
         self.surgeryEnd = surgery.end
-        
-        // Reset sugestões ao carregar do modelo
         self.suggestedSurgeryStart = nil
         self.suggestedSurgeryEnd = nil
     }
 
     func save() -> Bool {
-        // Reset estado de sucesso/resultado antes de uma nova tentativa de salvar
         saveSuccess = false
         resolvedAnesthesia = nil
-        // Validação do formulário antes de persistir (com side-effects)
         runValidations()
         guard isFormValid else {
-            // Mensagens específicas já estão nos campos de erro
             return false
         }
 
@@ -191,7 +136,6 @@ final class AnesthesiaFormViewModel {
             return false
         }
 
-    
         anesthesia.start = start
         anesthesia.end = end
         
@@ -199,7 +143,6 @@ final class AnesthesiaFormViewModel {
         shared.techniques = techniques
         shared.asa = asa
         anesthesia.shared = shared
-        
         anesthesia.position = position
 
         surgery.start = surgeryStart
@@ -213,7 +156,6 @@ final class AnesthesiaFormViewModel {
             }
             loadAnesthesia()
             self.isNew = false
-            // expõe a anestesia resolvida para fluxos externos (wizard)
             resolvedAnesthesia = self.anesthesia
             saveSuccess = true
             return true
@@ -239,7 +181,6 @@ final class AnesthesiaFormViewModel {
     }
     
     func runValidations() {
-        // Atualiza mensagens de erro (efeitos colaterais)
         clearErrors()
         validateAnesthesiaStart()
         validateSurgeryStart()
@@ -249,11 +190,8 @@ final class AnesthesiaFormViewModel {
         validateASA()
         validatePosition()
     }
-    
-    ///Validações
 
     var isFormValid: Bool {
-        // Checagem pura: apenas lê erros e presença de campos obrigatórios
         let noErrors = [
             anesthesiaStartError,
             anesthesiaEndError,
@@ -265,8 +203,6 @@ final class AnesthesiaFormViewModel {
         ].allSatisfy { $0 == nil }
 
         if isNew {
-            // Em criação: obrigatório início de anestesia, início de cirurgia,
-            // ao menos uma técnica, ASA e ao menos uma posição.
             let requiredPresent =
                 (start != nil) &&
                 (surgeryStart != nil) &&
@@ -275,8 +211,6 @@ final class AnesthesiaFormViewModel {
                 !position.isEmpty
             return noErrors && requiredPresent
         } else {
-            // Em edição: tudo que era obrigatório na criação CONTINUA obrigatório
-            // + também são obrigatórios o término da cirurgia e da anestesia.
             let requiredPresent =
                 (start != nil) &&
                 (surgeryStart != nil) &&
@@ -289,10 +223,7 @@ final class AnesthesiaFormViewModel {
         }
     }
 
-
     func validateAnesthesiaStart() {
-        //não pode ser antes de surgeryDate
-        //obrigatório para criação
         guard touched["anesthesiaStart"] == true else { return }
         anesthesiaStartError = nil
         if isNew {
@@ -301,7 +232,6 @@ final class AnesthesiaFormViewModel {
                 return
             }
         }
-        // Regras de ordem temporal
         anesthesiaStartError =
             Validator.before(start, surgeryDate, "Início da anestesia não pode ser antes da data da cirurgia - \(surgeryDate).") ??
             Validator.after(start, end, "Início da anestesia não pode ser após o seu término.") ??
@@ -310,8 +240,6 @@ final class AnesthesiaFormViewModel {
     }
 
     func validateSurgeryStart() {
-        //não pode ser antes de anesthesia.start
-        //obrigatório para criação
         guard touched["surgeryStart"] == true else { return }
         surgeryStartError = nil
         if isNew && surgeryStart == nil {
@@ -328,9 +256,6 @@ final class AnesthesiaFormViewModel {
     }
 
     func validateSurgeryEnd() {
-        // não pode ser antes de surgery.start
-        // não obrigatório para criação
-        // obrigatório para edição
         guard touched["surgeryEnd"] == true else { return }
         surgeryEndError = nil
         if !isNew && surgeryEnd == nil {
@@ -347,9 +272,6 @@ final class AnesthesiaFormViewModel {
     }
 
     func validateAnesthesiaEnd() {
-        //não pode ser antes de surgery.end
-        //não obrigatório para criação
-        //obrigatório para edição
         guard touched["anesthesiaEnd"] == true else { return }
         anesthesiaEndError = nil
         if !isNew && end == nil {
@@ -365,8 +287,6 @@ final class AnesthesiaFormViewModel {
     }
 
     func validateAnesthesiaTechnique() {
-        //para criar, pelo menos uma technique precisa ser selecionada
-        //obrigatório para criação
         guard touched["techniques"] == true else { return }
         techniquesError = nil
         if isNew && techniques.isEmpty {
@@ -375,8 +295,6 @@ final class AnesthesiaFormViewModel {
     }
 
     func validateASA() {
-        //para criar, ASA precisa estar selecionado
-        //obrigatório para criação
         guard touched["asa"] == true else { return }
         asaError = nil
         if isNew && asa == nil {
@@ -385,8 +303,6 @@ final class AnesthesiaFormViewModel {
     }
     
     func validatePosition() {
-        //para criar, Position precisa estar selecionado
-        //obrigatório para criação
         guard touched["position"] == true else { return }
         positionError = nil
         if isNew && position.isEmpty {
@@ -404,7 +320,25 @@ final class AnesthesiaFormViewModel {
         positionError = nil
     }
     
-    // Ações para aceitar/limpar sugestões (opcional para o UI)
+    // Lógica de sugestões movida para funções explícitas
+    func updateSuggestionsForStart() {
+        guard let start else { return }
+        let suggestion = Calendar.current.date(byAdding: .minute, value: 5, to: start)
+        suggestedSurgeryStart = suggestion
+        if touched["surgeryStart"] != true {
+            surgeryStart = suggestion
+        }
+    }
+    
+    func updateSuggestionsForEnd() {
+        guard let end else { return }
+        let suggestion = Calendar.current.date(byAdding: .minute, value: -5, to: end)
+        suggestedSurgeryEnd = suggestion
+        if touched["surgeryEnd"] != true {
+            surgeryEnd = suggestion
+        }
+    }
+    
     func acceptSurgeryStartSuggestion() {
         if let suggestedSurgeryStart { surgeryStart = suggestedSurgeryStart }
         suggestedSurgeryStart = nil
@@ -419,5 +353,4 @@ final class AnesthesiaFormViewModel {
         suggestedSurgeryStart = nil
         suggestedSurgeryEnd = nil
     }
-    
 }

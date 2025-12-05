@@ -14,7 +14,7 @@ struct DateTimePickerSheetButton: View {
 
     var body: some View {
         Button {
-            tempDate = date
+            tempDate = date ?? Date()
             showPicker = true
         } label: {
             Group {

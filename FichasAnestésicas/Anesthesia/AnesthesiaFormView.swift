@@ -244,10 +244,12 @@ struct AnesthesiaFormView: View {
             .onChange(of: viewModel.start) { _, _ in
                 viewModel.touched["anesthesiaStart"] = true
                 viewModel.validateAnesthesiaStart()
+                viewModel.updateSuggestionsForStart()  // ← Adicionar
             }
             .onChange(of: viewModel.end) { _, _ in
                 viewModel.touched["anesthesiaEnd"] = true
                 viewModel.validateAnesthesiaEnd()
+                viewModel.updateSuggestionsForEnd()  // ← Adicionar
             }
             .onChange(of: viewModel.surgeryStart) { _, _ in
                 viewModel.touched["surgeryStart"] = true
@@ -299,9 +301,7 @@ struct AnesthesiaFormView: View {
 
     // Modo wizard: apenas o formulário, sem NavigationStack nem toolbar própria
     private var wizardBody: some View {
-        NavigationStack {
             baseForm
-        }
     }
 }
 

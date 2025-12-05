@@ -60,11 +60,11 @@ struct NewAnesthesiaPageView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 // Header com título do step atual
-                Text(titleForCurrentStep)
-                    .font(.headline)
-                    .padding()
-                
-                Divider()
+//                Text(titleForCurrentStep)
+//                    .font(.headline)
+//                    .padding()
+//                
+//                Divider()
                 
                 // Conteúdo do passo atual
                 Group {
@@ -103,26 +103,38 @@ struct NewAnesthesiaPageView: View {
                 Divider()
                 
                 // Botões de navegação
-                HStack {
-                    Button("Voltar") {
-                        handleBack()
-                    }
-                    .disabled(currentStep == .patient || isSaving)
-                    
-                    Spacer()
-                    
-                    Button(primaryButtonTitle) {
-                        handleNext()
-                    }
-                    .disabled(!canGoForward || isSaving)
-                }
-                .padding()
+//                HStack {
+//                    Button("Voltar") {
+//                        handleBack()
+//                    }
+//                    .disabled(currentStep == .patient || isSaving)
+//                    
+//                    Spacer()
+//                    
+//                    Button(primaryButtonTitle) {
+//                        handleNext()
+//                    }
+//                    .disabled(!canGoForward || isSaving)
+//                }
+//                .padding()
             }
-            .navigationTitle("Nova Ficha Anestésica")
+            .navigationTitle(titleForCurrentStep)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
+                    Button(secondaryButtonTitle, systemImage: secondaryButtonIcon) {
+                        if currentStep == .patient {
+                            dismiss()
+                        } else {
+                            handleBack()
+                        }
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(primaryButtonTitle, systemImage: primaryButtonIcon) {
+                        handleNext()
+                    }
+                    .disabled(!canGoForward || isSaving)
                 }
             }
         }
@@ -132,15 +144,26 @@ struct NewAnesthesiaPageView: View {
     
     private var titleForCurrentStep: String {
         switch currentStep {
-        case .patient: return "Passo 1: Paciente"
-        case .surgery: return "Passo 2: Cirurgia"
-        case .anesthesia: return "Passo 3: Anestesia"
+        case .patient: return "Informar Paciente"
+        case .surgery: return "Nova Cirurgia"
+        case .anesthesia: return "Nova Anestesia"
         }
     }
     
     private var primaryButtonTitle: String {
         currentStep == .anesthesia ? "Concluir" : "Próximo"
     }
+    private var primaryButtonIcon: String {
+        currentStep == .anesthesia ? "checkmark" : "chevron.forward"
+    }
+    private var secondaryButtonTitle: String {
+        currentStep == .patient ? "Cancelar" : "Voltar"
+    }
+    private var secondaryButtonIcon: String {
+        currentStep == .patient ? "xmark" : "chevron.backward"
+    }
+    
+    
     
     // MARK: - Validação
     
