@@ -212,4 +212,21 @@ final class SurgeryFormViewModel {
         try repository.update(surgery)
         resolvedSurgery = surgery
     }
+    
+    func formatName(_ name: String) -> String {
+        let lowercasedWords = ["de", "da", "do", "das", "dos"]
+        
+        return name
+            .lowercased()
+            .split(separator: " ")
+            .map { word in
+                let w = String(word)
+                if lowercasedWords.contains(w) {
+                    return w
+                } else {
+                    return w.capitalized
+                }
+            }
+            .joined(separator: " ")
+    }
 }
