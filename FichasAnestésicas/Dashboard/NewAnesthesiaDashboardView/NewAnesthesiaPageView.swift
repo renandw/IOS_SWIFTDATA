@@ -100,7 +100,7 @@ struct NewAnesthesiaPageView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                Divider()
+                //Divider()
                 
                 // Botões de navegação
 //                HStack {

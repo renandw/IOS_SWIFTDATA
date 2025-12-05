@@ -18,6 +18,9 @@ struct PatientFormView: View {
     @ObservedObject var viewModel: PatientFormViewModel
     @State private var isSaving = false
     
+    @FocusState private var isFocused: Bool
+    
+    
     // Binding para retornar o paciente selecionado
     @Binding var selectedPatient: Patient?
     
@@ -36,20 +39,78 @@ struct PatientFormView: View {
     // Conteúdo comum do formulário (campos)
     private var formContent: some View {
         Form {
-            Section {
-                TextField("Nome", text: $viewModel.name)
-
-                TextField("CNS", text: $viewModel.cns)
-                    .keyboardType(.numberPad)
-
-                DatePicker("Nascimento",
-                           selection: $viewModel.birthDate,
-                           displayedComponents: .date)
-
-                Picker("Sexo", selection: $viewModel.sex) {
-                    ForEach(Sex.allCases, id: \.self) { sex in
-                        Text(sex == .male ? "Masculino" : "Feminino")
+            Section(
+                header:
+                    HStack{
+                        Image(systemName: "person")
+                        Text("Identificação do Paciente")
                     }
+                    .foregroundStyle(.blue),
+                footer:
+                    Text("Use 000 0000 0000 0000, se CNS desconhecido")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+            ) {
+                HStack(alignment: .center){
+                    Text("Nome")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    TextField("John Appleseed", text: $viewModel.name)
+                        .multilineTextAlignment(.trailing)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.words)
+                        .focused($isFocused)
+                        .onChange(of: isFocused) { _, focused in
+                            if !focused {
+                                viewModel.name = viewModel.formatName(viewModel.name)
+                            }
+                        }
+                }
+                HStack(alignment: .center){
+                    Text("Número SUS")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    TextField("000 0000 0000 0000", text: Binding(
+                        get: { viewModel.formatCNS(viewModel.cns) },
+                        set: { newValue in
+                            viewModel.cns = newValue.filter { $0.isNumber }
+                        }
+                    ))
+                    .keyboardType(.numberPad)
+                    .onChange(of: viewModel.cns) { _, newValue in
+                        if newValue.count > 15 {
+                            viewModel.cns = String(newValue.prefix(15))
+                        }
+                    }
+                    .multilineTextAlignment(.trailing)
+                }
+                HStack(alignment: .center){
+                    Text("Data de Nascimento")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    OnlyDatePickerSheetButton(
+                        date: Binding<Date?>(
+                            get: { viewModel.birthDate },
+                            set: { viewModel.birthDate = $0 ?? viewModel.birthDate }
+                        ),
+                        title: "Data de Nascimento",
+                        placeholder: "Selecionar",
+                        minDate: nil,
+                        maxDate: Date(),
+                        compactInRow: true
+                    )
+                }
+                HStack(alignment: .center){
+                    Text("Sexo")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    Spacer()
+                    Picker("Sexo", selection: $viewModel.sex) {
+                        ForEach(Sex.allCases, id: \.self) { sex in
+                            Text(sex == .male ? "Masculino" : "Feminino")
+                        }
+                    }
+                    .frame(maxWidth: 230)
                 }
                 .pickerStyle(.segmented)
             }
@@ -243,3 +304,4 @@ struct PatientDuplicateCard: View {
         .cornerRadius(12)
     }
 }
+

@@ -159,7 +159,8 @@ final class PatientFormViewModel: ObservableObject {
 
     // MARK: - Validation
     var isValid: Bool {
-        !name.isEmpty && !cns.isEmpty
+        let digitCount = cns.filter { $0.isNumber }.count
+        return !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && digitCount == 15
     }
 
     // MARK: - Derived state
@@ -180,4 +181,37 @@ final class PatientFormViewModel: ObservableObject {
             return ""
         }
     }
+    
+    // MARK: funções de formatação
+    func formatName(_ name: String) -> String {
+        let lowercasedWords = ["de", "da", "do", "das", "dos"]
+
+        return name
+            .lowercased()               // padroniza tudo antes
+            .split(separator: " ")
+            .map { word in
+                let w = String(word)
+                if lowercasedWords.contains(w) {
+                    return w            // mantém minúsculo
+                } else {
+                    return w.capitalized  // primeira maiúscula
+                }
+            }
+            .joined(separator: " ")
+    }
+    
+    func formatCNS(_ cns: String) -> String {
+        let numbers = cns.filter { $0.isNumber }.prefix(15)
+        var result = ""
+        
+        for (index, char) in numbers.enumerated() {
+            if index == 3 || index == 7 || index == 11 {
+                result += " "
+            }
+            result.append(char)
+        }
+        
+        return result
+    }
+
 }
