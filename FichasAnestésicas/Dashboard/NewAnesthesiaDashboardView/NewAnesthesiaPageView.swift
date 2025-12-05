@@ -59,14 +59,7 @@ struct NewAnesthesiaPageView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Header com título do step atual
-//                Text(titleForCurrentStep)
-//                    .font(.headline)
-//                    .padding()
-//                
-//                Divider()
-                
-                // Conteúdo do passo atual
+
                 Group {
                     switch currentStep {
                     case .patient:
@@ -99,35 +92,14 @@ struct NewAnesthesiaPageView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
-                //Divider()
-                
-                // Botões de navegação
-//                HStack {
-//                    Button("Voltar") {
-//                        handleBack()
-//                    }
-//                    .disabled(currentStep == .patient || isSaving)
-//                    
-//                    Spacer()
-//                    
-//                    Button(primaryButtonTitle) {
-//                        handleNext()
-//                    }
-//                    .disabled(!canGoForward || isSaving)
-//                }
-//                .padding()
+
             }
             .navigationTitle(titleForCurrentStep)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(secondaryButtonTitle, systemImage: secondaryButtonIcon) {
-                        if currentStep == .patient {
+                    Button("Cancelar", systemImage: "xmark") {
                             dismiss()
-                        } else {
-                            handleBack()
-                        }
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
@@ -156,12 +128,12 @@ struct NewAnesthesiaPageView: View {
     private var primaryButtonIcon: String {
         currentStep == .anesthesia ? "checkmark" : "chevron.forward"
     }
-    private var secondaryButtonTitle: String {
-        currentStep == .patient ? "Cancelar" : "Voltar"
-    }
-    private var secondaryButtonIcon: String {
-        currentStep == .patient ? "xmark" : "chevron.backward"
-    }
+//    private var secondaryButtonTitle: String {
+//        currentStep == .patient ? "Cancelar" : "Voltar"
+//    }
+//    private var secondaryButtonIcon: String {
+//        currentStep == .patient ? "xmark" : "chevron.backward"
+//    }
     
     
     

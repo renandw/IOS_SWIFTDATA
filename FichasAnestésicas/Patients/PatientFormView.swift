@@ -108,8 +108,10 @@ struct PatientFormView: View {
                     Picker("Sexo", selection: $viewModel.sex) {
                         ForEach(Sex.allCases, id: \.self) { sex in
                             Text(sex == .male ? "Masculino" : "Feminino")
+                                .tag(sex as Sex?)
                         }
                     }
+                    .pickerStyle(.segmented)
                     .frame(maxWidth: 230)
                 }
                 .pickerStyle(.segmented)

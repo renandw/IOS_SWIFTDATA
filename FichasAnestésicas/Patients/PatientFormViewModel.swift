@@ -13,8 +13,8 @@ final class PatientFormViewModel: ObservableObject {
     // MARK: - Form properties
     @Published var name: String = ""
     @Published var cns: String = ""
-    @Published var birthDate: Date = .now
-    @Published var sex: Sex = .male
+    @Published var birthDate: Date? = nil
+    @Published var sex: Sex? = nil
 
     // MARK: - Duplicate Detection State
     @Published var duplicateStatus: DuplicateStatus?
@@ -62,10 +62,11 @@ final class PatientFormViewModel: ObservableObject {
     
     private func performUpdate() throws {
         guard var patient = editingPatient else { return }
+        guard let bd = birthDate, let sx = sex else { return }
         patient.name = name
         patient.cns = cns
-        patient.birthDate = birthDate
-        patient.sex = sex
+        patient.birthDate = bd
+        patient.sex = sx
         try repository.update(patient)
         saveSuccess = true
     }
@@ -119,11 +120,12 @@ final class PatientFormViewModel: ObservableObject {
     
     /// Opção 3: Atualizar paciente existente com os novos dados
     func updateExisting(_ existingPatient: Patient) throws {
+        guard let bd = birthDate, let sx = sex else { return }
         var patient = existingPatient
         patient.name = name
         patient.cns = cns
-        patient.birthDate = birthDate
-        patient.sex = sex
+        patient.birthDate = bd
+        patient.sex = sx
         try repository.update(patient)
         saveSuccess = true
         resolvedPatient = patient
@@ -133,12 +135,13 @@ final class PatientFormViewModel: ObservableObject {
     // MARK: - Helpers
     
     private func createPatientObject() -> Patient {
-        Patient(
+        precondition(birthDate != nil && sex != nil, "Expected non-nil birthDate and sex when creating Patient")
+        return Patient(
             patientId: UUID().uuidString,
             cns: cns,
             name: name,
-            birthDate: birthDate,
-            sex: sex,
+            birthDate: birthDate!,
+            sex: sex!,
             createdBy: currentUser
         )
     }
@@ -153,14 +156,15 @@ final class PatientFormViewModel: ObservableObject {
     private func clearForm() {
         name = ""
         cns = ""
-        birthDate = .now
-        sex = .male
+        birthDate = nil
+        sex = nil
     }
 
     // MARK: - Validation
     var isValid: Bool {
         let digitCount = cns.filter { $0.isNumber }.count
-        return !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && digitCount == 15
+        let hasName = !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        return hasName && digitCount == 15 && birthDate != nil && sex != nil
     }
 
     // MARK: - Derived state
@@ -187,14 +191,14 @@ final class PatientFormViewModel: ObservableObject {
         let lowercasedWords = ["de", "da", "do", "das", "dos"]
 
         return name
-            .lowercased()               // padroniza tudo antes
+            .lowercased()               
             .split(separator: " ")
             .map { word in
                 let w = String(word)
                 if lowercasedWords.contains(w) {
-                    return w            // mantém minúsculo
+                    return w
                 } else {
-                    return w.capitalized  // primeira maiúscula
+                    return w.capitalized
                 }
             }
             .joined(separator: " ")
