@@ -29,6 +29,7 @@ struct NewAnesthesiaPageView: View {
     @State private var surgeryViewModel: SurgeryFormViewModel?
     @State private var anesthesiaViewModel: AnesthesiaFormViewModel?
     
+    
     @State private var currentStep: Step = .patient
     @State private var isSaving: Bool = false
     @State private var selectedPatient: Patient?
@@ -89,8 +90,9 @@ struct NewAnesthesiaPageView: View {
                         }
                     case .anesthesia:
                         if let anesthesiaViewModel {
+                            @Bindable var vm = anesthesiaViewModel
                             AnesthesiaFormView(
-                                viewModel: anesthesiaViewModel,
+                                viewModel: vm,
                                 mode: .wizard
                             )
                         }

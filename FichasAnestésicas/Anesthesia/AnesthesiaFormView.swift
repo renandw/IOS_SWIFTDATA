@@ -1,4 +1,5 @@
 import SwiftUI
+import Observation
 
 struct AnesthesiaFormView: View {
     enum Mode {
@@ -6,7 +7,7 @@ struct AnesthesiaFormView: View {
         case wizard       // usado dentro do fluxo NewAnesthesiaView
     }
 
-    @ObservedObject var viewModel: AnesthesiaFormViewModel
+    @Bindable var viewModel: AnesthesiaFormViewModel
     @Environment(\.dismiss) private var dismiss
 
     // MARK: - Bindings
@@ -447,3 +448,4 @@ struct ASAPickerView: View {
         }
     }
 }
+

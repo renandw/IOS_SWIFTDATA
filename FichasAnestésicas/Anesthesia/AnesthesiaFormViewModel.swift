@@ -25,20 +25,20 @@ private struct Validator {
 }
 
 
-@MainActor
-final class AnesthesiaFormViewModel: ObservableObject {
-    @Published var anesthesia: Anesthesia?
-    @Published var isEditing = false
-    @Published var errorMessage: String?
-    @Published var saveSuccess: Bool = false
+@Observable
+final class AnesthesiaFormViewModel {
+    var anesthesia: Anesthesia?
+    var isEditing = false
+    var errorMessage: String?
+    var saveSuccess: Bool = false
     // Anestesia resolvida (nova ou atualizada) para uso em fluxos externos (wizard)
-    @Published var resolvedAnesthesia: Anesthesia?
+    var resolvedAnesthesia: Anesthesia?
     
     // Sugestões automáticas de horário
-    @Published var suggestedSurgeryStart: Date?
-    @Published var suggestedSurgeryEnd: Date?
+    var suggestedSurgeryStart: Date?
+    var suggestedSurgeryEnd: Date?
 
-    @Published var start: Date? {
+    var start: Date? {
         didSet {
             // Ao mudar início da anestesia, sugerir início da cirurgia = início da anestesia + 5min
             guard oldValue != start else { return }
@@ -54,7 +54,7 @@ final class AnesthesiaFormViewModel: ObservableObject {
             validateSurgeryStart()
         }
     }
-    @Published var end: Date? {
+    var end: Date? {
         didSet {
             // Ao mudar término da anestesia, sugerir término da cirurgia = término da anestesia - 5min
             guard oldValue != end else { return }
@@ -70,21 +70,21 @@ final class AnesthesiaFormViewModel: ObservableObject {
             validateSurgeryEnd()
         }
     }
-    @Published var techniques: [AnesthesiaTechniqueKind] = []
-    @Published var asa: ASAClassification? = nil
-    @Published var position: [Positioning] = []
-    @Published var surgeryStart: Date?
-    @Published var surgeryEnd: Date?
+    var techniques: [AnesthesiaTechniqueKind] = []
+    var asa: ASAClassification? = nil
+    var position: [Positioning] = []
+    var surgeryStart: Date?
+    var surgeryEnd: Date?
     
     /// Validações e mensagens de erros:
-    @Published var anesthesiaStartError: String?
-    @Published var anesthesiaEndError: String?
-    @Published var surgeryStartError: String?
-    @Published var surgeryEndError: String?
-    @Published var techniquesError: String?
-    @Published var asaError: String?
-    @Published var positionError: String?
-    @Published var touched: [String: Bool] = [
+    var anesthesiaStartError: String?
+    var anesthesiaEndError: String?
+    var surgeryStartError: String?
+    var surgeryEndError: String?
+    var techniquesError: String?
+    var asaError: String?
+    var positionError: String?
+    var touched: [String: Bool] = [
         "anesthesiaStart": false,
         "anesthesiaEnd": false,
         "surgeryStart": false,
