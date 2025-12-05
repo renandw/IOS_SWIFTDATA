@@ -21,16 +21,21 @@ struct PatientListView: View {
     }
     
     var body: some View {
-        List(patient) { patient in
-            NavigationLink {
-                PatientDetailsView(patient: patient)
-            } label: {
-                PatientRowView(
-                    patient: patient,
-                    numberCnsContext: .notNeeded,
-                    ageContext: .outSurgery
-                )
-                .contentShape(Rectangle())
+        List {
+            ForEach(patient) { patient in
+                NavigationLink {
+                    PatientDetailsView(patient: patient)
+                } label: {
+                    PatientRowView(
+                        patient: patient,
+                        numberCnsContext: .notNeeded,
+                        ageContext: .outSurgery
+                    )
+                    .contentShape(Rectangle())
+                }
+            }
+            .onDelete { indexSet in
+                handleDelete(at: indexSet)
             }
         }
         .navigationTitle("Pacientes")
@@ -43,7 +48,9 @@ struct PatientListView: View {
                         currentUser: user,
                         editingPatient: editingPatient
                     ),
-                    selectedPatient: $selectedPatient
+                    selectedPatient: $selectedPatient,
+                    mode: .standalone
+                    
                 )
             } else {
                 ContentUnavailableView("Sem usuário", systemImage: "person.crop.circle.badge.exclam")
@@ -72,4 +79,19 @@ struct PatientListView: View {
             }
         }
     }
+    
+    private func handleDelete(at indexSet: IndexSet) {
+        guard let user = session.currentUser else { return }
+        let repository = SwiftDataPatientRepository(context: patientContext, currentUser: user)
+        for index in indexSet {
+            let p = patient[index]
+            do {
+                try repository.delete(p)
+            } catch {
+                // You may replace this with an alert/toast if you have one
+                print("Erro ao excluir paciente: \(error)")
+            }
+        }
+    }
 }
+

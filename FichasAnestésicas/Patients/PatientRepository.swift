@@ -69,7 +69,7 @@ final class SwiftDataPatientRepository: PatientRepository {
         
         // Helper para verificar se CNS é placeholder
         let isPlaceholder = { (cns: String) -> Bool in
-            cns == "00000000000000" || cns.isEmpty
+            cns == "000000000000000" || cns.isEmpty
         }
         
         // 1. Duplicata EXATA (CNS válido idêntico)

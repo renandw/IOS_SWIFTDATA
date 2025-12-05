@@ -24,6 +24,8 @@ final class PatientFormViewModel: ObservableObject {
     // MARK: - Success/Error State
     @Published var saveSuccess = false
     @Published var errorMessage: String?
+    // Paciente resolvido para uso em fluxos externos (novo, selecionado ou atualizado)
+    @Published var resolvedPatient: Patient?
 
     // MARK: - Dependencies
     private let repository: PatientRepository
@@ -79,6 +81,7 @@ final class PatientFormViewModel: ObservableObject {
         case .none:
             try repository.create(patient)
             saveSuccess = true
+            resolvedPatient = patient
             
         case .exact(let patients):
             foundPatients = patients
@@ -101,13 +104,15 @@ final class PatientFormViewModel: ObservableObject {
         guard let patient = pendingPatient else { return }
         try repository.create(patient)
         saveSuccess = true
+        resolvedPatient = patient
         closeDuplicateSheet()
     }
     
     /// Opção 2: Selecionar paciente existente (apenas navega/fecha)
     func selectExisting(_ patient: Patient) {
         // A View decide o que fazer (navegar, fechar, etc)
-        // Apenas fecha o sheet e limpa o form
+        // Além de fechar o sheet, expõe o paciente selecionado
+        resolvedPatient = patient
         closeDuplicateSheet()
         clearForm()
     }
@@ -121,6 +126,7 @@ final class PatientFormViewModel: ObservableObject {
         patient.sex = sex
         try repository.update(patient)
         saveSuccess = true
+        resolvedPatient = patient
         closeDuplicateSheet()
     }
     

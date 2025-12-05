@@ -30,6 +30,9 @@ final class AnesthesiaFormViewModel: ObservableObject {
     @Published var anesthesia: Anesthesia?
     @Published var isEditing = false
     @Published var errorMessage: String?
+    @Published var saveSuccess: Bool = false
+    // Anestesia resolvida (nova ou atualizada) para uso em fluxos externos (wizard)
+    @Published var resolvedAnesthesia: Anesthesia?
     
     // Sugestões automáticas de horário
     @Published var suggestedSurgeryStart: Date?
@@ -151,6 +154,9 @@ final class AnesthesiaFormViewModel: ObservableObject {
     }
 
     func save() -> Bool {
+        // Reset estado de sucesso/resultado antes de uma nova tentativa de salvar
+        saveSuccess = false
+        resolvedAnesthesia = nil
         // Validação do formulário antes de persistir (com side-effects)
         runValidations()
         guard isFormValid else {
@@ -207,9 +213,14 @@ final class AnesthesiaFormViewModel: ObservableObject {
             }
             loadAnesthesia()
             self.isNew = false
+            // expõe a anestesia resolvida para fluxos externos (wizard)
+            resolvedAnesthesia = self.anesthesia
+            saveSuccess = true
             return true
         } catch {
             errorMessage = "Erro ao salvar anestesia: \(error.localizedDescription)"
+            saveSuccess = false
+            resolvedAnesthesia = nil
             return false
         }
     }
@@ -218,6 +229,8 @@ final class AnesthesiaFormViewModel: ObservableObject {
         guard let anesthesia = anesthesia else { return }
         self.anesthesia = nil
         self.isNew = true
+        resolvedAnesthesia = nil
+        saveSuccess = false
         do {
             try repository.delete(anesthesia: anesthesia, from: surgery)
         } catch {
@@ -408,4 +421,3 @@ final class AnesthesiaFormViewModel: ObservableObject {
     }
     
 }
-

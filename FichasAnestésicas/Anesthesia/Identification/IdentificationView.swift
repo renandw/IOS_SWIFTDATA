@@ -264,7 +264,7 @@ struct IdentificationView: View {
                         user: currentUser,
                         context: modelContext,
                     )
-                    AnesthesiaFormView(viewModel: viewModel)
+                    AnesthesiaFormView(viewModel: viewModel, mode: .standalone)
                 }
             }
             
@@ -273,7 +273,7 @@ struct IdentificationView: View {
                 let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
                 let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
                 let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
-                SurgeryFormView(viewModel: viewModel)
+                SurgeryFormView(viewModel: viewModel, mode: .standalone)
             }
             
             .sheet(isPresented: $showingForm) {
@@ -285,7 +285,8 @@ struct IdentificationView: View {
                             currentUser: user,
                             editingPatient: patient
                         ),
-                        selectedPatient: $selectedPatient
+                        selectedPatient: $selectedPatient,
+                        mode: .standalone
                     )
                 } else {
                     ContentUnavailableView("Sem usuário", systemImage: "person.crop.circle.badge.exclam")

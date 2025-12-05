@@ -1,12 +1,5 @@
 //
 //  SurgeryFormViewModel.swift
-//  FichasAnestésicas
-//
-//  Created by Renan Wrobel on 30/10/25.
-//
-
-//
-//  SurgeryFormViewModel.swift
 //  FichasAnestésicas
 //
 //  Created by Claude on 30/10/25.
@@ -29,6 +22,9 @@ final class SurgeryFormViewModel {
     
     var isEditing: Bool { surgery != nil }
     var saveSuccess = false
+    
+    // Cirurgia resolvida (nova ou atualizada) para uso em fluxos externos (wizard)
+    var resolvedSurgery: Surgery?
     
     // Campos obrigatórios
     var date: Date
@@ -168,6 +164,8 @@ final class SurgeryFormViewModel {
             try financialRepository.create(financial)
             newSurgery.financial = financial
         }
+        
+        resolvedSurgery = newSurgery
     }
     
     private func updateExisting() throws {
@@ -192,9 +190,6 @@ final class SurgeryFormViewModel {
         try procedureRepository.replaceAll(for: surgery, with: selectedProcedures)
         
         
-        try repository.update(surgery)
-        
-        
         if insuranceName.lowercased() == "particular" {
             
             let existingFinancial = try financialRepository.get(for: surgery)
@@ -213,6 +208,8 @@ final class SurgeryFormViewModel {
                 try financialRepository.update(financial)
             }
         }
+        
+        try repository.update(surgery)
+        resolvedSurgery = surgery
     }
 }
-

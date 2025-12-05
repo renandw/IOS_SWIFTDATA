@@ -137,7 +137,7 @@ struct PatientDetailsView: View {
             let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
             let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
             let viewModel = SurgeryFormViewModel(patient: patient, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
-            SurgeryFormView(viewModel: viewModel)
+            SurgeryFormView(viewModel: viewModel, mode: .standalone)
         }
         .sheet(item: $selectedSurgery) { surgery in
             let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)

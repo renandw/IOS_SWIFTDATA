@@ -104,7 +104,7 @@ struct SurgeryDetailsView: View {
                     user: currentUser,
                     context: modelContext,
                 )
-                AnesthesiaFormView(viewModel: viewModel)
+                AnesthesiaFormView(viewModel: viewModel, mode: .standalone)
             }
         }
         .padding()

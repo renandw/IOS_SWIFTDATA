@@ -114,6 +114,11 @@ struct QuickActionsSection: View {
     var onFinancial: () -> Void = {}
     
     @State private var showingAnesthesiaWizard = false
+    @State private var createdAnesthesia: Anesthesia?
+    @State private var navigateToDetails = false
+    
+    @Environment(SessionManager.self) private var session
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -128,7 +133,7 @@ struct QuickActionsSection: View {
                     startPoint: .leading,
                     endPoint: .trailing
                 ),
-                //onTap: { showingAnesthesiaWizard = true }
+                onTap: { showingAnesthesiaWizard = true }
             )
             
             QuickActionCard(
@@ -174,11 +179,23 @@ struct QuickActionsSection: View {
             )
         }
         .sheet(isPresented: $showingAnesthesiaWizard) {
-            AnesthesiaWizardView()
+            NewAnesthesiaPageView(
+                session: session,
+                modelContext: modelContext,
+                onFinished: { anesthesia in
+                    createdAnesthesia = anesthesia
+                    navigateToDetails = true
+                }
+            )
+        }
+        .navigationDestination(isPresented: $navigateToDetails) {
+            if let anesthesia = createdAnesthesia {
+                AnesthesiaDetailsView(anesthesia: anesthesia)
+            }
         }
         .padding(.bottom, 16)
     }
-        
+    
 }
 
 struct QuickActionCard: View {

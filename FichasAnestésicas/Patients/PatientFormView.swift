@@ -9,75 +9,128 @@ import SwiftData
 import SwiftUI
 
 struct PatientFormView: View {
+    enum Mode {
+        case standalone   // usado como sheet isolado
+        case wizard       // usado dentro do fluxo NewAnesthesiaView
+    }
+
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: PatientFormViewModel
     @State private var isSaving = false
     
     // Binding para retornar o paciente selecionado
     @Binding var selectedPatient: Patient?
+    
+    // Modo de funcionamento da view (padrão mantém o comportamento atual)
+    var mode: Mode = .standalone
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    TextField("Nome", text: $viewModel.name)
+        switch mode {
+        case .standalone:
+            standaloneBody
+        case .wizard:
+            wizardBody
+        }
+    }
 
-                    TextField("CNS", text: $viewModel.cns)
-                        .keyboardType(.numberPad)
+    // Conteúdo comum do formulário (campos)
+    private var formContent: some View {
+        Form {
+            Section {
+                TextField("Nome", text: $viewModel.name)
 
-                    DatePicker("Nascimento",
-                               selection: $viewModel.birthDate,
-                               displayedComponents: .date)
+                TextField("CNS", text: $viewModel.cns)
+                    .keyboardType(.numberPad)
 
-                    Picker("Sexo", selection: $viewModel.sex) {
-                        ForEach(Sex.allCases, id: \.self) { sex in
-                            Text(sex == .male ? "Masculino" : "Feminino")
-                        }
+                DatePicker("Nascimento",
+                           selection: $viewModel.birthDate,
+                           displayedComponents: .date)
+
+                Picker("Sexo", selection: $viewModel.sex) {
+                    ForEach(Sex.allCases, id: \.self) { sex in
+                        Text(sex == .male ? "Masculino" : "Feminino")
                     }
-                    .pickerStyle(.segmented)
                 }
+                .pickerStyle(.segmented)
             }
-            .navigationTitle(viewModel.isEditing ? "Editar Paciente" : "Novo Paciente")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Salvar") {
-                        Task {
-                            isSaving = true
-                            try? viewModel.save()
-                            isSaving = false
-                            
-                            // Se salvou com sucesso, fecha
-                            if viewModel.saveSuccess {
-                                dismiss()
+        }
+    }
+
+    // Modo sheet standalone (com navegação própria e dismiss)
+    private var standaloneBody: some View {
+        NavigationStack {
+            formContent
+                .navigationTitle(viewModel.isEditing ? "Editar Paciente" : "Novo Paciente")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancelar") { dismiss() }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Salvar") {
+                            Task {
+                                isSaving = true
+                                try? viewModel.save()
+                                isSaving = false
+                                
+                                // Se salvou com sucesso, fecha
+                                if viewModel.saveSuccess {
+                                    // expõe o paciente resolvido (novo/selecionado/atualizado)
+                                    selectedPatient = viewModel.resolvedPatient
+                                    dismiss()
+                                }
                             }
                         }
+                        .disabled(!viewModel.isValid || isSaving)
                     }
-                    .disabled(!viewModel.isValid || isSaving)
                 }
-            }
+                .sheet(isPresented: $viewModel.showDuplicateSheet) {
+                    DuplicatePatientSheet(
+                        message: viewModel.duplicateMessage,
+                        foundPatients: viewModel.foundPatients,
+                        onCreateNew: {
+                            try? viewModel.forceCreateNew()
+                            selectedPatient = viewModel.resolvedPatient
+                            dismiss()
+                        },
+                        onSelect: { patient in
+                            viewModel.selectExisting(patient)
+                            selectedPatient = patient
+                            dismiss()
+                        },
+                        onUpdate: { patient in
+                            try? viewModel.updateExisting(patient)
+                            selectedPatient = viewModel.resolvedPatient
+                            dismiss()
+                        }
+                    )
+                }
+        }
+    }
+
+    // Modo wizard: sem dismiss da view, apenas resolve o paciente
+    private var wizardBody: some View {
+        formContent
             .sheet(isPresented: $viewModel.showDuplicateSheet) {
                 DuplicatePatientSheet(
                     message: viewModel.duplicateMessage,
                     foundPatients: viewModel.foundPatients,
                     onCreateNew: {
                         try? viewModel.forceCreateNew()
-                        dismiss()
+                        selectedPatient = viewModel.resolvedPatient
+                        // Não faz dismiss() aqui; o fluxo/wizard decide avançar ou fechar
                     },
                     onSelect: { patient in
                         viewModel.selectExisting(patient)
                         selectedPatient = patient
-                        dismiss()
+                        // Sem dismiss do formulário
                     },
                     onUpdate: { patient in
                         try? viewModel.updateExisting(patient)
-                        dismiss()
+                        selectedPatient = viewModel.resolvedPatient
+                        // Sem dismiss do formulário
                     }
                 )
             }
-        }
     }
 }
 
