@@ -13,6 +13,7 @@ struct CbhpmSearchView: View {
     @Binding var selectedProcedures: [CbhpmCode]
     @State private var searchText = ""
     @State private var debouncedSearchText = ""
+    @State private var isSearching = false
     
     private var searchResults: [CbhpmCode] {
         guard debouncedSearchText.count >= 3 else { return [] }
@@ -23,76 +24,76 @@ struct CbhpmSearchView: View {
         // Results list
         List {
             if !selectedProcedures.isEmpty {
-                Section {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            // Group by codigo to show counts
-                            let grouped = Dictionary(grouping: selectedProcedures, by: { $0.codigo })
-                            ForEach(grouped.keys.sorted(), id: \.self) { codigo in
-                                if let items = grouped[codigo], let first = items.first {
-                                    HStack(spacing: 6) {
-                                        Text(first.codigo)
-                                            .font(.caption)
-                                        if items.count > 1 {
-                                            Text("×\(items.count)")
-                                                .font(.caption2)
-                                                .foregroundStyle(.secondary)
-                                        }
-                                        Button {
-                                            // Remove a single unit
-                                            removeSelection(first)
-                                        } label: {
-                                            Image(systemName: "minus.circle.fill")
-                                                .foregroundStyle(.secondary)
-                                        }
-                                    }
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 5)
-                                    .background(Color.blue.opacity(0.1))
-                                    .cornerRadius(8)
-                                }
-                            }
+                Section(header: Text("Procedimentos Selecionados")) {
+                    let grouped = Dictionary(grouping: selectedProcedures, by: { $0.codigo })
+                    ForEach(grouped.keys.sorted(), id: \.self) { codigo in
+                        if let items = grouped[codigo], let first = items.first {
+                            ProcedureCard(
+                                code: first,
+                                count: items.count,
+                                onAdd: { addSelection(first) },
+                                onRemove: { removeSelection(first) }
+                            )
                         }
-                        .padding(.horizontal)
                     }
-                    .frame(height: 40)
                 }
             }
-            if searchText.count < 3 && selectedProcedures.isEmpty {
-                Section {
+            
+            Section {
+                if searchText.count < 3 && !isSearching && selectedProcedures.isEmpty {
                     ContentUnavailableView(
                         "Nenhum procedimento encontrado",
                         systemImage: "exclamationmark.magnifyingglass",
                         description: Text("Inicie a busca pela barra de busca")
                     )
-                }
-            } else {
-                ForEach(searchResults) { code in
-                    Button {
-                        toggleSelection(code)
-                    } label: {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("Código do Procedimento: \(code.codigo)")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                    .id("empty-state")
+                } else if isSearching {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                    .id("loading")
+                } else if debouncedSearchText.count >= 3 && searchResults.isEmpty {
+                    ContentUnavailableView(
+                        "Nenhum procedimento encontrado",
+                        systemImage: "exclamationmark.magnifyingglass",
+                        description: Text("não encontrou-se procedimentos com o texto informado")
+                    )
+                    .id("no-results")
+                } else {
+                    ForEach(searchResults) { code in
+                        Button {
+                            toggleSelection(code)
+                        } label: {
+                            HStack {
                                 VStack(alignment: .leading) {
-                                    Text("Procedimento:")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                    Text(code.procedimento)
-                                        .font(.body)
+                                    HStack(alignment: .bottom) {
+                                        Text("Código:")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                        Text("\(code.codigo)")
+                                            .font(.subheadline)
+                                            .foregroundStyle(.primary)
+                                    }
+                                    VStack(alignment: .leading) {
+                                        Text(code.procedimento)
+                                            .font(.subheadline)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .lineLimit(nil)
+                                    }
+                                    Text("Porte Anestésico: \(code.porte_anestesico)")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
                                 }
-                                Text("Porte Anestésico: \(code.porte_anestesico)")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
                             }
                         }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }
+        .animation(.none, value: debouncedSearchText)
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Buscar procedimento ou código")
         .navigationTitle("Procedimentos CBHPM")
         .navigationBarTitleDisplayMode(.inline)
@@ -105,11 +106,12 @@ struct CbhpmSearchView: View {
             debouncedSearchText = searchText
         }
         .onChange(of: searchText) { _, newValue in
-            // Simple debounce using DispatchQueue; adjust delay if needed
+            isSearching = true
             let current = newValue
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                if current == searchText { // still the latest value
+                if current == searchText {
                     debouncedSearchText = current
+                    isSearching = false
                 }
             }
         }
@@ -118,6 +120,13 @@ struct CbhpmSearchView: View {
     private func toggleSelection(_ code: CbhpmCode) {
         // Allow duplicates: always append
         selectedProcedures.append(code)
+        // Clear search after adding
+        searchText = ""
+        debouncedSearchText = ""
+    }
+    
+    private func addSelection(_ code: CbhpmCode) {
+        selectedProcedures.append(code)
     }
     
     private func removeSelection(_ code: CbhpmCode) {
@@ -125,6 +134,62 @@ struct CbhpmSearchView: View {
         if let idx = selectedProcedures.firstIndex(where: { $0.codigo == code.codigo }) {
             selectedProcedures.remove(at: idx)
         }
+    }
+}
+
+// MARK: - ProcedureCard Component
+struct ProcedureCard: View {
+    let code: CbhpmCode
+    let count: Int
+    let onAdd: () -> Void
+    let onRemove: () -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            VStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Código: \(code.codigo)")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    
+                    Text(code.procedimento)
+                        .font(.subheadline)
+                        .foregroundStyle(.primary)
+                    
+                    Text("Porte Anestésico: \(code.porte_anestesico)")
+                        .font(.subheadline)
+                        .foregroundStyle(.primary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Spacer()
+                VStack(alignment: .trailing) {
+                    HStack(spacing: 12) {
+                        Button(action: onRemove) {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.title3)
+                                .foregroundStyle(.red)
+                        }
+                        .buttonStyle(.borderless)
+                        
+                        Text("×\(count)")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                            .frame(minWidth: 30)
+                        
+                        Button(action: onAdd) {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title3)
+                                .foregroundStyle(.blue)
+                        }
+                        .buttonStyle(.borderless)
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
     }
 }
 

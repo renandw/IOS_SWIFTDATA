@@ -144,6 +144,10 @@ struct SurgeryFormView: View {
                     TextField("Peso", value: $viewModel.weight, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
+                    if viewModel.weight != 0 {
+                        Text("kg")
+                            .font(.caption)
+                    }
                 }
                 HStack(alignment: .center){
                     Text("Cirurgia Proposta")
@@ -164,8 +168,9 @@ struct SurgeryFormView: View {
                 } label: {
                     HStack {
                         Text("Procedimentos")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
-                        // Um resumo rápido do que já foi selecionado
                         if viewModel.selectedProcedures.isEmpty {
                             Text("Nenhum").foregroundStyle(.secondary)
                         } else {
