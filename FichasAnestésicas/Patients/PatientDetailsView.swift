@@ -24,6 +24,9 @@ struct PatientDetailsView: View {
         _editingPatient = State(initialValue: patient)
         _selectedPatient = State(initialValue: patient)
     }
+    var age: String {
+        AgeContext.outSurgery.ageLongString(from: patient.birthDate)
+    }
 
     var body: some View {
         List {
@@ -49,6 +52,13 @@ struct PatientDetailsView: View {
                         .foregroundStyle(.secondary)
                     Spacer()
                     Text(patient.birthDate.formatted(date: .abbreviated, time: .omitted))
+                        .fontWeight(.semibold)
+                }
+                HStack {
+                    Text("Idade (hoje)")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(age)
                         .fontWeight(.semibold)
                 }
                 HStack {
@@ -215,6 +225,8 @@ struct MetadataView: View {
                         .fontWeight(.semibold)
                 }
             }
+            .navigationTitle(patient.name)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

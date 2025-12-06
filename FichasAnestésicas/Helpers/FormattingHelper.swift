@@ -74,6 +74,43 @@ enum AgeContext {
             return "\(years)a"
         }
     }
+    func ageLongString(from birthDate: Date) -> String {
+        let now: Date = {
+            switch self {
+            case .outSurgery:
+                return .now
+            case .inSurgery(let surgery):
+                return surgery.date
+            }
+        }()
+
+        let calendar = Calendar.current
+        let dob = birthDate
+        let years = calendar.dateComponents([.year], from: dob, to: now).year ?? 0
+
+        if years < 1 {
+            let monthsTotal = calendar.dateComponents([.month], from: dob, to: now).month ?? 0
+            let months = max(0, monthsTotal)
+            let dateAfterMonths = calendar.date(byAdding: .month, value: months, to: dob) ?? dob
+            let daysRemainder = calendar.dateComponents([.day], from: dateAfterMonths, to: now).day ?? 0
+            let days = max(0, daysRemainder)
+            
+            let monthText = months == 1 ? "mês" : "meses"
+            let dayText = days == 1 ? "dia" : "dias"
+            return "\(months) \(monthText) \(days) \(dayText)"
+        } else if years < 12 {
+            let dateAfterYears = calendar.date(byAdding: .year, value: years, to: dob) ?? dob
+            let monthsRemainder = calendar.dateComponents([.month], from: dateAfterYears, to: now).month ?? 0
+            let months = max(0, monthsRemainder)
+            
+            let yearText = years == 1 ? "ano" : "anos"
+            let monthText = months == 1 ? "mês" : "meses"
+            return "\(years) \(yearText) \(months) \(monthText)"
+        } else {
+            let yearText = years == 1 ? "ano" : "anos"
+            return "\(years) \(yearText)"
+        }
+    }
 }
 
 enum numberCnsContex {
