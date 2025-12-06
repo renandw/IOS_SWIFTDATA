@@ -22,12 +22,12 @@ final class FinancialFormViewModel {
     var valueAnesthesia: Double?
     var valuePreAnesthesia: Double?
     var finalSurgeryValue: Double?
-    var glosaAnesthesia: Bool?
-    var glosaPreanesthesia: Bool?
+    var glosaAnesthesia: Bool? {didSet {glosedAnethesiaValuesVisibility()}}
+    var glosaPreanesthesia: Bool?{didSet {glosedPreanethesiaValuesVisibility()}}
     var glosedAnesthesiaValue: Double?
     var glosedPreAnesthesiaValue: Double?
     var notes: String?
-    var paid: Bool
+    var paid: Bool {didSet {paidVisibility()}}
     var paymentDate: Date?
     var billingDate: Date?
     
@@ -177,4 +177,21 @@ final class FinancialFormViewModel {
         let taxed = _taxedValue ?? 0
         return anesthesia + preAnesthesia - taxed
     }
+    
+    func glosedAnethesiaValuesVisibility() {
+        if glosaAnesthesia == false {
+            glosedAnesthesiaValue = nil
+        }
+    }
+    func glosedPreanethesiaValuesVisibility() {
+        if glosaPreanesthesia == false {
+            glosedPreAnesthesiaValue = nil
+        }
+    }
+    func paidVisibility () {
+        if paid == false {
+            paymentDate = nil
+        }
+    }
+    
 }

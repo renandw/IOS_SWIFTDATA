@@ -30,7 +30,7 @@ struct FinancialView: View {
                     }
                     if let valueGlosedAnesthesia = financial.glosedAnesthesiaValue {
                         HStack{
-                            Text("Valor Glosado Anesthesia")
+                            Text("Valor Glosado Anestesia")
                                 .foregroundStyle(.secondary)
                             Spacer()
                             Text(valueGlosedAnesthesia, format: .currency(code: "BRL"))
@@ -50,7 +50,7 @@ struct FinancialView: View {
                     }
                     if let valueGlosedPreAnesthesia = financial.glosedPreAnesthesiaValue {
                         HStack{
-                            Text("Valor Glosado Anesthesia")
+                            Text("Valor Glosado Pré-Anestésico")
                                 .foregroundStyle(.secondary)
                             Spacer()
                             Text(valueGlosedPreAnesthesia, format: .currency(code: "BRL"))
@@ -118,6 +118,15 @@ struct FinancialView: View {
                                 .foregroundStyle(.yellow)
                         }
                     }
+                }
+                
+                Section {
+                        HStack {
+                            if let notes = financial.notes {
+                                Text(notes)
+                                    .font(.caption)
+                            }
+                        }
                 }
                 
             } else {

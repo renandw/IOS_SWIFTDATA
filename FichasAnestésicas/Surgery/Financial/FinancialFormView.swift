@@ -33,19 +33,18 @@ struct FinancialFormView: View {
                             .fontWeight(.semibold)
                             .foregroundStyle(.blue)
                         Spacer()
-                        TextField("Valor", value: $viewModel.valueAnesthesia, format: .currency(code: "BRL"))
+                        TextField("0.00", value: $viewModel.valueAnesthesia, format: .number)
                             .foregroundStyle(.blue)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                     }
-                    
                     HStack {
                         Text("Pré-anestesia")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundStyle(.blue)
                         Spacer()
-                        TextField("Valor", value: $viewModel.valuePreAnesthesia, format: .currency(code: "BRL"))
+                        TextField("Valor", value: $viewModel.valuePreAnesthesia, format: .number)
                             .foregroundStyle(.blue)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
@@ -68,7 +67,7 @@ struct FinancialFormView: View {
                             .fontWeight(.semibold)
                             .foregroundStyle(.red)
                         Spacer()
-                        TextField("Valor", value: $viewModel.taxedValue, format: .currency(code: "BRL"))
+                        TextField("Valor", value: $viewModel.taxedValue, format: .number)
                             .foregroundStyle(.red)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
@@ -104,7 +103,7 @@ struct FinancialFormView: View {
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                             Spacer()
-                            TextField("Valor", value: $viewModel.glosedAnesthesiaValue, format: .currency(code: "BRL"))
+                            TextField("Valor", value: $viewModel.glosedAnesthesiaValue, format: .number)
                                 .keyboardType(.decimalPad)
                                 .multilineTextAlignment(.trailing)
                         }
@@ -123,7 +122,7 @@ struct FinancialFormView: View {
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                             Spacer()
-                            TextField("Valor", value: $viewModel.glosedPreAnesthesiaValue, format: .currency(code: "BRL"))
+                            TextField("Valor", value: $viewModel.glosedPreAnesthesiaValue, format: .number)
                                 .keyboardType(.decimalPad)
                                 .multilineTextAlignment(.trailing)
                         }
@@ -189,7 +188,7 @@ struct FinancialFormView: View {
                             .font(.subheadline)
                             .fontWeight(.semibold)
                         Spacer()
-                        TextField("Valor", value: $viewModel.taxedValue, format: .currency(code: "BRL"))
+                        TextField("Valor", value: $viewModel.taxedValue, format: .number)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                     }
