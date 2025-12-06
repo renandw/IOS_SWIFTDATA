@@ -22,20 +22,29 @@ struct PatientListView: View {
     
     var body: some View {
         List {
-            ForEach(patient) { patient in
-                NavigationLink {
-                    PatientDetailsView(patient: patient)
-                } label: {
-                    PatientRowView(
-                        patient: patient,
-                        numberCnsContext: .notNeeded,
-                        ageContext: .outSurgery
-                    )
-                    .contentShape(Rectangle())
+            if patient.isEmpty {
+                ContentUnavailableView(
+                    "Nenhum Paciente",
+                    systemImage: "person.2.slash",
+                    description: Text("Toque em + para adicionar o primeiro paciente.")
+                )
+                .frame(maxWidth: .infinity, alignment: .center)
+            } else {
+                ForEach(patient) { patient in
+                    NavigationLink {
+                        PatientDetailsView(patient: patient)
+                    } label: {
+                        PatientRowView(
+                            patient: patient,
+                            numberCnsContext: .notNeeded,
+                            ageContext: .outSurgery
+                        )
+                        .contentShape(Rectangle())
+                    }
                 }
-            }
-            .onDelete { indexSet in
-                handleDelete(at: indexSet)
+                .onDelete { indexSet in
+                    handleDelete(at: indexSet)
+                }
             }
         }
         .navigationTitle("Pacientes")

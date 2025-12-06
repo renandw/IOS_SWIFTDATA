@@ -7,114 +7,95 @@ struct PatientDetailsView: View {
 
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     
     @State private var showingSurgeryForm = false
     @State private var selectedSurgery: Surgery?
-
     
-    private let dateStyle: Date.FormatStyle = .dateTime.year().month().day()
+    @State private var showingPatientForm = false
+    @State private var editingPatient: Patient? = nil
+    @State private var selectedPatient: Patient? = nil
+
+    @State private var showDeleteAlert = false
+    @State private var deleteErrorMessage: String? = nil
+    
+    init(patient: Patient) {
+        self._patient = Bindable(wrappedValue: patient)
+        _editingPatient = State(initialValue: patient)
+        _selectedPatient = State(initialValue: patient)
+    }
 
     var body: some View {
         List {
-            Section("Dados do Paciente") {
+            Section {
                 HStack {
-                    Text("Name")
-                        .font(.caption)
+                    Text("Nome")
                         .foregroundStyle(.secondary)
+                    Spacer()
                     Text(patient.name)
-                        .font(.title3)
                         .fontWeight(.semibold)
                 }
-                HStack {
-                    Text("CNS")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text(patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                }
-                HStack {
-                    Text("Birth Date")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text(patient.birthDate, format: dateStyle)
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                }
-                HStack {
-                    Text("CreatedAt")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text(patient.createdAt, format: dateStyle)
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                }
-                HStack {
-                    Text("CreatedBy")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text(patient.createdBy.name)
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                }
-                if let updatedBy = patient.updatedBy {
+                if patient.cns != "000000000000000" {
                     HStack {
-                        Text("UpdatedBy")
-                            .font(.caption)
+                        Text("CNS")
                             .foregroundStyle(.secondary)
-                        Text(updatedBy.name)
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                    }
-                }
-                if let updatedAt = patient.updatedAt {
-                    HStack {
-                        Text("UpdatedAt")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text(updatedAt, format: dateStyle)
-                            .font(.title3)
+                        Spacer()
+                        Text(patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))
                             .fontWeight(.semibold)
                     }
                 }
                 HStack {
-                    Text("Last Activity")
-                        .font(.caption)
+                    Text("Nascimento")
                         .foregroundStyle(.secondary)
-                    Text(patient.lastActivityAt, format: dateStyle)
-                        .font(.title3)
+                    Spacer()
+                    Text(patient.birthDate.formatted(date: .abbreviated, time: .omitted))
                         .fontWeight(.semibold)
                 }
                 HStack {
-                    Text("PatientId")
-                        .font(.caption)
+                    Text("Sexo")
                         .foregroundStyle(.secondary)
-                    Text(patient.patientId)
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                }
-                HStack {
-                    Text("Sex")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Spacer()
                     HStack(spacing: 8) {
                         Image(systemName: patient.sex.sexImage)
                             .foregroundColor(patient.sex.sexColor)
                         Text(patient.sex.sexStringDescription)
-                            .font(.title3)
                             .fontWeight(.semibold)
                     }
                 }
-            }
-            Section("Lista de Cirurgias") {
-                ForEach(patient.surgeries ?? []) { surgery in
-                    NavigationLink(surgery.proposedProcedure) {
-                        SurgeryDetailsView(surgery: surgery)
+            } header: {
+                HStack{
+                    Text("Informações do Paciente")
+                    Spacer()
+                    NavigationLink {
+                        MetadataView(patient: patient)
+                    } label: {
+                        Image(systemName: "info.circle")
                     }
-                    .swipeActions {
-                        Button("Editar") {
-                            selectedSurgery = surgery
+                    .buttonStyle(.glass)
+                }
+            }
+            
+            Section {
+                if patient.surgeries == [] {
+                    Text("Nenhuma cirurgia registrada.")
+                } else {
+                    ForEach(patient.surgeries ?? []) { surgery in
+                        NavigationLink(surgery.proposedProcedure) {
+                            SurgeryDetailsView(surgery: surgery)
                         }
+                        .swipeActions {
+                            Button("Editar") {
+                                selectedSurgery = surgery
+                            }
+                        }
+                    }
+                }
+            } header : {
+                HStack{
+                    Text("Cirurgias")
+                    Spacer()
+                    Button("Adicionar Cirurgia", systemImage: "plus"){
+                        showingSurgeryForm = true
                     }
                 }
             }
@@ -123,13 +104,16 @@ struct PatientDetailsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showingSurgeryForm = true
-                } label: {
-                    Label("Adicionar Cirurgia", systemImage: "plus")
+                Menu("Opções", systemImage: "plus") {
+                    Button("Editar paciente ") {
+                        editingPatient = patient
+                        selectedPatient = patient
+                        showingPatientForm = true
+                    }
+                    Button("Excluir paciente", role: .destructive) {
+                        showDeleteAlert = true
+                    }
                 }
-                .tint(.blue)
-            
             }
         }
         .sheet(isPresented: $showingSurgeryForm) {
@@ -145,6 +129,92 @@ struct PatientDetailsView: View {
             let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
             let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
             SurgeryFormView(viewModel: viewModel)
+        }
+        .sheet(isPresented: $showingPatientForm) {
+            if let user = session.currentUser {
+                let repository = SwiftDataPatientRepository(context: modelContext, currentUser: user)
+                PatientFormView(
+                    viewModel: PatientFormViewModel(
+                        repository: repository,
+                        currentUser: user,
+                        editingPatient: editingPatient
+                    ),
+                    selectedPatient: $selectedPatient,
+                    mode: .standalone
+                )
+            }
+        }
+        .alert("Excluir paciente?", isPresented: $showDeleteAlert) {
+            Button("Cancelar", role: .cancel) { }
+            Button("Excluir", role: .destructive) {
+                guard let user = session.currentUser else { return }
+                let repository = SwiftDataPatientRepository(context: modelContext, currentUser: user)
+                do {
+                    try repository.delete(patient)
+                    dismiss()
+                } catch {
+                    deleteErrorMessage = "Falha ao excluir: \(error.localizedDescription)"
+                }
+            }
+        } message: {
+            Text("Esta ação não pode ser desfeita.")
+        }
+        .alert("Erro", isPresented: .constant(deleteErrorMessage != nil), presenting: deleteErrorMessage) { _ in
+            Button("OK", role: .cancel) { deleteErrorMessage = nil }
+        } message: { msg in
+            Text(msg)
+        }
+    }
+}
+
+struct MetadataView: View {
+    @Bindable var patient: Patient
+    
+    var body: some View {
+        List {
+            Section("Metadados") {
+                HStack {
+                    Text("Criado em")
+                        .foregroundStyle(.secondary)
+                    Text(patient.createdAt.formatted(date: .abbreviated, time: .shortened))
+                        .fontWeight(.semibold)
+                }
+                HStack {
+                    Text("Criado por")
+                        .foregroundStyle(.secondary)
+                    Text(patient.createdBy.name)
+                        .fontWeight(.semibold)
+                }
+                if let updatedBy = patient.updatedBy {
+                    HStack {
+                        Text("Atualizado por")
+                            .foregroundStyle(.secondary)
+                        Text(updatedBy.name)
+                            .fontWeight(.semibold)
+                    }
+                }
+                if let updatedAt = patient.updatedAt {
+                    HStack {
+                        Text("Atualizado em")
+                            .foregroundStyle(.secondary)
+                        Text(updatedAt.formatted(date: .abbreviated, time: .shortened))
+                            .fontWeight(.semibold)
+                    }
+                }
+                HStack {
+                    Text("Últimas Atualização")
+                        .foregroundStyle(.secondary)
+                    Text(patient.lastActivityAt.formatted(date: .abbreviated, time: .shortened))
+                        .fontWeight(.semibold)
+                }
+                HStack {
+                    Text("ID")
+                        .foregroundStyle(.secondary)
+                    Text(patient.patientId)
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                }
+            }
         }
     }
 }
