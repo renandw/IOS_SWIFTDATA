@@ -128,12 +128,6 @@ struct NewAnesthesiaPageView: View {
     private var primaryButtonIcon: String {
         currentStep == .anesthesia ? "checkmark" : "chevron.forward"
     }
-//    private var secondaryButtonTitle: String {
-//        currentStep == .patient ? "Cancelar" : "Voltar"
-//    }
-//    private var secondaryButtonIcon: String {
-//        currentStep == .patient ? "xmark" : "chevron.backward"
-//    }
     
     
     

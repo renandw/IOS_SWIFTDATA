@@ -44,6 +44,7 @@ struct RecentAnesthesiaCard: View {
     let anesthesia: Anesthesia
     
     var body: some View {
+        
         NavigationLink(destination: AnesthesiaDetailsView(anesthesia: anesthesia)) {
             VStack(alignment:.leading, spacing: 8) {
                 HStack(spacing: 12) {
