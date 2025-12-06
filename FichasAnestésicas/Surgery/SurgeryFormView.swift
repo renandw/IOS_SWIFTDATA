@@ -112,7 +112,7 @@ struct SurgeryFormView: View {
                         Text("Valor")
                             .font(.subheadline)
                             .fontWeight(.semibold)
-                        TextField("R$ 2100,00", value: $viewModel.valueAnesthesia, format: .currency(code: "BRL"))
+                        TextField("R$ 2100,00", value: $viewModel.valueAnesthesia, format: .number)
                             .multilineTextAlignment(.trailing)
                     }
                 }

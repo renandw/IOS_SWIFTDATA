@@ -114,7 +114,7 @@ struct PatientDetailsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Menu("Opções", systemImage: "plus") {
+                Menu("Opções", systemImage: "line.3.horizontal") {
                     Button("Editar paciente ") {
                         editingPatient = patient
                         selectedPatient = patient
