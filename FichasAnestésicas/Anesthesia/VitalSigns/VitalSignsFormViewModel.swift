@@ -443,6 +443,79 @@ final class VitalSignsFormViewModel: ObservableObject {
         guard let s = paS, let d = paD else { return nil }
         return (s + 2 * d) / 3
     }
+    
+    func healthyPatient() {
+        let vitalSigns = getVitalSignsRange(for: patientAge)
+        
+        fc = Double(Int.random(in: vitalSigns.heartRate))
+        rhythm = "Sinusal"
+        paS = Double(Int.random(in: vitalSigns.systolicBP))
+        paD = Double(Int.random(in: vitalSigns.diastolicBP))
+        spo2 = Double(Int.random(in: vitalSigns.spo2))
+        
+        if techniques.contains(.geralBalanceada) || techniques.contains(.geralInalatoria) || techniques.contains(.geralVenosaTotal) {
+            etco2 = Double(Int.random(in: vitalSigns.etco2))
+        }
+    }
+
+    private func getVitalSignsRange(for age: Int) -> (heartRate: ClosedRange<Int>, systolicBP: ClosedRange<Int>, diastolicBP: ClosedRange<Int>, spo2: ClosedRange<Int>, etco2: ClosedRange<Int>) {
+        switch age {
+        case 0...1: // Neonato/Lactente
+            return (
+                heartRate: 110...150,
+                systolicBP: 70...90,
+                diastolicBP: 50...65,
+                spo2: 95...100,
+                etco2: 30...35
+            )
+            
+        case 2...5: // Pré-escolar
+            return (
+                heartRate: 95...130,
+                systolicBP: 80...100,
+                diastolicBP: 55...70,
+                spo2: 96...100,
+                etco2: 32...38
+            )
+            
+        case 6...12: // Escolar
+            return (
+                heartRate: 80...115,
+                systolicBP: 90...110,
+                diastolicBP: 60...75,
+                spo2: 96...100,
+                etco2: 34...40
+            )
+            
+        case 13...17: // Adolescente
+            return (
+                heartRate: 70...100,
+                systolicBP: 100...120,
+                diastolicBP: 65...80,
+                spo2: 97...100,
+                etco2: 35...42
+            )
+            
+        case 18...64: // Adulto
+            return (
+                heartRate: 60...90,
+                systolicBP: 100...130,
+                diastolicBP: 70...85,
+                spo2: 97...100,
+                etco2: 35...42
+            )
+            
+        default: // Idoso (65+)
+            return (
+                heartRate: 65...85,
+                systolicBP: 110...140,
+                diastolicBP: 70...90,
+                spo2: 95...99,
+                etco2: 34...40
+            )
+        }
+    }
+    
 }
 
 extension Double {

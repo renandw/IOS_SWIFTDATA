@@ -40,6 +40,13 @@ struct VitalSignsFormView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            Section {
+                HStack {
+                    Button("Paciente Saudável") {
+                        viewModel.healthyPatient()
+                    }
+                }
+            }
 
             
             Section {

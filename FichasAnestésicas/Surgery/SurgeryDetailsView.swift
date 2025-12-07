@@ -167,10 +167,19 @@ struct SurgeryDetailsView: View {
             }
             if let anesthesia = surgery.anesthesia {
                 Section {
-                    NavigationLink {
-                        AnesthesiaDetailsView(anesthesia: anesthesia)
-                    } label: {
-                        Text(anesthesia.start?.formatted(date: .abbreviated, time: .shortened) ?? "Anestesia")
+                    HStack {
+                        NavigationLink {
+                            AnesthesiaDetailsView(anesthesia: anesthesia)
+                        } label: {
+                            Text("Detalhes da Ficha Anestésica")
+                                .fontWeight(.bold)
+                        }
+                    }
+                    HStack {
+                        ShareLink(item: anesthesia.renderAnesthesiaPDF()) {
+                            Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
+                        }
+                        .buttonStyle(.glass)
                     }
                 } header : {
                     HStack {
@@ -184,11 +193,21 @@ struct SurgeryDetailsView: View {
             }
             if let preanesthesia = surgery.preanesthesia {
                 Section {
-                    NavigationLink {
-                        PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
-                    } label: {
-                        Text("Pre Anestesia")
+                    HStack {
+                        NavigationLink {
+                            PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
+                        } label: {
+                            Text("Detalhes da Avaliação Pré Anestesia")
+                                .fontWeight(.bold)
+                        }
                     }
+                    if let anesthesia = surgery.anesthesia {
+                            HStack {
+                                ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
+                                    Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
+                                }
+                            }
+                        }
                 } header : {
                     HStack {
                         Text("Avaliação Pré Anestésica")

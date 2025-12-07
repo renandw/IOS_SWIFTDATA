@@ -44,8 +44,7 @@ struct RecentAnesthesiaCard: View {
     let anesthesia: Anesthesia
     
     var body: some View {
-        
-        NavigationLink(destination: AnesthesiaDetailsView(anesthesia: anesthesia)) {
+        NavigationLink(destination: SurgeryDetailsView(surgery: anesthesia.surgery)) {
             VStack(alignment:.leading, spacing: 8) {
                 HStack(spacing: 12) {
                     VStack(alignment: .leading) {
@@ -85,9 +84,9 @@ struct RecentAnesthesiaCard: View {
                 Divider()
                 
                 HStack {
-                    Button("Ficha Anestésica", systemImage: "square.and.arrow.up.fill") {
-                        //todo - compartilhar ficha anestésica
-                    }
+                    ShareLink(item: anesthesia.renderAnesthesiaPDF()) {
+                            Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
+                        }
                     .font(.caption)
                     .buttonStyle(.glass)
                     .tint(.blue)
@@ -95,8 +94,8 @@ struct RecentAnesthesiaCard: View {
                     Spacer()
 
                     if anesthesia.surgery.preanesthesia?.status == .finished {
-                        Button("Ficha APA", systemImage: "square.and.arrow.up.fill") {
-                            //todo - compartilhar ficha anestésica
+                        ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
+                            Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
                         }
                         .font(.caption)
                         .buttonStyle(.glass)
