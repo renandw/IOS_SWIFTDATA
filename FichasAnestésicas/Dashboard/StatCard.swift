@@ -145,6 +145,44 @@ struct StatisticsSection: View {
     }
     
     
+    private var anesthesiaFinalSurgeryValueCurrentMonthCount: Double {
+        let (start, end) = monthBounds
+        return anesthesias
+            .filter { anesthesia in
+                guard let anesthesiaStart = anesthesia.start else { return false }
+                return anesthesiaStart >= start && anesthesiaStart <= end
+            }
+            .compactMap { $0.surgery.financial?.finalSurgeryValue }
+            .reduce(0, +)
+    }
+
+    private var anesthesiaFinalSurgeryValuePreviousMonthCount: Double {
+        let (start, end) = previousMonthBounds
+        return anesthesias
+            .filter { anesthesia in
+                guard let anesthesiaStart = anesthesia.start else { return false }
+                return anesthesiaStart >= start && anesthesiaStart <= end
+            }
+            .compactMap { $0.surgery.financial?.finalSurgeryValue }
+            .reduce(0, +)
+    }
+
+    private var anesthesiaFinalSurgeryValueCurrentYear: Double {
+        let cal = Calendar.current
+        let yearStart = cal.date(from: cal.dateComponents([.year], from: now)) ?? now
+        let yearEnd = cal.date(byAdding: .year, value: 1, to: yearStart)
+            .map { cal.date(byAdding: .second, value: -1, to: $0) ?? $0 } ?? now
+        
+        return anesthesias
+            .filter { anesthesia in
+                guard let anesthesiaStart = anesthesia.start else { return false }
+                return anesthesiaStart >= yearStart && anesthesiaStart <= yearEnd
+            }
+            .compactMap { $0.surgery.financial?.finalSurgeryValue }
+            .reduce(0, +)
+    }
+    
+    
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -191,8 +229,8 @@ struct StatisticsSection: View {
                         title: "Neste mês",
                         secondaryTitle: "Anterior",
                         tertiaryTitle: "",
-                        value: String("10.000"),
-                        secondaryValue: String("30.000"),
+                        value: String(format: "%.2f", anesthesiaFinalSurgeryValueCurrentMonthCount),
+                        secondaryValue: String(format: "%.2f", anesthesiaFinalSurgeryValuePreviousMonthCount),
                         tertiaryValue: "",
                         iconColor: .green
                     )

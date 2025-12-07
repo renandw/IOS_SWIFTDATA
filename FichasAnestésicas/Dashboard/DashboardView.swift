@@ -17,6 +17,7 @@ struct DashboardView: View {
     @Query(sort: \Anesthesia.start, order: .reverse) var anesthesias: [Anesthesia]
     @Environment(\.modelContext) private var patientContext
     @State private var navigateToPatients = false
+    @State private var navigateToFinancialDashboard = false
     @State private var navigateToTwoMonthPatients = false
     @State private var navigateToTwoMonthAnesthesia = false
     
@@ -56,11 +57,15 @@ struct DashboardView: View {
                               TwoMonthsPatients(anesthesias: anesthesias)
                           } label: { EmptyView() }
                               .hidden()
+                          NavigationLink(isActive: $navigateToFinancialDashboard) {
+                              FinancialDashboardView(userId: user.userId, surgeries: surgeries)
+                          } label: { EmptyView() }
+                              .hidden()
 
                           QuickActionsSection(
                               onNewAnesthesia: {},
                               onMyPatients: { navigateToPatients = true },
-                              onFinancial: {}
+                              onFinancial: {navigateToFinancialDashboard = true}
                           )
 
                           
