@@ -23,6 +23,7 @@ struct SurgeryFormView: View {
     @FocusState private var isFocusedAuxInput: Bool
     
     @State private var isSaving = false
+    @State private var showInsuranceSuggestions: Bool = false
     // Modo de funcionamento da view (padrão mantém comportamento atual)
     var mode: Mode = .standalone
 
@@ -87,14 +88,99 @@ struct SurgeryFormView: View {
                             .multilineTextAlignment(.trailing)
                     }
                 } else if viewModel.type == .convenio {
-                    HStack(alignment: .center){
+                    let insuranceList = ["Unimed", "Bradesco", "Amil", "Sulamerica", "Assefaz", "Astir", "Capesesp", "Cassi", "Funsa", "Fusex", "Geap", "Ipam", "Life", "Saúde Caixa", "Innova", "Particular"]
+                    HStack(alignment: .center) {
                         Text("Convênio")
                             .font(.subheadline)
                             .fontWeight(.semibold)
-                        TextField("Convênio", text: $viewModel.insuranceName)
-                            .multilineTextAlignment(.trailing)
-                            .autocorrectionDisabled()
-                            .textInputAutocapitalization(.words)
+
+                        VStack(alignment: .trailing, spacing: 6) {
+                            HStack(spacing: 8) {
+                                TextField("Convênio", text: $viewModel.insuranceName)
+                                    .multilineTextAlignment(.trailing)
+                                    .autocorrectionDisabled()
+                                    .textInputAutocapitalization(.words)
+                                    .onChange(of: viewModel.insuranceName) { _, newValue in
+                                        let count = newValue.trimmingCharacters(in: .whitespacesAndNewlines).count
+                                        showInsuranceSuggestions = count >= 2
+                                    }
+                                    .onTapGesture {
+                                        let count = viewModel.insuranceName.trimmingCharacters(in: .whitespacesAndNewlines).count
+                                        showInsuranceSuggestions = count >= 2
+                                        
+                                    }
+
+                                if !viewModel.insuranceName.isEmpty {
+                                    Button {
+                                        viewModel.insuranceName = ""
+                                        showInsuranceSuggestions = false
+                                    } label: {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .accessibilityLabel("Limpar convênio")
+                                }
+                            }
+                            .contentShape(Rectangle())
+
+                            if showInsuranceSuggestions {
+                                let query = viewModel.insuranceName.trimmingCharacters(in: .whitespacesAndNewlines)
+                                let filtered = insuranceList.filter { $0.localizedCaseInsensitiveContains(query) }
+
+                                VStack(alignment: .trailing, spacing: 0) {
+                                    if filtered.isEmpty {
+                                        Text("Nenhum resultado")
+                                            .font(.footnote)
+                                            .foregroundStyle(.secondary)
+                                            .padding(.vertical, 8)
+                                            .padding(.horizontal, 12)
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                    } else {
+                                        ScrollView {
+                                            VStack(spacing: 0) {
+                                                ForEach(filtered, id: \.self) { name in
+                                                    Button {
+                                                        viewModel.insuranceName = name
+                                                        showInsuranceSuggestions = false
+                                                    } label: {
+                                                        HStack {
+                                                            Spacer()
+                                                            Text(name)
+                                                                .foregroundStyle(.primary)
+                                                                .padding(.vertical, 10)
+                                                                .padding(.horizontal, 12)
+                                                        }
+                                                    }
+                                                    .buttonStyle(.plain)
+                                                    .contentShape(Rectangle())
+                                                    .background(Color(.systemBackground))
+                                                    .overlay(
+                                                        Rectangle()
+                                                            .frame(height: 0.5)
+                                                            .foregroundStyle(Color.secondary.opacity(0.2)),
+                                                        alignment: .bottom
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        .frame(maxHeight: 180)
+                                    }
+                                }
+                                .background(.ultraThinMaterial)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .stroke(Color.secondary.opacity(0.25), lineWidth: 0.5)
+                                )
+                                .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
+                                .transition(.opacity.combined(with: .move(edge: .top)))
+                            }
+                            
+                        }
+                    }
+                    .onTapGesture {
+                        // no-op to avoid accidental dismissal on outer taps
                     }
                     HStack(alignment: .center){
                         Text("Carteirinha")
@@ -317,5 +403,4 @@ struct SurgeryFormView: View {
             }
     }
 }
-
 

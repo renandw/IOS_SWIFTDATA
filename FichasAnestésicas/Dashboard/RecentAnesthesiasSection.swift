@@ -83,26 +83,29 @@ struct RecentAnesthesiaCard: View {
                 
                 Divider()
                 
-                HStack {
-                    ShareLink(item: anesthesia.renderAnesthesiaPDF()) {
-                            Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
+                if anesthesia.status == .finished || anesthesia.surgery.preanesthesia?.status == .finished {
+                    HStack {
+                        if anesthesia.status == .finished {
+                            ShareLink(item: anesthesia.renderAnesthesiaPDF()) {
+                                Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
+                            }
+                            .font(.caption)
+                            .buttonStyle(.glass)
+                            .tint(.blue)
                         }
-                    .font(.caption)
-                    .buttonStyle(.glass)
-                    .tint(.blue)
-
-                    Spacer()
-
-                    if anesthesia.surgery.preanesthesia?.status == .finished {
-                        ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
-                            Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
+                        
+                        Spacer()
+                        
+                        if anesthesia.surgery.preanesthesia?.status == .finished {
+                            ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
+                                Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
+                            }
+                            .font(.caption)
+                            .buttonStyle(.glass)
+                            .tint(.blue)
                         }
-                        .font(.caption)
-                        .buttonStyle(.glass)
-                        .tint(.blue)
+                        
                     }
-                    
-
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

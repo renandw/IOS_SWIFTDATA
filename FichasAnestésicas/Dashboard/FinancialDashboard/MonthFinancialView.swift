@@ -71,7 +71,7 @@ struct MonthFinancialView: View {
                                 .mapValues { $0.count }
                             
                             // Se quiser ordenar por nome do convênio:
-                            let sortedInsuranceCounts = insuranceCounts.sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending }
+                            let sortedInsuranceCounts = insuranceCounts.sorted { $0.value > $1.value }
                             
                             let insuranceRevenue = Dictionary(grouping: surgeries, by: { $0.insuranceName })
                                 .mapValues { surgeries in
@@ -98,7 +98,7 @@ struct MonthFinancialView: View {
                     
                     
                     HStack {
-                        Text("Cirurgias")
+                        Text("Cirurgias: \(filteredSurgeries.count)")
                             .font(.headline)
                         Spacer()
                         Button {
