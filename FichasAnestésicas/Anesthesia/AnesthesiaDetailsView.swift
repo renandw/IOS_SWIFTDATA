@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 enum anesthesiaDetailsSection: Int, CaseIterable, Hashable {
     case identificationSection, apaSection, medicationsSection, vitalSignsSection, descriptionSection, previewSection
@@ -40,11 +41,41 @@ struct AnesthesiaDetailsView: View {
     @Bindable var anesthesia: Anesthesia
     
     @Environment(SessionManager.self) var session
+    @Environment(\.modelContext) private var modelContext
     
     @State private var activeSection: anesthesiaDetailsSection = .identificationSection
     @State private var customTitleBarButton: AnyView? = nil
+    
+    private var canShowFinalizeButton: Bool {
+        !anesthesia.medications.isEmpty &&
+        !anesthesia.vitalSigns.isEmpty &&
+        !(anesthesia.anesthesiaDescription?.veryEndDescriptionText?.isEmpty ?? true)
+    }
+
+    private var canFinalize: Bool {
+        anesthesia.status != .finished &&
+        anesthesia.surgery.status != .finished
+    }
+
+    private func finalize() {
+        guard let user = session.currentUser else { return }
+        let repository = SwiftDataAnesthesiaRepository(context: modelContext)
+        do {
+            try repository.finalizeStatus(
+                anesthesia: anesthesia,
+                for: anesthesia.surgery,
+                by: user
+            )
+        } catch {
+            print("Erro ao finalizar: \(error)")
+            // TODO: mostrar alerta
+        }
+    }
 
     var body: some View {
+        
+        
+        
         contentSectionView
             .safeAreaInset(edge: .top) {
                 headerSection
@@ -52,9 +83,20 @@ struct AnesthesiaDetailsView: View {
             }
             .navigationTitle("Ficha da Anestésica")
             .navigationBarTitleDisplayMode(.inline)
-        .onPreferenceChange(CustomTopBarButtonPreferenceKey.self) { pref in
-            customTitleBarButton = pref?.view
-        }
+            .onPreferenceChange(CustomTopBarButtonPreferenceKey.self) { pref in
+                customTitleBarButton = pref?.view
+            }
+            .toolbar {
+                if canShowFinalizeButton {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(canFinalize ? "Concluir" : "Concluído") {
+                            if canFinalize { finalize() }
+                        }
+                    }
+                }
+            }
+        
+        
     }
     
     

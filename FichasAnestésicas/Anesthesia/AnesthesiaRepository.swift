@@ -61,6 +61,23 @@ final class SwiftDataAnesthesiaRepository: AnesthesiaRepository {
         context.delete(anesthesia)
         try context.save()
     }
+    
+    func finalizeStatus(anesthesia: Anesthesia, for surgery: Surgery, by user: User) throws {
+        guard anesthesia.surgery === surgery else {
+            throw AnesthesiaError.inconsistentRelationship
+        }
+        
+        let now = Date()
+        
+        surgery.lastActivityAt = now
+        surgery.status = .finished
+        
+        anesthesia.status = .finished
+        anesthesia.updatedAt = now
+        anesthesia.updatedBy = user
+        
+        try context.save()
+    }
 
     func get(by id: String) -> Anesthesia? {
         let descriptor = FetchDescriptor<Anesthesia>(
@@ -77,5 +94,20 @@ final class SwiftDataAnesthesiaRepository: AnesthesiaRepository {
         return (try? context.fetch(descriptor)) ?? []
     }
     
-    
+    enum AnesthesiaError: LocalizedError {
+        case noAnesthesiaFound
+        case alreadyFinalized
+        case inconsistentRelationship
+        
+        var errorDescription: String? {
+            switch self {
+            case .noAnesthesiaFound:
+                return "Nenhuma anestesia encontrada para esta cirurgia"
+            case .alreadyFinalized:
+                return "Cirurgia já está finalizada"
+            case .inconsistentRelationship:
+                return "Anestesia não pertence a esta cirurgia"
+            }
+        }
+    }
 }

@@ -48,40 +48,199 @@ import SwiftUI
 struct MonthStatSection: View {
     let surgeries: [Surgery]
     
+    @State private var filters = SurgeryFilters()
+    @State private var isFilterSheetPresented = false
+    
+    private var hasActiveFilters: Bool {
+        filters.hasActiveFilters
+    }
+    
+    var filteredSurgeries: [Surgery] {
+        surgeries.filter { surgery in
+            (filters.patient.isEmpty || surgery.patient.name.localizedCaseInsensitiveContains(filters.patient)) &&
+            (filters.hospital.isEmpty || surgery.hospital.localizedCaseInsensitiveContains(filters.hospital)) &&
+            (filters.surgeon.isEmpty || surgery.mainSurgeon.localizedCaseInsensitiveContains(filters.surgeon)) &&
+            (filters.insurance.isEmpty || surgery.insuranceName.localizedCaseInsensitiveContains(filters.insurance)) &&
+            (!filters.useDateFilter || (surgery.date >= filters.startDate && surgery.date <= filters.endDate))
+        }
+    }
+    private func formatCurrency(_ value: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "BRL"
+        formatter.locale = Locale(identifier: "pt_BR")
+        return formatter.string(from: NSNumber(value: value)) ?? "R$ 0,00"
+    }
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Estatísticas:")
+        let calendar = Calendar.current
+
+        // Agrupa cirurgias por mês/ano (somente meses que têm cirurgias entram no dicionário)
+        let groupedByMonth = Dictionary(grouping: surgeries) { surgery in
+            calendar.date(from: calendar.dateComponents([.year, .month], from: surgery.date)) ?? surgery.date
+        }
+
+        // Ordena os meses (mais recente primeiro)
+        let sortedMonthDates = groupedByMonth.keys.sorted(by: >)
+
+        return VStack(alignment: .leading, spacing: 16) {
+            Text("Estatísticas Mensais:")
                 .font(.headline)
                 .fontWeight(.semibold)
-            
-            // Mês atual
-            let calendar = Calendar.current
-            let now = Date()
-            let currentMonth = calendar.component(.month, from: now)
-            let currentYear = calendar.component(.year, from: now)
-            let currentStats = getMonthlyStats(for: currentMonth, year: currentYear)
-            
-            MonthStatCard(
-                icon: "chart.line.uptrend.xyaxis",
-                cardName: "Mês Atual",
-                title: now.formatted(.dateTime.month(.wide).year()),
-                stats: currentStats,
-                iconColor: .blue
+
+            ForEach(sortedMonthDates, id: \.self) { monthDate in
+                let components = calendar.dateComponents([.month, .year], from: monthDate)
+                if let month = components.month, let year = components.year {
+                    let stats = getMonthlyStats(for: month, year: year)
+                    let surgeriesForMonth = groupedByMonth[monthDate] ?? []
+                    
+                    NavigationLink {
+                        MonthFinancialView(
+                            monthDate: monthDate,
+                            stats: stats,
+                            surgeries: surgeriesForMonth
+                        )
+                    } label: {
+                        MonthStatCard(
+                            icon: "calendar",
+                            cardName: monthDate.formatted(.dateTime.month(.wide).year()),
+                            title: monthDate.formatted(.dateTime.month(.wide).year()),
+                            stats: stats,
+                            iconColor: .blue
+                        )
+                    }
+                }
+            }
+            VStack(alignment: .leading, spacing: 16) {
+                if hasActiveFilters {
+                    HStack {
+                        Text("Cirurgias")
+                            .font(.headline)
+                        Spacer()
+                        Button {
+                            isFilterSheetPresented = true
+                        } label: {
+                            Label("Filtros", systemImage: "magnifyingglass.circle.fill")
+                                .labelStyle(.iconOnly)
+                        }
+                    }
+                    ForEach(filteredSurgeries) { surgery in
+                        HStack{
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Text(surgery.patient.name)
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                    
+                                    Spacer()
+                                    if let financial = surgery.financial {
+                                        if financial.paid {
+                                            VStack {
+                                                HStack {
+                                                    Image(systemName: "checkmark.circle.fill")
+                                                        .font(.subheadline)
+                                                        .foregroundStyle(.green)
+                                                    Text("Pago")
+                                                        .font(.subheadline)
+                                                        .foregroundStyle(.green)
+                                                }
+                                                if let payDate = financial.paymentDate {
+                                                    Text(payDate, style: .date)
+                                                        .font(.caption)
+                                                        .fontWeight(.heavy)
+                                                }
+                                            }
+                                        } else {
+                                            HStack{
+                                                Image(systemName: "exclamationmark.circle.fill")
+                                                    .font(.subheadline)
+                                                    .foregroundStyle(.orange)
+                                                Text("Pendente")
+                                                    .font(.subheadline)
+                                                    .foregroundStyle(.orange)
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                HStack {
+                                    Text(surgery.proposedProcedure)
+                                        .font(.subheadline)
+                                        .fontWeight(.regular)
+                                    Text ("-")
+                                    Text(surgery.mainSurgeon)
+                                        .font(.subheadline)
+                                        .fontWeight(.regular)
+                                }
+                                
+                                Text(surgery.date, style: .date)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                
+                                HStack {
+                                    Text("Convênio:")
+                                        .font(.subheadline)
+                                    Text(surgery.insuranceName)
+                                        .font(.subheadline)
+                                    Spacer()
+                                    if let financial = surgery.financial {
+                                        Text("\(formatCurrency(financial.finalSurgeryValue ?? 0))")
+                                            .font(.footnote)
+                                            .fontWeight(.black)
+                                            .foregroundColor(.green)
+                                    }
+                                }
+                                .padding(.bottom, 2)
+                                
+                                Divider()
+                                HStack {
+                                    HStack(alignment: .top) {
+                                        NavButton(title: "Paciente",
+                                                  icon: "person.circle",
+                                                  destination: PatientDetailsView(patient: surgery.patient))
+                                    }
+                                    Spacer()
+                                    HStack(alignment: .top) {
+                                        NavButton(title: "Cirurgia",
+                                                  icon: "stethoscope.circle",
+                                                  destination: SurgeryDetailsView(surgery:surgery))
+                                    }
+                                    Spacer()
+                                    HStack(alignment: .top) {
+                                        NavButton(title: "Valores",
+                                                  icon: "brazilianrealsign.circle",
+                                                  destination: FinancialView(surgery:surgery))
+                                    }
+                                }
+                                .padding(.top, 4)
+                                
+                            }
+                        }
+                        .padding()
+                        .glassEffect(in: .rect(cornerRadius: 12))
+                    }
+                } else {
+                    HStack {
+                        Text("Encontrar Cirurgias")
+                            .font(.headline)
+                        Spacer()
+                        Button {
+                            isFilterSheetPresented = true
+                        } label: {
+                            Label("Filtros", systemImage: "magnifyingglass.circle")
+                                .labelStyle(.iconOnly)
+                        }
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $isFilterSheetPresented) {
+            FilterSheetView(
+                filters: $filters,
+                showDateFilter: true,
+                isFilterSheetPresented: $isFilterSheetPresented
             )
-            
-            // Mês anterior
-            let previousMonthDate = calendar.date(byAdding: .month, value: -1, to: now) ?? now
-            let previousMonth = calendar.component(.month, from: previousMonthDate)
-            let previousYear = calendar.component(.year, from: previousMonthDate)
-            let previousStats = getMonthlyStats(for: previousMonth, year: previousYear)
-            
-            MonthStatCard(
-                icon: "calendar",
-                cardName: "Mês Anterior",
-                title: previousMonthDate.formatted(.dateTime.month(.wide).year()),
-                stats: previousStats,
-                iconColor: .green
-            )
+            .presentationDetents([.height(filters.useDateFilter ? 550 : 400), .large])
         }
     }
     
@@ -92,7 +251,6 @@ struct MonthStatSection: View {
         var totalPaid: Double = 0
         var totalDebts: Double = 0
         var totalOnHold: Double = 0
-        var finalValue: Double = 0
         
         let calendar = Calendar.current
         
@@ -121,15 +279,15 @@ struct MonthStatSection: View {
                 totalOnHold += surgeryFinalValue
             }
             
-            // finalValue: soma de todos os finalSurgeryValue (paid ou não)
-            finalValue += surgeryFinalValue
-            
             // totalDebts: soma de taxedValue + glosedAnesthesiaValue + glosedPreAnesthesiaValue
             let taxed = financial.taxedValue ?? 0
             let glosedAnesth = financial.glosedAnesthesiaValue ?? 0
             let glosedPreAnesth = financial.glosedPreAnesthesiaValue ?? 0
             totalDebts += taxed + glosedAnesth + glosedPreAnesth
         }
+        
+        // finalValue: calcula DEPOIS do loop, quando todos os valores já foram somados
+        let finalValue = totalValue - totalDebts
         
         return MonthStats(
             totalValue: totalValue,
@@ -159,90 +317,88 @@ struct MonthStatCard: View {
     let iconColor: Color
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Header com ícone, nome do card e mês
-            HStack {
+        VStack(alignment: .leading, spacing: 8) {
+            
+            // MARK: - HEADER
+            HStack(spacing: 10) {
+                Spacer()
                 Image(systemName: icon)
-                    .font(.title3)
+                    .font(.headline)
                     .foregroundColor(iconColor)
+
+                Text(cardName)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                
+                
+            }
+            Divider()
+            
+            // MARK: - RECEBIDO (HERÓI)
+            HStack {
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Pendente")
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
+                    Text(formatCurrency(stats.totalOnHold))
+                        
+                        .fontWeight(.bold)
+                        .foregroundColor(.orange)
+                }
+                
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("Recebido")
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
+                    Text(formatCurrency(stats.totalPaid))
+                        
+                        .fontWeight(.bold)
+                        .foregroundColor(.green)
+                }
+               
+            }
+        
+            HStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Faturado")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
+                    Text(formatCurrency(stats.totalValue))
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Descontos")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
+                    Text(formatCurrency(stats.totalDebts))
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.red)
+                }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text(cardName)
+                    Text("Líquido")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
+                    Text(formatCurrency(stats.finalValue))
                         .font(.headline)
                         .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                    Text(title)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            
-            VStack(alignment: .leading, spacing: 8) {
-                // Linha principal - Valor Total
-                HStack(alignment: .bottom) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Valor Total")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text(formatCurrency(stats.totalValue))
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.primary)
-                    }
-                    Spacer()
-                }
-                
-                // Linha secundária - Valor Pago
-                HStack(alignment: .bottom) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Valor Pago")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text(formatCurrency(stats.totalPaid))
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.green)
-                    }
-                    Spacer()
-                }
-                
-                // Linha terciária - Valores detalhados
-                HStack(alignment: .top, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Dívidas")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                        Text(formatCurrency(stats.totalDebts))
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.red)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Em Aberto")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                        Text(formatCurrency(stats.totalOnHold))
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.orange)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Valor Final")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                        Text(formatCurrency(stats.finalValue))
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Spacer()
+                        .foregroundStyle(.blue)
                 }
             }
         }
-        .padding(16)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 16)
         .glassEffect(in: .rect(cornerRadius: 16.0))
     }
     
@@ -252,5 +408,160 @@ struct MonthStatCard: View {
         formatter.currencyCode = "BRL"
         formatter.locale = Locale(identifier: "pt_BR")
         return formatter.string(from: NSNumber(value: value)) ?? "R$ 0,00"
+    }
+}
+
+#Preview {
+    MonthStatCard(
+        icon: "calendar",
+        cardName: "Outubro de 2025",
+        title: "Outubro de 2025",
+        stats: MonthStats(
+            totalValue: 10000,
+            totalPaid: 8000,
+            totalDebts: 2000,
+            finalValue: 8000,
+            totalOnHold: 0000,
+        ),
+        iconColor: .green
+    )
+}
+
+
+struct SurgeryFilters {
+    var patient = ""
+    var hospital = ""
+    var surgeon = ""
+    var insurance = ""
+    var useDateFilter = false
+    var startDate = Date()
+    var endDate = Date()
+    
+    var hasActiveFilters: Bool {
+        !patient.isEmpty || !hospital.isEmpty ||
+        !surgeon.isEmpty || !insurance.isEmpty || useDateFilter
+    }
+    
+    mutating func clear() {
+        self = SurgeryFilters()
+    }
+}
+
+
+struct FilterSheetView: View {
+    @Binding var filters: SurgeryFilters
+    var showDateFilter = true
+    @Binding var isFilterSheetPresented: Bool
+    
+    var hasActiveFilters: Bool {
+        filters.hasActiveFilters
+    }
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    HStack {
+                        Text("Paciente")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        TextField("John Appleseed", text: $filters.patient)
+                            .autocorrectionDisabled()
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Hospital")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        TextField("Hospital de Base", text: $filters.hospital)
+                            .autocorrectionDisabled()
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Cirurgião")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        TextField("Dr. Appleseed", text: $filters.surgeon)
+                            .autocorrectionDisabled()
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Convênio")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        TextField("Particular", text: $filters.insurance)
+                            .autocorrectionDisabled()
+                            .multilineTextAlignment(.trailing)
+                    }
+                } header : {
+                    HStack {
+                        Text("Filtros")
+                            .fontWeight(.semibold)
+                        Spacer()
+                        if hasActiveFilters {
+                            Button {
+                                filters.clear()
+                            } label: {
+                                Image(systemName: "eraser.fill")
+                                Text("Limpar Filtros")
+                                    .fontWeight(.bold)
+                            }
+                        }
+                    }
+                }
+                if showDateFilter {
+                    Section {
+                        Toggle("Filtrar por Data", isOn: $filters.useDateFilter)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        
+                        if filters.useDateFilter {
+                            DatePicker("Data inicial", selection: $filters.startDate, displayedComponents: .date)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            
+                            DatePicker("Data final", selection: $filters.endDate, displayedComponents: .date)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Filtros")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Fechar" , systemImage: "xmark") {
+                        isFilterSheetPresented = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Aplicar" , systemImage: "checkmark") {
+                        isFilterSheetPresented = false
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+#Preview("FilterSheetView") {
+    @Previewable @State var filters = SurgeryFilters(
+        patient: "Maria",
+        hospital: "Santa Casa",
+        surgeon: "Dr. Silva",
+        insurance: "Unimed",
+        useDateFilter: true,
+        startDate: Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date(),
+        endDate: Date()
+    )
+    @Previewable @State var isPresented = true
+
+    return NavigationStack {
+        FilterSheetView(
+            filters: $filters,
+            isFilterSheetPresented: $isPresented
+        )
     }
 }
