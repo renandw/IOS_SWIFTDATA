@@ -131,9 +131,10 @@ struct MonthFinancialView: View {
                                                         .foregroundStyle(.green)
                                                 }
                                                 if let payDate = financial.paymentDate {
-                                                    Text(payDate, style: .date)
+                                                    Text(payDate.formatted(date: .numeric, time: .omitted))
                                                         .font(.caption)
-                                                        .fontWeight(.heavy)
+                                                        .fontWeight(.bold)
+                                                        .foregroundStyle(.secondary)
                                                 }
                                             }
                                         } else {

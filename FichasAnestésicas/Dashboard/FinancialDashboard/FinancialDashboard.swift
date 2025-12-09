@@ -145,9 +145,10 @@ struct MonthStatSection: View {
                                                         .foregroundStyle(.green)
                                                 }
                                                 if let payDate = financial.paymentDate {
-                                                    Text(payDate, style: .date)
+                                                    Text(payDate.formatted(date: .numeric, time: .omitted))
                                                         .font(.caption)
-                                                        .fontWeight(.heavy)
+                                                        .fontWeight(.bold)
+                                                        .foregroundStyle(.secondary)
                                                 }
                                             }
                                         } else {
@@ -468,6 +469,16 @@ struct FilterSheetView: View {
                         TextField("John Appleseed", text: $filters.patient)
                             .autocorrectionDisabled()
                             .multilineTextAlignment(.trailing)
+                        if !filters.patient.isEmpty {
+                            Button {
+                                filters.patient = ""
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Paciente")
+                        }
                     }
                     HStack {
                         Text("Hospital")
@@ -476,6 +487,16 @@ struct FilterSheetView: View {
                         TextField("Hospital de Base", text: $filters.hospital)
                             .autocorrectionDisabled()
                             .multilineTextAlignment(.trailing)
+                        if !filters.hospital.isEmpty {
+                            Button {
+                                filters.hospital = ""
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Hospital")
+                        }
                     }
                     HStack {
                         Text("Cirurgião")
@@ -484,6 +505,16 @@ struct FilterSheetView: View {
                         TextField("Dr. Appleseed", text: $filters.surgeon)
                             .autocorrectionDisabled()
                             .multilineTextAlignment(.trailing)
+                        if !filters.surgeon.isEmpty {
+                            Button {
+                                filters.surgeon = ""
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Cirurgião")
+                        }
                     }
                     HStack {
                         Text("Convênio")
@@ -492,6 +523,16 @@ struct FilterSheetView: View {
                         TextField("Particular", text: $filters.insurance)
                             .autocorrectionDisabled()
                             .multilineTextAlignment(.trailing)
+                        if !filters.insurance.isEmpty {
+                            Button {
+                                filters.insurance = ""
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Convênio")
+                        }
                     }
                 } header : {
                     HStack {
