@@ -119,14 +119,16 @@ struct FinancialView: View {
                         }
                     }
                 }
-                
-                Section {
+                if let notes = financial.notes {
+                    Section {
                         HStack {
-                            if let notes = financial.notes {
-                                Text(notes)
-                                    .font(.caption)
-                            }
+                            
+                            Text(notes)
+                                .font(.caption)
                         }
+                    } header : {
+                        Text("Anotações Financeiras")
+                    }
                 }
                 
             } else {

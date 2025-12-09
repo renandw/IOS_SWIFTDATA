@@ -37,6 +37,16 @@ struct FinancialFormView: View {
                             .foregroundStyle(.blue)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                        if viewModel.valueAnesthesia != nil {
+                            Button {
+                                viewModel.valueAnesthesia = nil
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Valores")
+                        }
                     }
                     HStack {
                         Text("Pré-anestesia")
@@ -48,6 +58,16 @@ struct FinancialFormView: View {
                             .foregroundStyle(.blue)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                        if viewModel.valuePreAnesthesia != nil {
+                            Button {
+                                viewModel.valuePreAnesthesia = nil
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Valores Pré-Anestesia")
+                        }
                     }
                     HStack {
                         Text("Porcentagem (%)")
@@ -59,6 +79,16 @@ struct FinancialFormView: View {
                             .foregroundStyle(.red)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                        if viewModel.taxPercentage != nil {
+                            Button {
+                                viewModel.taxPercentage = nil
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Porcentagem")
+                        }
                     }
                     
                     HStack {
@@ -71,6 +101,16 @@ struct FinancialFormView: View {
                             .foregroundStyle(.red)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                        if viewModel.taxedValue != nil {
+                            Button {
+                                viewModel.taxedValue = nil
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Valor Imposto")
+                        }
                     }
                     
                 }
@@ -106,6 +146,16 @@ struct FinancialFormView: View {
                             TextField("Valor", value: $viewModel.glosedAnesthesiaValue, format: .number)
                                 .keyboardType(.decimalPad)
                                 .multilineTextAlignment(.trailing)
+                            if viewModel.glosaAnesthesia != nil {
+                                Button {
+                                    viewModel.glosaAnesthesia = nil
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("Limpar Glosa Anestesia")
+                            }
                         }
                     }
                     
@@ -125,6 +175,16 @@ struct FinancialFormView: View {
                             TextField("Valor", value: $viewModel.glosedPreAnesthesiaValue, format: .number)
                                 .keyboardType(.decimalPad)
                                 .multilineTextAlignment(.trailing)
+                            if viewModel.glosaPreanesthesia != nil {
+                                Button {
+                                    viewModel.glosedPreAnesthesiaValue = nil
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("Limpar Glosa Pré-Anestésia")
+                            }
                         }
                     }
                 }
@@ -168,29 +228,6 @@ struct FinancialFormView: View {
                             maxDate: Date(),
                             compactInRow: true
                         )
-                    }
-                }
-                
-                // MARK: - Impostos
-                Section("Impostos") {
-                    HStack {
-                        Text("Porcentagem (%)")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                        Spacer()
-                        TextField("13,05%", value: $viewModel.taxPercentage, format: .number)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    
-                    HStack {
-                        Text("Valor do Imposto")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                        Spacer()
-                        TextField("Valor", value: $viewModel.taxedValue, format: .number)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
                     }
                 }
                 

@@ -87,6 +87,16 @@ struct SurgeryFormView: View {
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                     }
+                    if !viewModel.insuranceNumber.isEmpty {
+                        Button {
+                            viewModel.insuranceNumber = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Limpar Carteirinha")
+                    }
                 } else if viewModel.type == .convenio {
                     let insuranceList = ["Unimed", "Bradesco", "Amil", "Sulamerica", "Assefaz", "Astir", "Capesesp", "Cassi", "Funsa", "Fusex", "Geap", "Ipam", "Life", "Saúde Caixa", "Innova", "Particular"]
                     HStack(alignment: .center) {
@@ -189,6 +199,16 @@ struct SurgeryFormView: View {
                         TextField("Carteirinha", text: $viewModel.insuranceNumber)
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
+                        if !viewModel.insuranceNumber.isEmpty {
+                            Button {
+                                viewModel.insuranceNumber = ""
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Carteirinha")
+                        }
                     }
                 }
             }
@@ -200,6 +220,16 @@ struct SurgeryFormView: View {
                             .fontWeight(.semibold)
                         TextField("R$ 2100,00", value: $viewModel.valueAnesthesia, format: .number)
                             .multilineTextAlignment(.trailing)
+                    }
+                    if viewModel.valueAnesthesia != nil {
+                        Button {
+                            viewModel.valueAnesthesia = nil
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Limpar Valores")
                     }
                 }
             }
@@ -221,6 +251,16 @@ struct SurgeryFormView: View {
                                 viewModel.hospital = viewModel.formatName(viewModel.hospital)
                             }
                         }
+                    if !viewModel.hospital.isEmpty {
+                        Button {
+                            viewModel.hospital = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Limpar Hospital")
+                    }
                 }
                 HStack {
                     Text("Peso do Paciente")
@@ -232,7 +272,17 @@ struct SurgeryFormView: View {
                         .multilineTextAlignment(.trailing)
                     if viewModel.weight != 0 {
                         Text("kg")
-                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    if viewModel.weight != nil {
+                        Button {
+                            viewModel.weight = nil
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Limpar Peso")
                     }
                 }
                 HStack(alignment: .center){
@@ -242,6 +292,16 @@ struct SurgeryFormView: View {
                     TextField("Cirurgia", text: $viewModel.proposedProcedure)
                         .multilineTextAlignment(.trailing)
                         .autocorrectionDisabled()
+                    if !viewModel.proposedProcedure.isEmpty {
+                        Button {
+                            viewModel.proposedProcedure = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Limpar Carteirinha")
+                    }
                 }
             }
             
@@ -283,6 +343,16 @@ struct SurgeryFormView: View {
                                 viewModel.mainSurgeon = viewModel.formatName(viewModel.mainSurgeon)
                             }
                         }
+                    if !viewModel.mainSurgeon.isEmpty {
+                        Button {
+                            viewModel.mainSurgeon = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Limpar Cirurgião")
+                    }
                 }
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .center){

@@ -20,16 +20,6 @@ struct FinancialDashboardView: View {
                         }
                         MonthStatSection(surgeries: surgeries)
                         
-                        Text("Olá, \(user.name)")
-                        Button("Encerrar Sessão") {
-                            session.currentUser = nil
-                        }
-                        .buttonStyle(.glassProminent)
-                        
-                        NavigationLink("Navegar para Lista de Usuários") {
-                            UserListView()
-                        }
-                        .buttonStyle(.borderedProminent)
                     }
                     .padding()
                     .navigationTitle("Financeiro")
@@ -43,7 +33,7 @@ struct FinancialDashboardView: View {
         }
     }
 }
-import SwiftUI
+
 
 struct MonthStatSection: View {
     let surgeries: [Surgery]
@@ -76,7 +66,7 @@ struct MonthStatSection: View {
         let calendar = Calendar.current
 
         // Agrupa cirurgias por mês/ano (somente meses que têm cirurgias entram no dicionário)
-        let groupedByMonth = Dictionary(grouping: surgeries) { surgery in
+        let groupedByMonth = Dictionary(grouping: surgeries.filter{$0.type == .convenio}) { surgery in
             calendar.date(from: calendar.dateComponents([.year, .month], from: surgery.date)) ?? surgery.date
         }
 

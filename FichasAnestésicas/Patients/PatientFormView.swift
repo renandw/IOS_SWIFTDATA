@@ -65,6 +65,16 @@ struct PatientFormView: View {
                                 viewModel.name = viewModel.formatName(viewModel.name)
                             }
                         }
+                    if !viewModel.name.isEmpty {
+                        Button {
+                            viewModel.name = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Limpar Paciente")
+                    }
                 }
                 HStack(alignment: .center){
                     Text("Número SUS")
@@ -83,6 +93,16 @@ struct PatientFormView: View {
                         }
                     }
                     .multilineTextAlignment(.trailing)
+                    if !viewModel.cns.isEmpty {
+                        Button {
+                            viewModel.cns = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Limpar CNS")
+                    }
                 }
                 HStack(alignment: .center){
                     Text("Data de Nascimento")
