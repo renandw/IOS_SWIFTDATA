@@ -8,6 +8,11 @@ import SwiftUI
 
 @Observable
 final class TechniquesSectionViewModel {
+    //shared
+    var mmssBlocks: [MMSSTechnique] = []
+    var mmiiBlocks: [MMIITechnique] = []
+    var abdominalBlocks: [AbdominalToraxTechnique] = []
+    
     // High-level technique toggles and order
     var generalAnesthesia = false
     var spinalAnesthesia = false
@@ -58,6 +63,14 @@ final class TechniquesSectionViewModel {
     var blockOthers: String?
 
     func load(from e: AnesthesiaDescriptionEntry) {
+        //shared
+        mmssBlocks = e.shared?.mmssBlocks ?? []
+        mmiiBlocks = e.shared?.mmiiBlocks ?? []
+        abdominalBlocks = e.shared?.abdominalBlocks ?? []
+        
+        print("e.shared:", String(describing: e.shared))
+        print("mmssBlocks count:", e.shared?.mmssBlocks.count ?? 0)
+        
         // Techniques
         generalAnesthesia = e.generalAnesthesia
         spinalAnesthesia = e.spinalAnesthesia
@@ -342,7 +355,6 @@ final class TechniquesSectionViewModel {
     
     func applyPeripheralBlockAnesthesiaSuggestion(){
         blockEquipment = .usg
-        mmssTechnique = .subclavian
     }
     
     func resetPeripheralBlockAnesthesia(){
@@ -527,17 +539,15 @@ final class TechniquesSectionViewModel {
             parts.append(blockEquipment)
         }
         
-        if let mmssTechnique = mmssTechnique?.reportDisplayName {
-            parts.append(mmssTechnique)
-        }
+        print("mmssBlocks na geração:", mmssBlocks) // ← Adicione
+        print("mmiiBlocks na geração:", mmiiBlocks)
+        print("abdominalBlocks na geração:", abdominalBlocks)
         
-        if let mmiiTechnique = mmiiTechnique?.reportDisplayName {
-            parts.append(mmiiTechnique)
-        }
+        parts += mmssBlocks.map { $0.reportDisplayName }
+        parts += mmiiBlocks.map { $0.reportDisplayName }
+        parts += abdominalBlocks.map { $0.reportDisplayName }
         
-        if let abdominalToraxTechnique = abdominalToraxTechnique?.DisplayName{
-            parts.append(abdominalToraxTechnique)
-        }
+        print("Parts após bloqueios:", parts)
         
         if let blockOthers = blockOthers {
             parts.append("\(blockOthers)")
@@ -566,3 +576,4 @@ final class TechniquesSectionViewModel {
         
     }
 }
+

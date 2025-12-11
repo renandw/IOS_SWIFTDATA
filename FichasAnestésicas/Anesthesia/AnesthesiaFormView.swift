@@ -160,7 +160,12 @@ struct AnesthesiaFormView: View {
 
             Section {
                 NavigationLink {
-                    AnesthesiaTechniquePickerView(selection: $viewModel.techniques)
+                    AnesthesiaTechniquePickerView(
+                        selection: $viewModel.techniques,
+                        mmssBlocks: $viewModel.mmssBlocks,
+                        mmiiBlocks: $viewModel.mmiiBlocks,
+                        abdominalBlocks: $viewModel.abdominalBlocks
+                    )
                 } label: {
                     HStack {
                         Text("Selecionar técnicas")
@@ -307,32 +312,106 @@ struct AnesthesiaFormView: View {
 
 struct AnesthesiaTechniquePickerView: View {
     @Binding var selection: [AnesthesiaTechniqueKind]
+    @Binding var mmssBlocks: [MMSSTechnique]
+    @Binding var mmiiBlocks: [MMIITechnique]
+    @Binding var abdominalBlocks: [AbdominalToraxTechnique]
 
     private var allTechniques: [AnesthesiaTechniqueKind] {
         AnesthesiaTechniqueKind.allCases.sorted { a, b in
             a.rawValue.localizedCaseInsensitiveCompare(b.rawValue) == .orderedAscending
         }
     }
+    
+    private var isPeripheralBlockSelected: Bool {
+        selection.contains(.bloqueioPeriferico)
+    }
 
     var body: some View {
         List {
-            ForEach(allTechniques, id: \.self) { kind in
-                Button {
-                    toggle(kind)
-                } label: {
-                    HStack {
-                        Text(kind.rawValue)
-                        Spacer()
-                        if selection.contains(kind) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.blue)
-                        } else {
-                            Image(systemName: "circle.dashed")
-                                .foregroundStyle(.gray)
+            Section {
+                ForEach(allTechniques, id: \.self) { kind in
+                    Button {
+                        toggle(kind)
+                    } label: {
+                        HStack {
+                            Text(kind.rawValue)
+                            Spacer()
+                            if selection.contains(kind) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.blue)
+                            } else {
+                                Image(systemName: "circle.dashed")
+                                    .foregroundStyle(.gray)
+                            }
                         }
                     }
+                    .foregroundStyle(.primary)
                 }
-                .foregroundStyle(.primary)
+            }
+            
+            if isPeripheralBlockSelected {
+                Section("Membros Superiores") {
+                    ForEach(MMSSTechnique.allCases, id: \.self) { technique in
+                        Button {
+                            toggleMMSS(technique)
+                        } label: {
+                            HStack {
+                                Text(technique.DisplayName)
+                                Spacer()
+                                if mmssBlocks.contains(technique) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.blue)
+                                } else {
+                                    Image(systemName: "circle.dashed")
+                                        .foregroundStyle(.gray)
+                                }
+                            }
+                        }
+                        .foregroundStyle(.primary)
+                    }
+                }
+                
+                Section("Membros Inferiores") {
+                    ForEach(MMIITechnique.allCases, id: \.self) { technique in
+                        Button {
+                            toggleMMII(technique)
+                        } label: {
+                            HStack {
+                                Text(technique.DisplayName)
+                                Spacer()
+                                if mmiiBlocks.contains(technique) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.blue)
+                                } else {
+                                    Image(systemName: "circle.dashed")
+                                        .foregroundStyle(.gray)
+                                }
+                            }
+                        }
+                        .foregroundStyle(.primary)
+                    }
+                }
+                
+                Section("Abdome e Tórax") {
+                    ForEach(AbdominalToraxTechnique.allCases, id: \.self) { technique in
+                        Button {
+                            toggleAbdominal(technique)
+                        } label: {
+                            HStack {
+                                Text(technique.DisplayName)
+                                Spacer()
+                                if abdominalBlocks.contains(technique) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.blue)
+                                } else {
+                                    Image(systemName: "circle.dashed")
+                                        .foregroundStyle(.gray)
+                                }
+                            }
+                        }
+                        .foregroundStyle(.primary)
+                    }
+                }
             }
         }
         .navigationTitle("Técnicas Anestésicas")
@@ -341,7 +420,12 @@ struct AnesthesiaTechniquePickerView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu("Opções", systemImage: "gear") {
                     Button("Selecionar tudo") { selection = allTechniques }
-                    Button("Limpar seleção", role: .destructive) { selection.removeAll() }
+                    Button("Limpar seleção", role: .destructive) {
+                        selection.removeAll()
+                        mmssBlocks.removeAll()
+                        mmiiBlocks.removeAll()
+                        abdominalBlocks.removeAll()
+                    }
                 }
             }
         }
@@ -350,8 +434,38 @@ struct AnesthesiaTechniquePickerView: View {
     private func toggle(_ kind: AnesthesiaTechniqueKind) {
         if let idx = selection.firstIndex(of: kind) {
             selection.remove(at: idx)
+            // Se desmarcar bloqueio periférico, limpar seleções específicas
+            if kind == .bloqueioPeriferico {
+                mmssBlocks.removeAll()
+                mmiiBlocks.removeAll()
+                abdominalBlocks.removeAll()
+            }
         } else {
             selection.append(kind)
+        }
+    }
+    
+    private func toggleMMSS(_ technique: MMSSTechnique) {
+        if let idx = mmssBlocks.firstIndex(of: technique) {
+            mmssBlocks.remove(at: idx)
+        } else {
+            mmssBlocks.append(technique)
+        }
+    }
+    
+    private func toggleMMII(_ technique: MMIITechnique) {
+        if let idx = mmiiBlocks.firstIndex(of: technique) {
+            mmiiBlocks.remove(at: idx)
+        } else {
+            mmiiBlocks.append(technique)
+        }
+    }
+    
+    private func toggleAbdominal(_ technique: AbdominalToraxTechnique) {
+        if let idx = abdominalBlocks.firstIndex(of: technique) {
+            abdominalBlocks.remove(at: idx)
+        } else {
+            abdominalBlocks.append(technique)
         }
     }
 }

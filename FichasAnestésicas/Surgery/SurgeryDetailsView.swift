@@ -151,6 +151,10 @@ struct SurgeryDetailsView: View {
                                     .fontWeight(.semibold)
                             }
                         }
+                    } else {
+                        Button("Adicionar Valores") {
+                            showingFinancialForm = true
+                        }
                     }
                 } header: {
                     HStack {
@@ -163,10 +167,6 @@ struct SurgeryDetailsView: View {
                         }
                         .buttonStyle(.glass)
                     }
-                }
-            } else {
-                Button("Adicionar Valores") {
-                    showingFinancialForm = true
                 }
             }
             if let anesthesia = surgery.anesthesia {

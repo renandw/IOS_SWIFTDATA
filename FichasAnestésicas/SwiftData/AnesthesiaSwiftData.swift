@@ -80,6 +80,10 @@ final class AnesthesiaDescriptionEntry {
     var bis: Bool
     var tof: Bool
     var customMonitorings: [String]
+    
+    var shared: SharedPreAndAnesthesia? {
+            anesthesia.surgery.shared
+        }
 
     var timestamp: Date
     //Admission
@@ -459,6 +463,10 @@ final class VitalSignEntry {
 final class SharedPreAndAnesthesia {
     var techniqueRaw: [String]
     var asaRaw: String?
+    var mmssBlocksRaw: [String]?
+    var mmiiBlocksRaw: [String]?
+    var abdominalBlocksRaw: [String]?
+    
     // computed
     var techniques: [AnesthesiaTechniqueKind] {
         get { techniqueRaw.compactMap(AnesthesiaTechniqueKind.init(rawValue:)) }
@@ -468,6 +476,21 @@ final class SharedPreAndAnesthesia {
     var asa: ASAClassification? {
         get { asaRaw.flatMap(ASAClassification.init(rawValue:)) }
         set { asaRaw = newValue?.rawValue }
+    }
+    
+    var mmssBlocks: [MMSSTechnique] {
+        get { (mmssBlocksRaw ?? []).compactMap(MMSSTechnique.init(rawValue:)) }
+        set { mmssBlocksRaw = newValue.map(\.rawValue) }
+    }
+    
+    var mmiiBlocks: [MMIITechnique] {
+        get { (mmiiBlocksRaw ?? []).compactMap(MMIITechnique.init(rawValue:)) }
+        set { mmiiBlocksRaw = newValue.map(\.rawValue) }
+    }
+    
+    var abdominalBlocks: [AbdominalToraxTechnique] {
+        get { (abdominalBlocksRaw ?? []).compactMap(AbdominalToraxTechnique.init(rawValue:)) }
+        set { abdominalBlocksRaw = newValue.map(\.rawValue) }
     }
     
     @Relationship(inverse: \Surgery.shared) var surgery: Surgery?

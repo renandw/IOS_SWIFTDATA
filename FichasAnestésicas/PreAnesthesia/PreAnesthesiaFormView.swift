@@ -182,14 +182,19 @@ struct PreAnesthesiaFormView: View {
 
                 Section {
                     NavigationLink {
-                        AnesthesiaTechniquePickerView(selection: $viewModel.techniques)
+                        AnesthesiaTechniquePickerView(
+                            selection: $viewModel.techniques,
+                            mmssBlocks: $viewModel.mmssBlocks,
+                            mmiiBlocks: $viewModel.mmiiBlocks,
+                            abdominalBlocks: $viewModel.abdominalBlocks
+                        )
                     } label: {
                         HStack {
                             Text("Selecionar técnicas")
                             Spacer()
                             Text(viewModel.techniques.isEmpty
                                  ? "Nenhuma"
-                                 : viewModel.techniques.map(\.rawValue).joined(separator: ", "))
+                                 : techniquesDisplayText)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.trailing)
                         }
@@ -258,6 +263,20 @@ struct PreAnesthesiaFormView: View {
         }
     }
     
+    private var techniquesDisplayText: String {
+        var parts = viewModel.techniques.map(\.rawValue)
+        
+        if viewModel.techniques.contains(.bloqueioPeriferico) {
+            let blocks = (viewModel.mmssBlocks.map(\.DisplayName) +
+                         viewModel.mmiiBlocks.map(\.DisplayName) +
+                         viewModel.abdominalBlocks.map(\.DisplayName))
+            if !blocks.isEmpty {
+                parts.append("(\(blocks.joined(separator: ", ")))")
+            }
+        }
+        
+        return parts.joined(separator: ", ")
+    }
     
     private var clearenceStatusPicker: some View {
         Picker("Liberação", selection: $viewModel.clearence.clearenceStatus) {

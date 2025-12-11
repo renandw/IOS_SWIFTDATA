@@ -20,6 +20,9 @@ final class PreAnesthesiaViewModel: Identifiable {
     private let isNew: Bool
     
     var techniques: [AnesthesiaTechniqueKind] = []
+    var mmssBlocks: [MMSSTechnique] = []
+    var mmiiBlocks: [MMIITechnique] = []
+    var abdominalBlocks: [AbdominalToraxTechnique] = []
     var asa: ASAClassification?
     var textField: String?
     var status: Status
@@ -93,6 +96,9 @@ final class PreAnesthesiaViewModel: Identifiable {
         
         if let shared = surgery.shared {
             self.techniques = shared.techniques
+            self.mmssBlocks = shared.mmssBlocks
+            self.mmiiBlocks = shared.mmiiBlocks
+            self.abdominalBlocks = shared.abdominalBlocks
             self.asa = shared.asa
         }
         self.status = preanesthesia.status ?? .inProgress
@@ -136,6 +142,9 @@ final class PreAnesthesiaViewModel: Identifiable {
         let shared = sharedRepo.get(for: p.surgery) ?? p.shared
         if let shared {
             self.techniques = shared.techniques
+            self.mmssBlocks = shared.mmssBlocks
+            self.mmiiBlocks = shared.mmiiBlocks
+            self.abdominalBlocks = shared.abdominalBlocks
             self.asa = shared.asa
         }
     }

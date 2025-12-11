@@ -17,9 +17,15 @@ struct PeripheralBlockAnesthesiaSectionView: View {
           Form {
               Section {
                   blockEquipmentPicker
-                  mmssTechniquePicker
-                  mmiiTechniquePicker
-                  abdominalToraxPicker
+                  NavigationLink("Membros Superiores") {
+                      MMSSSelectionView(viewModel: viewModel)
+                  }
+                  NavigationLink("Membros Inferiores") {
+                      MMIISelectionView(viewModel: viewModel)
+                  }
+                  NavigationLink("Abdome e Tórax") {
+                      AbdominalToraxSelectionView(viewModel: viewModel)
+                  }
                   blockSidePicker
                   blockOthersField
                   
@@ -53,31 +59,70 @@ struct PeripheralBlockAnesthesiaSectionView: View {
         }
     }
     private var mmssTechniquePicker: some View {
-        Picker("Membros Superiores", selection: $viewModel.techniques.mmssTechnique) {
-            Text("Não informado").tag(nil as MMSSTechnique?)
-            ForEach(MMSSTechnique.allCases, id: \.self) { (kind: MMSSTechnique) in
-                Text(kind.DisplayName)
-                    .tag(Optional(kind))
+        Section("Membros Superiores") {
+            ForEach(MMSSTechnique.allCases, id: \.self) { technique in
+                Button {
+                    toggleMMSS(technique)
+                } label: {
+                    HStack {
+                        Text(technique.DisplayName)
+                        Spacer()
+                        if (viewModel.techniques.mmssTechnique == technique) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.blue)
+                        } else {
+                            Image(systemName: "circle.dashed")
+                                .foregroundStyle(.gray)
+                        }
+                    }
+                }
+                .foregroundStyle(.primary)
             }
         }
     }
     
     private var mmiiTechniquePicker: some View {
-        Picker("Membros Inferiores", selection: $viewModel.techniques.mmiiTechnique) {
-            Text("Não informado").tag(nil as MMIITechnique?)
-            ForEach(MMIITechnique.allCases, id: \.self) { (kind: MMIITechnique) in
-                Text(kind.DisplayName)
-                    .tag(Optional(kind))
+        Section("Membros Inferiores") {
+            ForEach(MMIITechnique.allCases, id: \.self) { technique in
+                Button {
+                    toggleMMII(technique)
+                } label: {
+                    HStack {
+                        Text(technique.DisplayName)
+                        Spacer()
+                        if (viewModel.techniques.mmiiTechnique == technique) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.blue)
+                        } else {
+                            Image(systemName: "circle.dashed")
+                                .foregroundStyle(.gray)
+                        }
+                    }
+                }
+                .foregroundStyle(.primary)
             }
         }
     }
     
     private var abdominalToraxPicker: some View {
-        Picker("Tórax e Abdomen", selection: $viewModel.techniques.abdominalToraxTechnique) {
-            Text("Não informado").tag(nil as AbdominalToraxTechnique?)
-            ForEach(AbdominalToraxTechnique.allCases, id: \.self) { (kind: AbdominalToraxTechnique) in
-                Text(kind.DisplayName)
-                    .tag(Optional(kind))
+        Section("Abdome e Tórax") {
+            ForEach(AbdominalToraxTechnique.allCases, id: \.self) { technique in
+                Button {
+                    toggleAbdominal(technique)
+                } label: {
+                    HStack {
+                        Text(technique.DisplayName)
+                        Spacer()
+                        if (viewModel.techniques.abdominalToraxTechnique == technique) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.blue)
+                        } else {
+                            Image(systemName: "circle.dashed")
+                                .foregroundStyle(.gray)
+                        }
+                    }
+                }
+                .foregroundStyle(.primary)
             }
         }
     }
@@ -103,5 +148,145 @@ struct PeripheralBlockAnesthesiaSectionView: View {
                 .multilineTextAlignment(.trailing)
         }
     }
+
+    private func toggleMMSS(_ technique: MMSSTechnique) {
+        if viewModel.techniques.mmssTechnique == technique {
+            viewModel.techniques.mmssTechnique = nil
+        } else {
+            viewModel.techniques.mmssTechnique = technique
+        }
+    }
+
+    private func toggleMMII(_ technique: MMIITechnique) {
+        if viewModel.techniques.mmiiTechnique == technique {
+            viewModel.techniques.mmiiTechnique = nil
+        } else {
+            viewModel.techniques.mmiiTechnique = technique
+        }
+    }
+
+    private func toggleAbdominal(_ technique: AbdominalToraxTechnique) {
+        if viewModel.techniques.abdominalToraxTechnique == technique {
+            viewModel.techniques.abdominalToraxTechnique = nil
+        } else {
+            viewModel.techniques.abdominalToraxTechnique = technique
+        }
+    }
 }
 
+private struct MMSSSelectionView: View {
+    @Bindable var viewModel: AnesthesiaDescriptionViewModel
+
+    var body: some View {
+        Form {
+            Section("Membros Superiores") {
+                ForEach(MMSSTechnique.allCases, id: \.self) { technique in
+                    Button {
+                        toggleMMSS(technique)
+                    } label: {
+                        HStack {
+                            Text(technique.DisplayName)
+                            Spacer()
+                            if (viewModel.techniques.mmssTechnique == technique) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.blue)
+                            } else {
+                                Image(systemName: "circle.dashed")
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                    }
+                    .foregroundStyle(.primary)
+                }
+            }
+        }
+        .navigationTitle("Membros Superiores")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func toggleMMSS(_ technique: MMSSTechnique) {
+        if viewModel.techniques.mmssTechnique == technique {
+            viewModel.techniques.mmssTechnique = nil
+        } else {
+            viewModel.techniques.mmssTechnique = technique
+        }
+    }
+}
+
+private struct MMIISelectionView: View {
+    @Bindable var viewModel: AnesthesiaDescriptionViewModel
+
+    var body: some View {
+        Form {
+            Section("Membros Inferiores") {
+                ForEach(MMIITechnique.allCases, id: \.self) { technique in
+                    Button {
+                        toggleMMII(technique)
+                    } label: {
+                        HStack {
+                            Text(technique.DisplayName)
+                            Spacer()
+                            if (viewModel.techniques.mmiiTechnique == technique) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.blue)
+                            } else {
+                                Image(systemName: "circle.dashed")
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                    }
+                    .foregroundStyle(.primary)
+                }
+            }
+        }
+        .navigationTitle("Membros Inferiores")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func toggleMMII(_ technique: MMIITechnique) {
+        if viewModel.techniques.mmiiTechnique == technique {
+            viewModel.techniques.mmiiTechnique = nil
+        } else {
+            viewModel.techniques.mmiiTechnique = technique
+        }
+    }
+}
+
+private struct AbdominalToraxSelectionView: View {
+    @Bindable var viewModel: AnesthesiaDescriptionViewModel
+
+    var body: some View {
+        Form {
+            Section("Abdome e Tórax") {
+                ForEach(AbdominalToraxTechnique.allCases, id: \.self) { technique in
+                    Button {
+                        toggleAbdominal(technique)
+                    } label: {
+                        HStack {
+                            Text(technique.DisplayName)
+                            Spacer()
+                            if (viewModel.techniques.abdominalToraxTechnique == technique) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.blue)
+                            } else {
+                                Image(systemName: "circle.dashed")
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                    }
+                    .foregroundStyle(.primary)
+                }
+            }
+        }
+        .navigationTitle("Abdome e Tórax")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func toggleAbdominal(_ technique: AbdominalToraxTechnique) {
+        if viewModel.techniques.abdominalToraxTechnique == technique {
+            viewModel.techniques.abdominalToraxTechnique = nil
+        } else {
+            viewModel.techniques.abdominalToraxTechnique = technique
+        }
+    }
+}

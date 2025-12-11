@@ -148,6 +148,8 @@ final class AnesthesiaDescriptionViewModel: Identifiable {
         self.user = user
         self.repo = repo
         self.isNew = true
+        
+        techniques.load(from: newEntry)
     }
     
     // MARK: - Salvar (create ou update)

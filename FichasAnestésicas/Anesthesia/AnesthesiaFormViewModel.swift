@@ -31,6 +31,9 @@ final class AnesthesiaFormViewModel {
     var start: Date?
     var end: Date?
     var techniques: [AnesthesiaTechniqueKind] = []
+    var mmssBlocks: [MMSSTechnique] = []
+    var mmiiBlocks: [MMIITechnique] = []
+    var abdominalBlocks: [AbdominalToraxTechnique] = []
     var asa: ASAClassification? = nil
     var position: [Positioning] = []
     var surgeryStart: Date?
@@ -88,6 +91,9 @@ final class AnesthesiaFormViewModel {
             let shared = sharedRepo.get(for: surgery) ?? anesthesia.shared
             if let shared {
                 self.techniques = shared.techniques
+                self.mmssBlocks = shared.mmssBlocks
+                self.mmiiBlocks = shared.mmiiBlocks
+                self.abdominalBlocks = shared.abdominalBlocks
                 self.asa = shared.asa
             } else {
                 self.asa = nil
@@ -141,8 +147,12 @@ final class AnesthesiaFormViewModel {
         
         let shared = sharedRepo.ensure(for: surgery)
         shared.techniques = techniques
+        shared.mmssBlocks = mmssBlocks
+        shared.mmiiBlocks = mmiiBlocks
+        shared.abdominalBlocks = abdominalBlocks
         shared.asa = asa
         anesthesia.shared = shared
+        
         anesthesia.position = position
 
         surgery.start = surgeryStart
