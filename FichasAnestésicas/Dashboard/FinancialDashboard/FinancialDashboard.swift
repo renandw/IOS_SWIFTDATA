@@ -6,6 +6,8 @@ struct FinancialDashboardView: View {
     let surgeries: [Surgery]
     
     @Environment(SessionManager.self) var session
+    @State private var filters = SurgeryFilters()
+    @State private var isFilterSheetPresented = false
     
     
     var body: some View {
@@ -18,7 +20,11 @@ struct FinancialDashboardView: View {
                                 .font(.title2)
                                 .fontWeight(.bold)
                         }
-                        MonthStatSection(surgeries: surgeries)
+                        MonthStatSection(
+                            surgeries: surgeries,
+                            filters: $filters,
+                            isFilterSheetPresented: $isFilterSheetPresented
+                        )
                         
                     }
                     .padding()
@@ -27,6 +33,32 @@ struct FinancialDashboardView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .background(Color(.tertiarySystemGroupedBackground))
+            }
+            .toolbar {
+                ToolbarItem {
+                    if filters.hasActiveFilters {
+                        Button {
+                            isFilterSheetPresented = true
+                        } label: {
+                            Label("Filtros", systemImage: "magnifyingglass")
+                        }
+                        .buttonStyle(.glassProminent)
+                    } else {
+                        Button {
+                            isFilterSheetPresented = true
+                        } label: {
+                            Label("Filtros", systemImage: "magnifyingglass")
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $isFilterSheetPresented) {
+                FilterSheetView(
+                    filters: $filters,
+                    showDateFilter: true,
+                    isFilterSheetPresented: $isFilterSheetPresented
+                )
+                .presentationDetents([.height(filters.useDateFilter ? 550 : 400), .large])
             }
         } else {
             ContentUnavailableView("Sem usuário", systemImage: "person.crop.circle.badge.exclam")
@@ -37,9 +69,8 @@ struct FinancialDashboardView: View {
 
 struct MonthStatSection: View {
     let surgeries: [Surgery]
-    
-    @State private var filters = SurgeryFilters()
-    @State private var isFilterSheetPresented = false
+    @Binding var filters: SurgeryFilters
+    @Binding var isFilterSheetPresented: Bool
     
     private var hasActiveFilters: Bool {
         filters.hasActiveFilters
@@ -224,14 +255,6 @@ struct MonthStatSection: View {
                     }
                 }
             }
-        }
-        .sheet(isPresented: $isFilterSheetPresented) {
-            FilterSheetView(
-                filters: $filters,
-                showDateFilter: true,
-                isFilterSheetPresented: $isFilterSheetPresented
-            )
-            .presentationDetents([.height(filters.useDateFilter ? 550 : 400), .large])
         }
     }
     
@@ -596,3 +619,4 @@ struct FilterSheetView: View {
         )
     }
 }
+

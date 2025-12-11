@@ -108,6 +108,12 @@ public enum AnesthesiaTechniqueKind: String, Codable, CaseIterable {
     var displayName: String { rawValue }
 }
 
+enum BloqueioPeriferico: String, Codable, CaseIterable {
+    case infraClavicular = "Infra-Clavicular"
+    case supraClavicular = "Supra-Clavicular"
+    case interescalenico = "Interescalênico"
+}
+
 public enum Positioning: String, Codable, CaseIterable {
     case decubitoDorsal = "Decúbito Dorsal"
     case decubitoVentral = "Decúbito Ventral"

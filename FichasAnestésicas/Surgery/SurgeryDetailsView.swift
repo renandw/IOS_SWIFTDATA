@@ -164,6 +164,10 @@ struct SurgeryDetailsView: View {
                         .buttonStyle(.glass)
                     }
                 }
+            } else {
+                Button("Adicionar Valores") {
+                    showingFinancialForm = true
+                }
             }
             if let anesthesia = surgery.anesthesia {
                 Section {
@@ -276,6 +280,18 @@ struct SurgeryDetailsView: View {
         .sheet(item: $formViewModel) { vm in
             PreAnesthesiaFormView(viewModel: vm)
         }
+        .sheet(isPresented: $showingFinancialForm) {
+            if let currentUser = session.currentUser {
+                let repository = SwiftDataFinancialRepository(context: modelContext, currentUser: currentUser)
+                let viewModel = FinancialFormViewModel(
+                    surgery: surgery,
+                    financial: surgery.financial,
+                    repository: repository
+                )
+                FinancialFormView(viewModel: viewModel)
+            }
+        }
+        
         .alert("Excluir Cirurgia?", isPresented: $showDeleteAlert) {
             Button("Cancelar", role: .cancel) { }
             Button("Excluir", role: .destructive) {

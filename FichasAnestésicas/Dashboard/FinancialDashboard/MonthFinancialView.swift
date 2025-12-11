@@ -66,7 +66,7 @@ struct MonthFinancialView: View {
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                             
-                            // Cria um dicionário [String: Int] com as contagens por convênio
+                            // MARK: Cria um dicionário [String: Int] com as contagens por convênio
                             let insuranceCounts = Dictionary(grouping: surgeries, by: { $0.insuranceName })
                                 .mapValues { $0.count }
                             
@@ -77,8 +77,7 @@ struct MonthFinancialView: View {
                                 .mapValues { surgeries in
                                     surgeries.compactMap { $0.financial?.finalSurgeryValue }.reduce(0, +)
                                 }
-                            
-                            // Depois na UI:
+                            // MARK: Depois na UI:
                             ForEach(sortedInsuranceCounts, id: \.key) { insuranceName, count in
                                 HStack {
                                     Text(insuranceName)
@@ -94,9 +93,54 @@ struct MonthFinancialView: View {
                         }
                         .padding()
                         .glassEffect(in: .rect(cornerRadius: 12))
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            // MARK: valores particulares por cirurgião
+                            let particularSurgeries = surgeries.filter {
+                                $0.insuranceName.lowercased() == "particular"
+                            }
+
+                            let surgeonCounts = Dictionary(grouping: particularSurgeries, by: { $0.mainSurgeon })
+                                .mapValues { $0.count }
+
+                            let surgeonRevenue = Dictionary(grouping: particularSurgeries, by: { $0.mainSurgeon })
+                                .mapValues {
+                                    $0.compactMap { $0.financial?.finalSurgeryValue }.reduce(0, +)
+                                }
+
+                            let sortedSurgeonCounts = surgeonCounts.sorted { $0.value > $1.value }
+                            
+                            Text("Cirurgias Particulares: \(particularSurgeries.count)")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            
+                            Text("Contagem Por Cirurgião")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                        
+                            // MARK: Depois na UI:
+
+                            
+                            ForEach(sortedSurgeonCounts, id: \.key) { mainSurgeon, count in
+                                HStack {
+                                    Text(mainSurgeon)
+                                    Spacer()
+                                    Spacer()
+                                    Text("\(count)")
+                                        .fontWeight(.semibold)
+                                    Spacer()
+                                    Text(String(format: "R$ %.2f", surgeonRevenue[mainSurgeon] ?? 0))
+                                        .fontWeight(.semibold)
+                                }
+                            }
+
+                            
+                        }
+                        .padding()
+                        .glassEffect(in: .rect(cornerRadius: 12))
+                        
                     }
-                    
-                    
+                
                     HStack {
                         Text("Cirurgias: \(filteredSurgeries.count)")
                             .font(.headline)
