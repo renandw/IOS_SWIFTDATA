@@ -70,6 +70,7 @@ struct StatCard: View {
         }
         .padding(16)
         .glassEffect(in: .rect(cornerRadius: 16.0))
+        .contentShape(Rectangle())
     }
 }
 
