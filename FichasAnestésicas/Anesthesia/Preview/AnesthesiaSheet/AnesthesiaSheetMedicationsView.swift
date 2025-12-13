@@ -114,7 +114,7 @@ struct AnesthesiaSheetMedicationsView: View {
                 // Content
                 VStack(alignment: .leading, spacing: 4) {
                     combinedMedicationsText
-                        .font(.system(size: 10))
+                        .font(.system(size: 9))
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }

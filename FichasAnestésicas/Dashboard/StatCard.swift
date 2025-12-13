@@ -78,6 +78,7 @@ struct StatisticsSection: View {
     let anesthesias: [Anesthesia]
     var onPatientsTapped: (() -> Void)? = nil
     var onAnesthesiasTapped: (() -> Void)? = nil
+    var onFinancialTapped: (() -> Void)? = nil
 
     private var now: Date { Date() }
 
@@ -223,7 +224,7 @@ struct StatisticsSection: View {
                 }
                 .buttonStyle(.plain)
                 
-                Button(action: { onAnesthesiasTapped?() }) {
+                Button(action: { onFinancialTapped?() }) {
                     StatCard(
                         icon: "banknote.fill",
                         cardName: "Financeiro",

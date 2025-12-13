@@ -219,6 +219,7 @@ struct SurgeryFormView: View {
                             .font(.subheadline)
                             .fontWeight(.semibold)
                         TextField("R$ 2100,00", value: $viewModel.valueAnesthesia, format: .number)
+                            .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                     }
                     if viewModel.valueAnesthesia != nil {

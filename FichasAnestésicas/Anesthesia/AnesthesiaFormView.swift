@@ -286,14 +286,14 @@ struct AnesthesiaFormView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Excluir", role: .destructive) {
+                        Button("Excluir", systemImage: "trash", role: .destructive) {
                             viewModel.delete()
                             dismiss()
                         }
                         .disabled(viewModel.anesthesia == nil)
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Salvar") {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Salvar", systemImage: "checkmark") {
                             if viewModel.save() {
                                 dismiss()
                             }
@@ -311,6 +311,7 @@ struct AnesthesiaFormView: View {
 }
 
 struct AnesthesiaTechniquePickerView: View {
+    @Environment(\.dismiss) private var dismiss
     @Binding var selection: [AnesthesiaTechniqueKind]
     @Binding var mmssBlocks: [MMSSTechnique]
     @Binding var mmiiBlocks: [MMIITechnique]
@@ -417,15 +418,9 @@ struct AnesthesiaTechniquePickerView: View {
         .navigationTitle("Técnicas Anestésicas")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu("Opções", systemImage: "gear") {
-                    Button("Selecionar tudo") { selection = allTechniques }
-                    Button("Limpar seleção", role: .destructive) {
-                        selection.removeAll()
-                        mmssBlocks.removeAll()
-                        mmiiBlocks.removeAll()
-                        abdominalBlocks.removeAll()
-                    }
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Pronto", systemImage: "checkmark") {
+                    dismiss()
                 }
             }
         }
@@ -471,6 +466,7 @@ struct AnesthesiaTechniquePickerView: View {
 }
 
 struct PositionPickerView: View {
+    @Environment(\.dismiss) private var dismiss
     @Binding var selection: [Positioning]
 
     private var allPositions: [Positioning] {
@@ -503,10 +499,9 @@ struct PositionPickerView: View {
         .navigationTitle("Posições")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu("Opções", systemImage: "gear") {
-                    Button("Selecionar tudo") { selection = allPositions }
-                    Button("Limpar seleção", role: .destructive) { selection.removeAll() }
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Pronto", systemImage: "checkmark") {
+                    dismiss()
                 }
             }
         }
@@ -522,6 +517,7 @@ struct PositionPickerView: View {
 }
 
 struct ASAPickerView: View {
+    @Environment(\.dismiss) private var dismiss
     @Binding var selection: ASAClassification?
 
     private var allASA: [ASAClassification] {
@@ -551,6 +547,13 @@ struct ASAPickerView: View {
         }
         .navigationTitle("ASA")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Pronto", systemImage: "checkmark") {
+                    dismiss()
+                }
+            }
+        }
         
     }
 

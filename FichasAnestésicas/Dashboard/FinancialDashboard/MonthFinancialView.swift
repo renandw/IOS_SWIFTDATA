@@ -117,7 +117,7 @@ struct MonthFinancialView: View {
                         systemImage: "calendar.badge.exclamationmark"
                     )
                 } else {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Text("Estatísticas")
                                 .font(.headline)

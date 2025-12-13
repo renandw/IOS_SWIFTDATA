@@ -63,5 +63,5 @@ struct UserSelectionView: View {
     let session = SessionManager()
     return UserSelectionView()
         .environment(session)
-        .modelContainer(for: [User.self]) // sem inMemory
+        .modelContainer(for: [User.self])
 }

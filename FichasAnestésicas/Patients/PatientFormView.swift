@@ -144,12 +144,13 @@ struct PatientFormView: View {
         NavigationStack {
             formContent
                 .navigationTitle(viewModel.isEditing ? "Editar Paciente" : "Novo Paciente")
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancelar") { dismiss() }
+                        Button("Cancelar", systemImage: "xmark") { dismiss() }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Salvar") {
+                        Button("Salvar", systemImage: "checkmark") {
                             Task {
                                 isSaving = true
                                 try? viewModel.save()

@@ -160,18 +160,18 @@ struct MedicationsFormView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         if viewModel.isNew {
-                            Button("Fechar") { dismiss() }
+                            Button("Fechar", systemImage: "xmark") { dismiss() }
                         }
                     }
                     ToolbarItem(placement: .navigationBarLeading) {
                         if !viewModel.isNew {
-                            Button("Excluir", role: .destructive) {
+                            Button("Excluir", systemImage: "trash", role: .destructive) {
                                 if viewModel.delete() { dismiss() }
                             }
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Salvar", role: .confirm) {
+                        Button("Salvar", systemImage: "checkmark", role: .confirm) {
                             if viewModel.save() { dismiss() }
                         }
                         .disabled(!viewModel.isFormValid)
@@ -209,7 +209,7 @@ struct MedicationsFormView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         if viewModel.isNew {
-                            Button("Fechar") { dismiss() }
+                            Button("Fechar", systemImage: "xmark") { dismiss() }
                         }
                     }
                 }
@@ -309,7 +309,7 @@ struct MedicationPresetGroupView: View {
         .navigationTitle(preset.name)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Adicionar") {
+                Button("Adicionar", systemImage: "plus") {
                     let selected = items.filter { selectedIDs.contains($0.id) }
                     if viewModel.createEntries(from: selected, at: viewModel.timestamp) {
                         dismiss()

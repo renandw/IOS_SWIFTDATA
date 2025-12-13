@@ -69,7 +69,7 @@ struct DashboardView: View {
                           )
 
                           
-                          StatisticsSection(anesthesias: anesthesias, onPatientsTapped: { navigateToTwoMonthPatients = true }, onAnesthesiasTapped : {navigateToTwoMonthAnesthesia = true})
+                          StatisticsSection(anesthesias: anesthesias, onPatientsTapped: { navigateToTwoMonthPatients = true }, onAnesthesiasTapped : {navigateToTwoMonthAnesthesia = true}, onFinancialTapped: {navigateToFinancialDashboard = true})
                           RecentAnesthesiasSection(anesthesias: anesthesias)
                           
                           

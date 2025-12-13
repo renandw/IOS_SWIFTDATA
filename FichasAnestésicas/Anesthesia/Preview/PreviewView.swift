@@ -106,7 +106,7 @@ struct ContentView: View {
             value: CustomTopBarButtonPreference(
                 id: "Document.preview.topbar.buttons",
                 view: AnyView(topBarButtons),
-                token: "Document.preview.topbar.buttons.v1"
+                token: "Document.preview.topbar.buttons.v1.\(anesthesia.surgery.preanesthesia?.preanesthesiaId ?? "none")"
             )
         )
     }
@@ -154,12 +154,18 @@ struct ContentView: View {
             
             Picker("", selection: $selectedTab) {
                 Text("FA").tag(0)
-                Text("APA").tag(1)
+                if anesthesia.surgery.preanesthesia != nil {
+                    Text("APA").tag(1)
+                }
             }
             .pickerStyle(.segmented)
             .frame(width: 150)
-            
-            // ShareLink
+            .onChange(of: selectedTab) { oldValue, newValue in
+                
+                if newValue == 1 && anesthesia.surgery.preanesthesia == nil {
+                    selectedTab = 0
+                }
+            }
             ShareLink(item: render()) {
                 Image(systemName: "square.and.arrow.up")
                     .font(.system(size: 16, weight: .regular))
