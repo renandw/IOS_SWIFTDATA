@@ -135,6 +135,24 @@ struct ComorbiditiesView: View {
                                     displayName: { $0.displayName }
                                 )
                             }
+                            if anesthesia.surgery.preanesthesia?.infectiousComorbities == true {
+                                ComorbiditiesRow(
+                                    title: "Infeccioso:",
+                                    enumItems: anesthesia.surgery.preanesthesia?.infectiousComorbitiesDetails,
+                                    customItems: anesthesia.surgery.preanesthesia?.infectiousComorbitiesCustomDetails ?? [],
+                                    detailsText: anesthesia.surgery.preanesthesia?.infectiousComorbitiesDetailsText,
+                                    displayName: { $0.displayName }
+                                )
+                            }
+                            if anesthesia.surgery.preanesthesia?.oncologicComorbities == true {
+                                ComorbiditiesRow(
+                                    title: "Oncológico:",
+                                    enumItems: anesthesia.surgery.preanesthesia?.oncologyComorbitiesDetails,
+                                    customItems: anesthesia.surgery.preanesthesia?.oncologyComorbitiesCustomDetails ?? [],
+                                    detailsText: anesthesia.surgery.preanesthesia?.oncologyComorbitiesDetailsText,
+                                    displayName: { $0.displayName }
+                                )
+                            }
                             if anesthesia.surgery.preanesthesia?.neurologicalComorbities == true {
                                 ComorbiditiesRow(
                                     title: "Sistema Neurológico:",

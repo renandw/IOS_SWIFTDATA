@@ -31,7 +31,14 @@ struct SurgeryDetailsView: View {
     
     var body: some View {
         List {
-            Section("Dados do Paciente"){
+            Section{
+                HStack{
+                    Text("Nome")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(surgery.patient.name)
+                        .fontWeight(.semibold)
+                }
                 HStack{
                     Text("Idade")
                         .foregroundStyle(.secondary)
@@ -81,6 +88,18 @@ struct SurgeryDetailsView: View {
                             .fontWeight(.semibold)
                     }
                 }
+            } header : {
+                HStack{
+                    Text("Dados do Paciente")
+                    Spacer()
+                    NavigationLink {
+                        PatientDetailsView(patient: surgery.patient)
+                    } label: {
+                        Image(systemName: "info.circle")
+                    }
+                    .buttonStyle(.glass)
+                }
+                
             }
             Section{
                 HStack{

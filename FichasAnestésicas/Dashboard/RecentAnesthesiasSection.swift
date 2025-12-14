@@ -44,7 +44,15 @@ struct RecentAnesthesiaCard: View {
     let anesthesia: Anesthesia
     
     var body: some View {
-        NavigationLink(destination: SurgeryDetailsView(surgery: anesthesia.surgery)) {
+        NavigationLink(destination: {
+            if anesthesia.status == .inProgress {
+                AnesthesiaDetailsView(anesthesia: anesthesia)
+            } else if anesthesia.status == .finished {
+                SurgeryDetailsView(surgery: anesthesia.surgery)
+            } else {
+                SurgeryDetailsView(surgery: anesthesia.surgery)
+            }
+        }) {
             VStack(alignment:.leading, spacing: 8) {
                 HStack(spacing: 12) {
                     VStack(alignment: .leading) {

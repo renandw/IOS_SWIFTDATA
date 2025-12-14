@@ -606,6 +606,76 @@ struct PreAnesthesiaView: View {
                         }
                         Divider()
                     }
+                    if preanesthesia?.infectiousComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Infecciosas:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let infectiousDetails = preanesthesia?.infectiousComorbitiesDetails, !infectiousDetails.isEmpty {
+                                        ForEach(infectiousDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customInfectiousDetails = preanesthesia?.infectiousComorbitiesCustomDetails, !customInfectiousDetails.isEmpty {
+                                        ForEach(customInfectiousDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let infectiousDetailsText = preanesthesia?.infectiousComorbitiesDetailsText, !infectiousDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(infectiousDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
+                    if preanesthesia?.oncologicComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Oncológicas:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let oncologicDetails = preanesthesia?.oncologyComorbitiesDetails, !oncologicDetails.isEmpty {
+                                        ForEach(oncologicDetails, id: \.self) { comorbidity in
+                                            Text(comorbidity.displayName)
+                                        }
+                                    }
+                                    if let customOncologicDetails = preanesthesia?.oncologyComorbitiesCustomDetails, !customOncologicDetails.isEmpty {
+                                        ForEach(customOncologicDetails, id: \.self) { customComorbity in
+                                            Text(customComorbity)
+                                        }
+                                    }
+                                    HStack {
+                                        
+                                    }
+                                }
+                            }
+                            HStack(alignment: .top) {
+                                if let oncologicDetailsText = preanesthesia?.oncologyComorbitiesDetailsText, !oncologicDetailsText.isEmpty {
+                                    Text("Detalhes:")
+                                        .fontWeight(.semibold)
+                                        .font(.caption)
+                                    Spacer()
+                                    Text(oncologicDetailsText)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
                     if preanesthesia?.neurologicalComorbities == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
@@ -995,35 +1065,33 @@ struct PreAnesthesiaView: View {
                             }
                             
                             
-                            if hasTextDetails, hasCustomDetails, hasDetails {
-                                
-                                VStack(alignment: .leading, spacing: 8) {
-                                    HStack {
-                                        Text("Preditores:")
-                                            .fontWeight(.semibold)
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            let defaultEvaluations = (preanesthesia?.difficultAirwayEvaluation ?? []).filter { $0 != .traqueo }
-                                            let defaultDetails = defaultEvaluations.map { $0.displayName }
-                                            let customDetails = (preanesthesia?.difficultAirwayEvaluationCustomDetails ?? [])
-                                            let all = defaultDetails + customDetails
-                                            
-                                            if !all.isEmpty {
-                                                Text(all.joined(separator: " • "))
-                                                    .font(.subheadline)
-                                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                                    .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
-                                            }
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text("Preditores:")
+                                        .fontWeight(.semibold)
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        let defaultEvaluations = (preanesthesia?.difficultAirwayEvaluation ?? []).filter { $0 != .traqueo }
+                                        let defaultDetails = defaultEvaluations.map { $0.displayName }
+                                        let customDetails = (preanesthesia?.difficultAirwayEvaluationCustomDetails ?? [])
+                                        let all = defaultDetails + customDetails
+
+                                        if !all.isEmpty {
+                                            Text(all.joined(separator: " • "))
+                                                .font(.subheadline)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
                                         }
                                     }
-                                    HStack(alignment: .top) {
-                                        if let difficultAirwayEvaluationDetailsText = preanesthesia?.difficultAirwayEvaluationDetailsText, !difficultAirwayEvaluationDetailsText.isEmpty {
-                                            Text("Detalhes:")
-                                                .fontWeight(.semibold)
-                                                .font(.caption)
-                                            Spacer()
-                                            Text(difficultAirwayEvaluationDetailsText)
-                                                .font(.caption)
-                                        }
+                                }
+                                HStack(alignment: .top) {
+                                    if let difficultAirwayEvaluationDetailsText = preanesthesia?.difficultAirwayEvaluationDetailsText, !difficultAirwayEvaluationDetailsText.isEmpty {
+                                        Text("Detalhes:")
+                                            .fontWeight(.semibold)
+                                            .font(.caption)
+                                        Spacer()
+                                        Text(difficultAirwayEvaluationDetailsText)
+                                            .font(.caption)
                                     }
                                 }
                             }
