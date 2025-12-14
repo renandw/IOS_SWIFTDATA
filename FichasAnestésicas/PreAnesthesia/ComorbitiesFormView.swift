@@ -270,6 +270,22 @@ struct ComorbitiesFormView: View {
                     )
                 }
                 ComorbiditiesSection(
+                    title: "Infecciosas",
+                    icon: "person.fill",
+                    isEnabled: $viewModel.comorbities.infectiousComorbities,
+                    selection: binding(get: { viewModel.comorbities.infectiousComorbitiesDetails }, set: { viewModel.comorbities.infectiousComorbitiesDetails = $0 }),
+                    customDetails: $viewModel.comorbities.infectiousComorbitiesCustomDetails,
+                    detailsText: $viewModel.comorbities.infectiousComorbitiesDetailsText
+                )
+                ComorbiditiesSection(
+                    title: "Oncológicas",
+                    icon: "person.fill",
+                    isEnabled: $viewModel.comorbities.oncologicComorbities,
+                    selection: binding(get: { viewModel.comorbities.oncologyComorbitiesDetails }, set: { viewModel.comorbities.oncologyComorbitiesDetails = $0 }),
+                    customDetails: $viewModel.comorbities.oncologyComorbitiesCustomDetails,
+                    detailsText: $viewModel.comorbities.oncologyComorbitiesDetailsText
+                )
+                ComorbiditiesSection(
                     title: "Neurológicas",
                     icon: "brain.head.profile.fill",
                     isEnabled: $viewModel.comorbities.neurologicalComorbities,
@@ -342,6 +358,12 @@ extension HematologicComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
 extension ImmunologicComorbities: ComorbiditiesType {
+    public var id: Self { self }
+}
+extension InfectiousComorbities: ComorbiditiesType {
+    public var id: Self { self }
+}
+extension OncologicComorbidities: ComorbiditiesType {
     public var id: Self { self }
 }
 extension MusculoskeletalComorbities: ComorbiditiesType {

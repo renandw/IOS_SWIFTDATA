@@ -60,6 +60,8 @@ final class PreAnesthesia {
     var gynecologicalComorbities: Bool?
     var androgenicalComorbities: Bool?
     var neurologicalComorbities: Bool
+    var infectiousComorbities: Bool?
+    var oncologicComorbities: Bool?
     var geneticSyndrome: Bool
     var healthyPatient: Bool?
     var surgeryHistory: Bool?
@@ -180,6 +182,23 @@ final class PreAnesthesia {
     var geneticSyndromeComorbitiesDetailsText: String?
     var geneticSyndromeComorbitiesCustomDetails: [String]?
     
+    var infectiousComorbitiesDetailsRaw: [String]?
+    var infectiousComorbitiesDetails: [InfectiousComorbities]? {
+        get { infectiousComorbitiesDetailsRaw?.compactMap(InfectiousComorbities.init(rawValue:)) }
+        set { infectiousComorbitiesDetailsRaw = newValue?.map { $0.rawValue } }
+    }
+    var infectiousComorbitiesDetailsText: String?
+    var infectiousComorbitiesCustomDetails: [String]?
+    
+    var oncologyComorbitiesDetailsRaw: [String]?
+    var oncologyComorbitiesDetails: [OncologicComorbidities]? {
+        get { oncologyComorbitiesDetailsRaw?.compactMap(OncologicComorbidities.init(rawValue:)) }
+        set { oncologyComorbitiesDetailsRaw = newValue?.map { $0.rawValue } }
+    }
+    var oncologyComorbitiesDetailsText: String?
+    var oncologyComorbitiesCustomDetails: [String]?
+    
+    
     var surgeryHistoryDetailsRaw: [String]?
     var surgeryHistoryDetails: [SurgeryHistorySpeciality]? {
         get { surgeryHistoryDetailsRaw?.compactMap(SurgeryHistorySpeciality.init(rawValue:))}
@@ -285,6 +304,8 @@ final class PreAnesthesia {
         gynecologicalComorbities: Bool? = false,
         androgenicalComorbities: Bool? = false,
         neurologicalComorbities: Bool = false,
+        infectiousComorbities: Bool = false,
+        oncologicComorbities: Bool = false,
         geneticSyndrome: Bool = false,
         healthyPatient: Bool = false,
         hasAllergies: Bool? = false,
@@ -337,6 +358,14 @@ final class PreAnesthesia {
         geneticSyndromeComorbitiesDetails: GeneticSyndrome? = nil,
         geneticSyndromeComorbitiesDetailsText: String? = nil,
         geneticSyndromeComorbitiesCustomDetails: [String]? = [],
+        
+        infectiousComorbitiesDetails: InfectiousComorbities? = nil,
+        infectiousComorbitiesDetailsText: String? = nil,
+        infectiousComorbitiesCustomDetails: [String]? = [],
+        
+        oncologyComorbitiesDetails: OncologicComorbidities? = nil,
+        oncologyComorbitiesDetailsText: String? = nil,
+        oncologyComorbitiesCustomDetails: [String]? = [],
         
         surgeryHistoryDetails: SurgeryHistorySpeciality? = nil,
         surgeryHistoryDetailsText: String? = nil,
@@ -401,6 +430,8 @@ final class PreAnesthesia {
         self.gynecologicalComorbities = gynecologicalComorbities
         self.androgenicalComorbities = androgenicalComorbities
         self.neurologicalComorbities = neurologicalComorbities
+        self.infectiousComorbities = infectiousComorbities
+        self.oncologicComorbities = oncologicComorbities
         self.geneticSyndrome = geneticSyndrome
         self.healthyPatient = healthyPatient
         self.hasAllergies = hasAllergies
@@ -450,6 +481,15 @@ final class PreAnesthesia {
         self.geneticSyndromeComorbitiesDetailsRaw = geneticSyndromeComorbitiesDetails.map { [$0.rawValue] }
         self.geneticSyndromeComorbitiesDetailsText = geneticSyndromeComorbitiesDetailsText
         self.geneticSyndromeComorbitiesCustomDetails = geneticSyndromeComorbitiesCustomDetails
+        
+        self.infectiousComorbitiesDetailsRaw = infectiousComorbitiesDetails.map { [$0.rawValue] }
+        self.infectiousComorbitiesDetailsText = infectiousComorbitiesDetailsText
+        self.infectiousComorbitiesCustomDetails = infectiousComorbitiesCustomDetails
+        
+        self.oncologyComorbitiesDetailsRaw = oncologyComorbitiesDetails.map { [$0.rawValue] }
+        self.oncologyComorbitiesDetailsText = oncologyComorbitiesDetailsText
+        self.oncologyComorbitiesCustomDetails = oncologyComorbitiesCustomDetails
+        
         self.surgeryHistoryDetailsRaw = surgeryHistoryDetails.map { [$0.rawValue] }
         self.surgeryHistoryDetailsText = surgeryHistoryDetailsText
         self.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails

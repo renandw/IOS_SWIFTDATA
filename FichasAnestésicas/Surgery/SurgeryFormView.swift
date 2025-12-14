@@ -221,16 +221,16 @@ struct SurgeryFormView: View {
                         TextField("R$ 2100,00", value: $viewModel.valueAnesthesia, format: .number)
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
-                    }
-                    if viewModel.valueAnesthesia != nil {
-                        Button {
-                            viewModel.valueAnesthesia = nil
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.secondary)
+                        if viewModel.valueAnesthesia != nil {
+                            Button {
+                                viewModel.valueAnesthesia = nil
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Valores")
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel("Limpar Valores")
                     }
                 }
             }

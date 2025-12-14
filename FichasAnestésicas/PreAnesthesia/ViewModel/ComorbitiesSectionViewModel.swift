@@ -23,6 +23,8 @@ final class ComorbitiesSectionViewModel {
     var gynecologicalComorbities = false { didSet { gynecologicalComorbitiesVisibility() } }
     var androgenicalComorbities = false { didSet { androgenicalComorbitiesVisibility() } }
     var neurologicalComorbities = false {didSet { neurologicalComorbitiesVisibility() } }
+    var infectiousComorbities = false
+    var oncologicComorbities = false
     var geneticSyndrome = false {didSet { geneticSyndromeVisibility() } }
     var healthyPatient = false {
         didSet {
@@ -90,6 +92,14 @@ final class ComorbitiesSectionViewModel {
     var geneticSyndromeComorbitiesCustomDetails: [String] = []
     var geneticSyndromeComorbitiesDetailsText: String?
     
+    var infectiousComorbitiesDetails: [InfectiousComorbities]?
+    var infectiousComorbitiesCustomDetails: [String] = []
+    var infectiousComorbitiesDetailsText: String?
+    
+    var oncologyComorbitiesDetails: [OncologicComorbidities]?
+    var oncologyComorbitiesCustomDetails: [String] = []
+    var oncologyComorbitiesDetailsText: String?
+    
     
     func load(from e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
         isInfantVisibility(patientAge: patientAge)
@@ -107,6 +117,8 @@ final class ComorbitiesSectionViewModel {
         genitourologicalComorbities = e.genitourologicalComorbities
         gynecologicalComorbities = e.gynecologicalComorbities ?? false
         androgenicalComorbities = e.androgenicalComorbities ?? false
+        infectiousComorbities = e.infectiousComorbities ?? false
+        oncologicComorbities = e.oncologicComorbities ?? false
         neurologicalComorbities = e.neurologicalComorbities
         geneticSyndrome = e.geneticSyndrome
         healthyPatient = e.healthyPatient ?? false
@@ -155,6 +167,14 @@ final class ComorbitiesSectionViewModel {
         geneticSyndromeComorbitiesDetails = e.geneticSyndromeComorbitiesDetails ?? []
         geneticSyndromeComorbitiesCustomDetails = e.geneticSyndromeComorbitiesCustomDetails ?? []
         geneticSyndromeComorbitiesDetailsText = e.geneticSyndromeComorbitiesDetailsText
+        
+        infectiousComorbitiesDetails = e.infectiousComorbitiesDetails ?? []
+        infectiousComorbitiesCustomDetails = e.infectiousComorbitiesCustomDetails ?? []
+        infectiousComorbitiesDetailsText = e.infectiousComorbitiesDetailsText
+
+        oncologyComorbitiesDetails = e.oncologyComorbitiesDetails ?? []
+        oncologyComorbitiesCustomDetails = e.oncologyComorbitiesCustomDetails ?? []
+        oncologyComorbitiesDetailsText = e.oncologyComorbitiesDetailsText
     }
     
     func apply(to e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
@@ -175,6 +195,8 @@ final class ComorbitiesSectionViewModel {
         e.gynecologicalComorbities = gynecologicalComorbities
         e.androgenicalComorbities = androgenicalComorbities
         e.neurologicalComorbities = neurologicalComorbities
+        e.infectiousComorbities = infectiousComorbities
+        e.oncologicComorbities = oncologicComorbities
         e.geneticSyndrome = geneticSyndrome
         e.healthyPatient = healthyPatient
         
@@ -223,6 +245,14 @@ final class ComorbitiesSectionViewModel {
         e.geneticSyndromeComorbitiesDetails = geneticSyndromeComorbitiesDetails
         e.geneticSyndromeComorbitiesCustomDetails = geneticSyndromeComorbitiesCustomDetails
         e.geneticSyndromeComorbitiesDetailsText = geneticSyndromeComorbitiesDetailsText
+        
+        e.infectiousComorbitiesDetails = infectiousComorbitiesDetails
+        e.infectiousComorbitiesCustomDetails = infectiousComorbitiesCustomDetails
+        e.infectiousComorbitiesDetailsText = infectiousComorbitiesDetailsText
+        
+        e.oncologyComorbitiesDetails = oncologyComorbitiesDetails
+        e.oncologyComorbitiesCustomDetails = oncologyComorbitiesCustomDetails
+        e.oncologyComorbitiesDetailsText = oncologyComorbitiesDetailsText
     }
     
     func isPregnantVisibility(patientSex: Sex) {
@@ -332,6 +362,13 @@ final class ComorbitiesSectionViewModel {
             neurologicalComorbitiesDetails = []
             neurologicalComorbitiesDetailsText = ""
             neurologicalComorbitiesCustomDetails = []
+        }
+    }
+    func infectiousComorbitiesVisibility() {
+        if infectiousComorbities == false {
+            infectiousComorbitiesDetails = []
+            infectiousComorbitiesDetailsText = ""
+            infectiousComorbitiesCustomDetails = []
         }
     }
     func geneticSyndromeVisibility() {
@@ -493,6 +530,31 @@ final class ComorbitiesSectionViewModel {
         guard neurologicalComorbitiesCustomDetails.indices.contains(index) else { return }
         neurologicalComorbitiesCustomDetails.remove(at: index)
     }
+    func addInfectiousComorbitiesCustomDetails(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !infectiousComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+        infectiousComorbitiesCustomDetails.append(trimmed)
+    }
+
+    func removeInfectiousComorbitiesCustomDetails(at index: Int) {
+        guard infectiousComorbitiesCustomDetails.indices.contains(index) else { return }
+        infectiousComorbitiesCustomDetails.remove(at: index)
+    }
+
+    // Similarly, add these for oncologic comorbities:
+    func addOncologyComorbitiesCustomDetails(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !oncologyComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
+        oncologyComorbitiesCustomDetails.append(trimmed)
+    }
+
+    func removeOncologyComorbitiesCustomDetails(at index: Int) {
+        guard oncologyComorbitiesCustomDetails.indices.contains(index) else { return }
+        oncologyComorbitiesCustomDetails.remove(at: index)
+    }
+    
     func addGeneticSyndromeComorbitiesCustomDetails(_ name: String) {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }

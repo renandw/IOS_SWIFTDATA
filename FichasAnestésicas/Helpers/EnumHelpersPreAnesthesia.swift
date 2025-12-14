@@ -462,6 +462,66 @@ public enum GeneticSyndrome: String, Codable, CaseIterable {
     }
 }
 
+public enum InfectiousComorbities: String, Codable, CaseIterable {
+    case hiv
+    case syfilis
+    case hepatitisB
+    case hepatitisC
+    case meningitis
+    case sepsis
+    
+    var displayName: String {
+        switch self {
+        case .hiv:                            "HIV"
+        case .syfilis:                        "Sífilis"
+        case .hepatitisB:                     "Hepatite B"
+        case .hepatitisC:                     "Hepatite C"
+        case .meningitis:                     "Meningite"
+        case .sepsis:                         "Sepse"
+        }
+    }
+}
+
+public enum OncologicComorbidities: String, Codable, CaseIterable {
+    case breast
+    case prostate
+    case lung
+    case colorectal
+    case stomach
+    case pancreas
+    case cervix
+    case uterus
+    case ovary
+    case bladder
+    case kidney
+    case thyroid
+    case brain
+    case leukemia
+    case lymphoma
+    
+    var displayName: String {
+        switch self {
+        case .breast:          "Mama"
+        case .prostate:        "Próstata"
+        case .lung:            "Pulmão"
+        case .colorectal:      "Colorretal"
+        case .stomach:         "Estômago"
+        case .pancreas:        "Pâncreas"
+        case .cervix:          "Colo do útero"
+        case .uterus:          "Útero"
+        case .ovary:           "Ovário"
+        case .bladder:         "Bexiga"
+        case .kidney:          "Rim"
+        case .thyroid:         "Tireoide"
+        case .brain:           "Sistema nervoso central"
+        case .leukemia:        "Leucemia"
+        case .lymphoma:        "Linfoma"
+        }
+    }
+}
+
+
+
 public enum SurgeryHistorySpeciality: String, Codable, CaseIterable {
     case general
     case orthopedics
