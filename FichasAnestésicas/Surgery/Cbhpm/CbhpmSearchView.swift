@@ -41,12 +41,14 @@ struct CbhpmSearchView: View {
             
             Section {
                 if searchText.count < 3 && !isSearching && selectedProcedures.isEmpty {
+                    Button("Sair", systemImage: "xmark") { dismiss() }
                     ContentUnavailableView(
                         "Nenhum procedimento encontrado",
                         systemImage: "exclamationmark.magnifyingglass",
                         description: Text("Inicie a busca pela barra de busca")
                     )
                     .id("empty-state")
+                    
                 } else if isSearching {
                     HStack {
                         Spacer()
@@ -55,6 +57,7 @@ struct CbhpmSearchView: View {
                     }
                     .id("loading")
                 } else if debouncedSearchText.count >= 3 && searchResults.isEmpty {
+                    Button("Sair", systemImage: "xmark") { dismiss() }
                     ContentUnavailableView(
                         "Nenhum procedimento encontrado",
                         systemImage: "exclamationmark.magnifyingglass",
@@ -90,11 +93,12 @@ struct CbhpmSearchView: View {
                         }
                         .buttonStyle(.plain)
                     }
+                    Button("Sair", systemImage: "xmark") { dismiss() }
                 }
             }
         }
         .animation(.none, value: debouncedSearchText)
-        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Buscar procedimento ou código")
+        .searchable(text: $searchText, placement: .toolbar, prompt: "Buscar procedimento ou código")
         .navigationTitle("Procedimentos CBHPM")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

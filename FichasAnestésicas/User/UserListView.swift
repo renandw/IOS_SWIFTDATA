@@ -40,15 +40,17 @@ struct UserListView: View {
             }
             .navigationTitle("Lista de Usuários")
             .toolbar{
-                Button("Adicionar Usuário", systemImage: "plus") {
-                    showingCreate = true
-                }
-                .sheet(isPresented: $showingCreate) {
-                    NavigationStack {
-                        UserFormView(user: nil, repository: SwiftDataUserRepository(context: userModelContext))
+                if users.isEmpty {
+                    Button("Adicionar Usuário", systemImage: "plus") {
+                        showingCreate = true
                     }
+                    .sheet(isPresented: $showingCreate) {
+                        NavigationStack {
+                            UserFormView(user: nil, repository: SwiftDataUserRepository(context: userModelContext))
+                        }
+                    }
+                    .buttonStyle(.glassProminent)
                 }
-                .buttonStyle(.glassProminent)
             }
         }
     }

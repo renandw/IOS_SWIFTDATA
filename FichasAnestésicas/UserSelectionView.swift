@@ -41,17 +41,20 @@ struct UserSelectionView: View {
                             }
                         }
                     }
-
-                    Section {
-                        NavigationLink("Criar novo usuário", destination: UserFormView(repository: SwiftDataUserRepository(context: userModelContext)))
+                    if users.isEmpty {
+                        Section {
+                            NavigationLink("Criar novo usuário", destination: UserFormView(repository: SwiftDataUserRepository(context: userModelContext)))
+                        }
                     }
                 }
             }
             .navigationTitle("Selecionar Usuário")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: UserFormView(repository: SwiftDataUserRepository(context: userModelContext))) {
-                        Label("Criar", systemImage: "plus")
+                    if users.isEmpty {
+                        NavigationLink(destination: UserFormView(repository: SwiftDataUserRepository(context: userModelContext))) {
+                            Label("Criar", systemImage: "plus")
+                        }
                     }
                 }
             }

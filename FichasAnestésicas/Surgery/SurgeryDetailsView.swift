@@ -95,7 +95,7 @@ struct SurgeryDetailsView: View {
                     NavigationLink {
                         PatientDetailsView(patient: surgery.patient)
                     } label: {
-                        Image(systemName: "info.circle")
+                        Image(systemName: surgery.patient.sex.sexImage)
                     }
                     .buttonStyle(.glass)
                 }

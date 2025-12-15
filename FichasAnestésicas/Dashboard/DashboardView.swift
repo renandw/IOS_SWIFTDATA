@@ -71,23 +71,27 @@ struct DashboardView: View {
                           
                           StatisticsSection(anesthesias: anesthesias, onPatientsTapped: { navigateToTwoMonthPatients = true }, onAnesthesiasTapped : {navigateToTwoMonthAnesthesia = true}, onFinancialTapped: {navigateToFinancialDashboard = true})
                           RecentAnesthesiasSection(anesthesias: anesthesias)
-                          
-                          
-                          Text("Olá, \(user.name)")
-                          Button("Encerrar Sessão") {
-                              session.currentUser = nil
-                          }
-                          .buttonStyle(.glassProminent)
 
-                          NavigationLink("Navegar para Lista de Usuários") {
-                              UserListView()
-                          }
-                          .buttonStyle(.borderedProminent)
                       }
                       .padding()
                       .navigationTitle("Olá, \(displayName(name: user.name))")
                       .navigationSubtitle(Date.now.formatted(date: .long, time: .shortened))
                       .navigationBarTitleDisplayMode(.large)
+                      .toolbar {
+                          ToolbarItem(placement: .topBarLeading) {
+                              NavigationLink {
+                                  UserListView()
+                              } label: {
+                                  Label("Navegar para Lista de Usuários", systemImage: "gear")
+                              }
+                          }
+                          ToolbarItem(placement: .topBarLeading) {
+                              Button("Encerrar Sessão", systemImage: "rectangle.portrait.and.arrow.right") {
+                                  session.currentUser = nil
+                              }
+                          }
+                      }
+                      
                       
                   }
                   .background(Color(.tertiarySystemGroupedBackground))
@@ -182,6 +186,18 @@ struct QuickActionsSection: View {
                 ),
                 onTap: onMyPatients
             )
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing){
+                Menu("Ações Rápidas", systemImage: "line.3.horizontal") {
+                    Button("Nova Ficha Anestésica", systemImage: "plus") {
+                        showingAnesthesiaWizard = true
+                    }
+                    Button("Nova Ficha Pré-Anestésica", systemImage: "plus") {
+                        //showingAnesthesiaWizard = true
+                    }
+                }
+            }
         }
         .sheet(isPresented: $showingAnesthesiaWizard) {
             NewAnesthesiaPageView(
