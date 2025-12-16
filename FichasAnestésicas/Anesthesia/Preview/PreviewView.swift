@@ -99,6 +99,7 @@ struct ContentView: View {
                         PreanesthesiaSheetView(anesthesia: anesthesia)
                     }
                 })
+                .environment(\.showSignature, $showSignature)
                 .navigationTitle("Documento")
                 .navigationBarTitleDisplayMode(.inline)
             }
@@ -177,9 +178,18 @@ struct ContentView: View {
             .accessibilityLabel("Compartilhar")
             .buttonStyle(.glass)
             .tint(.blue)
-            Button("Assinar", systemImage: "signature") {
-                showSignature = true
+            Button(action: {
+                if showSignature == true {
+                    showSignature = false
+                } else {
+                    showSignature = true
+                }
+            }) {
+                Image(systemName: "signature")
+                    .font(.system(size: 16, weight: .regular))
+                    .frame(width: 20, height: 20)
             }
+            .buttonStyle(.glass)
         }
     }
     

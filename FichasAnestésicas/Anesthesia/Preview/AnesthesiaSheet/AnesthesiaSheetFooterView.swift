@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AnesthesiaSheetFooterView: View {
     let anesthesia: Anesthesia
-    
+    @Environment(\.showSignature) var showSignature
     
     var body: some View {
         let finishedDate = (anesthesia.end ?? Date()).formatted(date: .numeric, time: .omitted)
@@ -33,10 +33,13 @@ struct AnesthesiaSheetFooterView: View {
                     .foregroundColor(.secondary)
             }
             .overlay(alignment: .topTrailing) {
-                AssinaturaGovBRView(nome: anesthesia.surgery.createdBy.name, data: anesthesia.end ?? Date())
-                    .offset(y: -75)
-                    .scaleEffect(0.55)
+                if showSignature.wrappedValue {
+                    AssinaturaGovBRView(nome: anesthesia.surgery.createdBy.name, data: anesthesia.end ?? Date())
+                        .offset(y: -75)
+                        .scaleEffect(0.55)
+                }
             }
         }
     }
 }
+

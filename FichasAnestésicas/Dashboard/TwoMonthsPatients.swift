@@ -5,6 +5,7 @@
 //  Created by Renan Wrobel on 15/11/25.
 //
 import SwiftUI
+import SwiftData
 
 struct TwoMonthsPatients: View {
     @Environment(SessionManager.self) var session
