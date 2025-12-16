@@ -28,7 +28,13 @@ final class SurgeryFormViewModel {
     
     // Campos obrigatórios
     var date: Date
-    var insuranceName: String
+    var insuranceName: String {
+        didSet {
+            if insuranceName.lowercased() == "particular" {
+                particularInsuranceNumberVisibility()
+            }
+        }
+    }
     var insuranceNumber: String
     var mainSurgeon: String
     var hospital: String
@@ -229,4 +235,11 @@ final class SurgeryFormViewModel {
             }
             .joined(separator: " ")
     }
+    
+    func particularInsuranceNumberVisibility() {
+        if insuranceName.lowercased() == "particular" {
+            insuranceNumber = "-"
+        }
+    }
+    
 }

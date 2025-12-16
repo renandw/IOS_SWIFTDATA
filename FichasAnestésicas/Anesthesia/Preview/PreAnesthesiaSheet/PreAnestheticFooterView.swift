@@ -8,6 +8,7 @@ import SwiftUI
 
 struct PreAnestheticFooterView: View {
     let anesthesia: Anesthesia
+    @Environment(\.showSignature) var showSignature
     
     var body: some View {
 
@@ -26,11 +27,14 @@ struct PreAnestheticFooterView: View {
                         .font(.system(size: 9))
                         .foregroundColor(.secondary)
                 }
+                .overlay(alignment: .topTrailing) {
+                    if showSignature.wrappedValue {
+                        AssinaturaGovBRView(nome: anesthesia.surgery.createdBy.name, data: anesthesia.surgery.lastActivityAt)
+                            .offset(y: -75)
+                            .scaleEffect(0.55)
+                    }
+                }
             }
-            // .overlay(alignment: .topTrailing) {
-            //     AssinaturaGovBRViewPre(dto: dto)
-            // .offset(y: -60)
-            // }
         )
     }
 

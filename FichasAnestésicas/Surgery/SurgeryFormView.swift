@@ -192,22 +192,24 @@ struct SurgeryFormView: View {
                     .onTapGesture {
                         // no-op to avoid accidental dismissal on outer taps
                     }
-                    HStack(alignment: .center){
-                        Text("Carteirinha")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                        TextField("Carteirinha", text: $viewModel.insuranceNumber)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                        if !viewModel.insuranceNumber.isEmpty {
-                            Button {
-                                viewModel.insuranceNumber = ""
-                            } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundStyle(.secondary)
+                    if viewModel.insuranceName.lowercased() != "particular" {
+                        HStack(alignment: .center){
+                            Text("Carteirinha")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            TextField("Carteirinha", text: $viewModel.insuranceNumber)
+                                .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
+                            if !viewModel.insuranceNumber.isEmpty {
+                                Button {
+                                    viewModel.insuranceNumber = ""
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("Limpar Carteirinha")
                             }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel("Limpar Carteirinha")
                         }
                     }
                 }

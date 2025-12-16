@@ -110,14 +110,27 @@ struct ContentView: View {
             value: CustomTopBarButtonPreference(
                 id: "Document.preview.topbar.buttons",
                 view: AnyView(topBarButtons),
-                token: "Document.preview.topbar.buttons.v1.\(anesthesia.surgery.preanesthesia?.preanesthesiaId ?? "none")"
+                token: "Document.preview.topbar.buttons.v1.\(selectedTab).\(anesthesia.surgery.preanesthesia?.preanesthesiaId ?? "none")"
             )
         )
     }
     
     
-    func render() -> URL {
-        let content = selectedTab == 0 ? AnyView(AnesthesiaSheetView(anesthesia: anesthesia)) : AnyView(PreanesthesiaSheetView(anesthesia: anesthesia))
+    func render(showSignature: Bool = false) -> URL {
+        let content: AnyView
+        
+        if selectedTab == 0 {
+            content = AnyView(
+                AnesthesiaSheetView(anesthesia: anesthesia)
+                    .environment(\.showSignature, .constant(showSignature))
+            )
+        } else {
+            content = AnyView(
+                PreanesthesiaSheetView(anesthesia: anesthesia)
+                    .environment(\.showSignature, .constant(showSignature))
+            )
+        }
+        
         let renderer = ImageRenderer(content: content)
         renderer.scale = 3.0
         
@@ -170,7 +183,7 @@ struct ContentView: View {
                     selectedTab = 0
                 }
             }
-            ShareLink(item: render()) {
+            ShareLink(item: render(showSignature: showSignature)) {
                 Image(systemName: "square.and.arrow.up")
                     .font(.system(size: 16, weight: .regular))
                     .frame(width: 20, height: 20)
@@ -193,7 +206,7 @@ struct ContentView: View {
         }
     }
     
-    func renderPreAnesthesia() -> URL {
+    func renderPreAnesthesia(showSignature: Bool = false) -> URL {
         let content = AnyView(PreanesthesiaSheetView(anesthesia: anesthesia))
         let renderer = ImageRenderer(content: content)
         renderer.scale = 3.0
