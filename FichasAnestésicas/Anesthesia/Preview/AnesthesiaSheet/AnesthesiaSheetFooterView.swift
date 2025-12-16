@@ -32,10 +32,11 @@ struct AnesthesiaSheetFooterView: View {
                     .font(.system(size: 10))
                     .foregroundColor(.secondary)
             }
-            // .overlay(alignment: .topTrailing) {
-            //     AssinaturaGovBRView(data: data)
-            //         .offset(y: -60)
-            // }
+            .overlay(alignment: .topTrailing) {
+                AssinaturaGovBRView(nome: anesthesia.surgery.createdBy.name, data: anesthesia.end ?? Date())
+                    .offset(y: -75)
+                    .scaleEffect(0.55)
+            }
         }
     }
 }

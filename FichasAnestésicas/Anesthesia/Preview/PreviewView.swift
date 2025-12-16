@@ -5,6 +5,7 @@ struct PDFPreviewView<Content: View>: View {
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
     
+    
     var body: some View {
         ScrollView([.horizontal, .vertical], showsIndicators: true) {
             ZStack {
@@ -77,6 +78,8 @@ struct PDFPreviewView<Content: View>: View {
 struct ContentView: View {
     @Bindable var anesthesia: Anesthesia
     @State private var selectedTab = 0
+    
+    @State private var showSignature = false
     
     var filenameAnesthesia: String {
         "Ficha Anestésica - \(anesthesia.surgery.patient.name) - \(anesthesia.surgery.surgeryId)"
@@ -174,6 +177,9 @@ struct ContentView: View {
             .accessibilityLabel("Compartilhar")
             .buttonStyle(.glass)
             .tint(.blue)
+            Button("Assinar", systemImage: "signature") {
+                showSignature = true
+            }
         }
     }
     
