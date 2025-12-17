@@ -1,76 +1,140 @@
 import SwiftUI
 
-struct PDFPreviewView<Content: View>: View {
+struct PDFPreviewView<Content: View>: UIViewControllerRepresentable {
     let content: Content
-    @State private var scale: CGFloat = 1.0
-    @State private var lastScale: CGFloat = 1.0
     
+    func makeUIViewController(context: Context) -> PDFZoomViewController<Content> {
+        PDFZoomViewController(content: content)
+    }
     
-    var body: some View {
-        ScrollView([.horizontal, .vertical], showsIndicators: true) {
-            ZStack {
-                // background do "canvas"
-                Color(.tertiarySystemGroupedBackground)
+    func updateUIViewController(_ uiViewController: PDFZoomViewController<Content>, context: Context) {}
+}
 
-                content
-                    .scaleEffect(scale, anchor: .center)
-                    .gesture(
-                        MagnificationGesture()
-                            .onChanged { value in
-                                let newScale = lastScale * value
-                                scale = min(max(newScale, 0.5), 4.0)
-                            }
-                            .onEnded { _ in
-                                lastScale = scale
-                            }
-                    )
-                    .clipped()
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+class PDFZoomViewController<Content: View>: UIViewController, UIScrollViewDelegate {
+    let content: Content
+    private var scrollView: UIScrollView!
+    private var hostingController: UIHostingController<Content>!
+    
+    init(content: Content) {
+        self.content = content
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Configura UIScrollView nativo
+        scrollView = UIScrollView(frame: view.bounds)
+        scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        scrollView.delegate = self
+        scrollView.minimumZoomScale = 0.5
+        scrollView.maximumZoomScale = 4.0
+        scrollView.showsHorizontalScrollIndicator = true
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.bouncesZoom = true
+        
+        // Adiciona o conteúdo SwiftUI
+        hostingController = UIHostingController(rootView: content)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        addChild(hostingController)
+        scrollView.addSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+        
+        view.addSubview(scrollView)
+        
+        // Duplo toque para zoom
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
+        doubleTap.numberOfTapsRequired = 2
+        scrollView.addGestureRecognizer(doubleTap)
+        
+        setupToolbar()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        hostingController.view.frame = CGRect(
+            origin: .zero,
+            size: hostingController.sizeThatFits(in: scrollView.bounds.size)
+        )
+        scrollView.contentSize = hostingController.view.frame.size
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return hostingController.view
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        updateToolbar()
+    }
+    
+    // MARK: - Actions
+    
+    @objc private func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+        if scrollView.zoomScale > 1.0 {
+            scrollView.setZoomScale(1.0, animated: true)
+        } else {
+            let point = gesture.location(in: hostingController.view)
+            let zoomRect = zoomRect(for: 2.0, withCenter: point)
+            scrollView.zoom(to: zoomRect, animated: true)
         }
-        .onTapGesture(count: 2) {
-            withAnimation(.spring()) {
-                let target = scale > 1.0 ? 1.0 : 2.0
-                scale = target
-                lastScale = target
-            }
-        }
-        .toolbar {
-            ToolbarItemGroup(placement: .bottomBar) {
-                Button {
-                    withAnimation(.spring()) {
-                        scale = 1.0
-                        lastScale = 1.0
-                    }
-                } label: {
-                    Label("Reset", systemImage: "arrow.counterclockwise")
-                }
-                
-                Spacer()
-                
-                Text("Zoom: \(Int(scale * 100))%")
-                    .font(.caption)
-                
-                Spacer()
-                
-                Button {
-                    withAnimation(.spring()) {
-                        scale = min(scale + 0.5, 4.0)
-                        lastScale = scale
-                    }
-                } label: {
-                    Label("Zoom In", systemImage: "plus.magnifyingglass")
-                }
-                
-                Button {
-                    withAnimation(.spring()) {
-                        scale = max(scale - 0.5, 0.5)
-                        lastScale = scale
-                    }
-                } label: {
-                    Label("Zoom Out", systemImage: "minus.magnifyingglass")
-                }
-            }
+    }
+    
+    private func zoomRect(for scale: CGFloat, withCenter center: CGPoint) -> CGRect {
+        let size = CGSize(
+            width: scrollView.bounds.width / scale,
+            height: scrollView.bounds.height / scale
+        )
+        return CGRect(
+            x: center.x - size.width / 2,
+            y: center.y - size.height / 2,
+            width: size.width,
+            height: size.height
+        )
+    }
+    
+    @objc private func resetZoom() {
+        scrollView.setZoomScale(1.0, animated: true)
+    }
+    
+    @objc private func zoomIn() {
+        let newScale = min(scrollView.zoomScale + 0.5, scrollView.maximumZoomScale)
+        scrollView.setZoomScale(newScale, animated: true)
+    }
+    
+    @objc private func zoomOut() {
+        let newScale = max(scrollView.zoomScale - 0.5, scrollView.minimumZoomScale)
+        scrollView.setZoomScale(newScale, animated: true)
+    }
+    
+    // MARK: - Toolbar (usando UIKit)
+    
+    private func setupToolbar() {
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: view.bounds.height - 44, width: view.bounds.width, height: 44))
+        toolbar.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+        
+        let resetButton = UIBarButtonItem(image: UIImage(systemName: "arrow.counterclockwise"), style: .plain, target: self, action: #selector(resetZoom))
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let zoomLabel = UIBarButtonItem(title: "Zoom: 100%", style: .plain, target: nil, action: nil)
+        zoomLabel.isEnabled = false
+        let zoomInButton = UIBarButtonItem(image: UIImage(systemName: "plus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomIn))
+        let zoomOutButton = UIBarButtonItem(image: UIImage(systemName: "minus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomOut))
+        
+        toolbar.items = [resetButton, flexSpace, zoomLabel, flexSpace, zoomInButton, zoomOutButton]
+        view.addSubview(toolbar)
+    }
+    
+    private func updateToolbar() {
+        // Atualiza o label de zoom na toolbar
+        if let toolbar = view.subviews.compactMap({ $0 as? UIToolbar }).first,
+           let items = toolbar.items,
+           items.count > 2 {
+            items[2].title = "Zoom: \(Int(scrollView.zoomScale * 100))%"
         }
     }
 }
@@ -92,18 +156,17 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                PDFPreviewView(content: Group {
-                    if selectedTab == 0 {
-                        AnesthesiaSheetView(anesthesia: anesthesia)
-                    } else {
-                        PreanesthesiaSheetView(anesthesia: anesthesia)
-                    }
-                })
-                .environment(\.showSignature, $showSignature)
-                .navigationTitle("Documento")
-                .navigationBarTitleDisplayMode(.inline)
+                // Agora passa uma View normal, não um Group
+                if selectedTab == 0 {
+                    PDFPreviewView(content: AnesthesiaSheetView(anesthesia: anesthesia))
+                        .environment(\.showSignature, $showSignature)
+                } else {
+                    PDFPreviewView(content: PreanesthesiaSheetView(anesthesia: anesthesia))
+                        .environment(\.showSignature, $showSignature)
+                }
             }
-            
+            .navigationTitle("Documento")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .preference(
             key: CustomTopBarButtonPreferenceKey.self,
@@ -192,11 +255,7 @@ struct ContentView: View {
             .buttonStyle(.glass)
             .tint(.blue)
             Button(action: {
-                if showSignature == true {
-                    showSignature = false
-                } else {
-                    showSignature = true
-                }
+                showSignature.toggle()
             }) {
                 Image(systemName: "signature")
                     .font(.system(size: 16, weight: .regular))
@@ -230,4 +289,3 @@ struct ContentView: View {
         return url
     }
 }
-
