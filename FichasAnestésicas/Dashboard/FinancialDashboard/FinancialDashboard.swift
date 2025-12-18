@@ -86,6 +86,8 @@ struct MonthStatSection: View {
         }
     }
     
+    
+    
     var body: some View {
         let calendar = Calendar.current
 
@@ -132,11 +134,13 @@ struct MonthStatSection: View {
             } label: {
                 HStack {
                     Text("Ver todos os meses")
+                        .fontWeight(.bold)
                     Spacer()
                     Image(systemName: "chevron.right")
                 }
-                .foregroundColor(.blue)
+                
             }
+            .buttonStyle(.glass)
             
             VStack(alignment: .leading, spacing: 16) {
                 if hasActiveFilters {
@@ -210,7 +214,7 @@ struct MonthStatCard: View {
             HStack(spacing: 20) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Faturado")
-                        .font(.caption2)
+                        .font(.caption)
                         .fontWeight(.bold)
                         .foregroundColor(.secondary)
                     Text(formatCurrency(stats.totalValue))
@@ -224,13 +228,13 @@ struct MonthStatCard: View {
                         .foregroundColor(.secondary)
                     Text(formatCurrency(stats.totalDebts))
                         .font(.subheadline)
-                        .fontWeight(.semibold)
+                        .fontWeight(.bold)
                         .foregroundColor(.red)
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 2) {
                     Text("Líquido")
-                        .font(.caption2)
+                        .font(.caption)
                         .fontWeight(.bold)
                         .foregroundColor(.secondary)
                     Text(formatCurrency(stats.finalValue))

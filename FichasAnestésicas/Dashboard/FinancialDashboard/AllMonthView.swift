@@ -102,6 +102,6 @@ struct AllMonthsView: View {
             }
         }
         .background(Color(.tertiarySystemGroupedBackground))
-        .navigationTitle("Meses")
+        .navigationTitle("Escolha um mês")
     }
 }
