@@ -11,15 +11,11 @@ import Charts
 struct Last12MonthsGraphView: View {
     let surgeries: [Surgery]
     
-    struct MonthPointValue: Identifiable {
+    struct MonthData: Identifiable, Hashable {
         let id = UUID()
-        let date: Date
-        let totalValue: Double
-    }
-    struct MonthPointPaid: Identifiable {
-        let id = UUID()
-        let date: Date
-        let totalPaid: Double
+        let month: Date
+        let received: Double
+        let scheduled: Double
     }
     
     private func getMonthlyStats(for month: Int, year: Int) -> MonthStats {
@@ -64,14 +60,7 @@ struct Last12MonthsGraphView: View {
             totalOnHold: totalOnHold
         )
     }
-    
-    private func formatCurrency(_ value: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "BRL"
-        formatter.locale = Locale(identifier: "pt_BR")
-        return formatter.string(from: NSNumber(value: value)) ?? "R$ 0,00"
-    }
+
     
     var body: some View {
         let calendar = Calendar.current
@@ -83,21 +72,15 @@ struct Last12MonthsGraphView: View {
             calendar.date(byAdding: .month, value: -$0, to: calendar.date(from: currentMonthComponents) ?? now)
         }
         
-        // Create MonthPoints for chart
-        let monthPointsValue: [MonthPointValue] = monthAnchors.map { date in
+        let monthData: [MonthData] = monthAnchors.map { date in
             let comps = calendar.dateComponents([.month, .year], from: date)
             let stats = getMonthlyStats(for: comps.month ?? 1, year: comps.year ?? 0)
-            return MonthPointValue(date: date, totalValue: stats.totalValue)
-        }
-        let monthPointsPaid: [MonthPointPaid] = monthAnchors.map { date in
-            let comps = calendar.dateComponents([.month, .year], from: date)
-            let stats = getMonthlyStats(for: comps.month ?? 1, year: comps.year ?? 0)
-            return MonthPointPaid(date: date, totalPaid: stats.totalPaid)
+            return MonthData(month: date, received: stats.totalPaid, scheduled: stats.totalValue )
         }
         
         // currentMonthPaid for header display
-        let currentMonthValue = monthPointsValue.last?.totalValue ?? 0
-        let currentMonthPaid = monthPointsPaid.last?.totalPaid ?? 0
+        let currentMonthValue = monthData.last?.scheduled ?? 0
+        let currentMonthPaid = monthData.last?.received ?? 0
         
         VStack(alignment: .leading) {
             HStack() {
@@ -131,30 +114,29 @@ struct Last12MonthsGraphView: View {
                 }
             }
             Chart {
-                ForEach(monthPointsValue) { point in
+                ForEach(monthData) { data in
                     BarMark(
-                        x: .value("Mês", point.date, unit: .month),
-                        y: .value("Recebido", point.totalValue)
+                        x: .value("Mês", data.month, unit: .month),
+                        y: .value("Recebido", data.scheduled)
                     )
                     .foregroundStyle(
-                        calendar.isDate(point.date, equalTo: now, toGranularity: .month)
+                        calendar.isDate(data.month, equalTo: now, toGranularity: .month)
                         ? .blue
                         : .blue.opacity(0.5)
                     )
                     .position(by: .value("Tipo", "Recebido"))
-                }
-                
-                ForEach(monthPointsPaid) { point in
+                    
                     BarMark(
-                        x: .value("Mês", point.date, unit: .month),
-                        y: .value("Pago", point.totalPaid)
+                        x: .value("Mês", data.month, unit: .month),
+                        y: .value("Pago", data.received)
                     )
                     .foregroundStyle(
-                        calendar.isDate(point.date, equalTo: now, toGranularity: .month)
+                        calendar.isDate(data.month, equalTo: now, toGranularity: .month)
                         ? .green
                         : .green.opacity(0.5)
                     )
                     .position(by: .value("Tipo", "Pago"))
+                    
                 }
             }
             .chartXAxis {
@@ -167,7 +149,7 @@ struct Last12MonthsGraphView: View {
             .chartYAxis {
                 AxisMarks(position: .leading)
             }
-            .frame(height: 200)
+            .frame(height: 170)
             .padding(.top, 5)
         }
         .padding()

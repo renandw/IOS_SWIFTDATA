@@ -85,13 +85,6 @@ struct MonthStatSection: View {
             (!filters.useDateFilter || (surgery.date >= filters.startDate && surgery.date <= filters.endDate))
         }
     }
-    private func formatCurrency(_ value: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "BRL"
-        formatter.locale = Locale(identifier: "pt_BR")
-        return formatter.string(from: NSNumber(value: value)) ?? "R$ 0,00"
-    }
     
     var body: some View {
         let calendar = Calendar.current
@@ -319,14 +312,6 @@ struct MonthStatCard: View {
         .padding(.vertical, 10)
         .padding(.horizontal, 16)
         .glassEffect(in: .rect(cornerRadius: 16.0))
-    }
-    
-    private func formatCurrency(_ value: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "BRL"
-        formatter.locale = Locale(identifier: "pt_BR")
-        return formatter.string(from: NSNumber(value: value)) ?? "R$ 0,00"
     }
 }
 

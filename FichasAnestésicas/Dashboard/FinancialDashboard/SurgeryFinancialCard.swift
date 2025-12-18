@@ -10,16 +10,7 @@ import SwiftUI
 
 struct SurgeryFinancialCard: View {
     let surgery: Surgery
-    
-    
-    private func formatCurrency(_ value: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "BRL"
-        formatter.locale = Locale(identifier: "pt_BR")
-        return formatter.string(from: NSNumber(value: value)) ?? "R$ 0,00"
-    }
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
