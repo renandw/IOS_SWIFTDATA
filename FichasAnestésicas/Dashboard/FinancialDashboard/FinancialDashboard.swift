@@ -96,16 +96,17 @@ struct MonthStatSection: View {
 
         // Ordena os meses (mais recente primeiro)
         let sortedMonthDates = groupedByMonth.keys.sorted(by: >)
+        let recentMonths = Array(sortedMonthDates.prefix(6))
 
         return VStack(alignment: .leading, spacing: 16) {
             Text("Estatísticas Mensais:")
                 .font(.headline)
                 .fontWeight(.semibold)
 
-            ForEach(sortedMonthDates, id: \.self) { monthDate in
+            ForEach(recentMonths, id: \.self) { monthDate in
                 let components = calendar.dateComponents([.month, .year], from: monthDate)
                 if let month = components.month, let year = components.year {
-                    let stats = getMonthlyStats(for: month, year: year)
+                    let stats = MonthlyStatsHelper.getMonthlyStats(for: month, year: year, from: surgeries)
                     let surgeriesForMonth = groupedByMonth[monthDate] ?? []
                     
                     NavigationLink {
@@ -125,6 +126,18 @@ struct MonthStatSection: View {
                     }
                 }
             }
+            
+            NavigationLink {
+                        AllMonthsView(surgeries: surgeries)
+            } label: {
+                HStack {
+                    Text("Ver todos os meses")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                }
+                .foregroundColor(.blue)
+            }
+            
             VStack(alignment: .leading, spacing: 16) {
                 if hasActiveFilters {
                     HStack {
@@ -155,60 +168,6 @@ struct MonthStatSection: View {
                 }
             }
         }
-    }
-    
-    // MARK: - Helper Methods
-    
-    private func getMonthlyStats(for month: Int, year: Int) -> MonthStats {
-        var totalValue: Double = 0
-        var totalPaid: Double = 0
-        var totalDebts: Double = 0
-        var totalOnHold: Double = 0
-        
-        let calendar = Calendar.current
-        
-        for surgery in surgeries {
-            guard let financial = surgery.financial else { continue }
-            
-            // Usa a data da cirurgia como referência
-            let components = calendar.dateComponents([.month, .year], from: surgery.date)
-            
-            // Verifica se é do mês e ano corretos
-            guard components.month == month && components.year == year else { continue }
-            
-            // totalValue: soma de valueAnesthesia + valuePreAnesthesia
-            let anesthesiaValue = financial.valueAnesthesia ?? 0
-            let preAnesthesiaValue = financial.valuePreAnesthesia ?? 0
-            totalValue += anesthesiaValue + preAnesthesiaValue
-            
-            // finalSurgeryValue para este registro
-            let surgeryFinalValue = financial.finalSurgeryValue ?? 0
-            
-            if financial.paid {
-                // totalPaid: soma de finalSurgeryValue quando paid == true
-                totalPaid += surgeryFinalValue
-            } else {
-                // totalOnHold: soma de finalSurgeryValue quando paid == false
-                totalOnHold += surgeryFinalValue
-            }
-            
-            // totalDebts: soma de taxedValue + glosedAnesthesiaValue + glosedPreAnesthesiaValue
-            let taxed = financial.taxedValue ?? 0
-            let glosedAnesth = financial.glosedAnesthesiaValue ?? 0
-            let glosedPreAnesth = financial.glosedPreAnesthesiaValue ?? 0
-            totalDebts += taxed + glosedAnesth + glosedPreAnesth
-        }
-        
-        // finalValue: calcula DEPOIS do loop, quando todos os valores já foram somados
-        let finalValue = totalValue - totalDebts
-        
-        return MonthStats(
-            totalValue: totalValue,
-            totalPaid: totalPaid,
-            totalDebts: totalDebts,
-            finalValue: finalValue,
-            totalOnHold: totalOnHold
-        )
     }
 }
 

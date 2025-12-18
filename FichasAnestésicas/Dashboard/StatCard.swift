@@ -231,8 +231,8 @@ struct StatisticsSection: View {
                         title: "Neste mês",
                         secondaryTitle: "Anterior",
                         tertiaryTitle: "",
-                        value: String(format: "%.2f", anesthesiaFinalSurgeryValueCurrentMonthCount),
-                        secondaryValue: String(format: "%.2f", anesthesiaFinalSurgeryValuePreviousMonthCount),
+                        value: String(formatCurrency(anesthesiaFinalSurgeryValueCurrentMonthCount)),
+                        secondaryValue: String(formatCurrency(anesthesiaFinalSurgeryValuePreviousMonthCount)),
                         tertiaryValue: "",
                         iconColor: .green
                     )

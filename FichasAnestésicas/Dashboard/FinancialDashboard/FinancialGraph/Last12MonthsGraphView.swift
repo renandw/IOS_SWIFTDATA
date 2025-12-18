@@ -18,50 +18,6 @@ struct Last12MonthsGraphView: View {
         let scheduled: Double
     }
     
-    private func getMonthlyStats(for month: Int, year: Int) -> MonthStats {
-        var totalValue: Double = 0
-        var totalPaid: Double = 0
-        var totalDebts: Double = 0
-        var totalOnHold: Double = 0
-        
-        let calendar = Calendar.current
-        
-        for surgery in surgeries {
-            guard let financial = surgery.financial else { continue }
-            
-            let components = calendar.dateComponents([.month, .year], from: surgery.date)
-            guard components.month == month && components.year == year else { continue }
-            
-            let anesthesiaValue = financial.valueAnesthesia ?? 0
-            let preAnesthesiaValue = financial.valuePreAnesthesia ?? 0
-            totalValue += anesthesiaValue + preAnesthesiaValue
-            
-            let surgeryFinalValue = financial.finalSurgeryValue ?? 0
-            
-            if financial.paid {
-                totalPaid += surgeryFinalValue
-            } else {
-                totalOnHold += surgeryFinalValue
-            }
-            
-            let taxed = financial.taxedValue ?? 0
-            let glosedAnesth = financial.glosedAnesthesiaValue ?? 0
-            let glosedPreAnesth = financial.glosedPreAnesthesiaValue ?? 0
-            totalDebts += taxed + glosedAnesth + glosedPreAnesth
-        }
-        
-        let finalValue = totalValue - totalDebts
-        
-        return MonthStats(
-            totalValue: totalValue,
-            totalPaid: totalPaid,
-            totalDebts: totalDebts,
-            finalValue: finalValue,
-            totalOnHold: totalOnHold
-        )
-    }
-
-    
     var body: some View {
         let calendar = Calendar.current
         let now = Date()
@@ -74,7 +30,7 @@ struct Last12MonthsGraphView: View {
         
         let monthData: [MonthData] = monthAnchors.map { date in
             let comps = calendar.dateComponents([.month, .year], from: date)
-            let stats = getMonthlyStats(for: comps.month ?? 1, year: comps.year ?? 0)
+            let stats = MonthlyStatsHelper.getMonthlyStats(for: comps.month ?? 1, year: comps.year ?? 0, from: surgeries)
             return MonthData(month: date, received: stats.totalPaid, scheduled: stats.totalValue )
         }
         
