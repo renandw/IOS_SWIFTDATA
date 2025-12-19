@@ -11,13 +11,15 @@ struct SurgeryFilters {
     var hospital = ""
     var surgeon = ""
     var insurance = ""
+    var paid: Bool? = nil
     var useDateFilter = false
     var startDate = Date()
     var endDate = Date()
     
     var hasActiveFilters: Bool {
         !patient.isEmpty || !hospital.isEmpty ||
-        !surgeon.isEmpty || !insurance.isEmpty || useDateFilter
+        !surgeon.isEmpty || !insurance.isEmpty ||
+        useDateFilter || paid != nil
     }
     
     mutating func clear() {
@@ -110,6 +112,27 @@ struct FilterSheetView: View {
                             .buttonStyle(.plain)
                             .accessibilityLabel("Limpar Convênio")
                         }
+                    }
+                    HStack {
+                        Text("Pagamento")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        Spacer()
+                        Picker("", selection: $filters.paid) {
+                            //Text("Todos").tag(nil as Bool?)
+                            Text("Pago").tag(true as Bool?)
+                            Text("Pendente").tag(false as Bool?)
+                        }
+                        .pickerStyle(.segmented)
+                        if filters.paid != nil {
+                                Button {
+                                    filters.paid = nil
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                            }
                     }
                 } header : {
                     HStack {

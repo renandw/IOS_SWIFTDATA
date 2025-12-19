@@ -21,17 +21,18 @@ struct MonthFinancialView: View {
             (filters.patient.isEmpty || surgery.patient.name.localizedCaseInsensitiveContains(filters.patient)) &&
             (filters.hospital.isEmpty || surgery.hospital.localizedCaseInsensitiveContains(filters.hospital)) &&
             (filters.surgeon.isEmpty || surgery.mainSurgeon.localizedCaseInsensitiveContains(filters.surgeon)) &&
-            (filters.insurance.isEmpty || surgery.insuranceName.localizedCaseInsensitiveContains(filters.insurance))
+            (filters.insurance.isEmpty || surgery.insuranceName.localizedCaseInsensitiveContains(filters.insurance)) &&
+            (filters.paid == nil || surgery.financial?.paid == filters.paid)
         }
     }
     
-    private var insuranceCounts: [String: Int] {
+    private var insuranceAllCounts: [String: Int] {
         Dictionary(grouping: surgeries, by: { $0.insuranceName })
             .mapValues { $0.count }
     }
 
     private var sortedInsuranceCounts: [(key: String, value: Int)] {
-        insuranceCounts.sorted {
+        insuranceAllCounts.sorted {
             if $0.value != $1.value {
                 return $0.value > $1.value // count desc
             } else {
@@ -40,7 +41,7 @@ struct MonthFinancialView: View {
         }
     }
 
-    private var insuranceRevenue: [String: Double] {
+    private var insuranceAllRevenue: [String: Double] {
         Dictionary(grouping: surgeries, by: { $0.insuranceName })
             .mapValues { surgeries in
                 surgeries.compactMap { $0.financial?.finalSurgeryValue }.reduce(0, +)
@@ -53,6 +54,27 @@ struct MonthFinancialView: View {
                 .localizedCaseInsensitiveCompare("particular") == .orderedSame
         }
     }
+    
+    private var insuranceSurgeries: [Surgery] {
+        surgeries.filter { surgery in
+            surgery.insuranceName.trimmingCharacters(in: .whitespacesAndNewlines)
+                .localizedCaseInsensitiveCompare("particular") != .orderedSame
+            //&& surgery.financial?.paid != true
+        }
+    }
+    
+    private var insuranceCounts: [(key: String, value: Int)] {
+        Dictionary(grouping: insuranceSurgeries, by: {$0.insuranceName})
+            .mapValues { $0.count }
+            .sorted {
+                if $0.value != $1.value {
+                    return $0.value > $1.value
+                } else {
+                    return $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending
+                }
+            }
+    }
+    
 
     private var surgeonCounts: [(key: String, value: Int)] {
         Dictionary(grouping: particularSurgeries, by: { $0.mainSurgeon })
@@ -73,6 +95,13 @@ struct MonthFinancialView: View {
             }
     }
     
+    private var insuranceRevenue: [String: Double] {
+        Dictionary(grouping: insuranceSurgeries, by: { $0.insuranceName})
+            .mapValues { surgeries in
+                surgeries.compactMap { $0.financial?.finalSurgeryValue }.reduce(0, +)
+            }
+    }
+    
     private func isParticularSurgeonFilterActive(_ surgeon: String) -> Bool {
         let currentSurgeon = filters.surgeon.trimmingCharacters(in: .whitespacesAndNewlines)
         let targetSurgeon = surgeon.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -83,6 +112,16 @@ struct MonthFinancialView: View {
 
         return surgeonMatches && insuranceMatches
     }
+    
+    private func isInsuranceFilterActive(_ insurance: String) -> Bool {
+        let currentInsurance = filters.insurance.trimmingCharacters(in: .whitespacesAndNewlines)
+        let targetInsurance = insurance.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        let insuranceMatches = currentInsurance.localizedCaseInsensitiveCompare(targetInsurance) == .orderedSame
+
+        
+        return insuranceMatches
+    }
 
     private func toggleParticularSurgeonFilter(_ surgeon: String) {
         if isParticularSurgeonFilterActive(surgeon) {
@@ -91,6 +130,14 @@ struct MonthFinancialView: View {
         } else {
             filters.surgeon = surgeon
             filters.insurance = "particular"
+        }
+    }
+    
+    private func toggleInsuranceFilter(_ insurance: String) {
+        if isInsuranceFilterActive(insurance) {
+            filters.insurance = ""
+        } else {
+            filters.insurance = insurance
         }
     }
     
@@ -149,7 +196,7 @@ struct MonthFinancialView: View {
                                         .frame(width: 120, alignment: .trailing)
 
                                     // Receita
-                                    Text(formatCurrency(insuranceRevenue[insuranceName] ?? 0))
+                                    Text(formatCurrency(insuranceAllRevenue[insuranceName] ?? 0))
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .monospacedDigit()
@@ -223,6 +270,70 @@ struct MonthFinancialView: View {
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     toggleParticularSurgeonFilter(mainSurgeon)
+                                }
+                            }
+                        }
+                        
+                        Text("Cirurgias Convênio: \(insuranceSurgeries.count)")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        
+                        
+                        // MARK: valores por convênio
+                        LazyVGrid(
+                            columns: [GridItem(.flexible()), GridItem(.flexible())],
+                            spacing: 8
+                        ) {
+                            ForEach(insuranceCounts, id: \.key) { insuranceName, count in
+                                VStack(alignment: .leading, spacing: 12) {
+                                    HStack {
+                                        Image(systemName: "building.2.fill")
+                                            .font(.title3)
+                                            .foregroundStyle(.blue)
+                                        Spacer()
+                                        Text(insuranceName)
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .foregroundStyle(.primary)
+                                    }
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text("Cirurgias")
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                            
+                                            Text("\(count)")
+                                                .font(.title3)
+                                                .fontWeight(.bold)
+                                                .foregroundStyle(.primary)
+                                        }
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text("Receita")
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                            
+                                            Text(formatCurrency(insuranceRevenue[insuranceName] ?? 0))
+                                                .font(.subheadline)
+                                                .fontWeight(.bold)
+                                                .foregroundStyle(.primary)
+                                        }
+                                    }
+                                }
+                                .padding(12)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .glassEffect(in: .rect(cornerRadius: 12))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(isInsuranceFilterActive(insuranceName) ? Color.blue : Color.clear, lineWidth: 2)
+                                )
+                                .scaleEffect(isInsuranceFilterActive(insuranceName) ? 0.98 : 1.0)
+                                .animation(.easeInOut(duration: 0.15), value: isInsuranceFilterActive(insuranceName))
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    toggleInsuranceFilter(insuranceName)
                                 }
                             }
                         }
