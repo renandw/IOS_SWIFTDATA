@@ -10,7 +10,16 @@ struct PatientListView: View {
     @State private var editingPatient: Patient? = nil
     @State private var selectedPatient: Patient? = nil
     
+    @State private var patientSearchText = ""
+    
     private let dateStyle: Date.FormatStyle = .dateTime.year().month().day()
+    
+    var filteredPatients: [Patient] {
+        if patientSearchText.isEmpty {
+            return patient
+        }
+        return patient.filter { $0.name.localizedCaseInsensitiveContains(patientSearchText) }
+    }
     
     
     init(session: SessionManager) {
@@ -30,7 +39,7 @@ struct PatientListView: View {
                 )
                 .frame(maxWidth: .infinity, alignment: .center)
             } else {
-                ForEach(patient) { patient in
+                ForEach(filteredPatients) { patient in
                     NavigationLink {
                         PatientDetailsView(patient: patient)
                     } label: {
@@ -47,6 +56,7 @@ struct PatientListView: View {
                 }
             }
         }
+        .searchable(text: $patientSearchText, placement: .toolbar, prompt: "Buscar paciente")
         .navigationTitle("Pacientes")
         .sheet(isPresented: $showingForm) {
             if let user = session.currentUser {

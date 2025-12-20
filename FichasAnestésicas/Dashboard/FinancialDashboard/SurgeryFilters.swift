@@ -118,21 +118,14 @@ struct FilterSheetView: View {
                             .font(.subheadline)
                             .fontWeight(.semibold)
                         Spacer()
-                        Picker("", selection: $filters.paid) {
-                            //Text("Todos").tag(nil as Bool?)
-                            Text("Pago").tag(true as Bool?)
-                            Text("Pendente").tag(false as Bool?)
+                        Picker("", selection: Binding<Bool>(
+                            get: { filters.paid ?? false },
+                            set: { filters.paid = $0 }
+                        )) {
+                            Text("Pago").tag(true)
+                            Text("Pendente").tag(false)
                         }
                         .pickerStyle(.segmented)
-                        if filters.paid != nil {
-                                Button {
-                                    filters.paid = nil
-                                } label: {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundStyle(.secondary)
-                                }
-                                .buttonStyle(.plain)
-                            }
                     }
                 } header : {
                     HStack {
