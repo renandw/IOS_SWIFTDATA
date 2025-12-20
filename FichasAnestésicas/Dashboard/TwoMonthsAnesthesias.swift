@@ -9,20 +9,41 @@ import SwiftUI
 struct TwoMonthsAnesthesias: View {
     let anesthesias: [Anesthesia]
     
+    @State private var searchText: String = ""
+    
     var twoMonthsAnesthesias: [Anesthesia] {
         // Filtra anestesias entre o início do mês anterior e o fim do mês corrente
         let rangeStart = previousMonthBounds.start
         let rangeEnd = monthBounds.end
-        return anesthesias
-            .filter { anesthesia in
-                guard let date = anesthesia.start else { return false }
-                return (rangeStart ... rangeEnd).contains(date)
+        let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let ranged = anesthesias.filter { anesthesia in
+            guard let date = anesthesia.start else { return false }
+            return (rangeStart ... rangeEnd).contains(date)
+        }
+
+        let searched: [Anesthesia]
+        if trimmed.isEmpty {
+            searched = ranged
+        } else {
+            let needle = trimmed.lowercased()
+            searched = ranged.filter { anesthesia in
+                let haystack = [
+                    anesthesia.surgery.patient.name,
+                    anesthesia.surgery.proposedProcedure,
+                    anesthesia.surgery.mainSurgeon,
+                ]
+                .compactMap { $0?.lowercased() }
+                .joined(separator: " ")
+                return haystack.contains(needle)
             }
-            .sorted { (a, b) in
-                let da = a.start ?? .distantPast
-                let db = b.start ?? .distantPast
-                return da > db
-            }
+        }
+
+        return searched.sorted { (a, b) in
+            let da = a.start ?? .distantPast
+            let db = b.start ?? .distantPast
+            return da > db
+        }
     }
     
     var body: some View {
@@ -88,6 +109,7 @@ struct TwoMonthsAnesthesias: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
         }
+        .searchable(text: $searchText, placement: .toolbar, prompt: "Buscar pacientes, procedimentos, cirurgiões")
         .navigationTitle("Anestesias Recentes")
         .navigationBarTitleDisplayMode(.automatic)
     }

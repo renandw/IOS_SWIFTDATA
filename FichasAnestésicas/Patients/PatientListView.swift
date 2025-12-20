@@ -10,15 +10,25 @@ struct PatientListView: View {
     @State private var editingPatient: Patient? = nil
     @State private var selectedPatient: Patient? = nil
     
+    @State private var sortOrder: SortOrder = .recent
+    
     @State private var patientSearchText = ""
     
-    private let dateStyle: Date.FormatStyle = .dateTime.year().month().day()
+    enum SortOrder {
+        case alphabetical, recent
+    }
     
     var filteredPatients: [Patient] {
-        if patientSearchText.isEmpty {
-            return patient
+        let filtered = patientSearchText.isEmpty
+            ? patient
+            : patient.filter { $0.name.localizedCaseInsensitiveContains(patientSearchText) }
+        
+        switch sortOrder {
+        case .alphabetical:
+            return filtered.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        case .recent:
+            return filtered.sorted { $0.lastActivityAt > $1.lastActivityAt }
         }
-        return patient.filter { $0.name.localizedCaseInsensitiveContains(patientSearchText) }
     }
     
     
@@ -31,28 +41,42 @@ struct PatientListView: View {
     
     var body: some View {
         List {
-            if patient.isEmpty {
-                ContentUnavailableView(
-                    "Nenhum Paciente",
-                    systemImage: "person.2.slash",
-                    description: Text("Toque em + para adicionar o primeiro paciente.")
-                )
-                .frame(maxWidth: .infinity, alignment: .center)
-            } else {
-                ForEach(filteredPatients) { patient in
-                    NavigationLink {
-                        PatientDetailsView(patient: patient)
-                    } label: {
-                        PatientRowView(
-                            patient: patient,
-                            numberCnsContext: .notNeeded,
-                            ageContext: .outSurgery
-                        )
-                        .contentShape(Rectangle())
-                    }
-                }
-                .onDelete { indexSet in
-                    handleDelete(at: indexSet)
+            
+                if patient.isEmpty {
+                    ContentUnavailableView(
+                        "Nenhum Paciente",
+                        systemImage: "person.2.slash",
+                        description: Text("Toque em + para adicionar o primeiro paciente.")
+                    )
+                    .frame(maxWidth: .infinity, alignment: .center)
+                } else if filteredPatients.isEmpty {
+                    ContentUnavailableView(
+                        "Nenhum Resultado",
+                        systemImage: "magnifyingglass",
+                        description: Text("Nenhum paciente encontrado para '\(patientSearchText)'")
+                    )
+                } else {
+                    Section {
+                        ForEach(filteredPatients) { patient in
+                            NavigationLink {
+                                PatientDetailsView(patient: patient)
+                            } label: {
+                                PatientRowView(
+                                    patient: patient,
+                                    numberCnsContext: .notNeeded,
+                                    ageContext: .outSurgery
+                                )
+                                .contentShape(Rectangle())
+                            }
+                        }
+                        .onDelete { indexSet in
+                            handleDelete(at: indexSet)
+                        }
+                    } header: {
+                        HStack {
+                            Text("Total")
+                            Text("\(filteredPatients.count)")
+                        }
                 }
             }
         }
@@ -75,17 +99,6 @@ struct PatientListView: View {
                 ContentUnavailableView("Sem usuário", systemImage: "person.crop.circle.badge.exclam")
             }
         }
-        .onChange(of: selectedPatient) { _, newPatient in
-            if let patient = newPatient {
-                // Paciente foi selecionado da lista de duplicatas
-                // Aqui você pode fazer o que quiser com ele
-                // Por exemplo: navegar para detalhes, mostrar um toast, etc.
-                print("✅ Paciente selecionado: \(patient.name)")
-                
-                // Limpa a seleção após processar
-                selectedPatient = nil
-            }
-        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -96,18 +109,24 @@ struct PatientListView: View {
                 }
                 .tint(.blue)
             }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Button("Alfabética") { sortOrder = .alphabetical }
+                    Button("Recentes") { sortOrder = .recent }
+                } label: {
+                    Label("Sair", systemImage: "arrow.up.arrow.down")
+                }
+            }
         }
     }
-    
     private func handleDelete(at indexSet: IndexSet) {
         guard let user = session.currentUser else { return }
         let repository = SwiftDataPatientRepository(context: patientContext, currentUser: user)
         for index in indexSet {
-            let p = patient[index]
+            let p = filteredPatients[index]
             do {
                 try repository.delete(p)
             } catch {
-                // You may replace this with an alert/toast if you have one
                 print("Erro ao excluir paciente: \(error)")
             }
         }

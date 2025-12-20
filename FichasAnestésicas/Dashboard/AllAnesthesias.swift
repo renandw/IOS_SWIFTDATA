@@ -50,6 +50,7 @@ struct AllAnesthesias: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+            .searchable(text: $searchText, placement: .toolbar, prompt: "Buscar pacientes, procedimentos, cirurgiões")
             .navigationTitle("Todas Anestesias")
             .navigationBarTitleDisplayMode(.automatic)
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Buscar anestesias")
