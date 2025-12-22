@@ -12,6 +12,8 @@ struct TwoMonthsPatients: View {
     let anesthesias: [Anesthesia]
     private let cal = Calendar.current
     
+    @State private var searchText: String = ""
+    
     private var grouped: (current: [Anesthesia], previous: [Anesthesia]) {
         let (curStart, curEnd) = monthBounds(for: now)
         let (prevStart, prevEnd) = monthBounds(for: cal.date(byAdding: .month, value: -1, to: now)!)
@@ -28,10 +30,28 @@ struct TwoMonthsPatients: View {
                 .sorted(by: { ($0.start ?? .distantPast) > ($1.start ?? .distantPast) })
         }
         
-        return (
-            current: mostRecentPerPatient(in: curStart...curEnd),
-            previous: mostRecentPerPatient(in: prevStart...prevEnd)
-        )
+        let currentAll = mostRecentPerPatient(in: curStart...curEnd)
+        let previousAll = mostRecentPerPatient(in: prevStart...prevEnd)
+
+        let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            return (
+                current: currentAll,
+                previous: previousAll
+            )
+        } else {
+            let needle = trimmed.lowercased()
+            let currentFiltered = currentAll.filter { a in
+                a.surgery.patient.name.lowercased().contains(needle) == true
+            }
+            let previousFiltered = previousAll.filter { a in
+                a.surgery.patient.name.lowercased().contains(needle) == true
+            }
+            return (
+                current: currentFiltered,
+                previous: previousFiltered
+            )
+        }
     }
 
     var body: some View {
@@ -60,6 +80,7 @@ struct TwoMonthsPatients: View {
                 }
             }
         }
+        .searchable(text: $searchText, placement: .toolbar, prompt: "Buscar pacientes")
         .navigationTitle("Pacientes Recentes")
         .listStyle(.insetGrouped)
     }

@@ -105,7 +105,7 @@ struct AnesthesiaSheetMedicationsView: View {
                         .frame(width: 4)
                     Text("MEDICAÇÕES E FLUIDOS")
                         .font(.system(size: 9, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                     Spacer()
@@ -117,6 +117,7 @@ struct AnesthesiaSheetMedicationsView: View {
                         .font(.system(size: 9))
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.black)
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 4)

@@ -30,7 +30,7 @@ struct AnesthesiaSheetViewTeamAndProcedure: View {
                     .frame(width: 4)
                 Text("EQUIPE CIRÚRGICA E PROCEDIMENTOS")
                     .font(.system(size: 10, weight: .bold))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                 Spacer()
@@ -42,24 +42,29 @@ struct AnesthesiaSheetViewTeamAndProcedure: View {
                 Text("**Cirurgião Principal:** \(mainSurgeon)")
                     .font(.system(size: 9))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.black)
                 if !auxSurgeons.isEmpty{
                 Text("**Auxiliares:** \(auxSurgeonsDisplay)")
                     .font(.system(size: 10))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.black)
                  }
                 }
                 Text("**\(procLabel):** \(procValue)")
                     .font(.system(size: 9))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.black)
                 if !codes.isEmpty {
                     Text("**Códigos CBHPM:** \(codes.joined(separator: ", "))")
                         .font(.system(size: 9))
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.black)
                 }
                 if !portes.isEmpty {
                     Text("**Portes:** \(portes.joined(separator: ", "))")
                         .font(.system(size: 9))
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.black)
                 }
             }
             .padding(12)

@@ -246,14 +246,16 @@ struct ContentView: View {
                     selectedTab = 0
                 }
             }
-            ShareLink(item: render(showSignature: showSignature)) {
-                Image(systemName: "square.and.arrow.up")
-                    .font(.system(size: 16, weight: .regular))
-                    .frame(width: 20, height: 20)
+            if anesthesia.status == .finished {
+                ShareLink(item: render(showSignature: showSignature)) {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size: 16, weight: .regular))
+                        .frame(width: 20, height: 20)
+                }
+                .accessibilityLabel("Compartilhar")
+                .buttonStyle(.glass)
+                .tint(.blue)
             }
-            .accessibilityLabel("Compartilhar")
-            .buttonStyle(.glass)
-            .tint(.blue)
             Button(action: {
                 showSignature.toggle()
             }) {

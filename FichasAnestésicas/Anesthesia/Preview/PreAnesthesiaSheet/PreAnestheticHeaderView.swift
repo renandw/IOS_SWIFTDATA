@@ -15,7 +15,7 @@ struct PreAnestheticHeaderView: View {
             HStack {
                 Text("AVALIAÇÃO PRÉ-ANESTÉSICA")
                     .font(.system(size: 19, weight: .bold))
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black)
                 
                 Spacer()
                 
@@ -34,13 +34,13 @@ struct PreAnestheticHeaderView: View {
             HStack {
                 Text("**Hospital:** \(anesthesia.surgery.hospital)")
                     .font(.system(size: 9))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
                 
                 Spacer()
                 
                 Text("**Responsável:** \(anesthesia.surgery.createdBy.name) - CRM \(anesthesia.surgery.createdBy.crm) - RQE \(anesthesia.surgery.createdBy.rqe ?? "")")
                     .font(.system(size: 9))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
             }
         }
         .padding(.bottom, 2)

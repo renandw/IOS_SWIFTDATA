@@ -20,7 +20,7 @@ struct AnesthesiaSheetVitalSignsView: View {
                         .frame(width: 4)
                     Text("SINAIS VITAIS")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                     Spacer()
@@ -118,7 +118,7 @@ private struct VitalChartContentPrint: View {
                         .annotation(position: .overlay) {
                             Image(systemName: "triangle.fill")
                                 .rotationEffect(.degrees(180))
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(.black)
                                 .font(.system(size: 9))
                         }
                     }
@@ -134,7 +134,7 @@ private struct VitalChartContentPrint: View {
                         .opacity(0)
                         .annotation(position: .overlay) {
                             Image(systemName: "triangle.fill")
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(.black)
                                 .font(.system(size: 9))
                         }
                     }
@@ -261,7 +261,7 @@ private struct LegendItemPrint: View {
                 .rotationEffect(.degrees(rotation))
                 .font(.system(size: 8))
             Text(label)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.gray)
         }
     }
 }

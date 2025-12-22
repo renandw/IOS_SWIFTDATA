@@ -21,7 +21,7 @@ struct ClearanceStatusView: View {
 
                     Text("PARECER DA AVALIAÇÃO")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
 
@@ -39,6 +39,7 @@ struct ClearanceStatusView: View {
                         VStack(alignment: .trailing, spacing: 4) {
                             if let status = anesthesia.surgery.preanesthesia?.clearenceStatus {
                                 Text("**Parecer da Avaliação:** \(status.displayName)")
+                                    .foregroundColor(.black)
                                     .font(.system(size: 9))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
@@ -46,6 +47,7 @@ struct ClearanceStatusView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             if let asaText = anesthesia.surgery.shared?.asa?.displayName {
                                 Text("**Classificação ASA:** \(asaText)")
+                                    .foregroundColor(.black)
                                     .font(.system(size: 9))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
@@ -58,10 +60,13 @@ struct ClearanceStatusView: View {
                         
                         HStack(spacing: 4) {
                             Text("Recomendações:").bold()
+                                .foregroundColor(.black)
                             Text(joined)
+                                .foregroundColor(.black)
                             if let custom = anesthesia.surgery.preanesthesia?.futherRecommendationForRevaluation,
                                !custom.isEmpty {
                                 Text("; \(custom.joined(separator: "; "))")
+                                    .foregroundColor(.black)
                             }
                         }
                         .font(.system(size: 9))

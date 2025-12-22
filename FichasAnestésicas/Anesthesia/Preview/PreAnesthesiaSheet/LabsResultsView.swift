@@ -31,7 +31,7 @@ struct LabsResultsView: View {
 
                     Text("EXAMES COMPLEMENTARES")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 2)
 
@@ -46,12 +46,14 @@ struct LabsResultsView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     if !hasAnyLabExam {
                         Text("Sem exames laboratoriais registrados")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .fontWeight(.semibold)
                         
                     } else {
                         HStack(alignment: .top, spacing: 4) {
                             Text("Exames Laboratoriais:")
+                                .foregroundColor(.black)
                                 .font(.system(size: 9))
                                 .fontWeight(.semibold)
                             
@@ -67,6 +69,7 @@ struct LabsResultsView: View {
                             ].compactMap { $0 }
                             
                             Text(labItems.joined(separator: " • "))
+                                .foregroundColor(.black)
                                 .font(.system(size: 9))
                                 .fixedSize(horizontal: false, vertical: true)
                         }
@@ -81,11 +84,13 @@ struct LabsResultsView: View {
                     
                     if !hasAnyImagingExam {
                         Text("Sem outros exames complementares registrados")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .fontWeight(.semibold)
                     } else {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Exames Complementares:")
+                                .foregroundColor(.black)
                                 .font(.system(size: 9))
                                 .fontWeight(.semibold)
                             
@@ -94,6 +99,7 @@ struct LabsResultsView: View {
                                 ForEach(imagingExams) { exam in
                                     HStack(alignment: .top, spacing: 4) {
                                         Text(exam.type.displayName)
+                                            .foregroundColor(.black)
                                             .font(.system(size: 9))
                                             .fontWeight(.medium)
                                         
@@ -110,6 +116,7 @@ struct LabsResultsView: View {
                                             }.joined(separator: " • ")
                                             
                                             Text(findingsText)
+                                                .foregroundColor(.black)
                                                 .font(.system(size: 9))
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                                 .fixedSize(horizontal: false, vertical: true)
@@ -128,12 +135,13 @@ struct LabsResultsView: View {
                                 if hasCustomImagingExams {
                                     HStack(alignment: .top, spacing: 4) {
                                         Text("Outros exames:")
+                                            .foregroundColor(.black)
                                             .font(.system(size: 9))
                                             .fontWeight(.medium)
                                         
                                         Text(customImagingExams.joined(separator: " • "))
                                             .font(.system(size: 9))
-                                            .foregroundStyle(.secondary)
+                                            .foregroundColor(.black)
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .fixedSize(horizontal: false, vertical: true)
                                     }

@@ -26,7 +26,7 @@ struct ComorbiditiesView: View {
 
                     Text("COMORBIDADES")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
 
@@ -174,6 +174,7 @@ struct ComorbiditiesView: View {
                         }
                     } else {
                         Text("Paciente nega diagnóstico prévio de alguma comorbidade")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -206,6 +207,7 @@ struct ComorbiditiesRow<T>: View {
             VStack(alignment: .leading, spacing: 4) {
                 if !items.isEmpty {
                     Text("**\(title)** \(items.joined(separator: ", "))")
+                        .foregroundColor(.black)
                         .font(.system(size: 9))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -213,8 +215,10 @@ struct ComorbiditiesRow<T>: View {
                 if let details = detailsText, !details.isEmpty {
                     HStack(alignment: .top) {
                         Text("Detalhes:")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                         Text(details)
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                     }
                 }

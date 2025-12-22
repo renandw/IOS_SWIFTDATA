@@ -21,7 +21,7 @@ struct AnestheticTechniqueView: View {
                         .frame(width: 4)
                     Text("TÉCNICAS ANESTÉSICA PROPOSTA")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                     Spacer()
@@ -35,6 +35,7 @@ struct AnestheticTechniqueView: View {
                 if !techniques.isEmpty {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("**Técnicas Anestésicas:** \(techniques.joined(separator: ", "))")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .font(.system(size: 9))
                             .frame(maxWidth: .infinity, alignment: .leading)

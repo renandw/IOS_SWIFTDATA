@@ -24,7 +24,7 @@ struct PhysicalExamView: View {
 
                     Text("EXAME FÍSICO")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
 
@@ -39,6 +39,7 @@ struct PhysicalExamView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(physicalExam)
+                        .foregroundColor(.black)
                         .font(.system(size: 9))
                         .lineSpacing(2)
                         .frame(maxWidth: .infinity, alignment: .leading)

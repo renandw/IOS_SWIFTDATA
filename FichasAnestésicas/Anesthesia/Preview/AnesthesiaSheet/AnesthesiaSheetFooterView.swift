@@ -26,11 +26,11 @@ struct AnesthesiaSheetFooterView: View {
             HStack {
                 Text("Ficha finalizada em \(finishedTime) \(finishedDate)")
                     .font(.system(size: 9))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
                 Spacer()
                 Text("Responsável: \(responsavelName) - CRM \(responsavelCRM) - RQE \(responsavelRQE)")
                     .font(.system(size: 10))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
             }
             .overlay(alignment: .topTrailing) {
                 if showSignature.wrappedValue {

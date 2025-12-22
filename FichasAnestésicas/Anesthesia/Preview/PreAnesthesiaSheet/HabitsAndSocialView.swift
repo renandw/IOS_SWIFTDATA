@@ -30,7 +30,7 @@ struct HabitsAndSocialView: View {
 
                     Text("NVPO E HÁBITOS DE VIDA")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
 
@@ -46,21 +46,25 @@ struct HabitsAndSocialView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     if hasPONV {
                         Text("**Histórico de Naúsea e Vômitos:** Sim")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     
                     if !hasRiskFactors {
                         Text("Sem fatores de risco para náusea e vômitos no perioperatório.")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
                             Text("**Fatores de Risco para Náuseas e Vômitos PO:**")
+                                .foregroundColor(.black)
                                 .font(.system(size: 9))
                             if !apfelScoreDetails.isEmpty {
                                 Text(apfelScoreDetails.map { $0.reportDisplayName }.joined(separator: ", "))
+                                    .foregroundColor(.black)
                                     .font(.system(size: 9))
                                     .fixedSize(horizontal: false, vertical: true)
                             }
@@ -71,12 +75,14 @@ struct HabitsAndSocialView: View {
                     
                     if !hasSocialAndEnvironment {
                         Text("Sem anotações relevantes quanto a hábitos sociais e ambiente.")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
                             Text("Hábitos Sociais e Fatores Ambientais:")
+                                .foregroundColor(.black)
                                 .font(.system(size: 9))
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -91,6 +97,7 @@ struct HabitsAndSocialView: View {
                                         
                                         if !allDetails.isEmpty {
                                             Text(allDetails.joined(separator: " • "))
+                                                .foregroundColor(.black)
                                                 .font(.system(size: 9))
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                                 .fixedSize(horizontal: false, vertical: true)
@@ -103,9 +110,11 @@ struct HabitsAndSocialView: View {
                         HStack(alignment: .top, spacing: 8) {
                             if let socialAndEnvironmentDetailsText = anesthesia.surgery.preanesthesia?.socialHabitsAndEnvironmentDetailsText, !socialAndEnvironmentDetailsText.isEmpty {
                                 Text("Detalhes:")
+                                    .foregroundColor(.black)
                                     .fontWeight(.semibold)
                                     .font(.system(size: 9))
                                 Text(socialAndEnvironmentDetailsText)
+                                    .foregroundColor(.black)
                                     .font(.system(size: 9))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }

@@ -21,7 +21,7 @@ struct AirwayEvaluationView: View {
                         
                         Text("AVALIAÇÃO DA VIA AÉREA")
                             .font(.system(size: 10, weight: .bold))
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.gray)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
                         
@@ -48,6 +48,7 @@ struct AirwayEvaluationView: View {
                             Text("Paciente possui via aérea definitiva")
                                 .font(.system(size: 9))
                                 .fontWeight(.semibold)
+                                .foregroundColor(.black)
                                 
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -56,6 +57,7 @@ struct AirwayEvaluationView: View {
                             Text("Avaliação de Vias Aéreas:")
                                 .font(.system(size: 9))
                                 .fontWeight(.semibold)
+                                .foregroundColor(.black)
                             VStack(alignment: .leading, spacing: 8) {
                                 VStack(alignment: .leading, spacing: 8) {
                                     if let mallampatiDetails = anesthesia.surgery.preanesthesia?.mallampatiClassification {
@@ -63,10 +65,12 @@ struct AirwayEvaluationView: View {
                                             Text("Mallampati:")
                                                 .font(.system(size: 9))
                                                 .fontWeight(.semibold)
+                                                .foregroundColor(.black)
                                             Text(mallampatiDetails.displayName)
                                                 .font(.system(size: 9))
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                                 .fixedSize(horizontal: false, vertical: true)
+                                                .foregroundColor(.black)
                                         }
                                         
                                     }
@@ -84,11 +88,13 @@ struct AirwayEvaluationView: View {
                                             Text("Preditores:")
                                                 .fontWeight(.semibold)
                                                 .font(.system(size: 9))
+                                                .foregroundColor(.black)
                                             VStack(alignment: .leading, spacing: 8) {
                                                 
                                                 
                                                 if !all.isEmpty {
                                                     Text(all.joined(separator: " • "))
+                                                        .foregroundColor(.black)
                                                         .font(.system(size: 9))
                                                         .frame(maxWidth: .infinity, alignment: .leading)
                                                         .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
@@ -100,9 +106,11 @@ struct AirwayEvaluationView: View {
                                                 Text("Detalhes:")
                                                     .fontWeight(.semibold)
                                                     .font(.system(size: 9))
+                                                    .foregroundColor(.black)
                                                 Spacer()
                                                 Text(difficultAirwayEvaluationDetailsText)
                                                     .font(.system(size: 9))
+                                                    .foregroundColor(.black)
                                             }
                                         }
                                     }
@@ -111,6 +119,7 @@ struct AirwayEvaluationView: View {
                                 Text("Sem preditores via aérea difícil")
                                     .font(.system(size: 9))
                                     .fontWeight(.semibold)
+                                    .foregroundColor(.black)
                             }
                         }
                     }

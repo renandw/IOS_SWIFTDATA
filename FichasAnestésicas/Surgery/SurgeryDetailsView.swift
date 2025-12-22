@@ -198,11 +198,13 @@ struct SurgeryDetailsView: View {
                                 .fontWeight(.bold)
                         }
                     }
-                    HStack {
-                        ShareLink(item: anesthesia.renderAnesthesiaPDF()) {
-                            Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
+                    if anesthesia.status == .finished {
+                        HStack {
+                            ShareLink(item: anesthesia.renderAnesthesiaPDF()) {
+                                Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
+                            }
+                            .buttonStyle(.glass)
                         }
-                        .buttonStyle(.glass)
                     }
                 } header : {
                     HStack {
@@ -225,12 +227,14 @@ struct SurgeryDetailsView: View {
                         }
                     }
                     if let anesthesia = surgery.anesthesia {
+                        if preanesthesia.status == .finished {
                             HStack {
                                 ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
                                     Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
                                 }
                             }
                         }
+                    }
                 } header : {
                     HStack {
                         Text("Avaliação Pré Anestésica")

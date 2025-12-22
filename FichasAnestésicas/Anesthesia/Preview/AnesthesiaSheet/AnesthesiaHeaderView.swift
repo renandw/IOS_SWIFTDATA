@@ -25,7 +25,7 @@ struct AnesthesiaHeaderView: View {
             HStack {
                 Text("FICHA ANESTÉSICA")
                     .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black)
                 Spacer()
 
                 Text("**Data:** \(date)")
@@ -49,11 +49,11 @@ struct AnesthesiaHeaderView: View {
             HStack {
                 Text("**Hospital:** \(hospital)")
                     .font(.system(size: 10))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
                 Spacer()
                 Text("**Responsável:** \(doctor) - CRM \(doctorCRM) - RQE \(doctorRQE)")
                     .font(.system(size: 10))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
             }
         }
         .padding(.bottom, 4)

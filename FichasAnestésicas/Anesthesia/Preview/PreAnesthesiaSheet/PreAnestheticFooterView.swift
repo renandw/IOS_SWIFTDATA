@@ -21,11 +21,11 @@ struct PreAnestheticFooterView: View {
                 HStack {
                     Text("Realizada em \(anesthesia.surgery.preanesthesia?.createdAt.formatted(date: .numeric, time: .omitted) ?? "--")")
                         .font(.system(size: 9))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                     Spacer()
                     Text("**Responsável:** \(anesthesia.surgery.createdBy.name) - CRM \(anesthesia.surgery.createdBy.crm) - RQE \(anesthesia.surgery.createdBy.rqe ?? "")")
                         .font(.system(size: 9))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                 }
                 .overlay(alignment: .topTrailing) {
                     if showSignature.wrappedValue {

@@ -32,7 +32,7 @@ struct HistoryView: View {
 
                     Text("HISTÓRICO CIRÚRGICO/ANESTÉSICO")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
 
@@ -48,10 +48,12 @@ struct HistoryView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     if hasSurgeryHistory == false {
                         Text("Nega cirurgias prévias")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
                         Text("Cirurgias Prévias:")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .fontWeight(.semibold)
                                                         
@@ -65,6 +67,7 @@ struct HistoryView: View {
                                     
                                     if !allDetails.isEmpty {
                                         Text(allDetails.joined(separator: " • "))
+                                            .foregroundColor(.black)
                                             .font(.system(size: 9))
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .fixedSize(horizontal: false, vertical: true)
@@ -73,6 +76,7 @@ struct HistoryView: View {
                                 HStack(alignment: .top, spacing: 2) {
                                     if let surgeryHistoryDetailsText = anesthesia.surgery.preanesthesia?.surgeryHistoryDetailsText, !surgeryHistoryDetailsText.isEmpty {
                                         Text("Detalhes:")
+                                            .foregroundColor(.black)
                                             .fontWeight(.semibold)
                                             .font(.system(size: 9))
                                         Text(surgeryHistoryDetailsText)
@@ -87,6 +91,7 @@ struct HistoryView: View {
 
                     if hasAnesthesic == true && !hasAnesthesicComplications {
                         Text("Nega complicações anestésicas prévias")
+                            .foregroundColor(.black)
                             .font(.system(size: 9))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else if hasAnesthesic == true && hasAnesthesicComplications {
@@ -96,6 +101,7 @@ struct HistoryView: View {
                         
                         if !allDetails.isEmpty {
                             Text(allDetails.joined(separator: " • "))
+                                .foregroundColor(.black)
                                 .font(.system(size: 9))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -103,9 +109,11 @@ struct HistoryView: View {
                             HStack(alignment: .top) {
                                 if let anesthesiaHistoryDetailsText = anesthesia.surgery.preanesthesia?.anesthesiaHistoryDetailsText, !anesthesiaHistoryDetailsText.isEmpty {
                                     Text("Detalhes:")
+                                        .foregroundColor(.black)
                                         .fontWeight(.semibold)
                                         .font(.system(size: 9))
                                     Text(anesthesiaHistoryDetailsText)
+                                        .foregroundColor(.black)
                                         .font(.system(size: 9))
                                 }
                             }

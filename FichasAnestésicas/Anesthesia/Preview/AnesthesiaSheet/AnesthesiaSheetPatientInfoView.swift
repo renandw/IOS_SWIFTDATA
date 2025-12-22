@@ -41,6 +41,7 @@ struct AnesthesiaSheetPatientInfoView: View {
                             .font(.system(size: 10))
                             .lineLimit(2)
                             .fixedSize(horizontal: false, vertical: true)
+                            .foregroundColor(.black)
                     }
                     .layoutPriority(1)
 
@@ -48,11 +49,13 @@ struct AnesthesiaSheetPatientInfoView: View {
 
                     Text("**Sexo:** \(sex)")
                         .font(.system(size: 10))
+                        .foregroundColor(.black)
 
                     Spacer()
 
                     Text("**Idade:** \(age)")
                         .font(.system(size: 10))
+                        .foregroundColor(.black)
 
                     Spacer()
                 }
@@ -62,6 +65,7 @@ struct AnesthesiaSheetPatientInfoView: View {
                     Text("**Peso:** \(weight)")
                         .font(.system(size: 10))
                         .frame(width: 80, alignment: .leading)
+                        .foregroundColor(.black)
 
                     Spacer()
 
@@ -70,6 +74,7 @@ struct AnesthesiaSheetPatientInfoView: View {
                             .font(.system(size: 10))
                             .lineLimit(2)
                             .fixedSize(horizontal: false, vertical: true)
+                            .foregroundColor(.black)
                     }
                     .layoutPriority(1)
 
@@ -80,6 +85,7 @@ struct AnesthesiaSheetPatientInfoView: View {
                             .font(.system(size: 10))
                             .lineLimit(2)
                             .fixedSize(horizontal: false, vertical: true)
+                            .foregroundColor(.black)
                     }
 
 //                    Spacer()
