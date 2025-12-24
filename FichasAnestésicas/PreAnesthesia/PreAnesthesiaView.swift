@@ -290,6 +290,30 @@ struct PreAnesthesiaView: View {
                         }
                         Divider()
                     }
+                    if preanesthesia?.cardiacComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Cardiológicas:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let details = preanesthesia?.cardiologyDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Divider()
+                    }
                     if preanesthesia?.respiratoryComorbities == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
@@ -320,6 +344,30 @@ struct PreAnesthesiaView: View {
                                     Spacer()
                                     Text(respiratoryDetailsText)
                                         .font(.caption)
+                                }
+                            }
+                        }
+                        Divider()
+                    }
+                    if preanesthesia?.respiratoryComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Respiratórias:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let details = preanesthesia?.respiratoryDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

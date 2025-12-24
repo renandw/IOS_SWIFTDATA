@@ -36,6 +36,8 @@ final class ComorbitiesSectionViewModel {
     
     //section
     var oncologyDetails: [OncologyComorbidityDetail] = []
+    var cardiologyDetails: [CardiologyComorbidityDetail] = []
+    var respiratoryDetails: [RespiratoryComorbidityDetail] = []
     
     //one by one
     var isPregnantComorbitiesDetails: [PregnantComorbities]?
@@ -123,6 +125,8 @@ final class ComorbitiesSectionViewModel {
         healthyPatient = e.healthyPatient ?? false
         //newsection
         oncologyDetails = e.oncologyDetails ?? []
+        cardiologyDetails = e .cardiologyDetails ?? []
+        respiratoryDetails = e .respiratoryDetails ?? []
         //one by one
         isPregnantComorbitiesDetails = e.isPregnantComorbitiesDetails
         isPregnantDetailsText = e.isPregnantDetailsText
@@ -198,6 +202,8 @@ final class ComorbitiesSectionViewModel {
         e.healthyPatient = healthyPatient
         //newSection
         e.oncologyDetails = oncologyDetails
+        e.cardiologyDetails = cardiologyDetails
+        e.respiratoryDetails = respiratoryDetails
         
         //one by one
         e.isPregnantComorbitiesDetails = isPregnantComorbitiesDetails

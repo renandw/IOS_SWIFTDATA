@@ -46,21 +46,15 @@ struct ComorbiditiesView: View {
                             GridItem(.flexible(), alignment: .topLeading)
                         ], spacing: 2) {
                             if anesthesia.surgery.preanesthesia?.cardiacComorbities == true {
-                                ComorbiditiesRow(
-                                    title: "Sistema Cardiológico:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.cardiacComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.cardiacComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.cardiacComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                CardiacComorbiditiesRow(
+                                    title: "Cardiológicas:",
+                                    details: anesthesia.surgery.preanesthesia?.cardiologyDetails ?? []
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.respiratoryComorbities == true {
-                                ComorbiditiesRow(
-                                    title: "Sistema Respiratório:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.respiratoryComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.respiratoryComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.respiratoryComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                RespiratoryComorbiditiesRow(
+                                    title: "Respiratórias:",
+                                    details: anesthesia.surgery.preanesthesia?.respiratoryDetails ?? []
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.endocrineComorbities == true {
@@ -240,6 +234,53 @@ struct ComorbiditiesRow<T>: View {
 struct NewComorbiditiesRow: View {
     let title: String
     let details: [OncologyComorbidityDetail]
+    
+    var body: some View {
+        if !details.isEmpty {
+            Text("**\(title)** \(formattedText)")
+                .foregroundColor(.black)
+                .font(.system(size: 9))
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+    
+    private var formattedText: String {
+        details.map { detail in
+            let name = detail.displayName()
+            if let notes = detail.notes, !notes.isEmpty {
+                return "\(name) (\(notes))"
+            }
+            return name
+        }.joined(separator: "; ")
+    }
+}
+
+struct CardiacComorbiditiesRow: View {
+    let title: String
+    let details: [CardiologyComorbidityDetail]
+    
+    var body: some View {
+        if !details.isEmpty {
+            Text("**\(title)** \(formattedText)")
+                .foregroundColor(.black)
+                .font(.system(size: 9))
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+    
+    private var formattedText: String {
+        details.map { detail in
+            let name = detail.displayName()
+            if let notes = detail.notes, !notes.isEmpty {
+                return "\(name) (\(notes))"
+            }
+            return name
+        }.joined(separator: "; ")
+    }
+}
+struct RespiratoryComorbiditiesRow: View {
+    let title: String
+    let details: [RespiratoryComorbidityDetail]
     
     var body: some View {
         if !details.isEmpty {

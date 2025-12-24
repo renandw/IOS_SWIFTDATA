@@ -307,23 +307,23 @@ struct ComorbitiesFormView: View {
                 }
                 
                 // Cardíacas
-                ComorbiditiesSection(
+                NewComorbidityDetailSection<CardiologyComorbidityDetail, CardiologicComorbities>(
                     title: "Cardíacas",
                     icon: "heart.circle.fill",
                     isEnabled: $viewModel.comorbities.cardiacComorbities,
-                    selection: binding(get: { viewModel.comorbities.cardiacComorbitiesDetails }, set: { viewModel.comorbities.cardiacComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.cardiacComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.cardiacComorbitiesDetailsText
+                    details: $viewModel.comorbities.cardiologyDetails,
+                    createDetail: { CardiologyComorbidityDetail(type: $0) },
+                    createCustomDetail: { CardiologyComorbidityDetail(customName: $0) }
                 )
                 
                 // Respiratórias
-                ComorbiditiesSection(
+                NewComorbidityDetailSection<RespiratoryComorbidityDetail, RespiratoryComorbities>(
                     title: "Respiratórias",
                     icon: "lungs.fill",
                     isEnabled: $viewModel.comorbities.respiratoryComorbities,
-                    selection: binding(get: { viewModel.comorbities.respiratoryComorbitiesDetails }, set: { viewModel.comorbities.respiratoryComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.respiratoryComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.respiratoryComorbitiesDetailsText
+                    details: $viewModel.comorbities.respiratoryDetails,
+                    createDetail: { RespiratoryComorbidityDetail(type: $0) },
+                    createCustomDetail: { RespiratoryComorbidityDetail(customName: $0) }
                 )
                 
                 // Endócrinas
