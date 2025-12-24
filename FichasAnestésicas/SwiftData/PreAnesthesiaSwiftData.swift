@@ -72,6 +72,8 @@ final class PreAnesthesia {
     @Relationship var oncologyDetails: [OncologyComorbidityDetail]?
     @Relationship var cardiologyDetails: [CardiologyComorbidityDetail]?
     @Relationship var respiratoryDetails: [RespiratoryComorbidityDetail]?
+    @Relationship var endocrineDetails: [EndocrineComorbidityDetail]?
+    @Relationship var gastroIntestinalDetails: [GastroIntestinalComorbidityDetail]?
     
     //one by one
     var isPregnantComorbitiesDetailsRaw: [String]?
@@ -91,37 +93,6 @@ final class PreAnesthesia {
     var isInfantDetailsText: String?
     var isInfantCustomDetails: [String]?
     
-    var cardiacComorbitiesDetailsRaw: [String]?
-    var cardiacComorbitiesDetails: [CardiologicComorbities]? {
-        get { cardiacComorbitiesDetailsRaw?.compactMap(CardiologicComorbities.init(rawValue:))}
-        set { cardiacComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var cardiacComorbitiesDetailsText: String?
-    var cardiacComorbitiesCustomDetails: [String]?
-    
-    var respiratoryComorbitiesDetailsRaw: [String]?
-    var respiratoryComorbitiesDetails: [RespiratoryComorbities]? {
-        get { respiratoryComorbitiesDetailsRaw?.compactMap(RespiratoryComorbities.init(rawValue:))}
-        set { respiratoryComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var respiratoryComorbitiesDetailsText: String?
-    var respiratoryComorbitiesCustomDetails: [String]?
-    
-    var endocrineComorbitiesDetailsRaw: [String]?
-    var endocrineComorbitiesDetails: [EndocrineComorbities]? {
-        get { endocrineComorbitiesDetailsRaw?.compactMap(EndocrineComorbities.init(rawValue:))}
-        set { endocrineComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var endocrineComorbitiesDetailsText: String?
-    var endocrineComorbitiesCustomDetails: [String]?
-    
-    var gastrointestinalComorbitiesDetailsRaw: [String]?
-    var gastrointestinalComorbitiesDetails: [GastrointestinalComorbities]? {
-        get { gastrointestinalComorbitiesDetailsRaw?.compactMap(GastrointestinalComorbities.init(rawValue:))}
-        set { gastrointestinalComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var gastrointestinalComorbitiesDetailsText: String?
-    var gastrointestinalComorbitiesCustomDetails: [String]?
     
     var hematologicalComorbitiesDetailsRaw: [String]?
     var hematologicalComorbitiesDetails: [HematologicComorbities]? {
@@ -313,9 +284,10 @@ final class PreAnesthesia {
         
         //newSection
         oncologyDetails: [OncologyComorbidityDetail]? = nil,
-        cardiologyDeyails: [CardiologyComorbidityDetail]? = nil,
-        respiratoryDeyails: [RespiratoryComorbidityDetail]? = nil,
-        
+        cardiologyDetails: [CardiologyComorbidityDetail]? = nil,
+        respiratoryDetails: [RespiratoryComorbidityDetail]? = nil,
+        endocrineDetails: [EndocrineComorbidityDetail]? = nil,
+        gastroIntestinalDetails: [GastroIntestinalComorbidityDetail]? = nil,
         
         //one by one
         isPregnantComorbitiesDetails: PregnantComorbities? = nil,
@@ -325,18 +297,8 @@ final class PreAnesthesia {
         isInfantComorbitiesDetails: InfantComorbities? = nil,
         isInfantDetailsText: String? = nil,
         isInfantCustomDetails: [String]? = [],
-        cardiacComorbitiesDetails: CardiologicComorbities? = nil,
-        cardiacComorbitiesDetailsText: String? = nil,
-        cardiacComorbitiesCustomDetails: [String]? = [],
-        respiratoryComorbitiesDetails: RespiratoryComorbities? = nil,
-        respiratoryComorbitiesDetailsText: String? = nil,
-        respiratoryComorbitiesCustomDetails: [String]? = [],
-        endocrineComorbitiesDetails: EndocrineComorbities? = nil,
-        endocrineComorbitiesDetailsText: String? = nil,
-        endocrineComorbitiesCustomDetails: [String]? = [],
-        gastrointestinalComorbitiesDetails: GastrointestinalComorbities? = nil,
-        gastrointestinalComorbitiesDetailsText: String? = nil,
-        gastrointestinalComorbitiesCustomDetails: [String]? = [],
+        
+        
         hematologicalComorbitiesDetails: HematologicComorbities? = nil,
         hematologicalComorbitiesDetailsText: String? = nil,
         hematologicalComorbitiesCustomDetails: [String]? = [],
@@ -441,6 +403,8 @@ final class PreAnesthesia {
         self.oncologyDetails = oncologyDetails
         self.cardiologyDetails = cardiologyDetails
         self.respiratoryDetails = respiratoryDetails
+        self.endocrineDetails = endocrineDetails
+        self.gastroIntestinalDetails = gastroIntestinalDetails
         //one by one
         self.isPregnantComorbitiesDetailsRaw = isPregnantComorbitiesDetails.map { [$0.rawValue] }
         self.isPregnantDetailsText = isPregnantDetailsText
@@ -449,18 +413,8 @@ final class PreAnesthesia {
         self.isInfantComorbitiesDetailsRaw = isInfantComorbitiesDetails.map { [$0.rawValue] }
         self.isInfantCustomDetails = isInfantCustomDetails
         self.isInfantDetailsText = isInfantDetailsText
-        self.cardiacComorbitiesDetailsRaw = cardiacComorbitiesDetails.map { [$0.rawValue] }
-        self.cardiacComorbitiesCustomDetails = cardiacComorbitiesCustomDetails
-        self.cardiacComorbitiesDetailsText = cardiacComorbitiesDetailsText
-        self.respiratoryComorbitiesDetailsRaw = respiratoryComorbitiesDetails.map { [$0.rawValue] }
-        self.respiratoryComorbitiesDetailsText = respiratoryComorbitiesDetailsText
-        self.respiratoryComorbitiesCustomDetails = respiratoryComorbitiesCustomDetails
-        self.endocrineComorbitiesDetailsRaw = endocrineComorbitiesDetails.map { [$0.rawValue] }
-        self.endocrineComorbitiesDetailsText = endocrineComorbitiesDetailsText
-        self.endocrineComorbitiesCustomDetails = endocrineComorbitiesCustomDetails
-        self.gastrointestinalComorbitiesDetailsRaw = gastrointestinalComorbitiesDetails.map { [$0.rawValue] }
-        self.gastrointestinalComorbitiesDetailsText = gastrointestinalComorbitiesDetailsText
-        self.gastrointestinalComorbitiesCustomDetails = gastrointestinalComorbitiesCustomDetails
+        
+        
         self.hematologicalComorbitiesDetailsRaw = hematologicalComorbitiesDetails.map { [$0.rawValue] }
         self.hematologicalComorbitiesDetailsText = hematologicalComorbitiesDetailsText
         self.hematologicalComorbitiesCustomDetails = hematologicalComorbitiesCustomDetails

@@ -327,23 +327,23 @@ struct ComorbitiesFormView: View {
                 )
                 
                 // Endócrinas
-                ComorbiditiesSection(
+                NewComorbidityDetailSection<EndocrineComorbidityDetail, EndocrineComorbities>(
                     title: "Endócrinas e Metabólicas",
                     icon: "syringe.fill",
                     isEnabled: $viewModel.comorbities.endocrineComorbities,
-                    selection: binding(get: { viewModel.comorbities.endocrineComorbitiesDetails }, set: { viewModel.comorbities.endocrineComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.endocrineComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.endocrineComorbitiesDetailsText
+                    details: $viewModel.comorbities.endocrineDetails,
+                    createDetail: { EndocrineComorbidityDetail(type: $0) },
+                    createCustomDetail: { EndocrineComorbidityDetail(customName: $0) }
                 )
                 
                 //Gastrointestinal
-                ComorbiditiesSection(
+                NewComorbidityDetailSection<GastroIntestinalComorbidityDetail, GastrointestinalComorbities>(
                     title: "Gastrointestinais",
                     icon: "fork.knife.circle.fill",
                     isEnabled: $viewModel.comorbities.gastrointestinalComorbities,
-                    selection: binding(get: { viewModel.comorbities.gastrointestinalComorbitiesDetails }, set: { viewModel.comorbities.gastrointestinalComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.gastrointestinalComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.gastrointestinalComorbitiesDetailsText
+                    details: $viewModel.comorbities.gastroIntestinalDetails,
+                    createDetail: { GastroIntestinalComorbidityDetail(type: $0) },
+                    createCustomDetail: { GastroIntestinalComorbidityDetail(customName: $0) }
                 )
                 
                 ComorbiditiesSection(

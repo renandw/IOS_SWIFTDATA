@@ -254,42 +254,6 @@ struct PreAnesthesiaView: View {
                         }
                         Divider()
                     }
-                    
-                    if preanesthesia?.cardiacComorbities == true {
-                        VStack(alignment: .trailing, spacing: 12) {
-                            HStack(alignment: .top) {
-                                Text("Cardiológicas:")
-                                    .font(.headline)
-                                Spacer()
-                                VStack(alignment: .trailing) {
-                                    if let cardiacDetails = preanesthesia?.cardiacComorbitiesDetails, !cardiacDetails.isEmpty {
-                                        ForEach(cardiacDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
-                                        }
-                                    }
-                                    if let customCardiacDetails = preanesthesia?.cardiacComorbitiesCustomDetails, !customCardiacDetails.isEmpty {
-                                        ForEach(customCardiacDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let cardiacDetailsText = preanesthesia?.cardiacComorbitiesDetailsText, !cardiacDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(cardiacDetailsText)
-                                        .font(.caption)
-                                }
-                            }
-                        }
-                        Divider()
-                    }
                     if preanesthesia?.cardiacComorbities == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
@@ -309,41 +273,6 @@ struct PreAnesthesiaView: View {
                                             }
                                         }
                                     }
-                                }
-                            }
-                        }
-                        Divider()
-                    }
-                    if preanesthesia?.respiratoryComorbities == true {
-                        VStack(alignment: .trailing, spacing: 12) {
-                            HStack(alignment: .top) {
-                                Text("Respiratórias:")
-                                    .font(.headline)
-                                Spacer()
-                                VStack(alignment: .trailing) {
-                                    if let respiratoryDetails = preanesthesia?.respiratoryComorbitiesDetails, !respiratoryDetails.isEmpty {
-                                        ForEach(respiratoryDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
-                                        }
-                                    }
-                                    if let customRespiratoryDetails = preanesthesia?.respiratoryComorbitiesCustomDetails, !customRespiratoryDetails.isEmpty {
-                                        ForEach(customRespiratoryDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let respiratoryDetailsText = preanesthesia?.respiratoryComorbitiesDetailsText, !respiratoryDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(respiratoryDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
@@ -380,29 +309,18 @@ struct PreAnesthesiaView: View {
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let endocrineDetails = preanesthesia?.endocrineComorbitiesDetails, !endocrineDetails.isEmpty {
-                                        ForEach(endocrineDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.endocrineDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customEndocrineDetails = preanesthesia?.endocrineComorbitiesCustomDetails, !customEndocrineDetails.isEmpty {
-                                        ForEach(customEndocrineDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let endocrineDetailsText = preanesthesia?.endocrineComorbitiesDetailsText, !endocrineDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(endocrineDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
@@ -411,33 +329,22 @@ struct PreAnesthesiaView: View {
                     if preanesthesia?.gastrointestinalComorbities == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
-                                Text("Respiratórias:")
+                                Text("Gastrointestinais:")
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let gastrointestinalDetails = preanesthesia?.gastrointestinalComorbitiesDetails, !gastrointestinalDetails.isEmpty {
-                                        ForEach(gastrointestinalDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.gastroIntestinalDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customGastrointestinalDetails = preanesthesia?.gastrointestinalComorbitiesCustomDetails, !customGastrointestinalDetails.isEmpty {
-                                        ForEach(customGastrointestinalDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let gastrointestinalDetailsText = preanesthesia?.gastrointestinalComorbitiesDetailsText, !gastrointestinalDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(gastrointestinalDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }

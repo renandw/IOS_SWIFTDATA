@@ -46,24 +46,46 @@ struct ComorbiditiesView: View {
                             GridItem(.flexible(), alignment: .topLeading)
                         ], spacing: 2) {
                             if anesthesia.surgery.preanesthesia?.cardiacComorbities == true {
-                                CardiacComorbiditiesRow(
+                                NotesComorbiditiesRow(
                                     title: "Cardiológicas:",
-                                    details: anesthesia.surgery.preanesthesia?.cardiologyDetails ?? []
+                                    details: anesthesia.surgery.preanesthesia?.cardiologyDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
+
                             if anesthesia.surgery.preanesthesia?.respiratoryComorbities == true {
-                                RespiratoryComorbiditiesRow(
+                                NotesComorbiditiesRow(
                                     title: "Respiratórias:",
-                                    details: anesthesia.surgery.preanesthesia?.respiratoryDetails ?? []
+                                    details: anesthesia.surgery.preanesthesia?.respiratoryDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
+
                             if anesthesia.surgery.preanesthesia?.endocrineComorbities == true {
-                                ComorbiditiesRow(
-                                    title: "Sistema Endócrino:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.endocrineComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.endocrineComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.endocrineComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                NotesComorbiditiesRow(
+                                    title: "Endócrinas:",
+                                    details: anesthesia.surgery.preanesthesia?.endocrineDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
+                                )
+                            }
+
+                            if anesthesia.surgery.preanesthesia?.oncologicComorbities == true {
+                                NotesComorbiditiesRow(
+                                    title: "Oncológicas:",
+                                    details: anesthesia.surgery.preanesthesia?.oncologyDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
+                                )
+                            }
+                            if anesthesia.surgery.preanesthesia?.gastrointestinalComorbities == true {
+                                NotesComorbiditiesRow(
+                                    title: "Gastrointestinais:",
+                                    details: anesthesia.surgery.preanesthesia?.gastroIntestinalDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.hematologicalComorbities == true {
@@ -72,15 +94,6 @@ struct ComorbiditiesView: View {
                                     enumItems: anesthesia.surgery.preanesthesia?.hematologicalComorbitiesDetails,
                                     customItems: anesthesia.surgery.preanesthesia?.hematologicalComorbitiesCustomDetails ?? [],
                                     detailsText: anesthesia.surgery.preanesthesia?.hematologicalComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
-                                )
-                            }
-                            if anesthesia.surgery.preanesthesia?.gastrointestinalComorbities == true {
-                                ComorbiditiesRow(
-                                    title: "Sistema Gastrointestinal:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.gastrointestinalComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.gastrointestinalComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.gastrointestinalComorbitiesDetailsText,
                                     displayName: { $0.displayName }
                                 )
                             }
@@ -136,12 +149,6 @@ struct ComorbiditiesView: View {
                                     customItems: anesthesia.surgery.preanesthesia?.infectiousComorbitiesCustomDetails ?? [],
                                     detailsText: anesthesia.surgery.preanesthesia?.infectiousComorbitiesDetailsText,
                                     displayName: { $0.displayName }
-                                )
-                            }
-                            if anesthesia.surgery.preanesthesia?.oncologicComorbities == true {
-                                NewComorbiditiesRow(
-                                    title: "Oncológicas:",
-                                    details: anesthesia.surgery.preanesthesia?.oncologyDetails ?? []
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.neurologicalComorbities == true {
@@ -231,34 +238,12 @@ struct ComorbiditiesRow<T>: View {
 }
 
 
-struct NewComorbiditiesRow: View {
+struct NotesComorbiditiesRow<D>: View {
     let title: String
-    let details: [OncologyComorbidityDetail]
-    
-    var body: some View {
-        if !details.isEmpty {
-            Text("**\(title)** \(formattedText)")
-                .foregroundColor(.black)
-                .font(.system(size: 9))
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-    }
-    
-    private var formattedText: String {
-        details.map { detail in
-            let name = detail.displayName()
-            if let notes = detail.notes, !notes.isEmpty {
-                return "\(name) (\(notes))"
-            }
-            return name
-        }.joined(separator: "; ")
-    }
-}
+    let details: [D]
+    let name: (D) -> String
+    let notes: (D) -> String?
 
-struct CardiacComorbiditiesRow: View {
-    let title: String
-    let details: [CardiologyComorbidityDetail]
-    
     var body: some View {
         if !details.isEmpty {
             Text("**\(title)** \(formattedText)")
@@ -267,37 +252,15 @@ struct CardiacComorbiditiesRow: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
-    
+
     private var formattedText: String {
-        details.map { detail in
-            let name = detail.displayName()
-            if let notes = detail.notes, !notes.isEmpty {
-                return "\(name) (\(notes))"
+        details.map { d in
+            let n = name(d)
+            if let no = notes(d), !no.isEmpty {
+                return "\(n) (\(no))"
             }
-            return name
-        }.joined(separator: "; ")
-    }
-}
-struct RespiratoryComorbiditiesRow: View {
-    let title: String
-    let details: [RespiratoryComorbidityDetail]
-    
-    var body: some View {
-        if !details.isEmpty {
-            Text("**\(title)** \(formattedText)")
-                .foregroundColor(.black)
-                .font(.system(size: 9))
-                .frame(maxWidth: .infinity, alignment: .leading)
+            return n
         }
-    }
-    
-    private var formattedText: String {
-        details.map { detail in
-            let name = detail.displayName()
-            if let notes = detail.notes, !notes.isEmpty {
-                return "\(name) (\(notes))"
-            }
-            return name
-        }.joined(separator: "; ")
+        .joined(separator: "; ")
     }
 }

@@ -74,3 +74,45 @@ final class RespiratoryComorbidityDetail: ComorbidityDetailProtocol {
         type?.displayName ?? customName ?? ""
     }
 }
+
+@Model
+final class EndocrineComorbidityDetail: ComorbidityDetailProtocol {
+    var typeRaw: String?
+    var type: EndocrineComorbities? {
+        get { typeRaw.flatMap(EndocrineComorbities.init(rawValue:)) }
+        set { typeRaw = newValue?.rawValue }
+    }
+    var customName: String?
+    var notes: String?
+    
+    init(type: EndocrineComorbities? = nil, customName: String? = nil, notes: String? = nil) {
+        self.typeRaw = type?.rawValue
+        self.customName = customName
+        self.notes = notes
+    }
+    
+    func displayName() -> String {
+        type?.displayName ?? customName ?? ""
+    }
+}
+
+@Model
+final class GastroIntestinalComorbidityDetail: ComorbidityDetailProtocol {
+    var typeRaw: String?
+    var type: GastrointestinalComorbities? {
+        get { typeRaw.flatMap(GastrointestinalComorbities.init(rawValue:)) }
+        set { typeRaw = newValue?.rawValue }
+    }
+    var customName: String?
+    var notes: String?
+    
+    init(type: GastrointestinalComorbities? = nil, customName: String? = nil, notes: String? = nil) {
+        self.typeRaw = type?.rawValue
+        self.customName = customName
+        self.notes = notes
+    }
+    
+    func displayName() -> String {
+        type?.displayName ?? customName ?? ""
+    }
+}

@@ -23,7 +23,7 @@ final class ComorbitiesSectionViewModel {
     var gynecologicalComorbities = false { didSet { gynecologicalComorbitiesVisibility() } }
     var androgenicalComorbities = false { didSet { androgenicalComorbitiesVisibility() } }
     var neurologicalComorbities = false {didSet { neurologicalComorbitiesVisibility() } }
-    var infectiousComorbities = false
+    var infectiousComorbities = false { didSet { infectiousComorbitiesVisibility() } }
     var oncologicComorbities = false
     var geneticSyndrome = false {didSet { geneticSyndromeVisibility() } }
     var healthyPatient = false {
@@ -38,6 +38,9 @@ final class ComorbitiesSectionViewModel {
     var oncologyDetails: [OncologyComorbidityDetail] = []
     var cardiologyDetails: [CardiologyComorbidityDetail] = []
     var respiratoryDetails: [RespiratoryComorbidityDetail] = []
+    var endocrineDetails: [EndocrineComorbidityDetail] = []
+    var gastroIntestinalDetails: [GastroIntestinalComorbidityDetail] = []
+    
     
     //one by one
     var isPregnantComorbitiesDetails: [PregnantComorbities]?
@@ -49,21 +52,6 @@ final class ComorbitiesSectionViewModel {
     var isInfantDetailsText: String?
     var isInfantCustomDetails: [String] = []
     
-    var cardiacComorbitiesDetails: [CardiologicComorbities]?
-    var cardiacComorbitiesCustomDetails: [String] = []
-    var cardiacComorbitiesDetailsText: String?
-    
-    var respiratoryComorbitiesDetails: [RespiratoryComorbities]?
-    var respiratoryComorbitiesCustomDetails: [String] = []
-    var respiratoryComorbitiesDetailsText: String?
-    
-    var endocrineComorbitiesDetails: [EndocrineComorbities]?
-    var endocrineComorbitiesCustomDetails: [String] = []
-    var endocrineComorbitiesDetailsText: String?
-    
-    var gastrointestinalComorbitiesDetails: [GastrointestinalComorbities]?
-    var gastrointestinalComorbitiesCustomDetails: [String] = []
-    var gastrointestinalComorbitiesDetailsText: String?
     
     var hematologicalComorbitiesDetails: [HematologicComorbities]?
     var hematologicalComorbitiesCustomDetails: [String] = []
@@ -125,8 +113,10 @@ final class ComorbitiesSectionViewModel {
         healthyPatient = e.healthyPatient ?? false
         //newsection
         oncologyDetails = e.oncologyDetails ?? []
-        cardiologyDetails = e .cardiologyDetails ?? []
-        respiratoryDetails = e .respiratoryDetails ?? []
+        cardiologyDetails = e.cardiologyDetails ?? []
+        respiratoryDetails = e.respiratoryDetails ?? []
+        endocrineDetails = e.endocrineDetails ?? []
+        gastroIntestinalDetails = e.gastroIntestinalDetails ?? []
         //one by one
         isPregnantComorbitiesDetails = e.isPregnantComorbitiesDetails
         isPregnantDetailsText = e.isPregnantDetailsText
@@ -135,18 +125,8 @@ final class ComorbitiesSectionViewModel {
         isInfantComorbitiesDetails = e.isInfantComorbitiesDetails
         isInfantCustomDetails = e.isInfantCustomDetails ?? []
         isInfantDetailsText = e.isInfantDetailsText
-        cardiacComorbitiesDetails = e.cardiacComorbitiesDetails
-        cardiacComorbitiesCustomDetails = e.cardiacComorbitiesCustomDetails ?? []
-        cardiacComorbitiesDetailsText = e.cardiacComorbitiesDetailsText
-        respiratoryComorbitiesDetails = e.respiratoryComorbitiesDetails ?? []
-        respiratoryComorbitiesCustomDetails = e.respiratoryComorbitiesCustomDetails ?? []
-        respiratoryComorbitiesDetailsText = e.respiratoryComorbitiesDetailsText
-        endocrineComorbitiesDetails = e.endocrineComorbitiesDetails ?? []
-        endocrineComorbitiesCustomDetails = e.endocrineComorbitiesCustomDetails ?? []
-        endocrineComorbitiesDetailsText = e.endocrineComorbitiesDetailsText
-        gastrointestinalComorbitiesDetails = e.gastrointestinalComorbitiesDetails ?? []
-        gastrointestinalComorbitiesCustomDetails = e.gastrointestinalComorbitiesCustomDetails ?? []
-        gastrointestinalComorbitiesDetailsText = e.gastrointestinalComorbitiesDetailsText
+
+
         hematologicalComorbitiesDetails = e.hematologicalComorbitiesDetails ?? []
         hematologicalComorbitiesCustomDetails = e.hematologicalComorbitiesCustomDetails ?? []
         hematologicalComorbitiesDetailsText = e.hematologicalComorbitiesDetailsText
@@ -204,6 +184,8 @@ final class ComorbitiesSectionViewModel {
         e.oncologyDetails = oncologyDetails
         e.cardiologyDetails = cardiologyDetails
         e.respiratoryDetails = respiratoryDetails
+        e.endocrineDetails = endocrineDetails
+        e.gastroIntestinalDetails = gastroIntestinalDetails
         
         //one by one
         e.isPregnantComorbitiesDetails = isPregnantComorbitiesDetails
@@ -213,18 +195,8 @@ final class ComorbitiesSectionViewModel {
         e.isInfantComorbitiesDetails = isInfantComorbitiesDetails
         e.isInfantDetailsText = isInfantDetailsText
         e.isInfantCustomDetails = isInfantCustomDetails
-        e.cardiacComorbitiesDetails = cardiacComorbitiesDetails
-        e.cardiacComorbitiesCustomDetails = cardiacComorbitiesCustomDetails
-        e.cardiacComorbitiesDetailsText = cardiacComorbitiesDetailsText
-        e.respiratoryComorbitiesDetails = respiratoryComorbitiesDetails
-        e.respiratoryComorbitiesCustomDetails = respiratoryComorbitiesCustomDetails
-        e.respiratoryComorbitiesDetailsText = respiratoryComorbitiesDetailsText
-        e.endocrineComorbitiesDetails = endocrineComorbitiesDetails
-        e.endocrineComorbitiesCustomDetails = endocrineComorbitiesCustomDetails
-        e.endocrineComorbitiesDetailsText = endocrineComorbitiesDetailsText
-        e.gastrointestinalComorbitiesDetails = gastrointestinalComorbitiesDetails
-        e.gastrointestinalComorbitiesCustomDetails = gastrointestinalComorbitiesCustomDetails
-        e.gastrointestinalComorbitiesDetailsText = gastrointestinalComorbitiesDetailsText
+
+        
         e.hematologicalComorbitiesDetails = hematologicalComorbitiesDetails
         e.hematologicalComorbitiesCustomDetails = hematologicalComorbitiesCustomDetails
         e.hematologicalComorbitiesDetailsText = hematologicalComorbitiesDetailsText
@@ -289,30 +261,22 @@ final class ComorbitiesSectionViewModel {
     
     func cardiacComorbitiesVisibility() {
         if cardiacComorbities == false {
-            cardiacComorbitiesDetails = []
-            cardiacComorbitiesDetailsText = ""
-            cardiacComorbitiesCustomDetails = []
+            cardiologyDetails = []
         }
     }
     func respiratoryComorbitiesVisibility() {
         if respiratoryComorbities == false {
-            respiratoryComorbitiesDetails = []
-            respiratoryComorbitiesDetailsText = ""
-            respiratoryComorbitiesCustomDetails = []
+            respiratoryDetails = []
         }
     }
     func endocrineComorbitiesVisibility() {
         if endocrineComorbities == false {
-            endocrineComorbitiesDetails = []
-            endocrineComorbitiesDetailsText = ""
-            endocrineComorbitiesCustomDetails = []
+            endocrineDetails = []
         }
     }
     func gastrointestinalComorbitiesVisibility() {
         if gastrointestinalComorbities == false {
-            gastrointestinalComorbitiesDetails = []
-            gastrointestinalComorbitiesDetailsText = ""
-            gastrointestinalComorbitiesCustomDetails = []
+            gastroIntestinalDetails = []
         }
     }
     func hematologicalComorbitiesVisibility() {
@@ -422,46 +386,6 @@ final class ComorbitiesSectionViewModel {
     func removeInfantCustomDetails(at index: Int) {
         guard isInfantCustomDetails.indices.contains(index) else { return }
         isInfantCustomDetails.remove(at: index)
-    }
-    func addCardiacComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !cardiacComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        cardiacComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeCardiacComorbitiesCustomDetails(at index: Int) {
-        guard cardiacComorbitiesCustomDetails.indices.contains(index) else { return }
-        cardiacComorbitiesCustomDetails.remove(at: index)
-    }
-    func addRespiratoryComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !respiratoryComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        respiratoryComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeRespiratoryComorbitiesCustomDetails(at index: Int) {
-        guard respiratoryComorbitiesCustomDetails.indices.contains(index) else { return }
-        respiratoryComorbitiesCustomDetails.remove(at: index)
-    }
-    func addEndocrineComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !endocrineComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        endocrineComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeEndocrineComorbitiesCustomDetails(at index: Int) {
-        guard endocrineComorbitiesCustomDetails.indices.contains(index) else { return }
-        endocrineComorbitiesCustomDetails.remove(at: index)
-    }
-    func addGastrointestinalComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !gastrointestinalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        gastrointestinalComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeGastrointestinalComorbitiesCustomDetails(at index: Int) {
-        guard gastrointestinalComorbitiesCustomDetails.indices.contains(index) else { return }
-        gastrointestinalComorbitiesCustomDetails.remove(at: index)
     }
     func addHematologicalComorbitiesCustomDetails(_ name: String) {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -597,6 +521,32 @@ final class ComorbitiesSectionViewModel {
                oncologicComorbities || infectiousComorbities
     }
     
+    private func hasValidCardiologyDetails() -> Bool {
+        cardiologyDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+
+    private func hasValidRespiratoryDetails() -> Bool {
+        respiratoryDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidEndocrineDetails() -> Bool {
+        endocrineDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidGastroIntestinalDetails() -> Bool {
+        gastroIntestinalDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    
     var canSave: Bool {
         
         guard hasAnyInfo else { return false }
@@ -606,26 +556,28 @@ final class ComorbitiesSectionViewModel {
             if isPregnant && !(isPregnantComorbitiesDetails == [.healthy]) { return false }
             
             return !cardiacComorbities &&
-                   !respiratoryComorbities &&
-                   !endocrineComorbities &&
-                   !gastrointestinalComorbities &&
-                   !hematologicalComorbities &&
-                   !imunologicalComorbities &&
-                   !musculoskeletalComorbities &&
-                   !genitourologicalComorbities &&
-                   !gynecologicalComorbities &&
-                   !infectiousComorbities &&
-                   !oncologicComorbities &&
-                   !androgenicalComorbities &&
-                   !neurologicalComorbities &&
-                   !geneticSyndrome
+            !respiratoryComorbities &&
+            !endocrineComorbities &&
+            !gastrointestinalComorbities &&
+            !hematologicalComorbities &&
+            !imunologicalComorbities &&
+            !musculoskeletalComorbities &&
+            !genitourologicalComorbities &&
+            !gynecologicalComorbities &&
+            !infectiousComorbities &&
+            !oncologicComorbities &&
+            !androgenicalComorbities &&
+            !neurologicalComorbities &&
+            !geneticSyndrome &&
+            cardiologyDetails.isEmpty &&
+            respiratoryDetails.isEmpty
         } else {
             if isInfant && (isInfantComorbitiesDetails?.isEmpty ?? true) && isInfantCustomDetails.isEmpty { return false }
             if isPregnant && (isPregnantComorbitiesDetails?.isEmpty ?? true) && isPregnantCustomDetails.isEmpty { return false }
-            if cardiacComorbities && (cardiacComorbitiesDetails?.isEmpty ?? true) && cardiacComorbitiesCustomDetails.isEmpty { return false }
-            if respiratoryComorbities && (respiratoryComorbitiesDetails?.isEmpty ?? true) && respiratoryComorbitiesCustomDetails.isEmpty { return false }
-            if endocrineComorbities && (endocrineComorbitiesDetails?.isEmpty ?? true) && endocrineComorbitiesCustomDetails.isEmpty { return false }
-            if gastrointestinalComorbities && (gastrointestinalComorbitiesDetails?.isEmpty ?? true) && gastrointestinalComorbitiesCustomDetails.isEmpty { return false }
+            if cardiacComorbities && !hasValidCardiologyDetails() {return false}
+            if respiratoryComorbities && !hasValidRespiratoryDetails() {return false}
+            if endocrineComorbities && !hasValidEndocrineDetails() {return false}
+            if gastrointestinalComorbities && !hasValidGastroIntestinalDetails() {return false}
             if hematologicalComorbities && (hematologicalComorbitiesDetails?.isEmpty ?? true) && hematologicalComorbitiesCustomDetails.isEmpty { return false }
             if imunologicalComorbities && (imunologicalComorbitiesDetails?.isEmpty ?? true) && imunologicalComorbitiesCustomDetails.isEmpty { return false }
             if musculoskeletalComorbities && (musculoskeletalComorbitiesDetails?.isEmpty ?? true) && musculoskeletalComorbitiesCustomDetails.isEmpty { return false }
@@ -663,17 +615,17 @@ final class ComorbitiesSectionViewModel {
             if isPregnant && (isPregnantComorbitiesDetails?.isEmpty ?? true) && isPregnantCustomDetails.isEmpty {
                 messages.append("Adicione detalhes para Gestante")
             }
-            if cardiacComorbities && (cardiacComorbitiesDetails?.isEmpty ?? true) && cardiacComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades cardíacas")
+            if cardiacComorbities && !hasValidCardiologyDetails() {
+                messages.append("Adicione pelo menos uma comorbidade cardíaca")
             }
-            if respiratoryComorbities && (respiratoryComorbitiesDetails?.isEmpty ?? true) && respiratoryComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades respiratórias")
+            if respiratoryComorbities && !hasValidRespiratoryDetails() {
+                messages.append("Adicione pelo menos uma comorbidade respiratória")
             }
-            if endocrineComorbities && (endocrineComorbitiesDetails?.isEmpty ?? true) && endocrineComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades endócrinas")
+            if endocrineComorbities && !hasValidRespiratoryDetails() {
+                messages.append("Adicione pelo menos uma comorbidade endócrinas")
             }
-            if gastrointestinalComorbities && (gastrointestinalComorbitiesDetails?.isEmpty ?? true) && gastrointestinalComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades do trato gastrointestinais")
+            if gastrointestinalComorbities && !hasValidGastroIntestinalDetails() {
+                messages.append("Adicione pelo menos uma comorbidade gastrointestinal")
             }
             if hematologicalComorbities && (hematologicalComorbitiesDetails?.isEmpty ?? true) && hematologicalComorbitiesCustomDetails.isEmpty {
                 messages.append("Adicione detalhes para comorbidades hematológicas")
