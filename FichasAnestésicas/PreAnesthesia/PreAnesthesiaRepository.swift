@@ -29,7 +29,7 @@ final class SwiftDataPreAnesthesiaRepository: PreAnesthesiaRepository {
         preanesthesia.createdAt = now
         preanesthesia.updatedAt = now
         preanesthesia.updatedBy = user
-        preanesthesia.status = .inProgress
+        //preanesthesia.status = .inProgress
         
         
         surgery.preanesthesia = preanesthesia

@@ -21,32 +21,30 @@ struct AnesthesiaDescriptionView: View {
         NavigationStack {
             Group {
                 if let anesthesiaDescription = anesthesia.anesthesiaDescription {
-                    ScrollView {
+                    ScrollView {                        
                         VStack(alignment: .leading) {
-                            Section("Descrição") {
-                                Button {
-                                    presentEditForm(for: anesthesiaDescription)
-                                } label: {
+                            HStack {
+                                Image(systemName: "person.fill")
+                                    .foregroundStyle(anesthesia.surgery.patient.sex.sexColor)
+                                Text("Descrição")
+                                    .font(.title3)
+                                    .fontWeight(.semibold)
+                            }
+                            Divider()
+                            VStack(alignment: .leading) {
+                                VStack(alignment: .leading) {
                                     HStack {
-                                        VStack(alignment: .leading) {
-                                            Text(anesthesiaDescription.timestamp, style: .date)
-                                                .font(.headline)
-                                            Text(anesthesiaDescription.timestamp, style: .time)
-                                                .font(.subheadline)
-                                                .foregroundStyle(.secondary)
-                                            if let descriptionFinal = anesthesiaDescription.veryEndDescriptionText?.trimmingCharacters(in: .whitespacesAndNewlines), !descriptionFinal.isEmpty {
-                                                Text(descriptionFinal)
-                                            }
+                                        if let descriptionFinal = anesthesiaDescription.veryEndDescriptionText?.trimmingCharacters(in: .whitespacesAndNewlines), !descriptionFinal.isEmpty {
+                                            Text(descriptionFinal)
                                         }
-                                        Spacer()
-                                        Image(systemName: "chevron.right")
-                                            .foregroundStyle(.tertiary)
                                     }
                                 }
                             }
                         }
-                        .padding(.horizontal)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(.thinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     }
                 } else {
                     ContentUnavailableView(

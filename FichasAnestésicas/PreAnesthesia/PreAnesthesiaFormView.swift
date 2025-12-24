@@ -222,7 +222,6 @@ struct PreAnesthesiaFormView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Salvar", systemImage: "checkmark") {
                         do {
-                            try viewModel.save()
                             viewModel.finishStatus()
                             try viewModel.save()
                             
