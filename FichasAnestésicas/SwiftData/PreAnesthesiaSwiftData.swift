@@ -68,6 +68,9 @@ final class PreAnesthesia {
     var anesthesiaHistory: Bool?
     var hasAllergies: Bool?
     
+    //newFormat
+    @Relationship var oncologyDetails: [OncologyComorbidityDetail]?
+    
     //one by one
     var isPregnantComorbitiesDetailsRaw: [String]?
     var isPregnantComorbitiesDetails: [PregnantComorbities]? {
@@ -314,6 +317,9 @@ final class PreAnesthesia {
         surgeryHistory: Bool = false,
         anesthesiaHistory: Bool = false,
         
+        //newSection
+        oncologyDetails: [OncologyComorbidityDetail]? = nil,
+        
         //one by one
         isPregnantComorbitiesDetails: PregnantComorbities? = nil,
         isPregnantDetailsText: String? = nil,
@@ -437,6 +443,8 @@ final class PreAnesthesia {
         self.hasAllergies = hasAllergies
         self.surgeryHistory = surgeryHistory
         self.anesthesiaHistory = anesthesiaHistory
+        // newsection
+        self.oncologyDetails = oncologyDetails
         //one by one
         self.isPregnantComorbitiesDetailsRaw = isPregnantComorbitiesDetails.map { [$0.rawValue] }
         self.isPregnantDetailsText = isPregnantDetailsText

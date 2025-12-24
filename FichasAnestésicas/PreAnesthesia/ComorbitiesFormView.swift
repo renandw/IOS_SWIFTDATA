@@ -120,6 +120,136 @@ struct ComorbiditiesSection<T: ComorbiditiesType>: View {
     }
 }
 
+struct NewComorbidityDetailSection<Detail: ComorbidityDetailProtocol, EnumType: ComorbiditiesType>: View {
+    let title: String
+    let icon: String
+    @Binding var isEnabled: Bool
+    @Binding var details: [Detail]
+    let createDetail: (EnumType) -> Detail
+    let createCustomDetail: (String) -> Detail
+    
+    @State private var newCustomName = ""
+    
+    var sortedEnumItems: [EnumType] {
+        EnumType.allCases.sorted { $0.displayName < $1.displayName }
+    }
+    
+    private func existingDetail(for enumCase: EnumType) -> Detail? {
+        details.first { $0.displayName() == enumCase.displayName }
+    }
+    
+    private var customDetails: [Detail] {
+        details.filter { detail in
+            !EnumType.allCases.contains { $0.displayName == detail.displayName() }
+        }
+    }
+    
+    var body: some View {
+        Section {
+            Toggle(isOn: $isEnabled) {
+                Label(title, systemImage: icon)
+                    .fontWeight(.medium)
+            }
+            
+            if isEnabled {
+                ForEach(sortedEnumItems) { enumCase in
+                    detailRow(for: enumCase)
+                }
+                
+                ForEach(customDetails) { detail in
+                    customDetailRow(detail)
+                }
+                
+                HStack {
+                    TextField("Adicionar Comorbidades", text: $newCustomName)
+                        .autocorrectionDisabled(true)
+                        .submitLabel(.done)
+                        .onSubmit { addCustom() }
+                    if !newCustomName.isEmpty {
+                        Button { addCustom() } label: {
+                            Image(systemName: "plus.circle")
+                        }
+                    }
+                }
+            }
+        } header: {
+            Text(title)
+        }
+    }
+    
+    @ViewBuilder
+    private func detailRow(for enumCase: EnumType) -> some View {
+        let existing = existingDetail(for: enumCase)
+        let isSelected = existing != nil
+        
+        Button {
+            toggleEnum(enumCase)
+        } label: {
+            HStack {
+                Text(enumCase.displayName)
+                Spacer()
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle.dashed")
+                    .foregroundStyle(isSelected ? .blue : .gray)
+            }
+        }
+        .foregroundStyle(.primary)
+        
+        if let detail = existing {
+            TextField("Detalhes", text: Binding(
+                get: { detail.notes ?? "" },
+                set: { detail.notes = $0.isEmpty ? nil : $0 }
+            ))
+            .font(.caption)
+            .textFieldStyle(.roundedBorder)
+        }
+    }
+
+    @ViewBuilder
+    private func customDetailRow(_ detail: Detail) -> some View {
+        Button {
+            removeDetail(detail)
+        } label: {
+            HStack {
+                Text(detail.displayName())
+                Spacer()
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(.blue)
+            }
+        }
+        .foregroundStyle(.primary)
+        
+        TextField("Detalhes", text: Binding(
+            get: { detail.notes ?? "" },
+            set: { detail.notes = $0.isEmpty ? nil : $0 }
+        ))
+        .font(.caption)
+        .textFieldStyle(.roundedBorder)
+    }
+    
+    private func toggleEnum(_ enumCase: EnumType) {
+        if let existing = existingDetail(for: enumCase) {
+            removeDetail(existing)
+        } else {
+            let new = createDetail(enumCase)
+            details.append(new)
+        }
+    }
+    
+    private func removeDetail(_ detail: Detail) {
+        details.removeAll { $0.id == detail.id }
+    }
+    
+    private func addCustom() {
+        let trimmed = newCustomName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        guard !customDetails.contains(where: { $0.displayName() == trimmed }) else { return }
+        
+        let new = createCustomDetail(trimmed)
+        details.append(new)
+        newCustomName = ""
+    }
+}
+
 // MARK: - View Principal Refatorada
 struct ComorbitiesFormView: View {
     @Environment(\.dismiss) private var dismiss
@@ -284,6 +414,14 @@ struct ComorbitiesFormView: View {
                     selection: binding(get: { viewModel.comorbities.oncologyComorbitiesDetails }, set: { viewModel.comorbities.oncologyComorbitiesDetails = $0 }),
                     customDetails: $viewModel.comorbities.oncologyComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.oncologyComorbitiesDetailsText
+                )
+                NewComorbidityDetailSection<OncologyComorbidityDetail, OncologicComorbidities>(
+                    title: "Oncológicas",
+                    icon: "person.fill",
+                    isEnabled: $viewModel.comorbities.oncologicComorbities,
+                    details: $viewModel.comorbities.oncologyDetails,
+                    createDetail: { OncologyComorbidityDetail(type: $0) },
+                    createCustomDetail: { OncologyComorbidityDetail(customName: $0) }
                 )
                 ComorbiditiesSection(
                     title: "Neurológicas",

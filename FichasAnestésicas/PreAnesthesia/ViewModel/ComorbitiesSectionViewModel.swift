@@ -34,6 +34,9 @@ final class ComorbitiesSectionViewModel {
         }
     }
     
+    //section
+    var oncologyDetails: [OncologyComorbidityDetail] = []
+    
     //one by one
     var isPregnantComorbitiesDetails: [PregnantComorbities]?
     var isPregnantDetailsText: String?
@@ -122,6 +125,8 @@ final class ComorbitiesSectionViewModel {
         neurologicalComorbities = e.neurologicalComorbities
         geneticSyndrome = e.geneticSyndrome
         healthyPatient = e.healthyPatient ?? false
+        //newsection
+        oncologyDetails = e.oncologyDetails ?? []
         //one by one
         isPregnantComorbitiesDetails = e.isPregnantComorbitiesDetails
         isPregnantDetailsText = e.isPregnantDetailsText
@@ -199,6 +204,8 @@ final class ComorbitiesSectionViewModel {
         e.oncologicComorbities = oncologicComorbities
         e.geneticSyndrome = geneticSyndrome
         e.healthyPatient = healthyPatient
+        //newSection
+        e.oncologyDetails = oncologyDetails
         
         //one by one
         e.isPregnantComorbitiesDetails = isPregnantComorbitiesDetails
