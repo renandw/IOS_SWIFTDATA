@@ -648,41 +648,6 @@ struct PreAnesthesiaView: View {
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let oncologicDetails = preanesthesia?.oncologyComorbitiesDetails, !oncologicDetails.isEmpty {
-                                        ForEach(oncologicDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
-                                        }
-                                    }
-                                    if let customOncologicDetails = preanesthesia?.oncologyComorbitiesCustomDetails, !customOncologicDetails.isEmpty {
-                                        ForEach(customOncologicDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let oncologicDetailsText = preanesthesia?.oncologyComorbitiesDetailsText, !oncologicDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(oncologicDetailsText)
-                                        .font(.caption)
-                                }
-                            }
-                        }
-                        Divider()
-                    }
-                    if preanesthesia?.oncologicComorbities == true {
-                        VStack(alignment: .trailing, spacing: 12) {
-                            HStack(alignment: .top) {
-                                Text("Oncológicas:")
-                                    .font(.headline)
-                                Spacer()
-                                VStack(alignment: .trailing) {
                                     if let details = preanesthesia?.oncologyDetails, !details.isEmpty {
                                         ForEach(details) { detail in
                                             VStack(alignment: .trailing, spacing: 2) {

@@ -16,12 +16,13 @@ struct RootView: View {
             }
         }
         .task {
-            if !didRunManualMigrations {
-                didRunManualMigrations = true
-                try? migrateOncologyIfNeeded(context: context)
-            }
+//            if !didRunManualMigrations {
+//                didRunManualMigrations = true
+//                try? migrateOncologyIfNeeded(context: context)
+//            }
             session.loadCurrentUser(using: context)
-        }    }
+        }
+    }
 }
 
 #Preview("RootView") {

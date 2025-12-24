@@ -266,7 +266,6 @@ struct ComorbitiesFormView: View {
     var body: some View {
         NavigationStack {
             Form {
-                
                 ForEach(viewModel.comorbities.validationMessages, id: \.self) { message in
                     Text(message).foregroundStyle(.red)
                 }
@@ -406,14 +405,6 @@ struct ComorbitiesFormView: View {
                     selection: binding(get: { viewModel.comorbities.infectiousComorbitiesDetails }, set: { viewModel.comorbities.infectiousComorbitiesDetails = $0 }),
                     customDetails: $viewModel.comorbities.infectiousComorbitiesCustomDetails,
                     detailsText: $viewModel.comorbities.infectiousComorbitiesDetailsText
-                )
-                ComorbiditiesSection(
-                    title: "Oncológicas",
-                    icon: "person.fill",
-                    isEnabled: $viewModel.comorbities.oncologicComorbities,
-                    selection: binding(get: { viewModel.comorbities.oncologyComorbitiesDetails }, set: { viewModel.comorbities.oncologyComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.oncologyComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.oncologyComorbitiesDetailsText
                 )
                 NewComorbidityDetailSection<OncologyComorbidityDetail, OncologicComorbidities>(
                     title: "Oncológicas",

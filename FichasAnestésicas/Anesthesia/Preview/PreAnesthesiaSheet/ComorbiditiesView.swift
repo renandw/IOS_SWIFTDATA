@@ -145,15 +145,6 @@ struct ComorbiditiesView: View {
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.oncologicComorbities == true {
-                                ComorbiditiesRow(
-                                    title: "Oncológico:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.oncologyComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.oncologyComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.oncologyComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
-                                )
-                            }
-                            if anesthesia.surgery.preanesthesia?.oncologicComorbities == true {
                                 NewComorbiditiesRow(
                                     title: "Oncológicas:",
                                     details: anesthesia.surgery.preanesthesia?.oncologyDetails ?? []

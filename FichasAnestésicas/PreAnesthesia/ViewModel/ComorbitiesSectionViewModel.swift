@@ -99,10 +99,6 @@ final class ComorbitiesSectionViewModel {
     var infectiousComorbitiesCustomDetails: [String] = []
     var infectiousComorbitiesDetailsText: String?
     
-    var oncologyComorbitiesDetails: [OncologicComorbidities]?
-    var oncologyComorbitiesCustomDetails: [String] = []
-    var oncologyComorbitiesDetailsText: String?
-    
     
     func load(from e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
         isInfantVisibility(patientAge: patientAge)
@@ -176,10 +172,6 @@ final class ComorbitiesSectionViewModel {
         infectiousComorbitiesDetails = e.infectiousComorbitiesDetails ?? []
         infectiousComorbitiesCustomDetails = e.infectiousComorbitiesCustomDetails ?? []
         infectiousComorbitiesDetailsText = e.infectiousComorbitiesDetailsText
-
-        oncologyComorbitiesDetails = e.oncologyComorbitiesDetails ?? []
-        oncologyComorbitiesCustomDetails = e.oncologyComorbitiesCustomDetails ?? []
-        oncologyComorbitiesDetailsText = e.oncologyComorbitiesDetailsText
     }
     
     func apply(to e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
@@ -256,10 +248,6 @@ final class ComorbitiesSectionViewModel {
         e.infectiousComorbitiesDetails = infectiousComorbitiesDetails
         e.infectiousComorbitiesCustomDetails = infectiousComorbitiesCustomDetails
         e.infectiousComorbitiesDetailsText = infectiousComorbitiesDetailsText
-        
-        e.oncologyComorbitiesDetails = oncologyComorbitiesDetails
-        e.oncologyComorbitiesCustomDetails = oncologyComorbitiesCustomDetails
-        e.oncologyComorbitiesDetailsText = oncologyComorbitiesDetailsText
     }
     
     func isPregnantVisibility(patientSex: Sex) {
@@ -395,6 +383,8 @@ final class ComorbitiesSectionViewModel {
         imunologicalComorbities = false
         musculoskeletalComorbities = false
         genitourologicalComorbities = false
+        oncologicComorbities = false
+        infectiousComorbities = false
         gynecologicalComorbities = false
         androgenicalComorbities = false
         neurologicalComorbities = false
@@ -548,19 +538,6 @@ final class ComorbitiesSectionViewModel {
         guard infectiousComorbitiesCustomDetails.indices.contains(index) else { return }
         infectiousComorbitiesCustomDetails.remove(at: index)
     }
-
-    // Similarly, add these for oncologic comorbities:
-    func addOncologyComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !oncologyComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        oncologyComorbitiesCustomDetails.append(trimmed)
-    }
-
-    func removeOncologyComorbitiesCustomDetails(at index: Int) {
-        guard oncologyComorbitiesCustomDetails.indices.contains(index) else { return }
-        oncologyComorbitiesCustomDetails.remove(at: index)
-    }
     
     func addGeneticSyndromeComorbitiesCustomDetails(_ name: String) {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -585,7 +562,9 @@ final class ComorbitiesSectionViewModel {
         imunologicalComorbities = false
         musculoskeletalComorbities = false
         genitourologicalComorbities = false
+        infectiousComorbities = false
         gynecologicalComorbities = false
+        oncologicComorbities = false
         androgenicalComorbities = false
         neurologicalComorbities = false
         geneticSyndrome = false
@@ -608,7 +587,8 @@ final class ComorbitiesSectionViewModel {
                hematologicalComorbities || imunologicalComorbities ||
                musculoskeletalComorbities || genitourologicalComorbities ||
                gynecologicalComorbities || androgenicalComorbities ||
-               neurologicalComorbities || geneticSyndrome
+               neurologicalComorbities || geneticSyndrome ||
+               oncologicComorbities || infectiousComorbities
     }
     
     var canSave: Bool {
@@ -628,6 +608,8 @@ final class ComorbitiesSectionViewModel {
                    !musculoskeletalComorbities &&
                    !genitourologicalComorbities &&
                    !gynecologicalComorbities &&
+                   !infectiousComorbities &&
+                   !oncologicComorbities &&
                    !androgenicalComorbities &&
                    !neurologicalComorbities &&
                    !geneticSyndrome

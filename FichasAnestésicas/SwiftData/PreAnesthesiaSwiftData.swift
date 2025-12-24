@@ -193,14 +193,6 @@ final class PreAnesthesia {
     var infectiousComorbitiesDetailsText: String?
     var infectiousComorbitiesCustomDetails: [String]?
     
-    var oncologyComorbitiesDetailsRaw: [String]?
-    var oncologyComorbitiesDetails: [OncologicComorbidities]? {
-        get { oncologyComorbitiesDetailsRaw?.compactMap(OncologicComorbidities.init(rawValue:)) }
-        set { oncologyComorbitiesDetailsRaw = newValue?.map { $0.rawValue } }
-    }
-    var oncologyComorbitiesDetailsText: String?
-    var oncologyComorbitiesCustomDetails: [String]?
-    
     
     var surgeryHistoryDetailsRaw: [String]?
     var surgeryHistoryDetails: [SurgeryHistorySpeciality]? {
@@ -368,10 +360,7 @@ final class PreAnesthesia {
         infectiousComorbitiesDetails: InfectiousComorbities? = nil,
         infectiousComorbitiesDetailsText: String? = nil,
         infectiousComorbitiesCustomDetails: [String]? = [],
-        
-        oncologyComorbitiesDetails: OncologicComorbidities? = nil,
-        oncologyComorbitiesDetailsText: String? = nil,
-        oncologyComorbitiesCustomDetails: [String]? = [],
+
         
         surgeryHistoryDetails: SurgeryHistorySpeciality? = nil,
         surgeryHistoryDetailsText: String? = nil,
@@ -493,10 +482,6 @@ final class PreAnesthesia {
         self.infectiousComorbitiesDetailsRaw = infectiousComorbitiesDetails.map { [$0.rawValue] }
         self.infectiousComorbitiesDetailsText = infectiousComorbitiesDetailsText
         self.infectiousComorbitiesCustomDetails = infectiousComorbitiesCustomDetails
-        
-        self.oncologyComorbitiesDetailsRaw = oncologyComorbitiesDetails.map { [$0.rawValue] }
-        self.oncologyComorbitiesDetailsText = oncologyComorbitiesDetailsText
-        self.oncologyComorbitiesCustomDetails = oncologyComorbitiesCustomDetails
         
         self.surgeryHistoryDetailsRaw = surgeryHistoryDetails.map { [$0.rawValue] }
         self.surgeryHistoryDetailsText = surgeryHistoryDetailsText
