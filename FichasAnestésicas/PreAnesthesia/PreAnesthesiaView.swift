@@ -676,6 +676,30 @@ struct PreAnesthesiaView: View {
                         }
                         Divider()
                     }
+                    if preanesthesia?.oncologicComorbities == true {
+                        VStack(alignment: .trailing, spacing: 12) {
+                            HStack(alignment: .top) {
+                                Text("Oncológicas:")
+                                    .font(.headline)
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    if let details = preanesthesia?.oncologyDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Divider()
+                    }
                     if preanesthesia?.neurologicalComorbities == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {

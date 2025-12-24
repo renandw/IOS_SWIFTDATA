@@ -3,7 +3,7 @@ import SwiftUI
 import SwiftData
 
 struct RootView: View {
-    
+    @State private var didRunManualMigrations = false
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) var context
 
@@ -16,9 +16,12 @@ struct RootView: View {
             }
         }
         .task {
+            if !didRunManualMigrations {
+                didRunManualMigrations = true
+                try? migrateOncologyIfNeeded(context: context)
+            }
             session.loadCurrentUser(using: context)
-        }
-    }
+        }    }
 }
 
 #Preview("RootView") {

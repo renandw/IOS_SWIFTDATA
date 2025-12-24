@@ -153,6 +153,12 @@ struct ComorbiditiesView: View {
                                     displayName: { $0.displayName }
                                 )
                             }
+                            if anesthesia.surgery.preanesthesia?.oncologicComorbities == true {
+                                NewComorbiditiesRow(
+                                    title: "Oncológicas:",
+                                    details: anesthesia.surgery.preanesthesia?.oncologyDetails ?? []
+                                )
+                            }
                             if anesthesia.surgery.preanesthesia?.neurologicalComorbities == true {
                                 ComorbiditiesRow(
                                     title: "Sistema Neurológico:",
@@ -236,5 +242,30 @@ struct ComorbiditiesRow<T>: View {
         items.append(contentsOf: customItems)
         
         return items
+    }
+}
+
+
+struct NewComorbiditiesRow: View {
+    let title: String
+    let details: [OncologyComorbidityDetail]
+    
+    var body: some View {
+        if !details.isEmpty {
+            Text("**\(title)** \(formattedText)")
+                .foregroundColor(.black)
+                .font(.system(size: 9))
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+    
+    private var formattedText: String {
+        details.map { detail in
+            let name = detail.displayName()
+            if let notes = detail.notes, !notes.isEmpty {
+                return "\(name) (\(notes))"
+            }
+            return name
+        }.joined(separator: "; ")
     }
 }
