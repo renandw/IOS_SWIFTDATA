@@ -144,13 +144,21 @@ struct SurgeryHistoryTypeFormView: View {
             Form {
                 
                 // Cirurgias Prévias
-                SurgeryHistoryTypeSection(
+//                SurgeryHistoryTypeSection(
+//                    title: "Cirurgias Prévias?",
+//                    icon: "scissors.circle.fill",
+//                    isEnabled: $viewModel.surgeryHistory.surgeryHistory,
+//                    selection: binding(get: { viewModel.surgeryHistory.surgeryHistoryDetails }, set: { viewModel.surgeryHistory.surgeryHistoryDetails = $0 }),
+//                    customDetails: $viewModel.surgeryHistory.surgeryHistoryCustomDetails,
+//                    detailsText: $viewModel.surgeryHistory.surgeryHistoryDetailsText
+//                )
+                NewComorbidityDetailSection<SurgeryHistoryDetail, SurgeryHistorySpeciality>(
                     title: "Cirurgias Prévias?",
                     icon: "scissors.circle.fill",
                     isEnabled: $viewModel.surgeryHistory.surgeryHistory,
-                    selection: binding(get: { viewModel.surgeryHistory.surgeryHistoryDetails }, set: { viewModel.surgeryHistory.surgeryHistoryDetails = $0 }),
-                    customDetails: $viewModel.surgeryHistory.surgeryHistoryCustomDetails,
-                    detailsText: $viewModel.surgeryHistory.surgeryHistoryDetailsText
+                    details: $viewModel.surgeryHistory.surgeryHistoricDetails,
+                    createDetail: { SurgeryHistoryDetail(type: $0) },
+                    createCustomDetail: { SurgeryHistoryDetail(customName: $0) }
                 )
                 if viewModel.surgeryHistory.surgeryHistory {
                     SurgeryHistoryTypeSection(
@@ -186,7 +194,7 @@ struct SurgeryHistoryTypeFormView: View {
 }
 
 // MARK: - Extensões para conformidade com o protocolo
-extension SurgeryHistorySpeciality: SurgeryHistoryType {
+extension SurgeryHistorySpeciality: ComorbiditiesType {
     public var id: Self { self }
 }
 extension AnesthesiaComplicationsHistory: SurgeryHistoryType {

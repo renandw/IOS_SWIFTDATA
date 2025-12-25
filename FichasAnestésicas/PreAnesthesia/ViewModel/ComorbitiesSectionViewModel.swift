@@ -24,7 +24,7 @@ final class ComorbitiesSectionViewModel {
     var androgenicalComorbities = false { didSet { androgenicalComorbitiesVisibility() } }
     var neurologicalComorbities = false {didSet { neurologicalComorbitiesVisibility() } }
     var infectiousComorbities = false { didSet { infectiousComorbitiesVisibility() } }
-    var oncologicComorbities = false
+    var oncologicComorbities = false { didSet { oncologicComorbitiesVisibility() } }
     var geneticSyndrome = false {didSet { geneticSyndromeVisibility() } }
     var healthyPatient = false {
         didSet {
@@ -40,7 +40,17 @@ final class ComorbitiesSectionViewModel {
     var respiratoryDetails: [RespiratoryComorbidityDetail] = []
     var endocrineDetails: [EndocrineComorbidityDetail] = []
     var gastroIntestinalDetails: [GastroIntestinalComorbidityDetail] = []
+    var hematologyDetails: [HematologyComorbidityDetail] = []
+    var imunologyDetails: [ImunologyComorbidityDetail] = []
+    var musculoskeletalDetails: [MusculoskeletalComorbidityDetail] = []
+    var genitoUrinaryDetails: [GenitoUrinaryComorbidityDetail] = []
+    var gynecologyDetails: [GynecologicComorbityDetail] = []
+    var androgenyDetails: [AndrogenicComorbityDetail] = []
+    var neurologyDetails: [NeurologyComorbityDetail] = []
+    var infectiousDetails: [InfectiousComorbityDetail] = []
+    var geneticSyndromeDetails: [GeneticSyndromeDetail] = []
     
+
     
     //one by one
     var isPregnantComorbitiesDetails: [PregnantComorbities]?
@@ -53,41 +63,10 @@ final class ComorbitiesSectionViewModel {
     var isInfantCustomDetails: [String] = []
     
     
-    var hematologicalComorbitiesDetails: [HematologicComorbities]?
-    var hematologicalComorbitiesCustomDetails: [String] = []
-    var hematologicalComorbitiesDetailsText: String?
-    
-    var imunologicalComorbitiesDetails: [ImmunologicComorbities]?
-    var imunologicalComorbitiesCustomDetails: [String] = []
-    var imunologicalComorbitiesDetailsText: String?
-    
-    var musculoskeletalComorbitiesDetails: [MusculoskeletalComorbities]?
-    var musculoskeletalComorbitiesCustomDetails: [String] = []
-    var musculoskeletalComorbitiesDetailsText: String?
-    
-    var genitourologicalComorbitiesDetails: [GenitourinaryComorbities]?
-    var genitourologicalComorbitiesCustomDetails: [String] = []
-    var genitourologicalComorbitiesDetailsText: String?
-    
-    var gynecologicalComorbitiesDetails: [GynecologicComorbities]?
-    var gynecologicalComorbitiesCustomDetails: [String] = []
-    var gynecologicalComorbitiesDetailsText: String?
-    
-    var androgenicalComorbitiesDetails: [AndrologicComorbities]?
-    var androgenicalComorbitiesCustomDetails: [String] = []
-    var androgenicalComorbitiesDetailsText: String?
-    
-    var neurologicalComorbitiesDetails: [NeurologicalComorbities]?
-    var neurologicalComorbitiesCustomDetails: [String] = []
-    var neurologicalComorbitiesDetailsText: String?
-    
     var geneticSyndromeComorbitiesDetails: [GeneticSyndrome]?
     var geneticSyndromeComorbitiesCustomDetails: [String] = []
     var geneticSyndromeComorbitiesDetailsText: String?
     
-    var infectiousComorbitiesDetails: [InfectiousComorbities]?
-    var infectiousComorbitiesCustomDetails: [String] = []
-    var infectiousComorbitiesDetailsText: String?
     
     
     func load(from e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
@@ -117,6 +96,17 @@ final class ComorbitiesSectionViewModel {
         respiratoryDetails = e.respiratoryDetails ?? []
         endocrineDetails = e.endocrineDetails ?? []
         gastroIntestinalDetails = e.gastroIntestinalDetails ?? []
+        hematologyDetails = e.hematologyDetails ?? []
+        imunologyDetails = e.imunologyDetails ?? []
+        musculoskeletalDetails = e.musculoskeletalDetails ?? []
+        genitoUrinaryDetails = e.genitoUrinaryDetails ?? []
+        gynecologyDetails = e.gynecologyDetails ?? []
+        androgenyDetails = e.androgenyDetails ?? []
+        neurologyDetails = e.neurologyDetails ?? []
+        infectiousDetails = e.infectiousDetails ?? []
+        geneticSyndromeDetails = e.geneticSyndromeDetails ?? []
+        
+        
         //one by one
         isPregnantComorbitiesDetails = e.isPregnantComorbitiesDetails
         isPregnantDetailsText = e.isPregnantDetailsText
@@ -126,36 +116,12 @@ final class ComorbitiesSectionViewModel {
         isInfantCustomDetails = e.isInfantCustomDetails ?? []
         isInfantDetailsText = e.isInfantDetailsText
 
-
-        hematologicalComorbitiesDetails = e.hematologicalComorbitiesDetails ?? []
-        hematologicalComorbitiesCustomDetails = e.hematologicalComorbitiesCustomDetails ?? []
-        hematologicalComorbitiesDetailsText = e.hematologicalComorbitiesDetailsText
-        imunologicalComorbitiesDetails = e.imunologicalComorbitiesDetails ?? []
-        imunologicalComorbitiesCustomDetails = e.imunologicalComorbitiesCustomDetails ?? []
-        imunologicalComorbitiesDetailsText = e.imunologicalComorbitiesDetailsText
-        musculoskeletalComorbitiesDetails = e.musculoskeletalComorbitiesDetails ?? []
-        musculoskeletalComorbitiesCustomDetails = e.musculoskeletalComorbitiesCustomDetails ?? []
-        musculoskeletalComorbitiesDetailsText = e.musculoskeletalComorbitiesDetailsText
         
-        genitourologicalComorbitiesDetails = e.genitourologicalComorbitiesDetails ?? []
-        genitourologicalComorbitiesCustomDetails = e.genitourologicalComorbitiesCustomDetails ?? []
-        genitourologicalComorbitiesDetailsText = e.genitourologicalComorbitiesDetailsText
-        gynecologicalComorbitiesDetails = e.gynecologicalComorbitiesDetails ?? []
-        gynecologicalComorbitiesCustomDetails = e.gynecologicalComorbitiesCustomDetails ?? []
-        gynecologicalComorbitiesDetailsText = e.gynecologicalComorbitiesDetailsText
-        androgenicalComorbitiesDetails = e.androgenicalComorbitiesDetails ?? []
-        androgenicalComorbitiesCustomDetails = e.androgenicalComorbitiesCustomDetails ?? []
-        androgenicalComorbitiesDetailsText = e.androgenicalComorbitiesDetailsText
-        neurologicalComorbitiesDetails = e.neurologicalComorbitiesDetails ?? []
-        neurologicalComorbitiesCustomDetails = e.neurologicalComorbitiesCustomDetails ?? []
-        neurologicalComorbitiesDetailsText = e.neurologicalComorbitiesDetailsText
+        
         geneticSyndromeComorbitiesDetails = e.geneticSyndromeComorbitiesDetails ?? []
         geneticSyndromeComorbitiesCustomDetails = e.geneticSyndromeComorbitiesCustomDetails ?? []
         geneticSyndromeComorbitiesDetailsText = e.geneticSyndromeComorbitiesDetailsText
         
-        infectiousComorbitiesDetails = e.infectiousComorbitiesDetails ?? []
-        infectiousComorbitiesCustomDetails = e.infectiousComorbitiesCustomDetails ?? []
-        infectiousComorbitiesDetailsText = e.infectiousComorbitiesDetailsText
     }
     
     func apply(to e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
@@ -186,6 +152,17 @@ final class ComorbitiesSectionViewModel {
         e.respiratoryDetails = respiratoryDetails
         e.endocrineDetails = endocrineDetails
         e.gastroIntestinalDetails = gastroIntestinalDetails
+        e.hematologyDetails = hematologyDetails
+        e.imunologyDetails = imunologyDetails
+        e.musculoskeletalDetails = musculoskeletalDetails
+        e.genitoUrinaryDetails = genitoUrinaryDetails
+        e.gynecologyDetails = gynecologyDetails
+        e.androgenyDetails = androgenyDetails
+        e.neurologyDetails = neurologyDetails
+        e.infectiousDetails = infectiousDetails
+        e.geneticSyndromeDetails = geneticSyndromeDetails
+        
+        
         
         //one by one
         e.isPregnantComorbitiesDetails = isPregnantComorbitiesDetails
@@ -196,36 +173,13 @@ final class ComorbitiesSectionViewModel {
         e.isInfantDetailsText = isInfantDetailsText
         e.isInfantCustomDetails = isInfantCustomDetails
 
+
+
         
-        e.hematologicalComorbitiesDetails = hematologicalComorbitiesDetails
-        e.hematologicalComorbitiesCustomDetails = hematologicalComorbitiesCustomDetails
-        e.hematologicalComorbitiesDetailsText = hematologicalComorbitiesDetailsText
-        e.imunologicalComorbitiesDetails = imunologicalComorbitiesDetails
-        e.imunologicalComorbitiesCustomDetails = imunologicalComorbitiesCustomDetails
-        e.imunologicalComorbitiesDetailsText = imunologicalComorbitiesDetailsText
-        e.musculoskeletalComorbitiesDetails = musculoskeletalComorbitiesDetails
-        e.musculoskeletalComorbitiesCustomDetails = musculoskeletalComorbitiesCustomDetails
-        e.musculoskeletalComorbitiesDetailsText = musculoskeletalComorbitiesDetailsText
-        
-        e.genitourologicalComorbitiesDetails = genitourologicalComorbitiesDetails
-        e.genitourologicalComorbitiesCustomDetails = genitourologicalComorbitiesCustomDetails
-        e.genitourologicalComorbitiesDetailsText = genitourologicalComorbitiesDetailsText
-        e.gynecologicalComorbitiesDetails = gynecologicalComorbitiesDetails
-        e.gynecologicalComorbitiesCustomDetails = gynecologicalComorbitiesCustomDetails
-        e.gynecologicalComorbitiesDetailsText = gynecologicalComorbitiesDetailsText
-        e.androgenicalComorbitiesDetails = androgenicalComorbitiesDetails
-        e.androgenicalComorbitiesCustomDetails = androgenicalComorbitiesCustomDetails
-        e.androgenicalComorbitiesDetailsText = androgenicalComorbitiesDetailsText
-        e.neurologicalComorbitiesDetails = neurologicalComorbitiesDetails
-        e.neurologicalComorbitiesCustomDetails = neurologicalComorbitiesCustomDetails
-        e.neurologicalComorbitiesDetailsText = neurologicalComorbitiesDetailsText
         e.geneticSyndromeComorbitiesDetails = geneticSyndromeComorbitiesDetails
         e.geneticSyndromeComorbitiesCustomDetails = geneticSyndromeComorbitiesCustomDetails
         e.geneticSyndromeComorbitiesDetailsText = geneticSyndromeComorbitiesDetailsText
         
-        e.infectiousComorbitiesDetails = infectiousComorbitiesDetails
-        e.infectiousComorbitiesCustomDetails = infectiousComorbitiesCustomDetails
-        e.infectiousComorbitiesDetailsText = infectiousComorbitiesDetailsText
     }
     
     func isPregnantVisibility(patientSex: Sex) {
@@ -281,66 +235,53 @@ final class ComorbitiesSectionViewModel {
     }
     func hematologicalComorbitiesVisibility() {
         if hematologicalComorbities == false {
-            hematologicalComorbitiesDetails = []
-            hematologicalComorbitiesDetailsText = ""
-            hematologicalComorbitiesCustomDetails = []
+            imunologyDetails = []
         }
     }
     func imunologicalComorbitiesVisibility() {
         if imunologicalComorbities == false {
-            imunologicalComorbitiesDetails = []
-            imunologicalComorbitiesDetailsText = ""
-            imunologicalComorbitiesCustomDetails = []
+            imunologyDetails = []
         }
     }
     func musculoskeletalComorbitiesVisibility() {
         if musculoskeletalComorbities == false {
-            musculoskeletalComorbitiesDetails = []
-            musculoskeletalComorbitiesDetailsText = ""
-            musculoskeletalComorbitiesCustomDetails = []
+            musculoskeletalDetails = []
         }
     }
     
     func genitourologicalComorbitiesVisibility() {
         if genitourologicalComorbities == false {
-            genitourologicalComorbitiesDetails = []
-            genitourologicalComorbitiesDetailsText = ""
-            genitourologicalComorbitiesCustomDetails = []
+            genitoUrinaryDetails = []
         }
     }
     func gynecologicalComorbitiesVisibility() {
         if gynecologicalComorbities == false {
-            gynecologicalComorbitiesDetails = []
-            gynecologicalComorbitiesDetailsText = ""
-            gynecologicalComorbitiesCustomDetails = []
+            gynecologyDetails = []
         }
     }
     func androgenicalComorbitiesVisibility() {
         if androgenicalComorbities == false {
-            androgenicalComorbitiesDetails = []
-            androgenicalComorbitiesDetailsText = ""
-            androgenicalComorbitiesCustomDetails = []
+            androgenyDetails = []
         }
     }
     func neurologicalComorbitiesVisibility() {
         if neurologicalComorbities == false {
-            neurologicalComorbitiesDetails = []
-            neurologicalComorbitiesDetailsText = ""
-            neurologicalComorbitiesCustomDetails = []
+            neurologyDetails = []
         }
     }
     func infectiousComorbitiesVisibility() {
         if infectiousComorbities == false {
-            infectiousComorbitiesDetails = []
-            infectiousComorbitiesDetailsText = ""
-            infectiousComorbitiesCustomDetails = []
+            infectiousDetails = []
+        }
+    }
+    func oncologicComorbitiesVisibility() {
+        if oncologicComorbities == false {
+            oncologyDetails = []
         }
     }
     func geneticSyndromeVisibility() {
         if geneticSyndrome == false {
-            geneticSyndromeComorbitiesDetails = []
-            geneticSyndromeComorbitiesDetailsText = ""
-            geneticSyndromeComorbitiesCustomDetails = []
+            geneticSyndromeDetails = []
         }
     }
     
@@ -387,99 +328,6 @@ final class ComorbitiesSectionViewModel {
         guard isInfantCustomDetails.indices.contains(index) else { return }
         isInfantCustomDetails.remove(at: index)
     }
-    func addHematologicalComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !hematologicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        hematologicalComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeHematologicalComorbitiesCustomDetails(at index: Int) {
-        guard hematologicalComorbitiesCustomDetails.indices.contains(index) else { return }
-        hematologicalComorbitiesCustomDetails.remove(at: index)
-    }
-    func addImunologicalComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !imunologicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        imunologicalComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeImunologicalComorbitiesCustomDetails(at index: Int) {
-        guard imunologicalComorbitiesCustomDetails.indices.contains(index) else { return }
-        imunologicalComorbitiesCustomDetails.remove(at: index)
-    }
-    func addmMsculoskeletalComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !imunologicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        imunologicalComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeMusculoskeletalComorbitiesCustomDetails(at index: Int) {
-        guard musculoskeletalComorbitiesCustomDetails.indices.contains(index) else { return }
-        musculoskeletalComorbitiesCustomDetails.remove(at: index)
-    }
-    func addGenitourologicalComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !genitourologicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        genitourologicalComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeGenitourologicalComorbitiesCustomDetails(at index: Int) {
-        guard genitourologicalComorbitiesCustomDetails.indices.contains(index) else { return }
-        genitourologicalComorbitiesCustomDetails.remove(at: index)
-    }
-    func addGynecologicalComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !gynecologicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        gynecologicalComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeGynecologicalComorbitiesCustomDetails(at index: Int) {
-        guard gynecologicalComorbitiesCustomDetails.indices.contains(index) else { return }
-        gynecologicalComorbitiesCustomDetails.remove(at: index)
-    }
-    func addAndrogenicalComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !androgenicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        androgenicalComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeAndrogenicalComorbitiesCustomDetails(at index: Int) {
-        guard androgenicalComorbitiesCustomDetails.indices.contains(index) else { return }
-        androgenicalComorbitiesCustomDetails.remove(at: index)
-    }
-    func addNeurologicalComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !neurologicalComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        neurologicalComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeNeurologicalComorbitiesCustomDetails(at index: Int) {
-        guard neurologicalComorbitiesCustomDetails.indices.contains(index) else { return }
-        neurologicalComorbitiesCustomDetails.remove(at: index)
-    }
-    func addInfectiousComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !infectiousComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        infectiousComorbitiesCustomDetails.append(trimmed)
-    }
-
-    func removeInfectiousComorbitiesCustomDetails(at index: Int) {
-        guard infectiousComorbitiesCustomDetails.indices.contains(index) else { return }
-        infectiousComorbitiesCustomDetails.remove(at: index)
-    }
-    
-    func addGeneticSyndromeComorbitiesCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !geneticSyndromeComorbitiesCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        geneticSyndromeComorbitiesCustomDetails.append(trimmed)
-    }
-    func removeGeneticSyndromeComorbitiesCustomDetails(at index: Int) {
-        guard geneticSyndromeComorbitiesCustomDetails.indices.contains(index) else { return }
-        geneticSyndromeComorbitiesCustomDetails.remove(at: index)
-    }
-    
     
     
     func applyHealthyPatient() {
@@ -546,6 +394,66 @@ final class ComorbitiesSectionViewModel {
             !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
         }
     }
+    private func hasValidHematologyDetails() -> Bool {
+        hematologyDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidImunologyDetails() -> Bool {
+        imunologyDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidMusculoskeletalDetails() -> Bool {
+        musculoskeletalDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidGenitoUrinaryDetails() -> Bool {
+        genitoUrinaryDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidGynecologyDetails() -> Bool {
+        gynecologyDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidAndrogenyDetails() -> Bool {
+        androgenyDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidNeurologyDetails() -> Bool {
+        neurologyDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidInfectiousDetails() -> Bool {
+        infectiousDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidOncologyDetails() -> Bool {
+        oncologyDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
+    private func hasValidGeneticDetails() -> Bool {
+        geneticSyndromeDetails.contains {
+            $0.type != nil ||
+            !($0.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }
+    }
     
     var canSave: Bool {
         
@@ -578,14 +486,16 @@ final class ComorbitiesSectionViewModel {
             if respiratoryComorbities && !hasValidRespiratoryDetails() {return false}
             if endocrineComorbities && !hasValidEndocrineDetails() {return false}
             if gastrointestinalComorbities && !hasValidGastroIntestinalDetails() {return false}
-            if hematologicalComorbities && (hematologicalComorbitiesDetails?.isEmpty ?? true) && hematologicalComorbitiesCustomDetails.isEmpty { return false }
-            if imunologicalComorbities && (imunologicalComorbitiesDetails?.isEmpty ?? true) && imunologicalComorbitiesCustomDetails.isEmpty { return false }
-            if musculoskeletalComorbities && (musculoskeletalComorbitiesDetails?.isEmpty ?? true) && musculoskeletalComorbitiesCustomDetails.isEmpty { return false }
-            if genitourologicalComorbities && (genitourologicalComorbitiesDetails?.isEmpty ?? true) && genitourologicalComorbitiesCustomDetails.isEmpty { return false }
-            if gynecologicalComorbities && (gynecologicalComorbitiesDetails?.isEmpty ?? true) && gynecologicalComorbitiesCustomDetails.isEmpty { return false }
-            if androgenicalComorbities && (androgenicalComorbitiesDetails?.isEmpty ?? true) && androgenicalComorbitiesCustomDetails.isEmpty { return false }
-            if neurologicalComorbities && (neurologicalComorbitiesDetails?.isEmpty ?? true) && neurologicalComorbitiesCustomDetails.isEmpty { return false }
-            if geneticSyndrome && (geneticSyndromeComorbitiesDetails?.isEmpty ?? true) && geneticSyndromeComorbitiesCustomDetails.isEmpty { return false }
+            if hematologicalComorbities && !hasValidHematologyDetails() {return false}
+            if imunologicalComorbities && !hasValidImunologyDetails() {return false}
+            if musculoskeletalComorbities && !hasValidMusculoskeletalDetails() {return false}
+            if genitourologicalComorbities && !hasValidGenitoUrinaryDetails() {return false}
+            if gynecologicalComorbities && !hasValidGynecologyDetails() {return false}
+            if androgenicalComorbities && !hasValidAndrogenyDetails() {return false}
+            if neurologicalComorbities && !hasValidNeurologyDetails() {return false}
+            if oncologicComorbities && !hasValidOncologyDetails() {return false}
+            if infectiousComorbities && !hasValidInfectiousDetails() {return false}
+            if geneticSyndrome && !hasValidGeneticDetails() {return false}
             
             return true
         }
@@ -627,29 +537,35 @@ final class ComorbitiesSectionViewModel {
             if gastrointestinalComorbities && !hasValidGastroIntestinalDetails() {
                 messages.append("Adicione pelo menos uma comorbidade gastrointestinal")
             }
-            if hematologicalComorbities && (hematologicalComorbitiesDetails?.isEmpty ?? true) && hematologicalComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades hematológicas")
+            if hematologicalComorbities && !hasValidHematologyDetails() {
+                messages.append("Adicione pelo menos uma comorbidade hematológica")
             }
-            if imunologicalComorbities && (imunologicalComorbitiesDetails?.isEmpty ?? true) && imunologicalComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades imunológicas")
+            if imunologicalComorbities && !hasValidImunologyDetails() {
+                messages.append("Adicione pelo menos uma comorbidade imunológica")
             }
-            if musculoskeletalComorbities && (musculoskeletalComorbitiesDetails?.isEmpty ?? true) && musculoskeletalComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades do sistema muscular e articulares")
+            if musculoskeletalComorbities && !hasValidMusculoskeletalDetails() {
+                messages.append("Adicione pelo menos uma comorbidade músculo-esquelética")
             }
-            if genitourologicalComorbities && (genitourologicalComorbitiesDetails?.isEmpty ?? true) && genitourologicalComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades do sistema genitourinário")
+            if genitourologicalComorbities && !hasValidMusculoskeletalDetails() {
+                messages.append("Adicione pelo menos uma comorbidade genitourinária")
             }
-            if gynecologicalComorbities && (gynecologicalComorbitiesDetails?.isEmpty ?? true) && gynecologicalComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades ginecológicas")
+            if gynecologicalComorbities && !hasValidGynecologyDetails() {
+                messages.append("Adicione pelo menos uma comorbidade ginecológica")
             }
-            if androgenicalComorbities && (androgenicalComorbitiesDetails?.isEmpty ?? true) && androgenicalComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades androgenológicas")
+            if androgenicalComorbities && !hasValidAndrogenyDetails() {
+                messages.append("Adicione pelo menos uma comorbidade andrológicas")
             }
-            if neurologicalComorbities && (neurologicalComorbitiesDetails?.isEmpty ?? true) && neurologicalComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para comorbidades neurológicas")
+            if neurologicalComorbities && !hasValidNeurologyDetails() {
+                messages.append("Adicione pelo menos uma comorbidade neurológica")
             }
-            if geneticSyndrome && (geneticSyndromeComorbitiesDetails?.isEmpty ?? true) && geneticSyndromeComorbitiesCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para Síndromes Genéticas")
+            if infectiousComorbities && !hasValidInfectiousDetails() {
+                messages.append("Adicione pelo menos uma comorbidade infecciosas")
+            }
+            if oncologicComorbities && !hasValidOncologyDetails() {
+                messages.append("Adicione pelo menos uma comorbidade oncológica")
+            }
+            if geneticSyndrome && !hasValidGeneticDetails() {
+                messages.append("Adicione pelo menos uma Síndrome Genética")
             }
         }
 

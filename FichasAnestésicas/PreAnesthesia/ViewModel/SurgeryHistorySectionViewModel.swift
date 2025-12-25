@@ -34,6 +34,8 @@ final class SurgeryHistorySectionViewModel {
         }
     }
     
+    var surgeryHistoricDetails: [SurgeryHistoryDetail] = []
+    
     var surgeryHistoryDetails: [SurgeryHistorySpeciality]?
     var surgeryHistoryCustomDetails: [String] = []
     var surgeryHistoryDetailsText: String?
@@ -49,6 +51,8 @@ final class SurgeryHistorySectionViewModel {
         surgeryHistory = e.surgeryHistory ?? false
         anesthesiaHistory = e.anesthesiaHistory ?? false
         
+        surgeryHistoricDetails = e.surgeryHistoricDetails ?? []
+        
         surgeryHistoryDetails = e.surgeryHistoryDetails ?? []
         surgeryHistoryCustomDetails = e.surgeryHistoryCustomDetails ?? []
         surgeryHistoryDetailsText = e.surgeryHistoryDetailsText
@@ -60,6 +64,8 @@ final class SurgeryHistorySectionViewModel {
     func apply(to e: PreAnesthesia) {
         e.surgeryHistory = surgeryHistory
         e.anesthesiaHistory = anesthesiaHistory
+        
+        e.surgeryHistoricDetails = surgeryHistoricDetails
         
         e.surgeryHistoryDetails = surgeryHistoryDetails
         e.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails
@@ -100,18 +106,6 @@ final class SurgeryHistorySectionViewModel {
             
         }
         return ok
-    }
-    
-    
-    func addSurgeryHistoryCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !surgeryHistoryCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        surgeryHistoryCustomDetails.append(trimmed)
-    }
-    func removeSurgeryHistoryCustomDetails(at index: Int) {
-        guard surgeryHistoryCustomDetails.indices.contains(index) else { return }
-        surgeryHistoryCustomDetails.remove(at: index)
     }
     
     

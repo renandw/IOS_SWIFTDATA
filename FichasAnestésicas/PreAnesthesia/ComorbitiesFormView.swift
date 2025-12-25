@@ -345,66 +345,70 @@ struct ComorbitiesFormView: View {
                     createDetail: { GastroIntestinalComorbidityDetail(type: $0) },
                     createCustomDetail: { GastroIntestinalComorbidityDetail(customName: $0) }
                 )
-                
-                ComorbiditiesSection(
+                //Hematológicas
+                NewComorbidityDetailSection<HematologyComorbidityDetail, HematologicComorbities>(
                     title: "Hematológicas",
                     icon: "ivfluid.bag",
                     isEnabled: $viewModel.comorbities.hematologicalComorbities,
-                    selection: binding(get: { viewModel.comorbities.hematologicalComorbitiesDetails }, set: { viewModel.comorbities.hematologicalComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.hematologicalComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.hematologicalComorbitiesDetailsText
+                    details: $viewModel.comorbities.hematologyDetails,
+                    createDetail: { HematologyComorbidityDetail(type: $0) },
+                    createCustomDetail: { HematologyComorbidityDetail(customName: $0) }
                 )
-                ComorbiditiesSection(
+                //Imunologicas
+                NewComorbidityDetailSection<ImunologyComorbidityDetail, ImmunologicComorbities>(
                     title: "Imunológicas",
                     icon: "ivfluid.bag.fill",
                     isEnabled: $viewModel.comorbities.imunologicalComorbities,
-                    selection: binding(get: { viewModel.comorbities.imunologicalComorbitiesDetails }, set: { viewModel.comorbities.imunologicalComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.imunologicalComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.imunologicalComorbitiesDetailsText
+                    details: $viewModel.comorbities.imunologyDetails,
+                    createDetail: { ImunologyComorbidityDetail(type: $0) },
+                    createCustomDetail: { ImunologyComorbidityDetail(customName: $0) }
                 )
-                ComorbiditiesSection(
+                //Musculoesqueléticas
+                NewComorbidityDetailSection<MusculoskeletalComorbidityDetail, MusculoskeletalComorbities>(
                     title: "Musculoesqueléticas",
                     icon: "figure.run.circle.fill",
                     isEnabled: $viewModel.comorbities.musculoskeletalComorbities,
-                    selection: binding(get: { viewModel.comorbities.musculoskeletalComorbitiesDetails }, set: { viewModel.comorbities.musculoskeletalComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.musculoskeletalComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.musculoskeletalComorbitiesDetailsText
+                    details: $viewModel.comorbities.musculoskeletalDetails,
+                    createDetail: { MusculoskeletalComorbidityDetail(type: $0) },
+                    createCustomDetail: { MusculoskeletalComorbidityDetail(customName: $0) }
                 )
-                ComorbiditiesSection(
+                //GenitoUrinário
+                NewComorbidityDetailSection<GenitoUrinaryComorbidityDetail, GenitourinaryComorbities>(
                     title: "Genitourológicas",
                     icon: "toilet.fill",
                     isEnabled: $viewModel.comorbities.genitourologicalComorbities,
-                    selection: binding(get: { viewModel.comorbities.genitourologicalComorbitiesDetails }, set: { viewModel.comorbities.genitourologicalComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.genitourologicalComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.genitourologicalComorbitiesDetailsText
+                    details: $viewModel.comorbities.genitoUrinaryDetails,
+                    createDetail: { GenitoUrinaryComorbidityDetail(type: $0) },
+                    createCustomDetail: { GenitoUrinaryComorbidityDetail(customName: $0) }
                 )
+                //Ginecológica
                 if viewModel.patientSex == .female {
-                    ComorbiditiesSection(
+                    NewComorbidityDetailSection<GynecologicComorbityDetail, GynecologicComorbities>(
                         title: "Ginecológicas",
                         icon: "figure.stand.dress",
                         isEnabled: $viewModel.comorbities.gynecologicalComorbities,
-                        selection: binding(get: { viewModel.comorbities.gynecologicalComorbitiesDetails }, set: { viewModel.comorbities.gynecologicalComorbitiesDetails = $0 }),
-                        customDetails: $viewModel.comorbities.gynecologicalComorbitiesCustomDetails,
-                        detailsText: $viewModel.comorbities.gynecologicalComorbitiesDetailsText
+                        details: $viewModel.comorbities.gynecologyDetails,
+                        createDetail: { GynecologicComorbityDetail(type: $0) },
+                        createCustomDetail: { GynecologicComorbityDetail(customName: $0) }
                     )
                 }
                 if viewModel.patientSex == .male {
-                    ComorbiditiesSection(
+                    NewComorbidityDetailSection<AndrogenicComorbityDetail, AndrologicComorbities>(
                         title: "Andrológicas",
                         icon: "figure.stand",
                         isEnabled: $viewModel.comorbities.androgenicalComorbities,
-                        selection: binding(get: { viewModel.comorbities.androgenicalComorbitiesDetails }, set: { viewModel.comorbities.androgenicalComorbitiesDetails = $0 }),
-                        customDetails: $viewModel.comorbities.androgenicalComorbitiesCustomDetails,
-                        detailsText: $viewModel.comorbities.androgenicalComorbitiesDetailsText
+                        details: $viewModel.comorbities.androgenyDetails,
+                        createDetail: { AndrogenicComorbityDetail(type: $0) },
+                        createCustomDetail: { AndrogenicComorbityDetail(customName: $0) }
                     )
                 }
-                ComorbiditiesSection(
+                NewComorbidityDetailSection<InfectiousComorbityDetail, InfectiousComorbities>(
                     title: "Infecciosas",
                     icon: "person.fill",
                     isEnabled: $viewModel.comorbities.infectiousComorbities,
-                    selection: binding(get: { viewModel.comorbities.infectiousComorbitiesDetails }, set: { viewModel.comorbities.infectiousComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.infectiousComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.infectiousComorbitiesDetailsText
+                    details: $viewModel.comorbities.infectiousDetails,
+                    createDetail: { InfectiousComorbityDetail(type: $0) },
+                    createCustomDetail: { InfectiousComorbityDetail(customName: $0) }
                 )
                 NewComorbidityDetailSection<OncologyComorbidityDetail, OncologicComorbidities>(
                     title: "Oncológicas",
@@ -414,13 +418,21 @@ struct ComorbitiesFormView: View {
                     createDetail: { OncologyComorbidityDetail(type: $0) },
                     createCustomDetail: { OncologyComorbidityDetail(customName: $0) }
                 )
-                ComorbiditiesSection(
+                NewComorbidityDetailSection<NeurologyComorbityDetail, NeurologicalComorbities>(
                     title: "Neurológicas",
                     icon: "brain.head.profile.fill",
                     isEnabled: $viewModel.comorbities.neurologicalComorbities,
-                    selection: binding(get: { viewModel.comorbities.neurologicalComorbitiesDetails }, set: { viewModel.comorbities.neurologicalComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.neurologicalComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.neurologicalComorbitiesDetailsText
+                    details: $viewModel.comorbities.neurologyDetails,
+                    createDetail: { NeurologyComorbityDetail(type: $0) },
+                    createCustomDetail: { NeurologyComorbityDetail(customName: $0) }
+                )
+                NewComorbidityDetailSection<GeneticSyndromeDetail, GeneticSyndrome>(
+                    title: "Síndromes Genéticas",
+                    icon: "apple.meditate.circle.fill",
+                    isEnabled: $viewModel.comorbities.geneticSyndrome,
+                    details: $viewModel.comorbities.geneticSyndromeDetails,
+                    createDetail: { GeneticSyndromeDetail(type: $0) },
+                    createCustomDetail: { GeneticSyndromeDetail(customName: $0) }
                 )
                 ComorbiditiesSection(
                     title: "Síndromes Genéticas",

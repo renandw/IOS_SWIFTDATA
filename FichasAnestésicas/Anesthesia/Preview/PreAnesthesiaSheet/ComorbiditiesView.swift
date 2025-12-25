@@ -89,84 +89,75 @@ struct ComorbiditiesView: View {
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.hematologicalComorbities == true {
-                                ComorbiditiesRow(
+                                NotesComorbiditiesRow(
                                     title: "Sistema Hematológico:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.hematologicalComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.hematologicalComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.hematologicalComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                    details: anesthesia.surgery.preanesthesia?.hematologyDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.imunologicalComorbities == true {
-                                ComorbiditiesRow(
-                                    title: "Sistema Imunológico:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.imunologicalComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.imunologicalComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.imunologicalComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                NotesComorbiditiesRow(
+                                    title: "Sistema Hematológico:",
+                                    details: anesthesia.surgery.preanesthesia?.imunologyDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.musculoskeletalComorbities == true {
-                                ComorbiditiesRow(
-                                    title: "Sistema Músculo Esquelético:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.musculoskeletalComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.musculoskeletalComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.musculoskeletalComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                NotesComorbiditiesRow(
+                                    title: "Sistema Músculo-Esquelético:",
+                                    details: anesthesia.surgery.preanesthesia?.musculoskeletalDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.genitourologicalComorbities == true {
-                                ComorbiditiesRow(
+                                NotesComorbiditiesRow(
                                     title: "Sistema Genitourinário:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.genitourologicalComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.genitourologicalComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.genitourologicalComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                    details: anesthesia.surgery.preanesthesia?.genitoUrinaryDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.gynecologicalComorbities == true {
-                                ComorbiditiesRow(
+                                NotesComorbiditiesRow(
                                     title: "Sistema Ginecológico:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.gynecologicalComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.gynecologicalComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.gynecologicalComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                    details: anesthesia.surgery.preanesthesia?.gynecologyDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.androgenicalComorbities == true {
-                                ComorbiditiesRow(
+                                NotesComorbiditiesRow(
                                     title: "Sistema Andrológico:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.androgenicalComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.androgenicalComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.androgenicalComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                    details: anesthesia.surgery.preanesthesia?.androgenyDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.infectiousComorbities == true {
-                                ComorbiditiesRow(
+                                NotesComorbiditiesRow(
                                     title: "Infeccioso:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.infectiousComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.infectiousComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.infectiousComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                    details: anesthesia.surgery.preanesthesia?.infectiousDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.neurologicalComorbities == true {
-                                ComorbiditiesRow(
+                                NotesComorbiditiesRow(
                                     title: "Sistema Neurológico:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.neurologicalComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.neurologicalComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.neurologicalComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                    details: anesthesia.surgery.preanesthesia?.neurologyDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                             if anesthesia.surgery.preanesthesia?.geneticSyndrome == true {
-                                ComorbiditiesRow(
-                                    title: "Sindromes Genéticas:",
-                                    enumItems: anesthesia.surgery.preanesthesia?.geneticSyndromeComorbitiesDetails,
-                                    customItems: anesthesia.surgery.preanesthesia?.geneticSyndromeComorbitiesCustomDetails ?? [],
-                                    detailsText: anesthesia.surgery.preanesthesia?.geneticSyndromeComorbitiesDetailsText,
-                                    displayName: { $0.displayName }
+                                NotesComorbiditiesRow(
+                                    title: "Síndromes Genéticas:",
+                                    details: anesthesia.surgery.preanesthesia?.geneticSyndromeDetails ?? [],
+                                    name: { $0.displayName() },
+                                    notes: { $0.notes }
                                 )
                             }
                         }

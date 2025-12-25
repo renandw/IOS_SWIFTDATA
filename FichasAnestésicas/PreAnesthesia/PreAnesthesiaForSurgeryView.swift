@@ -364,29 +364,18 @@ struct PreAnesthesiaForSurgeryView: View {
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let hematologicalDetails = preanesthesia?.hematologicalComorbitiesDetails, !hematologicalDetails.isEmpty {
-                                        ForEach(hematologicalDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.hematologyDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customHematologicalDetails = preanesthesia?.hematologicalComorbitiesCustomDetails, !customHematologicalDetails.isEmpty {
-                                        ForEach(customHematologicalDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let hematologicalDetailsText = preanesthesia?.hematologicalComorbitiesDetailsText, !hematologicalDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(hematologicalDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
@@ -399,29 +388,18 @@ struct PreAnesthesiaForSurgeryView: View {
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let imunologicalDetails = preanesthesia?.imunologicalComorbitiesDetails, !imunologicalDetails.isEmpty {
-                                        ForEach(imunologicalDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.imunologyDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customImunologicalDetails = preanesthesia?.imunologicalComorbitiesCustomDetails, !customImunologicalDetails.isEmpty {
-                                        ForEach(customImunologicalDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let imunologicalDetailsText = preanesthesia?.imunologicalComorbitiesDetailsText, !imunologicalDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(imunologicalDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
@@ -430,69 +408,46 @@ struct PreAnesthesiaForSurgeryView: View {
                     if preanesthesia?.musculoskeletalComorbities == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
-                                Text("Musculoesqueléticas:")
+                                Text("Músculo-esqueléticos:")
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let musculoskeletalDetails = preanesthesia?.musculoskeletalComorbitiesDetails, !musculoskeletalDetails.isEmpty {
-                                        ForEach(musculoskeletalDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.musculoskeletalDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customMusculoskeletalDetails = preanesthesia?.musculoskeletalComorbitiesCustomDetails, !customMusculoskeletalDetails.isEmpty {
-                                        ForEach(customMusculoskeletalDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let musculoskeletalDetailsText = preanesthesia?.musculoskeletalComorbitiesDetailsText, !musculoskeletalDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(musculoskeletalDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
                         Divider()
                     }
-                    
                     if preanesthesia?.genitourologicalComorbities == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
-                                Text("Genitourológicas:")
+                                Text("Genitourinárias:")
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let genitourologicalDetails = preanesthesia?.genitourologicalComorbitiesDetails, !genitourologicalDetails.isEmpty {
-                                        ForEach(genitourologicalDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.genitoUrinaryDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customGenitourologicalDetails = preanesthesia?.genitourologicalComorbitiesCustomDetails, !customGenitourologicalDetails.isEmpty {
-                                        ForEach(customGenitourologicalDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let genitourologicalDetailsText = preanesthesia?.genitourologicalComorbitiesDetailsText, !genitourologicalDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(genitourologicalDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
@@ -505,29 +460,18 @@ struct PreAnesthesiaForSurgeryView: View {
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let gynecologicalDetails = preanesthesia?.gynecologicalComorbitiesDetails, !gynecologicalDetails.isEmpty {
-                                        ForEach(gynecologicalDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.gynecologyDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customGynecologicalDetails = preanesthesia?.gynecologicalComorbitiesCustomDetails, !customGynecologicalDetails.isEmpty {
-                                        ForEach(customGynecologicalDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let gynecologicalDetailsText = preanesthesia?.gynecologicalComorbitiesDetailsText, !gynecologicalDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(gynecologicalDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
@@ -540,29 +484,18 @@ struct PreAnesthesiaForSurgeryView: View {
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let androgenicalDetails = preanesthesia?.androgenicalComorbitiesDetails, !androgenicalDetails.isEmpty {
-                                        ForEach(androgenicalDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.androgenyDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customAndorlogicalDetails = preanesthesia?.androgenicalComorbitiesCustomDetails, !customAndorlogicalDetails.isEmpty {
-                                        ForEach(customAndorlogicalDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let androgenicalDetailsText = preanesthesia?.androgenicalComorbitiesDetailsText, !androgenicalDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(androgenicalDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
@@ -575,29 +508,18 @@ struct PreAnesthesiaForSurgeryView: View {
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let infectiousDetails = preanesthesia?.infectiousComorbitiesDetails, !infectiousDetails.isEmpty {
-                                        ForEach(infectiousDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.infectiousDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customInfectiousDetails = preanesthesia?.infectiousComorbitiesCustomDetails, !customInfectiousDetails.isEmpty {
-                                        ForEach(customInfectiousDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let infectiousDetailsText = preanesthesia?.infectiousComorbitiesDetailsText, !infectiousDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(infectiousDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
@@ -634,29 +556,18 @@ struct PreAnesthesiaForSurgeryView: View {
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let neurologicalDetails = preanesthesia?.neurologicalComorbitiesDetails, !neurologicalDetails.isEmpty {
-                                        ForEach(neurologicalDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.neurologyDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customNeurologicalDetails = preanesthesia?.neurologicalComorbitiesCustomDetails, !customNeurologicalDetails.isEmpty {
-                                        ForEach(customNeurologicalDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let neurologicalDetailsText = preanesthesia?.neurologicalComorbitiesDetailsText, !neurologicalDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(neurologicalDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
@@ -669,35 +580,23 @@ struct PreAnesthesiaForSurgeryView: View {
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let geneticSyndromeDetails = preanesthesia?.geneticSyndromeComorbitiesDetails, !geneticSyndromeDetails.isEmpty {
-                                        ForEach(geneticSyndromeDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.geneticSyndromeDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customGeneticSyndromeDetails = preanesthesia?.geneticSyndromeComorbitiesCustomDetails, !customGeneticSyndromeDetails.isEmpty {
-                                        ForEach(customGeneticSyndromeDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let geneticSyndromeDetailsText = preanesthesia?.geneticSyndromeComorbitiesDetailsText, !geneticSyndromeDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(geneticSyndromeDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
                         Divider()
                     }
-                    
                 }
             }
         }
