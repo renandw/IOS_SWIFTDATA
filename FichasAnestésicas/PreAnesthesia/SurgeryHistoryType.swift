@@ -147,7 +147,7 @@ struct SurgeryHistoryTypeFormView: View {
                 NewComorbidityDetailSection<SurgeryHistoryDetail, SurgeryHistorySpeciality>(
                     title: "Cirurgias Prévias?",
                     icon: "scissors.circle.fill",
-                    isEnabled: $viewModel.surgeryHistory.surgeryHistory,
+                    isEnabled: $viewModel.surgeryHistory.surgeryHistory.optional(),
                     details: $viewModel.surgeryHistory.surgeryHistoricDetails,
                     createDetail: { SurgeryHistoryDetail(type: $0) },
                     createCustomDetail: { SurgeryHistoryDetail(customName: $0) }
@@ -157,7 +157,7 @@ struct SurgeryHistoryTypeFormView: View {
                     NewComorbidityDetailSection<AnesthesiaHistoryDetail, AnesthesiaComplicationsHistory>(
                         title: "Anestesias Prévias",
                         icon: "syringe.fill",
-                        isEnabled: $viewModel.surgeryHistory.anesthesiaHistory,
+                        isEnabled: $viewModel.surgeryHistory.anesthesiaHistory.optional(),
                         details: $viewModel.surgeryHistory.anesthesiaHistoricDetails,
                         createDetail: { AnesthesiaHistoryDetail(type: $0) },
                         createCustomDetail: { AnesthesiaHistoryDetail(customName: $0) }

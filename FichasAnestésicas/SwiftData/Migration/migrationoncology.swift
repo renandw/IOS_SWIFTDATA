@@ -8,9 +8,9 @@
 //import SwiftData
 //
 //@MainActor
-//func migrateInfantIfNeeded(context: ModelContext) throws {
+//func migrateAirwayIfNeeded(context: ModelContext) throws {
 //
-//    print("🚀 Starting manual InfantDetail migration")
+//    print("🚀 Starting manual Airway migration")
 //
 //    let fetch = FetchDescriptor<PreAnesthesia>()
 //    let all = try context.fetch(fetch)
@@ -23,33 +23,33 @@
 //        print("➡️ Checking PreAnesthesia for surgery:", surgeryId)
 //
 //        // já migrado
-//        if let details = pre.infantDetails, !details.isEmpty {
+//        if let details = pre.difficultAirwayDetails, !details.isEmpty {
 //            print("⏭️ Already migrated, skipping")
 //            continue
 //        }
 //
 //        let hasOldEnums =
-//            pre.isInfantComorbitiesDetails?.isEmpty == false
+//            pre.difficultAirwayEvaluation?.isEmpty == false
 //        let hasOldCustom =
-//            pre.isInfantComorbitiesDetails?.isEmpty == false
+//            pre.difficultAirwayEvaluation?.isEmpty == false
 //
 //        if !hasOldEnums && !hasOldCustom {
-//            print("⚠️ No old InfantDetail data, skipping")
+//            print("⚠️ No old Airway data, skipping")
 //            continue
 //        }
 //
-//        print("🧬 Old InfantDetail data found")
+//        print("🧬 Old Airway data found")
 //
-//        var details: [InfantDetail] = []
-//        let notes = pre.isInfantDetailsText
+//        var details: [DifficultAirwayDetail] = []
+//        let notes = pre.difficultAirwayEvaluationDetailsText
 //
 //        // enums antigos
-//        if let raws = pre.isInfantComorbitiesDetailsRaw {
+//        if let raws = pre.difficultAirwayEvaluationRaw {
 //            for raw in raws {
-//                if let type = InfantComorbities(rawValue: raw) {
+//                if let type = DifficultAirwayEvaluation(rawValue: raw) {
 //                    print("   ➕ enum:", type.rawValue)
 //                    details.append(
-//                        InfantDetail(
+//                        DifficultAirwayDetail(
 //                            type: type,
 //                            notes: notes
 //                        )
@@ -61,11 +61,11 @@
 //        }
 //
 //        // customs antigos
-//        if let customs = pre.isInfantCustomDetails {
+//        if let customs = pre.difficultAirwayEvaluationCustomDetails {
 //            for name in customs {
 //                print("   ➕ custom:", name)
 //                details.append(
-//                    InfantDetail(
+//                    DifficultAirwayDetail(
 //                        customName: name,
 //                        notes: notes
 //                    )
@@ -74,14 +74,14 @@
 //        }
 //
 //        if details.isEmpty {
-//            print("⚠️ No valid infant details created")
+//            print("⚠️ No valid Airway details created")
 //            continue
 //        }
 //
-//        pre.infantDetails = details
-//        print("✅ Migrated \(details.count) infant items")
+//        pre.difficultAirwayDetails = details
+//        print("✅ Migrated \(details.count) Airway items")
 //    }
 //
 //    try context.save()
-//    print("💾 infant finished and saved")
+//    print("💾 Airway finished and saved")
 //}

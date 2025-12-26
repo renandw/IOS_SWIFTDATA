@@ -19,7 +19,7 @@ struct AnesthesiaHistoryTypeFormView: View {
                 NewComorbidityDetailSection<AnesthesiaHistoryDetail, AnesthesiaComplicationsHistory>(
                     title: "Anestesias Prévias",
                     icon: "syringe.fill",
-                    isEnabled: $viewModel.surgeryHistory.anesthesiaHistory,
+                    isEnabled: $viewModel.surgeryHistory.anesthesiaHistory.optional(),
                     details: $viewModel.surgeryHistory.anesthesiaHistoricDetails,
                     createDetail: { AnesthesiaHistoryDetail(type: $0) },
                     createCustomDetail: { AnesthesiaHistoryDetail(customName: $0) }

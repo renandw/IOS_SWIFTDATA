@@ -137,12 +137,6 @@ struct PreAnesthesiaFormView: View {
                     NavigationLink {
                         AirwaySectionView(
                             viewModel: viewModel,
-                            selection: Binding(
-                                get: { viewModel.airway.difficultAirwayEvaluation ?? [] },
-                                set: { newArray in
-                                    viewModel.airway.difficultAirwayEvaluation = newArray.isEmpty ? nil : newArray
-                                }
-                            )
                         )
                     } label : {
                         HStack {

@@ -93,6 +93,7 @@ final class PreAnesthesia {
     //one by one
     var isPregnantAge: String?
     
+    @Relationship var difficultAirwayDetails: [DifficultAirwayDetail]?
     
     
     var socialHabitsAndEnvironmentDetailsRaw: [String]?
@@ -118,15 +119,6 @@ final class PreAnesthesia {
             mallampatiClassificationRaw = newValue.map { [$0.rawValue] }
         }
     }
-    
-    var difficultAirwayEvaluationRaw: [String]?
-    var difficultAirwayEvaluation: [DifficultAirwayEvaluation]? {
-        get { difficultAirwayEvaluationRaw?.compactMap(DifficultAirwayEvaluation.init(rawValue:))}
-        set { difficultAirwayEvaluationRaw = newValue?.map { $0.rawValue}}
-    }
-    
-    var difficultAirwayEvaluationDetailsText: String?
-    var difficultAirwayEvaluationCustomDetails: [String]?
     
     var dailyMedicationsRaw: [String]?
     var dailyMedications: [DailyMedications]? {
@@ -218,6 +210,8 @@ final class PreAnesthesia {
         //one by one
         isPregnantAge: String? = nil,
         
+        difficultAirwayDetails: [DifficultAirwayDetail]? = nil,
+        
         
         socialHabitsAndEnvironmentDetails: SocialHabitsAndEnvironment? = nil,
         socialHabitsAndEnvironmentDetailsText: String? = nil,
@@ -225,9 +219,7 @@ final class PreAnesthesia {
         
         apfelScoreDetails: ApfelScore? = nil,
         mallampatiClassification: [MallampatiClassification]? = nil,
-        difficultAirwayEvaluation: [DifficultAirwayEvaluation]? = nil,
-        difficultAirwayEvaluationDetailsText: String? = nil,
-        difficultAirwayEvaluationCustomDetails: [String]? = [],
+
         
         dailyMedications: [DailyMedications]? = nil,
         dailyMedicationsRawDetailsText: String? = nil,
@@ -305,6 +297,7 @@ final class PreAnesthesia {
         
         //one by one
         self.isPregnantAge = isPregnantAge
+        self.difficultAirwayDetails = difficultAirwayDetails
         
         self.socialHabitsAndEnvironmentDetailsRaw = socialHabitsAndEnvironmentDetails.map { [$0.rawValue] }
         self.socialHabitsAndEnvironmentDetailsText = socialHabitsAndEnvironmentDetailsText
@@ -312,9 +305,7 @@ final class PreAnesthesia {
         self.apfelScoreDetailsRaw = apfelScoreDetails.map { [$0.rawValue] }
         
         self.mallampatiClassificationRaw = mallampatiClassification?.map { $0.rawValue }
-        self.difficultAirwayEvaluationRaw = difficultAirwayEvaluation?.map { $0.rawValue }
-        self.difficultAirwayEvaluationDetailsText = difficultAirwayEvaluationDetailsText
-        self.difficultAirwayEvaluationCustomDetails = difficultAirwayEvaluationCustomDetails
+
         self.dailyMedicationsRaw = dailyMedications?.map { $0.rawValue }
         self.dailyMedicationsDetailsText = dailyMedicationsDetailsText
         self.dailyMedicationsCustomDetails = dailyMedicationsCustomDetails

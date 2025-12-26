@@ -810,67 +810,53 @@ struct PreAnesthesiaForSurgeryView: View {
                             }
                         }
                     }
-                    
-                    let hasMallampatiDetails = (preanesthesia?.mallampatiClassification != nil)
-                    let hasDetails = !(preanesthesia?.difficultAirwayEvaluation?.isEmpty ?? true)
-                    let hasCustomDetails = !((preanesthesia?.difficultAirwayEvaluationCustomDetails ?? []).isEmpty)
-                    let hasTextDetails = !(preanesthesia?.difficultAirwayEvaluationDetailsText?.isEmpty ?? true)
-                    let hasTraqueo = (preanesthesia?.difficultAirwayEvaluation?.contains(.traqueo) ?? false)
-                    let hasAnyDetails = hasMallampatiDetails || hasDetails || hasCustomDetails || hasTextDetails
-                    
-                    
+                    //ViasAéreas
+                    let details = preanesthesia?.difficultAirwayDetails ?? []
+
+                    let hasTraqueo = details.contains { $0.type == .traqueo }
+                    let hasAnyDetails =
+                        preanesthesia?.mallampatiClassification != nil ||
+                        !details.isEmpty
                     if hasTraqueo {
                         Text("Paciente possui via aérea definitiva")
                             .fontWeight(.semibold)
+
                     } else if hasAnyDetails {
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            
                             Text("Avaliação de Vias Aéreas:")
                                 .fontWeight(.semibold)
-                            VStack(alignment: .leading, spacing: 8) {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    if let mallampatiDetails = preanesthesia?.mallampatiClassification {
-                                        HStack {
-                                            Text("Mallampati:")
-                                                .fontWeight(.semibold)
-                                            Text(mallampatiDetails.displayName)
-                                                .font(.subheadline)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                                .fixedSize(horizontal: false, vertical: true)
-                                        }
-                                        
-                                    }
+                            
+                            // MARK: - Mallampati (continua separado)
+                            if let mallampati = preanesthesia?.mallampatiClassification {
+                                HStack {
+                                    Text("Mallampati:")
+                                        .fontWeight(.semibold)
+                                    Text(mallampati.displayName)
+                                        .font(.subheadline)
                                 }
                             }
                             
+                            // MARK: - Preditores
+                            let predictors = details.filter { $0.type != .traqueo }
                             
-                            if hasTextDetails, hasCustomDetails, hasDetails {
-                                
-                                VStack(alignment: .leading, spacing: 8) {
-                                    HStack {
-                                        Text("Preditores:")
-                                            .fontWeight(.semibold)
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            let defaultEvaluations = (preanesthesia?.difficultAirwayEvaluation ?? []).filter { $0 != .traqueo }
-                                            let defaultDetails = defaultEvaluations.map { $0.displayName }
-                                            let customDetails = (preanesthesia?.difficultAirwayEvaluationCustomDetails ?? [])
-                                            let all = defaultDetails + customDetails
-                                            
-                                            if !all.isEmpty {
-                                                Text(all.joined(separator: " • "))
+                            if !predictors.isEmpty {
+                                HStack(alignment: .top) {
+                                    Text("Preditores:")
+                                        .fontWeight(.semibold)
+                                    
+                                    VStack(alignment: .leading, spacing: 6) {
+                                        ForEach(predictors) { detail in
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text(detail.displayName())
                                                     .font(.subheadline)
-                                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                                    .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
+                                                
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
                                             }
-                                        }
-                                    }
-                                    HStack(alignment: .top) {
-                                        if let difficultAirwayEvaluationDetailsText = preanesthesia?.difficultAirwayEvaluationDetailsText, !difficultAirwayEvaluationDetailsText.isEmpty {
-                                            Text("Detalhes:")
-                                                .fontWeight(.semibold)
-                                                .font(.caption)
-                                            Spacer()
-                                            Text(difficultAirwayEvaluationDetailsText)
-                                                .font(.caption)
                                         }
                                     }
                                 }

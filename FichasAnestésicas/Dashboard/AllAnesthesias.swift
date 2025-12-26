@@ -23,6 +23,7 @@ struct AllAnesthesias: View {
                 anesthesia.surgery.patient.name,
                 anesthesia.surgery.proposedProcedure,
                 anesthesia.surgery.mainSurgeon,
+                anesthesia.surgery.surgeryId,
             ]
             .compactMap { $0?.lowercased() }
             .joined(separator: " ")

@@ -9,7 +9,7 @@ protocol ComorbiditiesType: CaseIterable, Hashable, Identifiable where ID == Sel
 struct NewComorbidityDetailSection<Detail: ComorbidityDetailProtocol, EnumType: ComorbiditiesType>: View {
     let title: String
     let icon: String
-    @Binding var isEnabled: Bool
+    @Binding var isEnabled: Bool?
     @Binding var details: [Detail]
     let createDetail: (EnumType) -> Detail
     let createCustomDetail: (String) -> Detail
@@ -34,12 +34,16 @@ struct NewComorbidityDetailSection<Detail: ComorbidityDetailProtocol, EnumType: 
     
     var body: some View {
         Section {
-            Toggle(isOn: $isEnabled) {
-                Label(title, systemImage: icon)
-                    .fontWeight(.medium)
+            if let isEnabled = isEnabled {
+                Toggle(isOn: Binding(
+                    get: { isEnabled },
+                    set: { self.isEnabled = $0 }
+                )) {
+                    Label(title, systemImage: icon)
+                }
             }
             
-            if isEnabled {
+            if isEnabled ?? true {
                 if let extra = extraContent {
                     extra()
                 }
@@ -141,6 +145,16 @@ struct NewComorbidityDetailSection<Detail: ComorbidityDetailProtocol, EnumType: 
     }
 }
 
+extension Binding {
+    func optional() -> Binding<Value?> {
+        Binding<Value?>(
+            get: { self.wrappedValue },
+            set: { self.wrappedValue = $0 ?? self.wrappedValue }
+        )
+    }
+}
+
+
 // MARK: - View Principal Refatorada
 struct ComorbitiesFormView: View {
     @Environment(\.dismiss) private var dismiss
@@ -175,7 +189,7 @@ struct ComorbitiesFormView: View {
                     NewComorbidityDetailSection<PregnancyDetail, PregnantComorbities>(
                         title: "Gestante",
                         icon: "figure.seated.side.right.child.lap",
-                        isEnabled: $viewModel.comorbities.isPregnant,
+                        isEnabled: $viewModel.comorbities.isPregnant.optional(),
                         details: $viewModel.comorbities.pregnancyDetails,
                         createDetail: { PregnancyDetail(type: $0) },
                         createCustomDetail: { PregnancyDetail(customName: $0) },
@@ -200,7 +214,7 @@ struct ComorbitiesFormView: View {
                     NewComorbidityDetailSection<InfantDetail, InfantComorbities>(
                         title: "Menor de um ano",
                         icon: "figure.child.circle.fill",
-                        isEnabled: $viewModel.comorbities.isInfant,
+                        isEnabled: $viewModel.comorbities.isInfant.optional(),
                         details: $viewModel.comorbities.infantDetails,
                         createDetail: { InfantDetail(type: $0) },
                         createCustomDetail: { InfantDetail(customName: $0) }
@@ -211,7 +225,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<CardiologyComorbidityDetail, CardiologicComorbities>(
                     title: "Cardíacas",
                     icon: "heart.circle.fill",
-                    isEnabled: $viewModel.comorbities.cardiacComorbities,
+                    isEnabled: $viewModel.comorbities.cardiacComorbities.optional(),
                     details: $viewModel.comorbities.cardiologyDetails,
                     createDetail: { CardiologyComorbidityDetail(type: $0) },
                     createCustomDetail: { CardiologyComorbidityDetail(customName: $0) }
@@ -221,7 +235,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<RespiratoryComorbidityDetail, RespiratoryComorbities>(
                     title: "Respiratórias",
                     icon: "lungs.fill",
-                    isEnabled: $viewModel.comorbities.respiratoryComorbities,
+                    isEnabled: $viewModel.comorbities.respiratoryComorbities.optional(),
                     details: $viewModel.comorbities.respiratoryDetails,
                     createDetail: { RespiratoryComorbidityDetail(type: $0) },
                     createCustomDetail: { RespiratoryComorbidityDetail(customName: $0) }
@@ -231,7 +245,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<EndocrineComorbidityDetail, EndocrineComorbities>(
                     title: "Endócrinas e Metabólicas",
                     icon: "syringe.fill",
-                    isEnabled: $viewModel.comorbities.endocrineComorbities,
+                    isEnabled: $viewModel.comorbities.endocrineComorbities.optional(),
                     details: $viewModel.comorbities.endocrineDetails,
                     createDetail: { EndocrineComorbidityDetail(type: $0) },
                     createCustomDetail: { EndocrineComorbidityDetail(customName: $0) }
@@ -241,7 +255,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<GastroIntestinalComorbidityDetail, GastrointestinalComorbities>(
                     title: "Gastrointestinais",
                     icon: "fork.knife.circle.fill",
-                    isEnabled: $viewModel.comorbities.gastrointestinalComorbities,
+                    isEnabled: $viewModel.comorbities.gastrointestinalComorbities.optional(),
                     details: $viewModel.comorbities.gastroIntestinalDetails,
                     createDetail: { GastroIntestinalComorbidityDetail(type: $0) },
                     createCustomDetail: { GastroIntestinalComorbidityDetail(customName: $0) }
@@ -250,7 +264,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<HematologyComorbidityDetail, HematologicComorbities>(
                     title: "Hematológicas",
                     icon: "ivfluid.bag",
-                    isEnabled: $viewModel.comorbities.hematologicalComorbities,
+                    isEnabled: $viewModel.comorbities.hematologicalComorbities.optional(),
                     details: $viewModel.comorbities.hematologyDetails,
                     createDetail: { HematologyComorbidityDetail(type: $0) },
                     createCustomDetail: { HematologyComorbidityDetail(customName: $0) }
@@ -259,7 +273,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<ImunologyComorbidityDetail, ImmunologicComorbities>(
                     title: "Imunológicas",
                     icon: "ivfluid.bag.fill",
-                    isEnabled: $viewModel.comorbities.imunologicalComorbities,
+                    isEnabled: $viewModel.comorbities.imunologicalComorbities.optional(),
                     details: $viewModel.comorbities.imunologyDetails,
                     createDetail: { ImunologyComorbidityDetail(type: $0) },
                     createCustomDetail: { ImunologyComorbidityDetail(customName: $0) }
@@ -268,7 +282,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<MusculoskeletalComorbidityDetail, MusculoskeletalComorbities>(
                     title: "Musculoesqueléticas",
                     icon: "figure.run.circle.fill",
-                    isEnabled: $viewModel.comorbities.musculoskeletalComorbities,
+                    isEnabled: $viewModel.comorbities.musculoskeletalComorbities.optional(),
                     details: $viewModel.comorbities.musculoskeletalDetails,
                     createDetail: { MusculoskeletalComorbidityDetail(type: $0) },
                     createCustomDetail: { MusculoskeletalComorbidityDetail(customName: $0) }
@@ -277,7 +291,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<GenitoUrinaryComorbidityDetail, GenitourinaryComorbities>(
                     title: "Genitourológicas",
                     icon: "toilet.fill",
-                    isEnabled: $viewModel.comorbities.genitourologicalComorbities,
+                    isEnabled: $viewModel.comorbities.genitourologicalComorbities.optional(),
                     details: $viewModel.comorbities.genitoUrinaryDetails,
                     createDetail: { GenitoUrinaryComorbidityDetail(type: $0) },
                     createCustomDetail: { GenitoUrinaryComorbidityDetail(customName: $0) }
@@ -287,7 +301,7 @@ struct ComorbitiesFormView: View {
                     NewComorbidityDetailSection<GynecologicComorbityDetail, GynecologicComorbities>(
                         title: "Ginecológicas",
                         icon: "figure.stand.dress",
-                        isEnabled: $viewModel.comorbities.gynecologicalComorbities,
+                        isEnabled: $viewModel.comorbities.gynecologicalComorbities.optional(),
                         details: $viewModel.comorbities.gynecologyDetails,
                         createDetail: { GynecologicComorbityDetail(type: $0) },
                         createCustomDetail: { GynecologicComorbityDetail(customName: $0) }
@@ -298,7 +312,7 @@ struct ComorbitiesFormView: View {
                     NewComorbidityDetailSection<AndrogenicComorbityDetail, AndrologicComorbities>(
                         title: "Andrológicas",
                         icon: "figure.stand",
-                        isEnabled: $viewModel.comorbities.androgenicalComorbities,
+                        isEnabled: $viewModel.comorbities.androgenicalComorbities.optional(),
                         details: $viewModel.comorbities.androgenyDetails,
                         createDetail: { AndrogenicComorbityDetail(type: $0) },
                         createCustomDetail: { AndrogenicComorbityDetail(customName: $0) }
@@ -308,7 +322,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<InfectiousComorbityDetail, InfectiousComorbities>(
                     title: "Infecciosas",
                     icon: "person.fill",
-                    isEnabled: $viewModel.comorbities.infectiousComorbities,
+                    isEnabled: $viewModel.comorbities.infectiousComorbities.optional(),
                     details: $viewModel.comorbities.infectiousDetails,
                     createDetail: { InfectiousComorbityDetail(type: $0) },
                     createCustomDetail: { InfectiousComorbityDetail(customName: $0) }
@@ -317,7 +331,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<OncologyComorbidityDetail, OncologicComorbidities>(
                     title: "Oncológicas",
                     icon: "person.fill",
-                    isEnabled: $viewModel.comorbities.oncologicComorbities,
+                    isEnabled: $viewModel.comorbities.oncologicComorbities.optional(),
                     details: $viewModel.comorbities.oncologyDetails,
                     createDetail: { OncologyComorbidityDetail(type: $0) },
                     createCustomDetail: { OncologyComorbidityDetail(customName: $0) }
@@ -326,7 +340,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<NeurologyComorbityDetail, NeurologicalComorbities>(
                     title: "Neurológicas",
                     icon: "brain.head.profile.fill",
-                    isEnabled: $viewModel.comorbities.neurologicalComorbities,
+                    isEnabled: $viewModel.comorbities.neurologicalComorbities.optional(),
                     details: $viewModel.comorbities.neurologyDetails,
                     createDetail: { NeurologyComorbityDetail(type: $0) },
                     createCustomDetail: { NeurologyComorbityDetail(customName: $0) }
@@ -335,7 +349,7 @@ struct ComorbitiesFormView: View {
                 NewComorbidityDetailSection<GeneticSyndromeDetail, GeneticSyndrome>(
                     title: "Síndromes Genéticas",
                     icon: "apple.meditate.circle.fill",
-                    isEnabled: $viewModel.comorbities.geneticSyndrome,
+                    isEnabled: $viewModel.comorbities.geneticSyndrome.optional(),
                     details: $viewModel.comorbities.geneticSyndromeDetails,
                     createDetail: { GeneticSyndromeDetail(type: $0) },
                     createCustomDetail: { GeneticSyndromeDetail(customName: $0) }
@@ -421,5 +435,9 @@ extension NeurologicalComorbities: ComorbiditiesType {
     public var id: Self { self }
 }
 extension GeneticSyndrome: ComorbiditiesType {
+    public var id: Self { self }
+}
+
+extension DifficultAirwayEvaluation: ComorbiditiesType {
     public var id: Self { self }
 }

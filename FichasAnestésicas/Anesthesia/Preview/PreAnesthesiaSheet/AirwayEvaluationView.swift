@@ -35,93 +35,66 @@ struct AirwayEvaluationView: View {
                     )
                     
                 VStack(alignment: .leading, spacing: 2) {
-                    let hasMallampatiDetails = (anesthesia.surgery.preanesthesia?.mallampatiClassification != nil)
-                    let hasDetails = !(anesthesia.surgery.preanesthesia?.difficultAirwayEvaluation?.isEmpty ?? true)
-                    let hasCustomDetails = !((anesthesia.surgery.preanesthesia?.difficultAirwayEvaluationCustomDetails ?? []).isEmpty)
-                    let hasTextDetails = !(anesthesia.surgery.preanesthesia?.difficultAirwayEvaluationDetailsText?.isEmpty ?? true)
-                    let hasTraqueo = (anesthesia.surgery.preanesthesia?.difficultAirwayEvaluation?.contains(.traqueo) ?? false)
-                    let hasAnyDetails = hasMallampatiDetails || hasDetails || hasCustomDetails || hasTextDetails
-                    
-                    
+                    let pre = anesthesia.surgery.preanesthesia
+                    let details = pre?.difficultAirwayDetails ?? []
+
+                    let hasMallampati = pre?.mallampatiClassification != nil
+                    let hasTraqueo = details.contains { $0.type == .traqueo }
+                    let hasPredictors = !details.filter { $0.type != .traqueo }.isEmpty
+
+                    let hasAnyDetails = hasMallampati || hasPredictors
                     if hasTraqueo {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Paciente possui via aérea definitiva")
-                                .font(.system(size: 9))
-                                .fontWeight(.semibold)
-                                .foregroundColor(.black)
-                                
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("Paciente possui via aérea definitiva")
+                            .font(.system(size: 9))
+                            .fontWeight(.semibold)
+
                     } else if hasAnyDetails {
-                        VStack(alignment: .leading) {
+                        HStack(spacing: 6) {
+
                             Text("Avaliação de Vias Aéreas:")
                                 .font(.system(size: 9))
                                 .fontWeight(.semibold)
-                                .foregroundColor(.black)
-                            VStack(alignment: .leading, spacing: 8) {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    if let mallampatiDetails = anesthesia.surgery.preanesthesia?.mallampatiClassification {
-                                        HStack {
-                                            Text("Mallampati:")
-                                                .font(.system(size: 9))
-                                                .fontWeight(.semibold)
-                                                .foregroundColor(.black)
-                                            Text(mallampatiDetails.displayName)
-                                                .font(.system(size: 9))
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                                .fixedSize(horizontal: false, vertical: true)
-                                                .foregroundColor(.black)
-                                        }
-                                        
-                                    }
+
+                            if let mallampati = pre?.mallampatiClassification {
+                                HStack {
+                                    Text("Mallampati:")
+                                        .fontWeight(.semibold)
+                                    Text(mallampati.displayName)
                                 }
+                                .font(.system(size: 9))
                             }
-                            if hasDetails || hasCustomDetails || hasTextDetails {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    let defaultEvaluations = (anesthesia.surgery.preanesthesia?.difficultAirwayEvaluation ?? []).filter { $0 != .traqueo }
-                                    let defaultDetails = defaultEvaluations.map { $0.displayName }
-                                    let customDetails = (anesthesia.surgery.preanesthesia?.difficultAirwayEvaluationCustomDetails ?? [])
-                                    let all = defaultDetails + customDetails
-                                    if !all.isEmpty {
-                                        
-                                        HStack {
-                                            Text("Preditores:")
-                                                .fontWeight(.semibold)
-                                                .font(.system(size: 9))
-                                                .foregroundColor(.black)
-                                            VStack(alignment: .leading, spacing: 8) {
-                                                
-                                                
-                                                if !all.isEmpty {
-                                                    Text(all.joined(separator: " • "))
-                                                        .foregroundColor(.black)
-                                                        .font(.system(size: 9))
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                                        .fixedSize(horizontal: false, vertical: true) // garante quebra vertical
-                                                }
-                                            }
-                                        }
-                                        HStack(alignment: .top) {
-                                            if let difficultAirwayEvaluationDetailsText = anesthesia.surgery.preanesthesia?.difficultAirwayEvaluationDetailsText, !difficultAirwayEvaluationDetailsText.isEmpty {
-                                                Text("Detalhes:")
-                                                    .fontWeight(.semibold)
-                                                    .font(.system(size: 9))
-                                                    .foregroundColor(.black)
-                                                Spacer()
-                                                Text(difficultAirwayEvaluationDetailsText)
-                                                    .font(.system(size: 9))
-                                                    .foregroundColor(.black)
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
+
+                            let predictors = details.filter { $0.type != .traqueo }
+
+                            if predictors.isEmpty {
                                 Text("Sem preditores via aérea difícil")
                                     .font(.system(size: 9))
                                     .fontWeight(.semibold)
-                                    .foregroundColor(.black)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .fixedSize(horizontal: false, vertical: true)
+                            } else {
+                                HStack(alignment: .top) {
+                                    Text("Preditores:")
+                                        .fontWeight(.semibold)
+                                        .font(.system(size: 9))
+
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        ForEach(predictors) { detail in
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text(detail.displayName())
+                                                    .font(.system(size: 9))
+
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.system(size: 9))
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                    }
+                                }
                             }
                         }
                     }

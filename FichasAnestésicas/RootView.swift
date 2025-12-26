@@ -18,7 +18,7 @@ struct RootView: View {
         .task {
 //            if !didRunManualMigrations {
 //                didRunManualMigrations = true
-//                try? migrateInfantIfNeeded(context: context)
+//                try? migrateAirwayIfNeeded(context: context)
 //            }
             session.loadCurrentUser(using: context)
         }
