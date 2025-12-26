@@ -6,120 +6,6 @@ protocol ComorbiditiesType: CaseIterable, Hashable, Identifiable where ID == Sel
 }
 
 // MARK: - Componente Genérico Reutilizável
-struct ComorbiditiesSection<T: ComorbiditiesType>: View {
-    let title: String
-    let icon: String
-    @Binding var isEnabled: Bool
-    @Binding var selection: [T]
-    @Binding var customDetails: [String]
-    @Binding var detailsText: String?
-    @State private var newCustomItem = ""
-    
-    var extraContent: (() -> AnyView)? = nil
-    
-    var sortedItems: [T] {
-        T.allCases.sorted { a, b in
-            a.displayName.localizedCaseInsensitiveCompare(b.displayName) == .orderedAscending
-        }
-    }
-    
-    var body: some View {
-        Section {
-            Toggle(isOn: $isEnabled) {
-                Label(title, systemImage: icon)
-                    .fontWeight(Font.Weight.medium)
-            }
-            
-            if isEnabled {
-                // Conteúdo extra (ex: idade gestacional)
-                if let extra = extraContent {
-                    extra()
-                }
-                
-                // Items predefinidos
-                ForEach(sortedItems) { item in
-                    Button {
-                        toggleSelection(item)
-                    } label: {
-                        HStack {
-                            Text(item.displayName)
-                            Spacer()
-                            Image(systemName: selection.contains(item) ? "checkmark.circle.fill" : "circle.dashed")
-                                .foregroundStyle(selection.contains(item) ? .blue : .gray)
-                        }
-                    }
-                    .foregroundStyle(.primary)
-                }
-                
-                // Items customizados
-                ForEach(customDetails, id: \.self) { name in
-                    Button {
-                        customDetails.removeAll { $0 == name }
-                    } label: {
-                        HStack {
-                            Text(name)
-                            Spacer()
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.blue)
-                        }
-                    }
-                    .foregroundStyle(.primary)
-                }
-                
-                // Campo adicionar custom
-                HStack {
-                    TextField("Adicionar Comorbidades", text: $newCustomItem)
-                        .autocorrectionDisabled(true)
-                        .submitLabel(.done)
-                        .onSubmit {
-                            addCustomItem()
-                        }
-                    if !newCustomItem.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        Button {
-                            addCustomItem()
-                        } label: {
-                            Image(systemName: "plus.circle")
-                        }
-                    }
-                }
-                
-                // Campo de detalhes
-                if !customDetails.isEmpty || !selection.isEmpty {
-                    HStack {
-                        Text("Detalhes")
-                        TextField(
-                            "Informações adicionais",
-                            text: Binding<String>(
-                                get: { detailsText ?? "" },
-                                set: { detailsText = $0.isEmpty ? nil : $0 }
-                            )
-                        )
-                        .multilineTextAlignment(.trailing)
-                    }
-                }
-            }
-        } header: {
-            Text(title)
-        }
-    }
-    
-    private func toggleSelection(_ item: T) {
-        if let idx = selection.firstIndex(of: item) {
-            selection.remove(at: idx)
-        } else {
-            selection.append(item)
-        }
-    }
-    
-    private func addCustomItem() {
-        let trimmed = newCustomItem.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmed.isEmpty && !customDetails.contains(trimmed) {
-            customDetails.append(trimmed)
-            newCustomItem = ""
-        }
-    }
-}
-
 struct NewComorbidityDetailSection<Detail: ComorbidityDetailProtocol, EnumType: ComorbiditiesType>: View {
     let title: String
     let icon: String
@@ -318,14 +204,6 @@ struct ComorbitiesFormView: View {
                         details: $viewModel.comorbities.infantDetails,
                         createDetail: { InfantDetail(type: $0) },
                         createCustomDetail: { InfantDetail(customName: $0) }
-                    )
-                    ComorbiditiesSection(
-                        title: "Menor de um ano",
-                        icon: "figure.child.circle.fill",
-                        isEnabled: $viewModel.comorbities.isInfant,
-                        selection: binding(get: { viewModel.comorbities.isInfantComorbitiesDetails }, set: { viewModel.comorbities.isInfantComorbitiesDetails = $0 }),
-                        customDetails: $viewModel.comorbities.isInfantCustomDetails,
-                        detailsText: $viewModel.comorbities.isInfantDetailsText
                     )
                 }
                 

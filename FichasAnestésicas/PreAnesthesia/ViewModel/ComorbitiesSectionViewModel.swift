@@ -56,20 +56,8 @@ final class ComorbitiesSectionViewModel {
 
     
     //one by one
-    var isPregnantComorbitiesDetails: [PregnantComorbities]?
-    var isPregnantDetailsText: String?
     var isPregnantAge: String?
-    var isPregnantCustomDetails: [String] = []
-    
-    var isInfantComorbitiesDetails: [InfantComorbities]?
-    var isInfantDetailsText: String?
-    var isInfantCustomDetails: [String] = []
-    
-    
-    var geneticSyndromeComorbitiesDetails: [GeneticSyndrome]?
-    var geneticSyndromeComorbitiesCustomDetails: [String] = []
-    var geneticSyndromeComorbitiesDetailsText: String?
-    
+
     
     
     func load(from e: PreAnesthesia, patientSex: Sex, patientAge: Int) {
@@ -114,13 +102,8 @@ final class ComorbitiesSectionViewModel {
         
         
         //one by one
-        isPregnantComorbitiesDetails = e.isPregnantComorbitiesDetails
-        isPregnantDetailsText = e.isPregnantDetailsText
         isPregnantAge = e.isPregnantAge
-        isPregnantCustomDetails = e.isPregnantCustomDetails ?? []
-        isInfantComorbitiesDetails = e.isInfantComorbitiesDetails
-        isInfantCustomDetails = e.isInfantCustomDetails ?? []
-        isInfantDetailsText = e.isInfantDetailsText
+
         
     }
     
@@ -168,13 +151,7 @@ final class ComorbitiesSectionViewModel {
         
         
         //one by one
-        e.isPregnantComorbitiesDetails = isPregnantComorbitiesDetails
-        e.isPregnantDetailsText = isPregnantDetailsText
         e.isPregnantAge = isPregnantAge
-        e.isPregnantCustomDetails = isPregnantCustomDetails
-        e.isInfantComorbitiesDetails = isInfantComorbitiesDetails
-        e.isInfantDetailsText = isInfantDetailsText
-        e.isInfantCustomDetails = isInfantCustomDetails
         
     }
     
@@ -227,7 +204,7 @@ final class ComorbitiesSectionViewModel {
     }
     func hematologicalComorbitiesVisibility() {
         if hematologicalComorbities == false {
-            imunologyDetails = []
+            hematologyDetails = []
         }
     }
     func imunologicalComorbitiesVisibility() {
@@ -293,10 +270,10 @@ final class ComorbitiesSectionViewModel {
         neurologicalComorbities = false
         geneticSyndrome = false
         if isInfant == true {
-            isInfantComorbitiesDetails = [.healthy]
+            infantDetails = [InfantDetail(type: .healthy, customName: nil)]
         }
         if isPregnant == true {
-            isPregnantComorbitiesDetails = [.healthy]
+            pregnancyDetails = [PregnancyDetail(type: .healthy, customName: nil)]
         }
     }
     
@@ -320,14 +297,12 @@ final class ComorbitiesSectionViewModel {
         neurologicalComorbities = false
         geneticSyndrome = false
         
-        
         if isInfant {
-            isInfantComorbitiesDetails = [.healthy]
+            infantDetails = [InfantDetail(type: .healthy, customName: nil)]
         }
-        
-        
+
         if isPregnant {
-            isPregnantComorbitiesDetails = [.healthy]
+            pregnancyDetails = [PregnancyDetail(type: .healthy, customName: nil)]
         }
     }
     
@@ -433,8 +408,8 @@ final class ComorbitiesSectionViewModel {
         guard hasAnyInfo else { return false }
         
         if healthyPatient {
-            if isInfant && !(isInfantComorbitiesDetails == [.healthy]) { return false }
-            if isPregnant && !(isPregnantComorbitiesDetails == [.healthy]) { return false }
+//            if isInfant && !(isInfantComorbitiesDetails == [.healthy]) { return false }
+//            if isPregnant && !(isPregnantComorbitiesDetails == [.healthy]) { return false }
             
             return !cardiacComorbities &&
             !respiratoryComorbities &&
@@ -453,8 +428,8 @@ final class ComorbitiesSectionViewModel {
             cardiologyDetails.isEmpty &&
             respiratoryDetails.isEmpty
         } else {
-            if isInfant && (isInfantComorbitiesDetails?.isEmpty ?? true) && isInfantCustomDetails.isEmpty { return false }
-            if isPregnant && (isPregnantComorbitiesDetails?.isEmpty ?? true) && isPregnantCustomDetails.isEmpty { return false }
+//            if isInfant && (isInfantComorbitiesDetails?.isEmpty ?? true) && isInfantCustomDetails.isEmpty { return false }
+//            if isPregnant && (isPregnantComorbitiesDetails?.isEmpty ?? true) && isPregnantCustomDetails.isEmpty { return false }
             if cardiacComorbities && !hasValidCardiologyDetails() {return false}
             if respiratoryComorbities && !hasValidRespiratoryDetails() {return false}
             if endocrineComorbities && !hasValidEndocrineDetails() {return false}
@@ -482,22 +457,22 @@ final class ComorbitiesSectionViewModel {
         }
 
         if healthyPatient {
-            if isInfant && !(isInfantComorbitiesDetails == [.healthy]) {
-                messages.append("Paciente saudável: marque apenas 'Saudável' em Infantil")
-            }
-            if isPregnant && !(isPregnantComorbitiesDetails == [.healthy]) {
-                messages.append("Paciente saudável: marque apenas 'Saudável' em Gestante")
-            }
+//            if isInfant && !(isInfantComorbitiesDetails == [.healthy]) {
+//                messages.append("Paciente saudável: marque apenas 'Saudável' em Infantil")
+//            }
+//            if isPregnant && !(isPregnantComorbitiesDetails == [.healthy]) {
+//                messages.append("Paciente saudável: marque apenas 'Saudável' em Gestante")
+//            }
             if cardiacComorbities || respiratoryComorbities || endocrineComorbities || gastrointestinalComorbities || hematologicalComorbities || imunologicalComorbities || musculoskeletalComorbities || genitourologicalComorbities || gynecologicalComorbities || androgenicalComorbities || neurologicalComorbities || geneticSyndrome {
                 messages.append("Paciente saudável não pode ter outras comorbidades")
             }
         } else {
-            if isInfant && (isInfantComorbitiesDetails?.isEmpty ?? true) && isInfantCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para Infantil")
-            }
-            if isPregnant && (isPregnantComorbitiesDetails?.isEmpty ?? true) && isPregnantCustomDetails.isEmpty {
-                messages.append("Adicione detalhes para Gestante")
-            }
+//            if isInfant && (isInfantComorbitiesDetails?.isEmpty ?? true) && isInfantCustomDetails.isEmpty {
+//                messages.append("Adicione detalhes para Infantil")
+//            }
+//            if isPregnant && (isPregnantComorbitiesDetails?.isEmpty ?? true) && isPregnantCustomDetails.isEmpty {
+//                messages.append("Adicione detalhes para Gestante")
+//            }
             if cardiacComorbities && !hasValidCardiologyDetails() {
                 messages.append("Adicione pelo menos uma comorbidade cardíaca")
             }
@@ -551,3 +526,4 @@ final class ComorbitiesSectionViewModel {
     
     
 }
+

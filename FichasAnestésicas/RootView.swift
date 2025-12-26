@@ -16,10 +16,10 @@ struct RootView: View {
             }
         }
         .task {
-            if !didRunManualMigrations {
-                didRunManualMigrations = true
-                try? migrateInfantIfNeeded(context: context)
-            }
+//            if !didRunManualMigrations {
+//                didRunManualMigrations = true
+//                try? migrateInfantIfNeeded(context: context)
+//            }
             session.loadCurrentUser(using: context)
         }
     }

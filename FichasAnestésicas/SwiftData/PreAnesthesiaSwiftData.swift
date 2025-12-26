@@ -91,50 +91,8 @@ final class PreAnesthesia {
     @Relationship var anesthesiaHistoricDetails: [AnesthesiaHistoryDetail]?
     
     //one by one
-    var isPregnantComorbitiesDetailsRaw: [String]?
-    var isPregnantComorbitiesDetails: [PregnantComorbities]? {
-        get { isPregnantComorbitiesDetailsRaw?.compactMap(PregnantComorbities.init(rawValue:))}
-        set { isPregnantComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var isPregnantDetailsText: String?
     var isPregnantAge: String?
-    var isPregnantCustomDetails: [String]?
     
-    var isInfantComorbitiesDetailsRaw: [String]?
-    var isInfantComorbitiesDetails: [InfantComorbities]? {
-        get { isInfantComorbitiesDetailsRaw?.compactMap(InfantComorbities.init(rawValue:))}
-        set { isInfantComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var isInfantDetailsText: String?
-    var isInfantCustomDetails: [String]?
-    
-    
-    var geneticSyndromeComorbitiesDetailsRaw: [String]?
-    var geneticSyndromeComorbitiesDetails: [GeneticSyndrome]? {
-        get { geneticSyndromeComorbitiesDetailsRaw?.compactMap(GeneticSyndrome.init(rawValue:))}
-        set { geneticSyndromeComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var geneticSyndromeComorbitiesDetailsText: String?
-    var geneticSyndromeComorbitiesCustomDetails: [String]?
-    
-
-    
-    
-    var surgeryHistoryDetailsRaw: [String]?
-    var surgeryHistoryDetails: [SurgeryHistorySpeciality]? {
-        get { surgeryHistoryDetailsRaw?.compactMap(SurgeryHistorySpeciality.init(rawValue:))}
-        set { surgeryHistoryDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var surgeryHistoryDetailsText: String?
-    var surgeryHistoryCustomDetails: [String]?
-    
-    var anesthesiaHistoryDetailsRaw: [String]?
-    var anesthesiaHistoryDetails: [AnesthesiaComplicationsHistory]? {
-        get { anesthesiaHistoryDetailsRaw?.compactMap(AnesthesiaComplicationsHistory.init(rawValue:))}
-        set { anesthesiaHistoryDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var anesthesiaHistoryDetailsText: String?
-    var anesthesiaHistoryCustomDetails: [String]?
     
     
     var socialHabitsAndEnvironmentDetailsRaw: [String]?
@@ -258,27 +216,7 @@ final class PreAnesthesia {
         anesthesiaHistoricDetails: [AnesthesiaHistoryDetail]? = nil,
         
         //one by one
-        isPregnantComorbitiesDetails: PregnantComorbities? = nil,
-        isPregnantDetailsText: String? = nil,
         isPregnantAge: String? = nil,
-        isPregnantCustomDetails: [String]? = [],
-        isInfantComorbitiesDetails: InfantComorbities? = nil,
-        isInfantDetailsText: String? = nil,
-        isInfantCustomDetails: [String]? = [],
-        
-        
-        geneticSyndromeComorbitiesDetails: GeneticSyndrome? = nil,
-        geneticSyndromeComorbitiesDetailsText: String? = nil,
-        geneticSyndromeComorbitiesCustomDetails: [String]? = [],
-        
-
-        
-        surgeryHistoryDetails: SurgeryHistorySpeciality? = nil,
-        surgeryHistoryDetailsText: String? = nil,
-        surgeryHistoryCustomDetails: [String]? = [],
-        anesthesiaHistoryDetails: AnesthesiaComplicationsHistory? = nil,
-        anesthesiaHistoryDetailsText: String? = nil,
-        anesthesiaHistoryCustomDetails: [String]? = [],
         
         
         socialHabitsAndEnvironmentDetails: SocialHabitsAndEnvironment? = nil,
@@ -366,26 +304,7 @@ final class PreAnesthesia {
         self.anesthesiaHistoricDetails = anesthesiaHistoricDetails
         
         //one by one
-        self.isPregnantComorbitiesDetailsRaw = isPregnantComorbitiesDetails.map { [$0.rawValue] }
-        self.isPregnantDetailsText = isPregnantDetailsText
         self.isPregnantAge = isPregnantAge
-        self.isPregnantCustomDetails = isPregnantCustomDetails
-        self.isInfantComorbitiesDetailsRaw = isInfantComorbitiesDetails.map { [$0.rawValue] }
-        self.isInfantCustomDetails = isInfantCustomDetails
-        self.isInfantDetailsText = isInfantDetailsText
-        
-        self.geneticSyndromeComorbitiesDetailsRaw = geneticSyndromeComorbitiesDetails.map { [$0.rawValue] }
-        self.geneticSyndromeComorbitiesDetailsText = geneticSyndromeComorbitiesDetailsText
-        self.geneticSyndromeComorbitiesCustomDetails = geneticSyndromeComorbitiesCustomDetails
-        
-
-        
-        self.surgeryHistoryDetailsRaw = surgeryHistoryDetails.map { [$0.rawValue] }
-        self.surgeryHistoryDetailsText = surgeryHistoryDetailsText
-        self.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails
-        self.anesthesiaHistoryDetailsRaw = anesthesiaHistoryDetails.map { [$0.rawValue] }
-        self.anesthesiaHistoryDetailsText = anesthesiaHistoryDetailsText
-        self.anesthesiaHistoryCustomDetails = anesthesiaHistoryCustomDetails
         
         self.socialHabitsAndEnvironmentDetailsRaw = socialHabitsAndEnvironmentDetails.map { [$0.rawValue] }
         self.socialHabitsAndEnvironmentDetailsText = socialHabitsAndEnvironmentDetailsText
