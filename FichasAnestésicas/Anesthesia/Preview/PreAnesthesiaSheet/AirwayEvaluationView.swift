@@ -120,6 +120,8 @@ struct AirwayEvaluationView: View {
                                     .font(.system(size: 9))
                                     .fontWeight(.semibold)
                                     .foregroundColor(.black)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .fixedSize(horizontal: false, vertical: true)
                             }
                         }
                     }

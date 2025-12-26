@@ -50,40 +50,28 @@ struct SpecialInfoView: View {
                                 Text(pregnantAge)
                                     .font(.system(size: 9))
                             }
-                            let defaultDetails = (anesthesia.surgery.preanesthesia?.isPregnantComorbitiesDetails ?? []).map { $0.displayName }
-                            let customDetails = (anesthesia.surgery.preanesthesia?.isPregnantCustomDetails ?? [])
-                            let textDetails = (anesthesia.surgery.preanesthesia?.isPregnantDetailsText ?? "")
-                            let allDetails = defaultDetails + customDetails + (textDetails.isEmpty ? [] : [textDetails])
-                            
-                            if !allDetails.isEmpty {
-                                Text(allDetails.joined(separator: " • "))
-                                    .font(.system(size: 9))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
+                            NotesComorbiditiesRow(
+                                title: "",
+                                details: anesthesia.surgery.preanesthesia?.pregnancyDetails ?? [],
+                                name: { $0.displayName() },
+                                notes: { $0.notes }
+                            )
                             
                         }
-                            Spacer()
+                            //Spacer()
                         
                     }
                     if isInfant {
                         HStack(alignment: .top) {
                             Text("**Lactente:** \(age)")
                                 .font(.system(size: 10))
-                            
-                            let defaultDetails = (anesthesia.surgery.preanesthesia?.isInfantComorbitiesDetails ?? []).map { $0.displayName }
-                            let customDetails = (anesthesia.surgery.preanesthesia?.isInfantCustomDetails ?? [])
-                            let textDetails = (anesthesia.surgery.preanesthesia?.isInfantDetailsText ?? "")
-                            let allDetails = defaultDetails + customDetails + (textDetails.isEmpty ? [] : [textDetails])
-                            
-                            if !allDetails.isEmpty {
-                                Text(allDetails.joined(separator: " • "))
-                                    .font(.system(size: 9))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
-
-                            Spacer()
+            
+                            NotesComorbiditiesRow(
+                                title: "",
+                                details: anesthesia.surgery.preanesthesia?.infantDetails ?? [],
+                                name: { $0.displayName() },
+                                notes: { $0.notes }
+                            )
                         }
                     }
                 }

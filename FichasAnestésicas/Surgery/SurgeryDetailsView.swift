@@ -218,37 +218,25 @@ struct SurgeryDetailsView: View {
             }
             if let preanesthesia = surgery.preanesthesia {
                 Section {
-                    HStack {
-                        NavigationLink {
-                            PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
-                        } label: {
-                            Text("Detalhes da Avaliação Pré Anestesia")
-                                .fontWeight(.bold)
+                    NavigationLink {
+                        PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
+                    } label: {
+                        Text("Detalhes da Avaliação Pré Anestesia")
+                            .fontWeight(.bold)
+                    }
+
+                    if let anesthesia = surgery.anesthesia,
+                       preanesthesia.status == .finished {
+                        ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
+                            Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
                         }
                     }
-                    if let anesthesia = surgery.anesthesia {
-                        if preanesthesia.status == .finished {
-                            HStack {
-                                ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
-                                    Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
-                                }
-                            }
-                        }
-                    }
-                } header : {
-                    HStack {
-                        Text("Avaliação Pré Anestésica")
-                    }
+                } header: {
+                    Text("Avaliação Pré Anestésica")
                 }
             } else {
-                if let preanesthesia = surgery.preanesthesia {
-                    Button("Editar Avaliação Pré Anestésica") {
-                        presentEditForm(for: preanesthesia)
-                    }
-                } else {
-                    Button("Criar Avaliação Pré Anestésica") {
-                        presentNewForm()
-                    }
+                Button("Criar Avaliação Pré Anestésica") {
+                    presentNewForm()
                 }
             }
         }

@@ -130,6 +130,8 @@ struct NewComorbidityDetailSection<Detail: ComorbidityDetailProtocol, EnumType: 
     
     @State private var newCustomName = ""
     
+    var extraContent: (() -> AnyView)? = nil
+    
     var sortedEnumItems: [EnumType] {
         EnumType.allCases.sorted { $0.displayName < $1.displayName }
     }
@@ -152,16 +154,21 @@ struct NewComorbidityDetailSection<Detail: ComorbidityDetailProtocol, EnumType: 
             }
             
             if isEnabled {
+                if let extra = extraContent {
+                    extra()
+                }
+                
                 ForEach(sortedEnumItems) { enumCase in
                     detailRow(for: enumCase)
                 }
+                
                 
                 ForEach(customDetails) { detail in
                     customDetailRow(detail)
                 }
                 
                 HStack {
-                    TextField("Adicionar Comorbidades", text: $newCustomName)
+                    TextField("Adicionar", text: $newCustomName)
                         .autocorrectionDisabled(true)
                         .submitLabel(.done)
                         .onSubmit { addCustom() }
@@ -279,21 +286,39 @@ struct ComorbitiesFormView: View {
                 
                 // Gestação (condicional)
                 if viewModel.patientSex == .female && viewModel.patientAge > 12 {
-                    ComorbiditiesSection(
+                    NewComorbidityDetailSection<PregnancyDetail, PregnantComorbities>(
                         title: "Gestante",
                         icon: "figure.seated.side.right.child.lap",
                         isEnabled: $viewModel.comorbities.isPregnant,
-                        selection: binding(get: { viewModel.comorbities.isPregnantComorbitiesDetails }, set: { viewModel.comorbities.isPregnantComorbitiesDetails = $0 }),
-                        customDetails: $viewModel.comorbities.isPregnantCustomDetails,
-                        detailsText: $viewModel.comorbities.isPregnantDetailsText,
+                        details: $viewModel.comorbities.pregnancyDetails,
+                        createDetail: { PregnancyDetail(type: $0) },
+                        createCustomDetail: { PregnancyDetail(customName: $0) },
                         extraContent: {
-                            AnyView(pregnantAgeField)
+                            AnyView(
+                                HStack {
+                                    Text("Idade Gestacional:")
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                    TextField("IG: 32 semanas...", text: Binding(
+                                        get: { viewModel.comorbities.isPregnantAge ?? "" },
+                                        set: { viewModel.comorbities.isPregnantAge = $0.isEmpty ? nil : $0 }
+                                    ))
+                                }
+                            )
                         }
                     )
                 }
                 
                 // Menor de um ano (condicional)
                 if viewModel.patientAge < 1 {
+                    NewComorbidityDetailSection<InfantDetail, InfantComorbities>(
+                        title: "Menor de um ano",
+                        icon: "figure.child.circle.fill",
+                        isEnabled: $viewModel.comorbities.isInfant,
+                        details: $viewModel.comorbities.infantDetails,
+                        createDetail: { InfantDetail(type: $0) },
+                        createCustomDetail: { InfantDetail(customName: $0) }
+                    )
                     ComorbiditiesSection(
                         title: "Menor de um ano",
                         icon: "figure.child.circle.fill",
@@ -390,6 +415,7 @@ struct ComorbitiesFormView: View {
                         createCustomDetail: { GynecologicComorbityDetail(customName: $0) }
                     )
                 }
+                //Andrológicas
                 if viewModel.patientSex == .male {
                     NewComorbidityDetailSection<AndrogenicComorbityDetail, AndrologicComorbities>(
                         title: "Andrológicas",
@@ -400,6 +426,7 @@ struct ComorbitiesFormView: View {
                         createCustomDetail: { AndrogenicComorbityDetail(customName: $0) }
                     )
                 }
+                //Infecciosas
                 NewComorbidityDetailSection<InfectiousComorbityDetail, InfectiousComorbities>(
                     title: "Infecciosas",
                     icon: "person.fill",
@@ -408,6 +435,7 @@ struct ComorbitiesFormView: View {
                     createDetail: { InfectiousComorbityDetail(type: $0) },
                     createCustomDetail: { InfectiousComorbityDetail(customName: $0) }
                 )
+                //Oncológicas
                 NewComorbidityDetailSection<OncologyComorbidityDetail, OncologicComorbidities>(
                     title: "Oncológicas",
                     icon: "person.fill",
@@ -416,6 +444,7 @@ struct ComorbitiesFormView: View {
                     createDetail: { OncologyComorbidityDetail(type: $0) },
                     createCustomDetail: { OncologyComorbidityDetail(customName: $0) }
                 )
+                //Neurológicas
                 NewComorbidityDetailSection<NeurologyComorbityDetail, NeurologicalComorbities>(
                     title: "Neurológicas",
                     icon: "brain.head.profile.fill",
@@ -424,6 +453,7 @@ struct ComorbitiesFormView: View {
                     createDetail: { NeurologyComorbityDetail(type: $0) },
                     createCustomDetail: { NeurologyComorbityDetail(customName: $0) }
                 )
+                //Genéticas
                 NewComorbidityDetailSection<GeneticSyndromeDetail, GeneticSyndrome>(
                     title: "Síndromes Genéticas",
                     icon: "apple.meditate.circle.fill",

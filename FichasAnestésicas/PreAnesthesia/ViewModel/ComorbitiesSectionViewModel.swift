@@ -35,6 +35,9 @@ final class ComorbitiesSectionViewModel {
     }
     
     //section
+    var pregnancyDetails: [PregnancyDetail] = []
+    var infantDetails: [InfantDetail] = []
+    
     var oncologyDetails: [OncologyComorbidityDetail] = []
     var cardiologyDetails: [CardiologyComorbidityDetail] = []
     var respiratoryDetails: [RespiratoryComorbidityDetail] = []
@@ -91,6 +94,9 @@ final class ComorbitiesSectionViewModel {
         geneticSyndrome = e.geneticSyndrome
         healthyPatient = e.healthyPatient ?? false
         //newsection
+        pregnancyDetails = e.pregnancyDetails ?? []
+        infantDetails = e.infantDetails ?? []
+        
         oncologyDetails = e.oncologyDetails ?? []
         cardiologyDetails = e.cardiologyDetails ?? []
         respiratoryDetails = e.respiratoryDetails ?? []
@@ -141,6 +147,9 @@ final class ComorbitiesSectionViewModel {
         e.geneticSyndrome = geneticSyndrome
         e.healthyPatient = healthyPatient
         //newSection
+        e.pregnancyDetails = pregnancyDetails
+        e.infantDetails = infantDetails
+        
         e.oncologyDetails = oncologyDetails
         e.cardiologyDetails = cardiologyDetails
         e.respiratoryDetails = respiratoryDetails
@@ -177,9 +186,7 @@ final class ComorbitiesSectionViewModel {
     func isPregnantComorbitiesVisibility() {
         if isPregnant == false {
             isPregnantAge = ""
-            isPregnantCustomDetails = []
-            isPregnantDetailsText = ""
-            isPregnantComorbitiesDetails = []
+            pregnancyDetails = []
         }
     }
     
@@ -194,9 +201,7 @@ final class ComorbitiesSectionViewModel {
     
     func isInfantComorbitiesVisibility() {
         if isInfant == false {
-            isInfantCustomDetails = []
-            isInfantDetailsText = ""
-            isInfantComorbitiesDetails = []
+            infantDetails = []
         }
     }
     
@@ -295,26 +300,7 @@ final class ComorbitiesSectionViewModel {
         }
     }
     
-    func addPregnantCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !isPregnantCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        isPregnantCustomDetails.append(trimmed)
-    }
-    func removePregnantCustomDetails(at index: Int) {
-        guard isPregnantCustomDetails.indices.contains(index) else { return }
-        isPregnantCustomDetails.remove(at: index)
-    }
-    func addInfantCustomDetails(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        guard !isInfantCustomDetails.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return }
-        isInfantCustomDetails.append(trimmed)
-    }
-    func removeInfantCustomDetails(at index: Int) {
-        guard isInfantCustomDetails.indices.contains(index) else { return }
-        isInfantCustomDetails.remove(at: index)
-    }
+
     
     
     func applyHealthyPatient() {

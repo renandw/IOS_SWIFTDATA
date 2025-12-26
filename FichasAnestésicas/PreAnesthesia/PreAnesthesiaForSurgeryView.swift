@@ -185,42 +185,30 @@ struct PreAnesthesiaForSurgeryView: View {
                             }
                         }
                     }
-                    
-                    if let isInfant = preanesthesia?.isInfant, isInfant {
+                    if preanesthesia?.isInfant == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
-                                Text("Menor de um ano:")
+                                Text("Menor de 1 ano:")
                                     .font(.headline)
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let isInfantDetails = preanesthesia?.isInfantComorbitiesDetails, !isInfantDetails.isEmpty {
-                                        ForEach(isInfantDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.infantDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customIsInfantDetails = preanesthesia?.isInfantCustomDetails, !customIsInfantDetails.isEmpty {
-                                        ForEach(customIsInfantDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let isInfantDetailsText = preanesthesia?.isInfantDetailsText, !isInfantDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(isInfantDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }
+                        Divider()
                     }
-                    
                     if preanesthesia?.isPregnant == true {
                         VStack(alignment: .trailing, spacing: 12) {
                             HStack(alignment: .top) {
@@ -233,29 +221,18 @@ struct PreAnesthesiaForSurgeryView: View {
                                 
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    if let isPregnantDetails = preanesthesia?.isPregnantComorbitiesDetails, !isPregnantDetails.isEmpty {
-                                        ForEach(isPregnantDetails, id: \.self) { comorbidity in
-                                            Text(comorbidity.displayName)
+                                    if let details = preanesthesia?.pregnancyDetails, !details.isEmpty {
+                                        ForEach(details) { detail in
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(detail.displayName())
+                                                if let notes = detail.notes, !notes.isEmpty {
+                                                    Text(notes)
+                                                        .font(.caption)
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
                                         }
                                     }
-                                    if let customIsPregnantDetails = preanesthesia?.isPregnantCustomDetails, !customIsPregnantDetails.isEmpty {
-                                        ForEach(customIsPregnantDetails, id: \.self) { customComorbity in
-                                            Text(customComorbity)
-                                        }
-                                    }
-                                    HStack {
-                                        
-                                    }
-                                }
-                            }
-                            HStack(alignment: .top) {
-                                if let isPregnantDetailsText = preanesthesia?.isPregnantDetailsText, !isPregnantDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .fontWeight(.semibold)
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(isPregnantDetailsText)
-                                        .font(.caption)
                                 }
                             }
                         }

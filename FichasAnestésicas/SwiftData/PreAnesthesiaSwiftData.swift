@@ -69,6 +69,9 @@ final class PreAnesthesia {
     var hasAllergies: Bool?
     
     //newFormat
+    @Relationship var pregnancyDetails: [PregnancyDetail]?
+    @Relationship var infantDetails: [InfantDetail]?
+    
     @Relationship var oncologyDetails: [OncologyComorbidityDetail]?
     @Relationship var cardiologyDetails: [CardiologyComorbidityDetail]?
     @Relationship var respiratoryDetails: [RespiratoryComorbidityDetail]?
@@ -105,6 +108,33 @@ final class PreAnesthesia {
     var isInfantDetailsText: String?
     var isInfantCustomDetails: [String]?
     
+    
+    var geneticSyndromeComorbitiesDetailsRaw: [String]?
+    var geneticSyndromeComorbitiesDetails: [GeneticSyndrome]? {
+        get { geneticSyndromeComorbitiesDetailsRaw?.compactMap(GeneticSyndrome.init(rawValue:))}
+        set { geneticSyndromeComorbitiesDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var geneticSyndromeComorbitiesDetailsText: String?
+    var geneticSyndromeComorbitiesCustomDetails: [String]?
+    
+
+    
+    
+    var surgeryHistoryDetailsRaw: [String]?
+    var surgeryHistoryDetails: [SurgeryHistorySpeciality]? {
+        get { surgeryHistoryDetailsRaw?.compactMap(SurgeryHistorySpeciality.init(rawValue:))}
+        set { surgeryHistoryDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var surgeryHistoryDetailsText: String?
+    var surgeryHistoryCustomDetails: [String]?
+    
+    var anesthesiaHistoryDetailsRaw: [String]?
+    var anesthesiaHistoryDetails: [AnesthesiaComplicationsHistory]? {
+        get { anesthesiaHistoryDetailsRaw?.compactMap(AnesthesiaComplicationsHistory.init(rawValue:))}
+        set { anesthesiaHistoryDetailsRaw = newValue?.map { $0.rawValue}}
+    }
+    var anesthesiaHistoryDetailsText: String?
+    var anesthesiaHistoryCustomDetails: [String]?
     
     
     var socialHabitsAndEnvironmentDetailsRaw: [String]?
@@ -206,6 +236,9 @@ final class PreAnesthesia {
         anesthesiaHistory: Bool = false,
         
         //newSection
+        pregnancyDetails: [PregnancyDetail]? = nil,
+        infantDetails: [InfantDetail]? = nil,
+        
         oncologyDetails: [OncologyComorbidityDetail]? = nil,
         cardiologyDetails: [CardiologyComorbidityDetail]? = nil,
         respiratoryDetails: [RespiratoryComorbidityDetail]? = nil,
@@ -232,7 +265,20 @@ final class PreAnesthesia {
         isInfantComorbitiesDetails: InfantComorbities? = nil,
         isInfantDetailsText: String? = nil,
         isInfantCustomDetails: [String]? = [],
-    
+        
+        
+        geneticSyndromeComorbitiesDetails: GeneticSyndrome? = nil,
+        geneticSyndromeComorbitiesDetailsText: String? = nil,
+        geneticSyndromeComorbitiesCustomDetails: [String]? = [],
+        
+
+        
+        surgeryHistoryDetails: SurgeryHistorySpeciality? = nil,
+        surgeryHistoryDetailsText: String? = nil,
+        surgeryHistoryCustomDetails: [String]? = [],
+        anesthesiaHistoryDetails: AnesthesiaComplicationsHistory? = nil,
+        anesthesiaHistoryDetailsText: String? = nil,
+        anesthesiaHistoryCustomDetails: [String]? = [],
         
         
         socialHabitsAndEnvironmentDetails: SocialHabitsAndEnvironment? = nil,
@@ -298,6 +344,9 @@ final class PreAnesthesia {
         self.surgeryHistory = surgeryHistory
         self.anesthesiaHistory = anesthesiaHistory
         // newsection
+        self.pregnancyDetails = pregnancyDetails
+        self.infantDetails = infantDetails
+        
         self.oncologyDetails = oncologyDetails
         self.cardiologyDetails = cardiologyDetails
         self.respiratoryDetails = respiratoryDetails
@@ -325,6 +374,18 @@ final class PreAnesthesia {
         self.isInfantCustomDetails = isInfantCustomDetails
         self.isInfantDetailsText = isInfantDetailsText
         
+        self.geneticSyndromeComorbitiesDetailsRaw = geneticSyndromeComorbitiesDetails.map { [$0.rawValue] }
+        self.geneticSyndromeComorbitiesDetailsText = geneticSyndromeComorbitiesDetailsText
+        self.geneticSyndromeComorbitiesCustomDetails = geneticSyndromeComorbitiesCustomDetails
+        
+
+        
+        self.surgeryHistoryDetailsRaw = surgeryHistoryDetails.map { [$0.rawValue] }
+        self.surgeryHistoryDetailsText = surgeryHistoryDetailsText
+        self.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails
+        self.anesthesiaHistoryDetailsRaw = anesthesiaHistoryDetails.map { [$0.rawValue] }
+        self.anesthesiaHistoryDetailsText = anesthesiaHistoryDetailsText
+        self.anesthesiaHistoryCustomDetails = anesthesiaHistoryCustomDetails
         
         self.socialHabitsAndEnvironmentDetailsRaw = socialHabitsAndEnvironmentDetails.map { [$0.rawValue] }
         self.socialHabitsAndEnvironmentDetailsText = socialHabitsAndEnvironmentDetailsText
@@ -345,4 +406,3 @@ final class PreAnesthesia {
         self.physicalExaminationDetailsText = physicalExaminationDetailsText
     }
 }
-

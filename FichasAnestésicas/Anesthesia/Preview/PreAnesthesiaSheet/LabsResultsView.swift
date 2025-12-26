@@ -49,6 +49,8 @@ struct LabsResultsView: View {
                             .foregroundColor(.black)
                             .font(.system(size: 9))
                             .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .fixedSize(horizontal: false, vertical: true)
                         
                     } else {
                         HStack(alignment: .top, spacing: 4) {

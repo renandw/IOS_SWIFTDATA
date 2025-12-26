@@ -47,4 +47,3 @@ extension Anesthesia {
         return s.components(separatedBy: invalid).joined().trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
-

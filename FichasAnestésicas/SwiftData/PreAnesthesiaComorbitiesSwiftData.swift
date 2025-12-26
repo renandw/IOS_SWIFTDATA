@@ -347,3 +347,45 @@ final class AnesthesiaHistoryDetail: ComorbidityDetailProtocol {
         type?.displayName ?? customName ?? ""
     }
 }
+
+@Model
+final class PregnancyDetail: ComorbidityDetailProtocol {
+    var typeRaw: String?
+    var type: PregnantComorbities? {
+        get { typeRaw.flatMap(PregnantComorbities.init(rawValue:)) }
+        set { typeRaw = newValue?.rawValue }
+    }
+    var customName: String?
+    var notes: String?
+    
+    init(type: PregnantComorbities? = nil, customName: String? = nil, notes: String? = nil) {
+        self.typeRaw = type?.rawValue
+        self.customName = customName
+        self.notes = notes
+    }
+    
+    func displayName() -> String {
+        type?.displayName ?? customName ?? ""
+    }
+}
+
+@Model
+final class InfantDetail: ComorbidityDetailProtocol {
+    var typeRaw: String?
+    var type: InfantComorbities? {
+        get { typeRaw.flatMap(InfantComorbities.init(rawValue:)) }
+        set { typeRaw = newValue?.rawValue }
+    }
+    var customName: String?
+    var notes: String?
+    
+    init(type: InfantComorbities? = nil, customName: String? = nil, notes: String? = nil) {
+        self.typeRaw = type?.rawValue
+        self.customName = customName
+        self.notes = notes
+    }
+    
+    func displayName() -> String {
+        type?.displayName ?? customName ?? ""
+    }
+}
