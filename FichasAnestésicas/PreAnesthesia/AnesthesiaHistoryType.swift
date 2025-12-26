@@ -142,14 +142,14 @@ struct AnesthesiaHistoryTypeFormView: View {
     var body: some View {
         NavigationStack {
             Form {
-                    SurgeryHistoryTypeSection(
-                        title: "Anestesias Prévias?",
-                        icon: "syringe.fill",
-                        isEnabled: $viewModel.surgeryHistory.anesthesiaHistory,
-                        selection: binding(get: { viewModel.surgeryHistory.anesthesiaHistoryDetails }, set: { viewModel.surgeryHistory.anesthesiaHistoryDetails = $0 }),
-                        customDetails: $viewModel.surgeryHistory.anesthesiaHistoryCustomDetails,
-                        detailsText: $viewModel.surgeryHistory.anesthesiaHistoryDetailsText
-                    )
+                NewComorbidityDetailSection<AnesthesiaHistoryDetail, AnesthesiaComplicationsHistory>(
+                    title: "Anestesias Prévias",
+                    icon: "syringe.fill",
+                    isEnabled: $viewModel.surgeryHistory.anesthesiaHistory,
+                    details: $viewModel.surgeryHistory.anesthesiaHistoricDetails,
+                    createDetail: { AnesthesiaHistoryDetail(type: $0) },
+                    createCustomDetail: { AnesthesiaHistoryDetail(customName: $0) }
+                )
             }
             .navigationTitle("Anestesias Prévias")
             .navigationBarTitleDisplayMode(.inline)

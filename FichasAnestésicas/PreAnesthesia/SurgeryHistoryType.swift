@@ -161,14 +161,22 @@ struct SurgeryHistoryTypeFormView: View {
                     createCustomDetail: { SurgeryHistoryDetail(customName: $0) }
                 )
                 if viewModel.surgeryHistory.surgeryHistory {
-                    SurgeryHistoryTypeSection(
+                    NewComorbidityDetailSection<AnesthesiaHistoryDetail, AnesthesiaComplicationsHistory>(
                         title: "Anestesias Prévias",
                         icon: "syringe.fill",
                         isEnabled: $viewModel.surgeryHistory.anesthesiaHistory,
-                        selection: binding(get: { viewModel.surgeryHistory.anesthesiaHistoryDetails }, set: { viewModel.surgeryHistory.anesthesiaHistoryDetails = $0 }),
-                        customDetails: $viewModel.surgeryHistory.anesthesiaHistoryCustomDetails,
-                        detailsText: $viewModel.surgeryHistory.anesthesiaHistoryDetailsText
+                        details: $viewModel.surgeryHistory.anesthesiaHistoricDetails,
+                        createDetail: { AnesthesiaHistoryDetail(type: $0) },
+                        createCustomDetail: { AnesthesiaHistoryDetail(customName: $0) }
                     )
+//                    SurgeryHistoryTypeSection(
+//                        title: "Anestesias Prévias",
+//                        icon: "syringe.fill",
+//                        isEnabled: $viewModel.surgeryHistory.anesthesiaHistory,
+//                        selection: binding(get: { viewModel.surgeryHistory.anesthesiaHistoryDetails }, set: { viewModel.surgeryHistory.anesthesiaHistoryDetails = $0 }),
+//                        customDetails: $viewModel.surgeryHistory.anesthesiaHistoryCustomDetails,
+//                        detailsText: $viewModel.surgeryHistory.anesthesiaHistoryDetailsText
+//                    )
                 }
                 
                 
@@ -197,7 +205,7 @@ struct SurgeryHistoryTypeFormView: View {
 extension SurgeryHistorySpeciality: ComorbiditiesType {
     public var id: Self { self }
 }
-extension AnesthesiaComplicationsHistory: SurgeryHistoryType {
+extension AnesthesiaComplicationsHistory: ComorbiditiesType {
     public var id: Self { self }
 }
 

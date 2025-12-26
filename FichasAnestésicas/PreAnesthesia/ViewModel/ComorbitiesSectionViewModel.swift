@@ -115,12 +115,6 @@ final class ComorbitiesSectionViewModel {
         isInfantComorbitiesDetails = e.isInfantComorbitiesDetails
         isInfantCustomDetails = e.isInfantCustomDetails ?? []
         isInfantDetailsText = e.isInfantDetailsText
-
-        
-        
-        geneticSyndromeComorbitiesDetails = e.geneticSyndromeComorbitiesDetails ?? []
-        geneticSyndromeComorbitiesCustomDetails = e.geneticSyndromeComorbitiesCustomDetails ?? []
-        geneticSyndromeComorbitiesDetailsText = e.geneticSyndromeComorbitiesDetailsText
         
     }
     
@@ -172,13 +166,6 @@ final class ComorbitiesSectionViewModel {
         e.isInfantComorbitiesDetails = isInfantComorbitiesDetails
         e.isInfantDetailsText = isInfantDetailsText
         e.isInfantCustomDetails = isInfantCustomDetails
-
-
-
-        
-        e.geneticSyndromeComorbitiesDetails = geneticSyndromeComorbitiesDetails
-        e.geneticSyndromeComorbitiesCustomDetails = geneticSyndromeComorbitiesCustomDetails
-        e.geneticSyndromeComorbitiesDetailsText = geneticSyndromeComorbitiesDetailsText
         
     }
     

@@ -13,10 +13,7 @@ final class SurgeryHistorySectionViewModel {
 
     weak var socialHabitsVM: SocialHabitsAndEnvironmentSectionViewModel?
     
-    
-    
-    
-    //to be implemented
+
     var surgeryHistory = false {
         didSet {
             if surgeryHistory == false && oldValue == true {
@@ -35,6 +32,9 @@ final class SurgeryHistorySectionViewModel {
     }
     
     var surgeryHistoricDetails: [SurgeryHistoryDetail] = []
+    var anesthesiaHistoricDetails: [AnesthesiaHistoryDetail] = [] {
+        didSet { syncHistoryToApfel() }
+    }
     
     var surgeryHistoryDetails: [SurgeryHistorySpeciality]?
     var surgeryHistoryCustomDetails: [String] = []
@@ -52,6 +52,7 @@ final class SurgeryHistorySectionViewModel {
         anesthesiaHistory = e.anesthesiaHistory ?? false
         
         surgeryHistoricDetails = e.surgeryHistoricDetails ?? []
+        anesthesiaHistoricDetails = e.anesthesiaHistoricDetails ?? []
         
         surgeryHistoryDetails = e.surgeryHistoryDetails ?? []
         surgeryHistoryCustomDetails = e.surgeryHistoryCustomDetails ?? []
@@ -66,6 +67,7 @@ final class SurgeryHistorySectionViewModel {
         e.anesthesiaHistory = anesthesiaHistory
         
         e.surgeryHistoricDetails = surgeryHistoricDetails
+        e.anesthesiaHistoricDetails = anesthesiaHistoricDetails
         
         e.surgeryHistoryDetails = surgeryHistoryDetails
         e.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails
@@ -77,9 +79,7 @@ final class SurgeryHistorySectionViewModel {
     
     func surgeryHistoryVisibility() {
         if surgeryHistory == false {
-            surgeryHistoryCustomDetails = []
-            surgeryHistoryDetailsText = ""
-            surgeryHistoryDetails = nil
+            surgeryHistoricDetails = []
         }
     }
     func whenSurgeryHistory() {
@@ -88,30 +88,21 @@ final class SurgeryHistorySectionViewModel {
     
     func anesthesiaHistoryVisibility() {
         if anesthesiaHistory == false {
-            anesthesiaHistoryCustomDetails = []
-            anesthesiaHistoryDetailsText = ""
-            anesthesiaHistoryDetails = []
+            anesthesiaHistoricDetails = []
+            
         }
     }
     
     var canSave: Bool {
         var ok = true
         if surgeryHistory {
-            let hasDetails = (surgeryHistoryDetails?.isEmpty == false)
-            let hasCustom = !surgeryHistoryCustomDetails.isEmpty
-            let hasText = !(surgeryHistoryDetailsText ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            ok = ok && (hasDetails || hasCustom || hasText)
+            ok = ok && !surgeryHistoricDetails.isEmpty
         }
         if anesthesiaHistory {
-            
+            ok = ok && !anesthesiaHistoricDetails.isEmpty
         }
         return ok
     }
-    
-    
-    
-    
-    
     
     private var syncing = false
 
@@ -119,10 +110,11 @@ final class SurgeryHistorySectionViewModel {
         guard !syncing, let socialVM = socialHabitsVM else { return }
         syncing = true
         
-        let history = anesthesiaHistoryDetails ?? []
         var apfel = socialVM.apfelScoreDetails ?? []
         
-        if history.contains(.nausea) {
+        let hasNausea = anesthesiaHistoricDetails.contains { $0.type == .nausea }
+        
+        if hasNausea {
             if !apfel.contains(.historyPONV) {
                 apfel.append(.historyPONV)
             }

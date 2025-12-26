@@ -621,7 +621,7 @@ struct PreAnesthesiaView: View {
                             Text("Cirurgias Prévias:")
                                 .fontWeight(.semibold)
                             
-                            Text(formatDetails(details))
+                            Text(formatSurgeryDetails(details))
                                 .font(.subheadline)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         } else {
@@ -636,28 +636,28 @@ struct PreAnesthesiaView: View {
                         .fontWeight(.semibold)
                 }
                 
-//                // Histórico Anestésico
-//                if preanesthesia?.anesthesiaHistory == true {
-//                    VStack(alignment: .leading, spacing: 12) {
-//                        if let details = preanesthesia?.anesthesiaHistoricDetails, !details.isEmpty {
-//                            Text("Eventos adversos prévios:")
-//                                .fontWeight(.semibold)
-//                            
-//                            Text(formatDetails(details))
-//                                .font(.subheadline)
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                        } else {
-//                            Text("Sem eventos adversos em anestesias prévias")
-//                                .fontWeight(.semibold)
-//                        }
-//                    }
-//                } else if preanesthesia?.anesthesiaHistory == false {
-//                    Text("Paciente não tem histórico anestésico")
-//                } else {
-//                    Text("Histórico anestésico não informado")
-//                        .foregroundStyle(.secondary)
-//                        .font(.subheadline)
-//                }
+                // Histórico Anestésico
+                if preanesthesia?.anesthesiaHistory == true {
+                    VStack(alignment: .leading, spacing: 12) {
+                        if let details = preanesthesia?.anesthesiaHistoricDetails, !details.isEmpty {
+                            Text("Eventos adversos prévios:")
+                                .fontWeight(.semibold)
+                            
+                            Text(formatAnesthesiaDetails(details))
+                                .font(.subheadline)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        } else {
+                            Text("Sem eventos adversos em anestesias prévias")
+                                .fontWeight(.semibold)
+                        }
+                    }
+                } else if preanesthesia?.anesthesiaHistory == false {
+                    Text("Paciente não tem histórico anestésico")
+                } else {
+                    Text("Histórico anestésico não informado")
+                        .foregroundStyle(.secondary)
+                        .font(.subheadline)
+                }
                 
                 Divider()
             }
@@ -668,7 +668,7 @@ struct PreAnesthesiaView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
-    private func formatDetails(_ details: [SurgeryHistoryDetail]) -> String {
+    private func formatSurgeryDetails(_ details: [SurgeryHistoryDetail]) -> String {
         details.map { detail in
             let name = detail.displayName()
             if let notes = detail.notes, !notes.isEmpty {
@@ -677,6 +677,16 @@ struct PreAnesthesiaView: View {
             return name
         }.joined(separator: " • ")
     }
+    private func formatAnesthesiaDetails(_ details: [AnesthesiaHistoryDetail]) -> String {
+        details.map { detail in
+            let name = detail.displayName()
+            if let notes = detail.notes, !notes.isEmpty {
+                return "\(name) (\(notes))"
+            }
+            return name
+        }.joined(separator: " • ")
+    }
+
     
     private func apfelCard(preanesthesia: PreAnesthesia?) -> some View {
         VStack(alignment: .leading) {

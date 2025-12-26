@@ -10,14 +10,9 @@ struct HistoryView: View {
     let anesthesia: Anesthesia
 
     var body: some View {
-        
-        // Decide if this section should render
         let hasSurgeryHistory = anesthesia.surgery.preanesthesia?.surgeryHistory ?? false
         let hasAnesthesic = anesthesia.surgery.preanesthesia?.anesthesiaHistory ?? false
-        let hasAnesthesicDetails = !(anesthesia.surgery.preanesthesia?.anesthesiaHistoryDetails?.isEmpty ?? true)
-        let hasAnesthesicCustomComplications = !((anesthesia.surgery.preanesthesia?.anesthesiaHistoryCustomDetails ?? []).isEmpty)
-        let hasAnesthesicTextComplications = !((anesthesia.surgery.preanesthesia?.anesthesiaHistoryDetailsText?.isEmpty ?? true))
-        let hasAnesthesicComplications = hasAnesthesicDetails || hasAnesthesicCustomComplications || hasAnesthesicTextComplications
+        let hasAnesthesicDetails = !(anesthesia.surgery.preanesthesia?.anesthesiaHistoricDetails?.isEmpty ?? true)
         
         if !hasSurgeryHistory {
             return AnyView(EmptyView())
@@ -46,6 +41,7 @@ struct HistoryView: View {
                 )
 
                 VStack(alignment: .leading, spacing: 2) {
+                    // Cirurgias
                     if hasSurgeryHistory == false {
                         Text("Nega cirurgias prévias")
                             .foregroundColor(.black)
@@ -56,67 +52,29 @@ struct HistoryView: View {
                             .foregroundColor(.black)
                             .font(.system(size: 9))
                             .fontWeight(.semibold)
-                                                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            VStack(alignment: .leading) {
-                                VStack(alignment: .leading, spacing: 2) {
-                                    
-                                    let defaultDetails = (anesthesia.surgery.preanesthesia?.surgeryHistoryDetails ?? []).map { $0.displayName }
-                                    let customDetails = (anesthesia.surgery.preanesthesia?.surgeryHistoryCustomDetails ?? [])
-                                    let allDetails = defaultDetails + customDetails
-                                    
-                                    if !allDetails.isEmpty {
-                                        Text(allDetails.joined(separator: " • "))
-                                            .foregroundColor(.black)
-                                            .font(.system(size: 9))
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .fixedSize(horizontal: false, vertical: true)
-                                    }
-                                }
-                                HStack(alignment: .top, spacing: 2) {
-                                    if let surgeryHistoryDetailsText = anesthesia.surgery.preanesthesia?.surgeryHistoryDetailsText, !surgeryHistoryDetailsText.isEmpty {
-                                        Text("Detalhes:")
-                                            .foregroundColor(.black)
-                                            .fontWeight(.semibold)
-                                            .font(.system(size: 9))
-                                        Text(surgeryHistoryDetailsText)
-                                            .font(.system(size: 9))
-                                    }
-                                }
-                                .padding(.bottom, 2)
-                            }
-                            
-                        }
-                    }
-
-                    if hasAnesthesic == true && !hasAnesthesicComplications {
-                        Text("Nega complicações anestésicas prévias")
-                            .foregroundColor(.black)
-                            .font(.system(size: 9))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    } else if hasAnesthesic == true && hasAnesthesicComplications {
-                        let defaultDetails = (anesthesia.surgery.preanesthesia?.anesthesiaHistoryDetails ?? []).map { $0.displayName }
-                        let customDetails = (anesthesia.surgery.preanesthesia?.anesthesiaHistoryCustomDetails ?? [])
-                        let allDetails = defaultDetails + customDetails
                         
-                        if !allDetails.isEmpty {
-                            Text(allDetails.joined(separator: " • "))
+                        if let details = anesthesia.surgery.preanesthesia?.surgeryHistoricDetails, !details.isEmpty {
+                            Text(formatDetails(details))
                                 .foregroundColor(.black)
                                 .font(.system(size: 9))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .fixedSize(horizontal: false, vertical: true)
-                            
-                            HStack(alignment: .top) {
-                                if let anesthesiaHistoryDetailsText = anesthesia.surgery.preanesthesia?.anesthesiaHistoryDetailsText, !anesthesiaHistoryDetailsText.isEmpty {
-                                    Text("Detalhes:")
-                                        .foregroundColor(.black)
-                                        .fontWeight(.semibold)
-                                        .font(.system(size: 9))
-                                    Text(anesthesiaHistoryDetailsText)
-                                        .foregroundColor(.black)
-                                        .font(.system(size: 9))
-                                }
-                            }
+                        }
+                    }
+
+                    // Anestesias
+                    if hasAnesthesic == true && !hasAnesthesicDetails {
+                        Text("Nega complicações anestésicas prévias")
+                            .foregroundColor(.black)
+                            .font(.system(size: 9))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } else if hasAnesthesic == true && hasAnesthesicDetails {
+                        if let details = anesthesia.surgery.preanesthesia?.anesthesiaHistoricDetails, !details.isEmpty {
+                            Text(formatDetails(details))
+                                .foregroundColor(.black)
+                                .font(.system(size: 9))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
@@ -129,7 +87,16 @@ struct HistoryView: View {
                 )
             }
             .fixedSize(horizontal: false, vertical: true)
-        
         )
+    }
+    
+    private func formatDetails<T: ComorbidityDetailProtocol>(_ details: [T]) -> String {
+        details.map { detail in
+            let name = detail.displayName()
+            if let notes = detail.notes, !notes.isEmpty {
+                return "\(name) (\(notes))"
+            }
+            return name
+        }.joined(separator: " • ")
     }
 }

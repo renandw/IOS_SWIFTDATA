@@ -434,14 +434,6 @@ struct ComorbitiesFormView: View {
                     createDetail: { GeneticSyndromeDetail(type: $0) },
                     createCustomDetail: { GeneticSyndromeDetail(customName: $0) }
                 )
-                ComorbiditiesSection(
-                    title: "Síndromes Genéticas",
-                    icon: "apple.meditate.circle.fill",
-                    isEnabled: $viewModel.comorbities.geneticSyndrome,
-                    selection: binding(get: { viewModel.comorbities.geneticSyndromeComorbitiesDetails }, set: { viewModel.comorbities.geneticSyndromeComorbitiesDetails = $0 }),
-                    customDetails: $viewModel.comorbities.geneticSyndromeComorbitiesCustomDetails,
-                    detailsText: $viewModel.comorbities.geneticSyndromeComorbitiesDetailsText
-                )
             }
             .navigationTitle("Comorbidades")
             .navigationBarTitleDisplayMode(.inline)

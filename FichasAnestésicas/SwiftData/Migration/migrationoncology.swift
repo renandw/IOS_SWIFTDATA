@@ -10,7 +10,7 @@ import SwiftData
 @MainActor
 func migrateSurgeryIfNeeded(context: ModelContext) throws {
 
-    print("🚀 Starting manual surgeryHistoric migration")
+    print("🚀 Starting manual anesthesiaHistoric migration")
 
     let fetch = FetchDescriptor<PreAnesthesia>()
     let all = try context.fetch(fetch)
@@ -23,33 +23,33 @@ func migrateSurgeryIfNeeded(context: ModelContext) throws {
         print("➡️ Checking PreAnesthesia for surgery:", surgeryId)
 
         // já migrado
-        if let details = pre.surgeryHistoricDetails, !details.isEmpty {
+        if let details = pre.anesthesiaHistoricDetails, !details.isEmpty {
             print("⏭️ Already migrated, skipping")
             continue
         }
 
         let hasOldEnums =
-            pre.surgeryHistoryDetails?.isEmpty == false
+            pre.anesthesiaHistoryDetails?.isEmpty == false
         let hasOldCustom =
-            pre.surgeryHistoryDetails?.isEmpty == false
+            pre.anesthesiaHistoryDetails?.isEmpty == false
 
         if !hasOldEnums && !hasOldCustom {
-            print("⚠️ No old surgeryHistoric data, skipping")
+            print("⚠️ No old anesthesiaHistoric data, skipping")
             continue
         }
 
-        print("🧬 Old surgeryHistoric data found")
+        print("🧬 Old anesthesiaHistoric data found")
 
-        var details: [SurgeryHistoryDetail] = []
-        let notes = pre.surgeryHistoryDetailsText
+        var details: [AnesthesiaHistoryDetail] = []
+        let notes = pre.anesthesiaHistoryDetailsText
 
         // enums antigos
-        if let raws = pre.surgeryHistoryDetailsRaw {
+        if let raws = pre.anesthesiaHistoryDetailsRaw {
             for raw in raws {
-                if let type = SurgeryHistorySpeciality(rawValue: raw) {
+                if let type = AnesthesiaComplicationsHistory(rawValue: raw) {
                     print("   ➕ enum:", type.rawValue)
                     details.append(
-                        SurgeryHistoryDetail(
+                        AnesthesiaHistoryDetail(
                             type: type,
                             notes: notes
                         )
@@ -61,11 +61,11 @@ func migrateSurgeryIfNeeded(context: ModelContext) throws {
         }
 
         // customs antigos
-        if let customs = pre.surgeryHistoryCustomDetails {
+        if let customs = pre.anesthesiaHistoryCustomDetails {
             for name in customs {
                 print("   ➕ custom:", name)
                 details.append(
-                    SurgeryHistoryDetail(
+                    AnesthesiaHistoryDetail(
                         customName: name,
                         notes: notes
                     )
@@ -74,14 +74,14 @@ func migrateSurgeryIfNeeded(context: ModelContext) throws {
         }
 
         if details.isEmpty {
-            print("⚠️ No valid surgeryHistoric details created")
+            print("⚠️ No valid anesthesiaHistoric details created")
             continue
         }
 
-        pre.surgeryHistoricDetails = details
-        print("✅ Migrated \(details.count) surgeryHistoric items")
+        pre.anesthesiaHistoricDetails = details
+        print("✅ Migrated \(details.count) anesthesiaHistoric items")
     }
 
     try context.save()
-    print("💾 surgeryHistoric finished and saved")
+    print("💾 anesthesiaHistoric finished and saved")
 }

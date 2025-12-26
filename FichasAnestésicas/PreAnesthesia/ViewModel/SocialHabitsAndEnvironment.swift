@@ -83,23 +83,22 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
             social.removeAll { $0 == .tobaccoUse }
         }
 
-        // Write back
         socialHabitsAndEnvironmentDetails = social
         
         if let historyVM = surgeryHistoryVM {
-            var history = historyVM.anesthesiaHistoryDetails ?? []
+            var history = historyVM.anesthesiaHistoricDetails
             
             if apfel.contains(.historyPONV) {
-                if !history.contains(.nausea) {
-                    history.append(.nausea)
+                if !history.contains(where: { $0.type == .nausea }) {
+                    history.append(AnesthesiaHistoryDetail(type: .nausea))
                 }
             } else {
-                history.removeAll { $0 == .nausea }
+                // Remove nausea
+                history.removeAll { $0.type == .nausea }
             }
             
-            historyVM.anesthesiaHistoryDetails = history
+            historyVM.anesthesiaHistoricDetails = history
         }
-
 
         syncing = false
     }
