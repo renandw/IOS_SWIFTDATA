@@ -621,7 +621,7 @@ struct PreAnesthesiaView: View {
                             Text("Cirurgias Prévias:")
                                 .fontWeight(.semibold)
                             
-                            Text(formatSurgeryDetails(details))
+                            Text(formatDetails(details))
                                 .font(.subheadline)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         } else {
@@ -643,7 +643,7 @@ struct PreAnesthesiaView: View {
                             Text("Eventos adversos prévios:")
                                 .fontWeight(.semibold)
                             
-                            Text(formatAnesthesiaDetails(details))
+                            Text(formatDetails(details))
                                 .font(.subheadline)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         } else {
@@ -668,16 +668,8 @@ struct PreAnesthesiaView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
-    private func formatSurgeryDetails(_ details: [SurgeryHistoryDetail]) -> String {
-        details.map { detail in
-            let name = detail.displayName()
-            if let notes = detail.notes, !notes.isEmpty {
-                return "\(name) (\(notes))"
-            }
-            return name
-        }.joined(separator: " • ")
-    }
-    private func formatAnesthesiaDetails(_ details: [AnesthesiaHistoryDetail]) -> String {
+
+    private func formatDetails<T: ComorbidityDetailProtocol>(_ details: [T]) -> String {
         details.map { detail in
             let name = detail.displayName()
             if let notes = detail.notes, !notes.isEmpty {

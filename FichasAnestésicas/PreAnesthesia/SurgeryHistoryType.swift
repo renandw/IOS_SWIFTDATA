@@ -144,14 +144,6 @@ struct SurgeryHistoryTypeFormView: View {
             Form {
                 
                 // Cirurgias Prévias
-//                SurgeryHistoryTypeSection(
-//                    title: "Cirurgias Prévias?",
-//                    icon: "scissors.circle.fill",
-//                    isEnabled: $viewModel.surgeryHistory.surgeryHistory,
-//                    selection: binding(get: { viewModel.surgeryHistory.surgeryHistoryDetails }, set: { viewModel.surgeryHistory.surgeryHistoryDetails = $0 }),
-//                    customDetails: $viewModel.surgeryHistory.surgeryHistoryCustomDetails,
-//                    detailsText: $viewModel.surgeryHistory.surgeryHistoryDetailsText
-//                )
                 NewComorbidityDetailSection<SurgeryHistoryDetail, SurgeryHistorySpeciality>(
                     title: "Cirurgias Prévias?",
                     icon: "scissors.circle.fill",
@@ -160,6 +152,7 @@ struct SurgeryHistoryTypeFormView: View {
                     createDetail: { SurgeryHistoryDetail(type: $0) },
                     createCustomDetail: { SurgeryHistoryDetail(customName: $0) }
                 )
+                // Anestesias Prévias
                 if viewModel.surgeryHistory.surgeryHistory {
                     NewComorbidityDetailSection<AnesthesiaHistoryDetail, AnesthesiaComplicationsHistory>(
                         title: "Anestesias Prévias",
@@ -169,18 +162,7 @@ struct SurgeryHistoryTypeFormView: View {
                         createDetail: { AnesthesiaHistoryDetail(type: $0) },
                         createCustomDetail: { AnesthesiaHistoryDetail(customName: $0) }
                     )
-//                    SurgeryHistoryTypeSection(
-//                        title: "Anestesias Prévias",
-//                        icon: "syringe.fill",
-//                        isEnabled: $viewModel.surgeryHistory.anesthesiaHistory,
-//                        selection: binding(get: { viewModel.surgeryHistory.anesthesiaHistoryDetails }, set: { viewModel.surgeryHistory.anesthesiaHistoryDetails = $0 }),
-//                        customDetails: $viewModel.surgeryHistory.anesthesiaHistoryCustomDetails,
-//                        detailsText: $viewModel.surgeryHistory.anesthesiaHistoryDetailsText
-//                    )
                 }
-                
-                
-                
             }
             .navigationTitle("Cirurgias Prévias")
             .navigationBarTitleDisplayMode(.inline)

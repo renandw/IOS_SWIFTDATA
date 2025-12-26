@@ -36,16 +36,6 @@ final class SurgeryHistorySectionViewModel {
         didSet { syncHistoryToApfel() }
     }
     
-    var surgeryHistoryDetails: [SurgeryHistorySpeciality]?
-    var surgeryHistoryCustomDetails: [String] = []
-    var surgeryHistoryDetailsText: String?
-    var anesthesiaHistoryDetails: [AnesthesiaComplicationsHistory]? {
-        didSet { syncHistoryToApfel() }
-    }
-    var anesthesiaHistoryCustomDetails: [String] = []
-    var anesthesiaHistoryDetailsText: String?
-
-    
     
     func load(from e: PreAnesthesia) {
         surgeryHistory = e.surgeryHistory ?? false
@@ -54,12 +44,6 @@ final class SurgeryHistorySectionViewModel {
         surgeryHistoricDetails = e.surgeryHistoricDetails ?? []
         anesthesiaHistoricDetails = e.anesthesiaHistoricDetails ?? []
         
-        surgeryHistoryDetails = e.surgeryHistoryDetails ?? []
-        surgeryHistoryCustomDetails = e.surgeryHistoryCustomDetails ?? []
-        surgeryHistoryDetailsText = e.surgeryHistoryDetailsText
-        anesthesiaHistoryDetails = e.anesthesiaHistoryDetails ?? []
-        anesthesiaHistoryCustomDetails = e.anesthesiaHistoryCustomDetails ?? []
-        anesthesiaHistoryDetailsText = e.anesthesiaHistoryDetailsText
     }
     
     func apply(to e: PreAnesthesia) {
@@ -69,12 +53,6 @@ final class SurgeryHistorySectionViewModel {
         e.surgeryHistoricDetails = surgeryHistoricDetails
         e.anesthesiaHistoricDetails = anesthesiaHistoricDetails
         
-        e.surgeryHistoryDetails = surgeryHistoryDetails
-        e.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails
-        e.surgeryHistoryDetailsText = surgeryHistoryDetailsText
-        e.anesthesiaHistoryDetails = anesthesiaHistoryDetails
-        e.anesthesiaHistoryCustomDetails = anesthesiaHistoryCustomDetails
-        e.anesthesiaHistoryDetailsText = anesthesiaHistoryDetailsText
     }
     
     func surgeryHistoryVisibility() {

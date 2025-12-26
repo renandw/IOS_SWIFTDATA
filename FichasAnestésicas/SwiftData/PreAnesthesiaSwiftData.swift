@@ -107,23 +107,6 @@ final class PreAnesthesia {
     
     
     
-    var surgeryHistoryDetailsRaw: [String]?
-    var surgeryHistoryDetails: [SurgeryHistorySpeciality]? {
-        get { surgeryHistoryDetailsRaw?.compactMap(SurgeryHistorySpeciality.init(rawValue:))}
-        set { surgeryHistoryDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var surgeryHistoryDetailsText: String?
-    var surgeryHistoryCustomDetails: [String]?
-    
-    var anesthesiaHistoryDetailsRaw: [String]?
-    var anesthesiaHistoryDetails: [AnesthesiaComplicationsHistory]? {
-        get { anesthesiaHistoryDetailsRaw?.compactMap(AnesthesiaComplicationsHistory.init(rawValue:))}
-        set { anesthesiaHistoryDetailsRaw = newValue?.map { $0.rawValue}}
-    }
-    var anesthesiaHistoryDetailsText: String?
-    var anesthesiaHistoryCustomDetails: [String]?
-    
-    
     var socialHabitsAndEnvironmentDetailsRaw: [String]?
     var socialHabitsAndEnvironmentDetails: [SocialHabitsAndEnvironment]? {
         get { socialHabitsAndEnvironmentDetailsRaw?.compactMap(SocialHabitsAndEnvironment.init(rawValue:))}
@@ -251,13 +234,6 @@ final class PreAnesthesia {
         isInfantCustomDetails: [String]? = [],
     
         
-        surgeryHistoryDetails: SurgeryHistorySpeciality? = nil,
-        surgeryHistoryDetailsText: String? = nil,
-        surgeryHistoryCustomDetails: [String]? = [],
-        anesthesiaHistoryDetails: AnesthesiaComplicationsHistory? = nil,
-        anesthesiaHistoryDetailsText: String? = nil,
-        anesthesiaHistoryCustomDetails: [String]? = [],
-        
         
         socialHabitsAndEnvironmentDetails: SocialHabitsAndEnvironment? = nil,
         socialHabitsAndEnvironmentDetailsText: String? = nil,
@@ -349,14 +325,6 @@ final class PreAnesthesia {
         self.isInfantCustomDetails = isInfantCustomDetails
         self.isInfantDetailsText = isInfantDetailsText
         
-
-        
-        self.surgeryHistoryDetailsRaw = surgeryHistoryDetails.map { [$0.rawValue] }
-        self.surgeryHistoryDetailsText = surgeryHistoryDetailsText
-        self.surgeryHistoryCustomDetails = surgeryHistoryCustomDetails
-        self.anesthesiaHistoryDetailsRaw = anesthesiaHistoryDetails.map { [$0.rawValue] }
-        self.anesthesiaHistoryDetailsText = anesthesiaHistoryDetailsText
-        self.anesthesiaHistoryCustomDetails = anesthesiaHistoryCustomDetails
         
         self.socialHabitsAndEnvironmentDetailsRaw = socialHabitsAndEnvironmentDetails.map { [$0.rawValue] }
         self.socialHabitsAndEnvironmentDetailsText = socialHabitsAndEnvironmentDetailsText
