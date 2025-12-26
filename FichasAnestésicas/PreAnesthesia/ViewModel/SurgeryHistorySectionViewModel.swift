@@ -76,9 +76,9 @@ final class SurgeryHistorySectionViewModel {
         if surgeryHistory {
             ok = ok && !surgeryHistoricDetails.isEmpty
         }
-        if anesthesiaHistory {
-            ok = ok && !anesthesiaHistoricDetails.isEmpty
-        }
+//        if anesthesiaHistory {
+//            ok = ok && !anesthesiaHistoricDetails.isEmpty
+//        }
         return ok
     }
     

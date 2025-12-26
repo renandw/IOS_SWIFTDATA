@@ -200,7 +200,6 @@ struct NewComorbidityDetailSection<Detail: ComorbidityDetailProtocol, EnumType: 
                 set: { detail.notes = $0.isEmpty ? nil : $0 }
             ))
             .font(.caption)
-            .textFieldStyle(.roundedBorder)
         }
     }
 
@@ -223,7 +222,6 @@ struct NewComorbidityDetailSection<Detail: ComorbidityDetailProtocol, EnumType: 
             set: { detail.notes = $0.isEmpty ? nil : $0 }
         ))
         .font(.caption)
-        .textFieldStyle(.roundedBorder)
     }
     
     private func toggleEnum(_ enumCase: EnumType) {
