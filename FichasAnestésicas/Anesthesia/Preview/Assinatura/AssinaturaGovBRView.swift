@@ -112,6 +112,6 @@ private struct GovBRLogo: View {
         nome: "RENAN DANTAS WROBEL",
         data: date
     )
-    .previewLayout(.sizeThatFits)
+   // .previewLayout(.sizeThatFits)
     .padding()
 }

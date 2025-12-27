@@ -207,9 +207,14 @@ struct MedicationsFormView: View {
                 .navigationTitle(viewModel.isNew ? "Nova Medicação" : "Editar Medicação")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
+                    ToolbarItem(placement: .topBarLeading) {
                         if viewModel.isNew {
                             Button("Fechar", systemImage: "xmark") { dismiss() }
+                        }
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        if viewModel.isNew {
+                            Button("Fechar", systemImage: "checkmark") { dismiss() }
                         }
                     }
                 }

@@ -19,5 +19,8 @@ struct FichasAnestesicasApp: App {
         .environment(session)
         .modelContainer(for: [User.self, Patient.self, Surgery.self, CbhpmProcedure.self, Financial.self])
     }
+//    init() {
+//        print(URL.applicationSupportDirectory.path(percentEncoded: false))
+//    }
 }
  

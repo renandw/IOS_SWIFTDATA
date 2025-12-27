@@ -59,21 +59,23 @@ struct VitalSignsView: View {
                                         if (vitalSign.rhythm) != nil{
                                             HStack {
                                                 Text("Ritmo:")
-                                                    .font(.headline)
-                                                    .fontWeight(.semibold)
-                                                Text("\(displayOrNoStringRecord(vitalSign.rhythm))")
-                                                    .font(.headline)
+                                                    .font(.caption)
+                                                    .fontWeight(.bold)
                                                     .foregroundColor(.secondary)
+                                                Text("\(displayOrNoStringRecord(vitalSign.rhythm))")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.primary)
                                             }
                                         }
                                         if vitalSign.fc != nil {
                                             HStack {
                                                 Text("FC:")
-                                                    .font(.headline)
-                                                    .fontWeight(.semibold)
-                                                Text("\(displayOrNoRecord(vitalSign.fc, decimals: 0, suffix: "bpm"))")
-                                                    .font(.headline)
+                                                    .font(.caption)
+                                                    .fontWeight(.bold)
                                                     .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.fc, decimals: 0, suffix: "bpm"))")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.primary)
                                             }
                                         }
                                     }
@@ -83,11 +85,12 @@ struct VitalSignsView: View {
                                         if vitalSign.spo2 != nil {
                                             HStack {
                                                 Text("SpO₂:")
-                                                    .font(.headline)
-                                                    .fontWeight(.semibold)
-                                                Text("\(displayOrNoRecord(vitalSign.spo2, decimals: 1, suffix: "%"))")
-                                                    .font(.headline)
+                                                    .font(.caption)
+                                                    .fontWeight(.bold)
                                                     .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.spo2, decimals: 1, suffix: "%"))")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.primary)
                                             }
                                         }
                                         
@@ -96,14 +99,16 @@ struct VitalSignsView: View {
                                         if vitalSign.paS != nil || vitalSign.paD != nil {
                                             HStack(alignment: .bottom) {
                                                 Text("PA:")
-                                                    .font(.headline)
-                                                    .fontWeight(.semibold)
-                                                Text("\(displayOrNoRecord(vitalSign.paS, decimals: 0, suffix: "")) / \(displayOrNoRecord(vitalSign.paD, decimals: 0, suffix: "mmHg"))")
-                                                    .font(.body)
+                                                    .font(.caption)
+                                                    .fontWeight(.bold)
                                                     .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.paS, decimals: 0, suffix: "")) / \(displayOrNoRecord(vitalSign.paD, decimals: 0, suffix: "mmHg"))")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.primary)
                                                 if vitalSign.pam != nil{
                                                     Text("(\(displayOrNoRecord(vitalSign.pam, decimals: 0, suffix: "")))")
                                                         .font(.caption)
+                                                        .fontWeight(.bold)
                                                         .foregroundColor(.secondary)
                                                 }
                                                 
@@ -115,30 +120,50 @@ struct VitalSignsView: View {
                                         
                                         
                                         if (vitalSign.etco2) != nil{
-                                            VStack(alignment: .leading) {
+                                            HStack(alignment: .bottom) {
                                                 Text("ETCO₂:")
+                                                .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
                                                 Text("\(displayOrNoRecord(vitalSign.etco2, decimals: 0, suffix: "mmHg"))")
+                                                .font(.subheadline)
+                                                    .foregroundColor(.primary)
                                             }
                                         }
                                         if (vitalSign.volumeCorrente) != nil{
-                                            VStack(alignment: .leading) {
+                                            HStack(alignment: .bottom) {
                                                 Text("VC:")
+                                                .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
                                                 Text("\(displayOrNoRecord(vitalSign.volumeCorrente, decimals: 0, suffix: "mL"))")
+                                                .font(.subheadline)
+                                                    .foregroundColor(.primary)
                                             }
                                         }
                                         
                                     }
                                     HStack {
                                         if vitalSign.bis != nil {
-                                            VStack(alignment: .leading) {
+                                           HStack(alignment: .bottom) {
                                                 Text("BIS:")
+                                                .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
                                                 Text("\(displayOrNoRecord(vitalSign.bis, decimals: 1, suffix: "bis"))")
+                                                .font(.subheadline)
+                                                    .foregroundColor(.primary)
                                             }
                                         }
                                         if vitalSign.pvc != nil {
-                                            VStack(alignment: .leading) {
+                                            HStack(alignment: .bottom) {
                                                 Text("PVC:")
+                                                .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
                                                 Text("\(displayOrNoRecord(vitalSign.pvc, decimals: 1, suffix: "mmHg"))")
+                                                .font(.subheadline)
+                                                    .foregroundColor(.primary)
                                             }
                                         }
                                         

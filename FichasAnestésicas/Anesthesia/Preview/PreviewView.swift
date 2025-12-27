@@ -51,7 +51,7 @@ class PDFZoomViewController<Content: View>: UIViewController, UIScrollViewDelega
         doubleTap.numberOfTapsRequired = 2
         scrollView.addGestureRecognizer(doubleTap)
         
-        setupToolbar()
+        //setupToolbar()
     }
     
     override func viewDidLayoutSubviews() {
@@ -70,7 +70,7 @@ class PDFZoomViewController<Content: View>: UIViewController, UIScrollViewDelega
     }
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        updateToolbar()
+       // updateToolbar()
     }
     
     // MARK: - Actions
@@ -114,29 +114,29 @@ class PDFZoomViewController<Content: View>: UIViewController, UIScrollViewDelega
     
     // MARK: - Toolbar (usando UIKit)
     
-    private func setupToolbar() {
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: view.bounds.height - 44, width: view.bounds.width, height: 44))
-        toolbar.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
-        
-        let resetButton = UIBarButtonItem(image: UIImage(systemName: "arrow.counterclockwise"), style: .plain, target: self, action: #selector(resetZoom))
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let zoomLabel = UIBarButtonItem(title: "Zoom: 100%", style: .plain, target: nil, action: nil)
-        zoomLabel.isEnabled = false
-        let zoomInButton = UIBarButtonItem(image: UIImage(systemName: "plus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomIn))
-        let zoomOutButton = UIBarButtonItem(image: UIImage(systemName: "minus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomOut))
-        
-        toolbar.items = [resetButton, flexSpace, zoomLabel, flexSpace, zoomInButton, zoomOutButton]
-        view.addSubview(toolbar)
-    }
-    
-    private func updateToolbar() {
-        // Atualiza o label de zoom na toolbar
-        if let toolbar = view.subviews.compactMap({ $0 as? UIToolbar }).first,
-           let items = toolbar.items,
-           items.count > 2 {
-            items[2].title = "Zoom: \(Int(scrollView.zoomScale * 100))%"
-        }
-    }
+//    private func setupToolbar() {
+//        let toolbar = UIToolbar(frame: CGRect(x: 0, y: view.bounds.height - 44, width: view.bounds.width, height: 44))
+//        toolbar.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+//        
+//        let resetButton = UIBarButtonItem(image: UIImage(systemName: "arrow.counterclockwise"), style: .plain, target: self, action: #selector(resetZoom))
+//        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+//        let zoomLabel = UIBarButtonItem(title: "Zoom: 100%", style: .plain, target: nil, action: nil)
+//        zoomLabel.isEnabled = false
+//        let zoomInButton = UIBarButtonItem(image: UIImage(systemName: "plus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomIn))
+//        let zoomOutButton = UIBarButtonItem(image: UIImage(systemName: "minus.magnifyingglass"), style: .plain, target: self, action: #selector(zoomOut))
+//        
+//        toolbar.items = [resetButton, flexSpace, zoomLabel, flexSpace, zoomInButton, zoomOutButton]
+//        view.addSubview(toolbar)
+//    }
+//    
+//    private func updateToolbar() {
+//        // Atualiza o label de zoom na toolbar
+//        if let toolbar = view.subviews.compactMap({ $0 as? UIToolbar }).first,
+//           let items = toolbar.items,
+//           items.count > 2 {
+//            items[2].title = "Zoom: \(Int(scrollView.zoomScale * 100))%"
+//        }
+//    }
 }
 
 struct ContentView: View {

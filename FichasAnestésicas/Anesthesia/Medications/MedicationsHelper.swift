@@ -164,6 +164,8 @@ struct MedicationPresetItem: Identifiable, Codable, Equatable {
     let dose: String
     let category: MedicationCategory
     let via: AdministrationRoute
+    
+    
 
     func makeEntry(for anesthesia: Anesthesia,
                    at date: Date = .init(),
@@ -194,6 +196,11 @@ struct MedicationCatalogItem: Identifiable, Codable, Equatable {
   let id = UUID()
   let name: String
   let category: MedicationCategory
+  
+  enum CodingKeys: String, CodingKey {
+      case name
+      case category
+  }
 }
 
 // MARK: - Classe Principal
@@ -249,7 +256,9 @@ class MedicationsHelper {
         "sugammadex": "200mg",
         "ceftriaxona": "2g",
         "cetorolaco": "30mg",
-        "escopolamina": "20mg"
+        "escopolamina": "20mg",
+        "atropina": "0,5mg",
+        
     ]
 
 
@@ -473,7 +482,17 @@ class MedicationsHelper {
                 MedicationPresetItem(name: "Sevoflurano", dose: "10mL", category: .anestesicoInalatório, via: .VR)
             ]
         ),
-        
+        MedicationPreset(
+            name: "Sedação Ambulatorial",
+            medications: [
+                MedicationPresetItem(name: "Propofol", dose: "70mg", category: .hipnotico, via: .EV),
+                MedicationPresetItem(name: "Fentanil", dose: "50mcg", category: .opioide, via: .EV),
+                MedicationPresetItem(name: "Cloreto de Sódio 0,9%", dose: "100mL", category: .cristalóide, via: .EV),
+                MedicationPresetItem(name: "Oxigênio", dose: "3L/min", category: .gasFresco, via: .VR),
+                MedicationPresetItem(name: "Midazolam", dose: "5mg", category: .benzodiazepínico, via: .EV),
+                MedicationPresetItem(name: "Cetamina", dose: "10mg", category: .analgésico, via: .EV)
+            ]
+        ),
         MedicationPreset(
             name: "Profilaxia Dor e NVPO",
             medications: [
@@ -517,16 +536,6 @@ class MedicationsHelper {
                 MedicationPresetItem(name: "Cefazolina", dose: "2g", category: .antibiótico, via: .EV),
                 MedicationPresetItem(name: "Cloreto de Sódio 0,9%", dose: "100mL", category: .cristalóide, via: .EV),
                 MedicationPresetItem(name: "Oxigênio", dose: "3L/min", category: .gasFresco, via: .VR),
-            ]
-        ),
-        
-        MedicationPreset(
-            name: "Sedação Ambulatorial",
-            medications: [
-                MedicationPresetItem(name: "Propofol", dose: "70mg", category: .hipnotico, via: .EV),
-                MedicationPresetItem(name: "Fentanil", dose: "50mcg", category: .opioide, via: .EV),
-                MedicationPresetItem(name: "Cloreto de Sódio 0,9%", dose: "100mL", category: .cristalóide, via: .EV),
-                MedicationPresetItem(name: "Oxigênio", dose: "3L/min", category: .gasFresco, via: .VR)
             ]
         ),
         
@@ -680,3 +689,4 @@ class MedicationsHelper {
         MedicationCatalogItem(name: "Levobupivacaina + adrenalina", category: .anestésicoLocal)
     ]
 }
+

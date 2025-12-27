@@ -41,9 +41,11 @@ struct VitalSignsFormView: View {
                 }
             }
             Section {
-                HStack {
-                    Button("Paciente Saudável") {
-                        viewModel.healthyPatient()
+                if viewModel.isNew {
+                    HStack {
+                        Button("Paciente Saudável") {
+                            viewModel.healthyPatient()
+                        }
                     }
                 }
             }

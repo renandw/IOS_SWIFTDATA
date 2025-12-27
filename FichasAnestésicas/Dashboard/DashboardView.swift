@@ -156,20 +156,30 @@ struct QuickActionsSection: View {
             )
             
             QuickActionCard(
-                title: "Nova Ficha SRPA",
-                icon: "plus.circle.fill",
+                title: "Estatísticas Clínicas",
+                icon: "chart.bar.xaxis",
                 gradient: LinearGradient(
-                    colors: [Color(red: 0.4, green: 0.5, blue: 0.66), Color(red: 0.45, green: 0.4, blue: 0.59)],
-                    startPoint: .leading,
-                    endPoint: .trailing
+                    colors: [Color(red: 0.12, green: 0.78, blue: 0.76), Color(red: 0.77, green: 0.18, blue: 0.45)],
+                    startPoint: .trailing,
+                    endPoint: .leading
                 )
             )
+            
+//            QuickActionCard(
+//                title: "Nova Ficha SRPA",
+//                icon: "plus.circle.fill",
+//                gradient: LinearGradient(
+//                    colors: [Color(red: 0.4, green: 0.5, blue: 0.66), Color(red: 0.45, green: 0.4, blue: 0.59)],
+//                    startPoint: .leading,
+//                    endPoint: .trailing
+//                )
+//            )
             
             QuickActionCard(
                 title: "Financeiro",
                 icon: "dollarsign",
                 gradient: LinearGradient(
-                    colors: [Color(red: 0.19, green: 0.55, blue: 0.65), Color(red: 0.17, green: 0.45, blue: 0.65)],
+                    colors: [Color(red: 0.39, green: 0.75, blue: 0.65), Color(red: 0.17, green: 0.45, blue: 0.65)],
                     startPoint: .leading,
                     endPoint: .trailing
                 ),
@@ -180,7 +190,7 @@ struct QuickActionsSection: View {
                 title: "Meus Pacientes",
                 icon: "person.2.fill",
                 gradient: LinearGradient(
-                    colors: [Color(red: 0.31, green: 0.18, blue: 0.66), Color(red: 0.25, green: 0.14, blue: 0.55)],
+                    colors: [Color(red: 0.41, green: 0.25, blue: 0.66), Color(red: 0.25, green: 0.14, blue: 0.55)],
                     startPoint: .leading,
                     endPoint: .trailing
                 ),
