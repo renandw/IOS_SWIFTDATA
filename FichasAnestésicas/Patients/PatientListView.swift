@@ -19,25 +19,32 @@ struct PatientListView: View {
     }
     
     var filteredPatients: [Patient] {
-        let filtered = patientSearchText.isEmpty
-            ? patient
-            : patient.filter { $0.name.localizedCaseInsensitiveContains(patientSearchText) }
-        
-        switch sortOrder {
-        case .alphabetical:
-            return filtered.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-        case .recent:
-            return filtered.sorted { $0.lastActivityAt > $1.lastActivityAt }
+            // Primeiro filtra por userId
+            let userFiltered = patient.filter {
+                $0.createdBy.userId == (session.currentUser?.userId ?? "")
+            }
+            
+            // Depois aplica busca
+            let searchFiltered = patientSearchText.isEmpty
+                ? userFiltered
+                : userFiltered.filter { $0.name.localizedCaseInsensitiveContains(patientSearchText) }
+            
+            // Finalmente ordena
+            switch sortOrder {
+            case .alphabetical:
+                return searchFiltered.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+            case .recent:
+                return searchFiltered.sorted { $0.lastActivityAt > $1.lastActivityAt }
+            }
         }
-    }
     
     
-    init(session: SessionManager) {
-        let uid = session.currentUser?.userId ?? ""
-        _patient = Query(filter: #Predicate<Patient> {
-            $0.createdBy.userId == uid
-        })
-    }
+//    init(session: SessionManager) {
+//        let uid = session.currentUser?.userId ?? ""
+//        _patient = Query(filter: #Predicate<Patient> {
+//            $0.createdBy.userId == uid
+//        })
+//    }
     
     var body: some View {
         List {

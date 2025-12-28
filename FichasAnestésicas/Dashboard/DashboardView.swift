@@ -57,7 +57,7 @@ struct DashboardView: View {
 
                       }
                       .navigationDestination(isPresented: $navigateToPatients) {
-                          PatientListView(session: session)
+                          PatientListView()
                       }
                       .navigationDestination(isPresented: $navigateToTwoMonthAnesthesia) {
                           TwoMonthsAnesthesias(anesthesias: anesthesias)
@@ -74,10 +74,15 @@ struct DashboardView: View {
                       .navigationBarTitleDisplayMode(.large)
                       .toolbar {
                           ToolbarItem(placement: .topBarLeading) {
-                              NavigationLink {
-                                  UserListView()
+//                              NavigationLink {
+//                                  UserListView()
+//                              } label: {
+//                                  Label("Navegar para Lista de Usuários", systemImage: "gear")
+//                              }
+                              NavigationLink{
+                                  UserDetails(userId: user.userId)
                               } label: {
-                                  Label("Navegar para Lista de Usuários", systemImage: "gear")
+                                  Label(user.name, systemImage: "gear")
                               }
                           }
                           ToolbarItem(placement: .topBarLeading) {
@@ -108,6 +113,10 @@ struct DashboardView: View {
         } else {
             return name
         }
+    }
+    
+    func createSamplePatientsWithRealPatients(){
+        //get
     }
 }
 

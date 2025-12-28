@@ -76,7 +76,7 @@ struct TwoMonthsPatients: View {
             
             Section {
                 NavigationLink("Todos os pacientes") {
-                    PatientListView(session: session)
+                    PatientListView()
                 }
             }
         }
