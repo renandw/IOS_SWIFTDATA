@@ -25,6 +25,18 @@ struct UserSelectionView: View {
                     )
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .listRowInsets(EdgeInsets())
+                    
+                    Section {
+                        NavigationLink("Restaurar Backup", destination: RestoreView())
+                            .foregroundStyle(.blue)
+                    } header: {
+                        HStack{
+                            Image(systemName: "externaldrive.fill.badge.timemachine")
+                            Text("Restauração de Backup")
+                                .font(.headline)
+                            Spacer()
+                        }
+                    }
                 } else {
                     Section("Selecione um usuário") {
                         ForEach(users, id: \.userId) { user in

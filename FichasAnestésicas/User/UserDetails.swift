@@ -23,7 +23,7 @@ struct UserDetails: View {
     @Query private var patients: [Patient]
     @Query private var surgeries: [Surgery]
     @Query private var anesthesia: [Anesthesia]
-//    @Query private var preAnesthesia: [PreAnesthesia]
+    @Query private var preAnesthesia: [PreAnesthesia]
 
     init(userId: String) {
         self.userId = userId
@@ -34,7 +34,7 @@ struct UserDetails: View {
           )
         self._surgeries = Query(filter: #Predicate<Surgery> { $0.createdBy.userId == userId })
         self._anesthesia = Query(filter: #Predicate<Anesthesia> { $0.createdBy.userId == userId })
-//        self._preAnesthesia = Query(filter: #Predicate<PreAnesthesia> { $0.createdBy.userId == userId })
+        self._preAnesthesia = Query(filter: #Predicate<PreAnesthesia> { $0.createdBy.userId == userId })
     }
 
     private var dateFormatter: DateFormatter {
@@ -53,7 +53,7 @@ struct UserDetails: View {
                             CountCard(title: "Pacientes", count: patients.count, systemImage: "person.2")
                             CountCard(title: "Cirurgias", count: surgeries.count, systemImage: "scissors")
                             CountCard(title: "Anestesias", count: anesthesia.count, systemImage: "stethoscope")
-//                            CountCard(title: "Pré-anest.", count: preAnesthesia.count, systemImage: "doc.text.magnifyingglass")
+                            CountCard(title: "APA.", count: preAnesthesia.count, systemImage: "doc.text.magnifyingglass")
                         }
                         .padding(.vertical, 4)
                     }
@@ -69,6 +69,17 @@ struct UserDetails: View {
                 Section("Metadados") {
                     LabeledValueRow(title: "Criado em", value: dateFormatter.string(from: user.createdAt))
                     LabeledValueRow(title: "Atualizado em", value: user.updatedAt.map { dateFormatter.string(from: $0) } ?? "Nunca foi atualizado")
+                }
+                Section {
+                    NavigationLink("Criar backup completo", destination: BackupView())
+                        .foregroundStyle(.blue)
+                } header: {
+                    HStack{
+                        Image(systemName: "externaldrive.fill")
+                        Text("Criar Backup")
+                            .font(.headline)
+                        Spacer()
+                    }
                 }
             }
             .navigationTitle(user.name.isEmpty ? "Detalhes do Usuário" : user.name)
@@ -113,11 +124,11 @@ private struct LabeledValueRow: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             Text(title)
-                .font(.subheadline)
+                
                 .foregroundStyle(.secondary)
             Spacer(minLength: 16)
             Text(value)
-                .font(.body)
+                .fontWeight(.semibold)
                 .multilineTextAlignment(.trailing)
         }
         .textSelection(.enabled)
@@ -158,11 +169,11 @@ private struct CountCard: View {
     let context = ModelContext(container)
 
     let sample = User(userId: UUID().uuidString,
-                      name: "Dra. Ana Silva",
-                      crm: "12345-SP",
-                      rqe: "98765",
-                      phone: "(11) 99999-0000",
-                      emailAddress: "ana.silva@example.com",
+                      name: "Renan Dantas Wrobel",
+                      crm: "4794-SP",
+                      rqe: "2516",
+                      phone: "(69) 98132-8798",
+                      emailAddress: "renandw@me.com",
                       createdAt: .now.addingTimeInterval(-86400 * 20),
                       updatedAt: .now)
     context.insert(sample)

@@ -44,24 +44,7 @@ struct DashboardView: View {
               NavigationStack {
                   ScrollView {
                       VStack {
-                          // Hidden navigation trigger for Meus Pacientes
-                          NavigationLink(isActive: $navigateToPatients) {
-                              PatientListView(session: session)
-                          } label: { EmptyView() }
-                          .hidden()
-                          NavigationLink(isActive: $navigateToTwoMonthAnesthesia) {
-                              TwoMonthsAnesthesias(anesthesias: anesthesias)
-                          } label: { EmptyView() }
-                              .hidden()
-                          NavigationLink(isActive: $navigateToTwoMonthPatients) {
-                              TwoMonthsPatients(anesthesias: anesthesias)
-                          } label: { EmptyView() }
-                              .hidden()
-                          NavigationLink(isActive: $navigateToFinancialDashboard) {
-                              FinancialDashboardView(userId: user.userId, surgeries: surgeries)
-                          } label: { EmptyView() }
-                              .hidden()
-
+                          
                           QuickActionsSection(
                               onNewAnesthesia: {},
                               onMyPatients: { navigateToPatients = true },
@@ -72,6 +55,18 @@ struct DashboardView: View {
                           StatisticsSection(anesthesias: anesthesias, onPatientsTapped: { navigateToTwoMonthPatients = true }, onAnesthesiasTapped : {navigateToTwoMonthAnesthesia = true}, onFinancialTapped: {navigateToFinancialDashboard = true})
                           RecentAnesthesiasSection(anesthesias: anesthesias)
 
+                      }
+                      .navigationDestination(isPresented: $navigateToPatients) {
+                          PatientListView(session: session)
+                      }
+                      .navigationDestination(isPresented: $navigateToTwoMonthAnesthesia) {
+                          TwoMonthsAnesthesias(anesthesias: anesthesias)
+                      }
+                      .navigationDestination(isPresented: $navigateToTwoMonthPatients) {
+                          TwoMonthsPatients(anesthesias: anesthesias)
+                      }
+                      .navigationDestination(isPresented: $navigateToFinancialDashboard) {
+                          FinancialDashboardView(userId: user.userId, surgeries: surgeries)
                       }
                       .padding()
                       .navigationTitle("Olá, \(displayName(name: user.name))")
@@ -125,6 +120,7 @@ struct QuickActionsSection: View {
     @State private var showingAnesthesiaWizard = false
     @State private var createdAnesthesia: Anesthesia?
     @State private var navigateToDetails = false
+    @State private var showComingSoonAlert = false
     
     @Environment(SessionManager.self) private var session
     @Environment(\.modelContext) private var modelContext
@@ -152,7 +148,8 @@ struct QuickActionsSection: View {
                     colors: [Color(red: 0.4, green: 0.3, blue: 0.66), Color(red: 0.5, green: 0.4, blue: 0.55)],
                     startPoint: .leading,
                     endPoint: .trailing
-                )
+                ),
+                onTap: { showComingSoonAlert = true }
             )
             
             QuickActionCard(
@@ -162,7 +159,8 @@ struct QuickActionsSection: View {
                     colors: [Color(red: 0.12, green: 0.78, blue: 0.76), Color(red: 0.77, green: 0.18, blue: 0.45)],
                     startPoint: .trailing,
                     endPoint: .leading
-                )
+                ),
+                onTap: { showComingSoonAlert = true }
             )
             
 //            QuickActionCard(
@@ -225,6 +223,9 @@ struct QuickActionsSection: View {
             }
         }
         .padding(.bottom, 16)
+        .alert("Será implementado em breve", isPresented: $showComingSoonAlert) {
+            Button("OK", role: .cancel) { }
+        }
     }
     
 }
