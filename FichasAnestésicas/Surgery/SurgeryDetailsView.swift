@@ -31,214 +31,11 @@ struct SurgeryDetailsView: View {
     
     var body: some View {
         List {
-            Section{
-                HStack{
-                    Text("Nome")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text(surgery.patient.name)
-                        .fontWeight(.semibold)
-                }
-                HStack{
-                    Text("Idade")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text(age)
-                        .fontWeight(.semibold)
-                    Spacer()
-                    Spacer()
-                    Text("Peso")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text("\(surgery.weight, specifier: "%.1f")")
-                        .fontWeight(.semibold)
-                    Text("kg")
-                        .fontWeight(.semibold)
-                }
-                HStack{
-                    if surgery.insuranceName == "SUS" {
-                        Text("Número SUS")
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Text(surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))
-                            .fontWeight(.semibold)
-                        
-                    } else {
-                        Text("Convênio")
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Text(surgery.insuranceName)
-                            .fontWeight(.semibold)
-                    }
-                }
-                if surgery.insuranceName == "SUS" {
-                    HStack {
-                        Text("Prontuário")
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Text(surgery.insuranceNumber)
-                            .fontWeight(.semibold)
-                    }
-                } else if surgery.insuranceName != "Particular" {
-                    HStack {
-                        Text("Carteirinha")
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Text(surgery.insuranceNumber)
-                            .fontWeight(.semibold)
-                    }
-                }
-            } header : {
-                HStack{
-                    Text("Dados do Paciente")
-                    Spacer()
-                    NavigationLink {
-                        PatientDetailsView(patient: surgery.patient)
-                    } label: {
-                        Image(systemName: surgery.patient.sex.sexImage)
-                    }
-                    .buttonStyle(.glass)
-                }
-                
-            }
-            Section{
-                HStack{
-                    Text("Cirurgia Proposta")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text(surgery.proposedProcedure)
-                        .fontWeight(.semibold)
-                }
-                HStack{
-                    Text("Hospital")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text(surgery.hospital)
-                        .fontWeight(.semibold)
-                }
-            } header: {
-                HStack{
-                    Text("Cirurgia")
-                    Text("-")
-                    Text(surgery.date.formatted(date: .abbreviated, time: .omitted))
-                    Spacer()
-                    NavigationLink {
-                        SurgeryMetadataView(surgery: surgery)
-                    } label: {
-                        Image(systemName: "info.circle")
-                    }
-                    .buttonStyle(.glass)
-                }
-            }
-            
-            Section("Equipe Médica"){
-                HStack{
-                    Text("Anestesiologista")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text(surgery.createdBy.name)
-                        .fontWeight(.semibold)
-                }
-                HStack{
-                    Text("Cirurgião Principal")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text(surgery.mainSurgeon)
-                        .fontWeight(.semibold)
-                }
-                if let auxiliarySurgeons = surgery.auxiliarySurgeons, !auxiliarySurgeons.isEmpty {
-                    ForEach(auxiliarySurgeons, id: \.self) { aux in
-                        HStack{
-                            Text("Cirurgião Auxiliar")
-                                .foregroundStyle(.secondary)
-                            Spacer()
-                            Text(aux)
-                                .fontWeight(.semibold)
-                        }
-                    }
-                }
-            }
-            if surgery.type == .convenio {
-                Section {
-                    if let financial = surgery.financial {
-                        if let valueAnesthesia = financial.finalSurgeryValue {
-                            HStack{
-                                Text("Valor Anestesia")
-                                    .foregroundStyle(.secondary)
-                                Spacer()
-                                Text(valueAnesthesia, format: .currency(code: "BRL"))
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                    } else {
-                        Button("Adicionar Valores") {
-                            showingFinancialForm = true
-                        }
-                    }
-                } header: {
-                    HStack {
-                        Text("Dados Financeiros")
-                        Spacer()
-                        NavigationLink {
-                            FinancialView(surgery: surgery)
-                        } label: {
-                            Image(systemName: "brazilianrealsign.circle")
-                        }
-                        .buttonStyle(.glass)
-                    }
-                }
-            }
-            if let anesthesia = surgery.anesthesia {
-                Section {
-                    HStack {
-                        NavigationLink {
-                            AnesthesiaDetailsView(anesthesia: anesthesia)
-                        } label: {
-                            Text("Detalhes da Ficha Anestésica")
-                                .fontWeight(.bold)
-                        }
-                    }
-                    if anesthesia.status == .finished {
-                        HStack {
-                            ShareLink(item: anesthesia.renderAnesthesiaPDF()) {
-                                Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
-                            }
-                            .buttonStyle(.glass)
-                        }
-                    }
-                } header : {
-                    HStack {
-                        Text("Anestesia")
-                    }
-                }
-            } else {
-                Button("Cadastrar Anestesia") {
-                    showingAnesthesiaForm = true
-                }
-            }
-            if let preanesthesia = surgery.preanesthesia {
-                Section {
-                    NavigationLink {
-                        PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
-                    } label: {
-                        Text("Detalhes da Avaliação Pré Anestesia")
-                            .fontWeight(.bold)
-                    }
-
-                    if let anesthesia = surgery.anesthesia,
-                       preanesthesia.status == .finished {
-                        ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
-                            Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
-                        }
-                    }
-                } header: {
-                    Text("Avaliação Pré Anestésica")
-                }
-            } else {
-                Button("Criar Avaliação Pré Anestésica") {
-                    presentNewForm()
-                }
-            }
+            patientSection
+            surgerySection
+            medicalTeamSection
+            financialSection
+            anesthesiaSection
         }
         .navigationTitle(surgery.surgeryId)
         .toolbar {
@@ -326,6 +123,228 @@ struct SurgeryDetailsView: View {
     }
     
     // MARK: - Helpers
+    
+    private var patientSection: some View {
+        Section{
+            HStack{
+                Text("Nome")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text(surgery.patient.name)
+                    .fontWeight(.semibold)
+            }
+            HStack{
+                Text("Idade")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text(age)
+                    .fontWeight(.semibold)
+                Spacer()
+                Spacer()
+                Text("Peso")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text("\(surgery.weight, specifier: "%.1f")")
+                    .fontWeight(.semibold)
+                Text("kg")
+                    .fontWeight(.semibold)
+            }
+            HStack{
+                if surgery.insuranceName == "SUS" {
+                    Text("Número SUS")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))
+                        .fontWeight(.semibold)
+                    
+                } else {
+                    Text("Convênio")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(surgery.insuranceName)
+                        .fontWeight(.semibold)
+                }
+            }
+            if surgery.insuranceName == "SUS" {
+                HStack {
+                    Text("Prontuário")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(surgery.insuranceNumber)
+                        .fontWeight(.semibold)
+                }
+            } else if surgery.insuranceName != "Particular" {
+                HStack {
+                    Text("Carteirinha")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(surgery.insuranceNumber)
+                        .fontWeight(.semibold)
+                }
+            }
+        } header : {
+            HStack{
+                Text("Dados do Paciente")
+                Spacer()
+                NavigationLink {
+                    PatientDetailsView(patient: surgery.patient)
+                } label: {
+                    Image(systemName: surgery.patient.sex.sexImage)
+                }
+                .buttonStyle(.glass)
+            }
+            
+        }
+    }
+    private var surgerySection: some View {
+        Section{
+            HStack{
+                Text("Cirurgia Proposta")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text(surgery.proposedProcedure)
+                    .fontWeight(.semibold)
+            }
+            HStack{
+                Text("Hospital")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text(surgery.hospital)
+                    .fontWeight(.semibold)
+            }
+        } header: {
+            HStack{
+                Text("Cirurgia")
+                Text("-")
+                Text(surgery.date.formatted(date: .abbreviated, time: .omitted))
+                Spacer()
+                NavigationLink {
+                    SurgeryMetadataView(surgery: surgery)
+                } label: {
+                    Image(systemName: "info.circle")
+                }
+                .buttonStyle(.glass)
+            }
+        }
+    }
+    private var medicalTeamSection: some View {
+        Section("Equipe Médica"){
+            HStack{
+                Text("Anestesiologista")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text(surgery.createdBy.name)
+                    .fontWeight(.semibold)
+            }
+            HStack{
+                Text("Cirurgião Principal")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text(surgery.mainSurgeon)
+                    .fontWeight(.semibold)
+            }
+            if let auxiliarySurgeons = surgery.auxiliarySurgeons, !auxiliarySurgeons.isEmpty {
+                ForEach(auxiliarySurgeons, id: \.self) { aux in
+                    HStack{
+                        Text("Cirurgião Auxiliar")
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text(aux)
+                            .fontWeight(.semibold)
+                    }
+                }
+            }
+        }
+    }
+    private var financialSection: some View {
+        Group {
+            if surgery.type == .convenio {
+                Section {
+                    if let financial = surgery.financial {
+                        if let valueAnesthesia = financial.finalSurgeryValue {
+                            HStack{
+                                Text("Valor Anestesia")
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                                Text(valueAnesthesia, format: .currency(code: "BRL"))
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                    } else {
+                        Button("Adicionar Valores") {
+                            showingFinancialForm = true
+                        }
+                    }
+                } header: {
+                    HStack {
+                        Text("Dados Financeiros")
+                        Spacer()
+                        NavigationLink {
+                            FinancialView(surgery: surgery)
+                        } label: {
+                            Image(systemName: "brazilianrealsign.circle")
+                        }
+                        .buttonStyle(.glass)
+                    }
+                }
+            }
+        }
+    }
+    private var anesthesiaSection: some View {
+        Group {
+            if let anesthesia = surgery.anesthesia {
+                Section {
+                    HStack {
+                        NavigationLink {
+                            AnesthesiaDetailsView(anesthesia: anesthesia)
+                        } label: {
+                            Text("Detalhes da Ficha Anestésica")
+                                .fontWeight(.bold)
+                        }
+                    }
+                    if anesthesia.status == .finished {
+                        HStack {
+                            ShareLink(item: anesthesia.renderAnesthesiaPDF()) {
+                                Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
+                            }
+                            .buttonStyle(.glass)
+                        }
+                    }
+                } header : {
+                    HStack {
+                        Text("Anestesia")
+                    }
+                }
+            } else {
+                Button("Cadastrar Anestesia") {
+                    showingAnesthesiaForm = true
+                }
+            }
+            if let preanesthesia = surgery.preanesthesia {
+                Section {
+                    NavigationLink {
+                        PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
+                    } label: {
+                        Text("Detalhes da Avaliação Pré Anestesia")
+                            .fontWeight(.bold)
+                    }
+
+                    if let anesthesia = surgery.anesthesia,
+                       preanesthesia.status == .finished {
+                        ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
+                            Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
+                        }
+                    }
+                } header: {
+                    Text("Avaliação Pré Anestésica")
+                }
+            } else {
+                Button("Criar Avaliação Pré Anestésica") {
+                    presentNewForm()
+                }
+            }
+        }
+    }
     
     private func presentNewForm() {
         // Ajuste a forma de obter o usuário conforme a API real do seu SessionManager
@@ -449,4 +468,3 @@ struct SurgeryMetadataView: View {
         }
     }
 }
-

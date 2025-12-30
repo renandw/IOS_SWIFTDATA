@@ -217,5 +217,4 @@ final class PatientFormViewModel: ObservableObject {
         
         return result
     }
-
 }

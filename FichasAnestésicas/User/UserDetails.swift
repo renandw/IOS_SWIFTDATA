@@ -13,6 +13,7 @@ struct UserDetails: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(SessionManager.self) private var session
 
     @State private var showingEdit = false
     @State private var showingDeleteConfirm = false
@@ -103,6 +104,7 @@ struct UserDetails: View {
                 titleVisibility: .visible
             ) {
                 Button("Excluir", role: .destructive) {
+                    session.currentUser = nil
                     modelContext.delete(user)
                     try? modelContext.save()
                     dismiss()

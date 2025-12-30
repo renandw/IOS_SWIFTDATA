@@ -90,6 +90,14 @@ struct DashboardView: View {
                                   session.currentUser = nil
                               }
                           }
+//                          ToolbarItem(placement: .topBarTrailing) {
+//                              Button("Sobre", systemImage: "gearshape") {
+//                                  createSampleAnesthesiasExtension()
+//                                  createSampleAnesthesiaDescriptionExtension()
+//                                  createSampleMedicationEntryExtension()
+//                                  createSampleVitalSignEntryExtension()
+//                              }
+//                          }
                       }
                       
                       
@@ -115,8 +123,12 @@ struct DashboardView: View {
         }
     }
     
-    func createSamplePatientsWithRealPatients(){
-        //get
+    // Função auxiliar para formatar datas
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy HH:mm:ss"
+        formatter.locale = Locale(identifier: "pt_BR")
+        return formatter.string(from: date)
     }
 }
 

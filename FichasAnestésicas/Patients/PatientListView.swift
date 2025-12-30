@@ -19,32 +19,23 @@ struct PatientListView: View {
     }
     
     var filteredPatients: [Patient] {
-            // Primeiro filtra por userId
-            let userFiltered = patient.filter {
-                $0.createdBy.userId == (session.currentUser?.userId ?? "")
-            }
-            
-            // Depois aplica busca
-            let searchFiltered = patientSearchText.isEmpty
-                ? userFiltered
-                : userFiltered.filter { $0.name.localizedCaseInsensitiveContains(patientSearchText) }
-            
-            // Finalmente ordena
-            switch sortOrder {
-            case .alphabetical:
-                return searchFiltered.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-            case .recent:
-                return searchFiltered.sorted { $0.lastActivityAt > $1.lastActivityAt }
-            }
+        let userFiltered = patient.filter {
+            $0.createdBy.userId == (session.currentUser?.userId ?? "")
         }
-    
-    
-//    init(session: SessionManager) {
-//        let uid = session.currentUser?.userId ?? ""
-//        _patient = Query(filter: #Predicate<Patient> {
-//            $0.createdBy.userId == uid
-//        })
-//    }
+        
+        let searchFiltered = patientSearchText.isEmpty
+        ? userFiltered
+        : userFiltered.filter { $0.name.localizedStandardContains(patientSearchText) }
+        
+        
+        // Finalmente ordena
+        switch sortOrder {
+        case .alphabetical:
+            return searchFiltered.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        case .recent:
+            return searchFiltered.sorted { $0.lastActivityAt > $1.lastActivityAt }
+        }
+    }
     
     var body: some View {
         List {
@@ -121,8 +112,9 @@ struct PatientListView: View {
                     Button("Alfabética") { sortOrder = .alphabetical }
                     Button("Recentes") { sortOrder = .recent }
                 } label: {
-                    Label("Sair", systemImage: "arrow.up.arrow.down")
+                    Label("Ordenar", systemImage: "arrow.up.arrow.down")
                 }
+                .tint(.blue)
             }
         }
     }
@@ -138,5 +130,30 @@ struct PatientListView: View {
             }
         }
     }
+}
+
+#Preview("Lista com samples") {
+    // Usa o mesmo usuário dos samples para que o filtro por userId funcione
+    let samples = Patient.samplePatients
+    let sampleUser = samples.first?.createdBy
+    let session = SessionManager()
+    session.currentUser = sampleUser
+
+    // Container SwiftData em memória e preload com samples
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Patient.self, User.self, configurations: config)
+    let context = container.mainContext
+
+    // Insere os samples apenas uma vez
+    if try! context.fetch(FetchDescriptor<Patient>()).isEmpty {
+        for p in samples { context.insert(p) }
+        try! context.save()
+    }
+
+    return NavigationStack {
+        PatientListView()
+            .environment(session)
+    }
+    .modelContainer(container)
 }
 

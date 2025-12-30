@@ -68,6 +68,8 @@ struct PatientDetailsView: View {
                     HStack(spacing: 8) {
                         Image(systemName: patient.sex.sexImage)
                             .foregroundColor(patient.sex.sexColor)
+                            .font(.system(size: 16, weight: .regular))
+                            .frame(width: 20, height: 20)
                         Text(patient.sex.sexStringDescription)
                             .fontWeight(.semibold)
                     }
@@ -80,14 +82,18 @@ struct PatientDetailsView: View {
                         MetadataView(patient: patient)
                     } label: {
                         Image(systemName: "info.circle")
+                            .font(.system(size: 16, weight: .regular))
+                            .frame(width: 20, height: 20)
                     }
                     .buttonStyle(.glass)
+                    .tint(.blue)
                 }
             }
             
             Section {
                 if patient.surgeries == [] {
                     Text("Nenhuma cirurgia registrada.")
+                        .foregroundStyle(.secondary)
                 } else {
                     ForEach(patient.surgeries ?? []) { surgery in
                         NavigationLink(surgery.proposedProcedure) {
@@ -104,9 +110,20 @@ struct PatientDetailsView: View {
                 HStack{
                     Text("Cirurgias")
                     Spacer()
-                    Button("Adicionar Cirurgia", systemImage: "plus"){
+                    Button{
                         showingSurgeryForm = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus")
+                                .font(.system(size: 16, weight: .regular))
+                                .frame(width: 20, height: 20)
+                            Text("Nova cirurgia")
+                                .fontWeight(.semibold)
+                                
+                        }
                     }
+                    .buttonStyle(.glass)
+                    .tint(.green)
                 }
             }
         }
@@ -115,15 +132,17 @@ struct PatientDetailsView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Menu("Opções", systemImage: "line.3.horizontal") {
-                    Button("Editar paciente ") {
+                    Button("Editar paciente", systemImage: "pencil") {
                         editingPatient = patient
                         selectedPatient = patient
                         showingPatientForm = true
                     }
-                    Button("Excluir paciente", role: .destructive) {
+                    
+                    Button("Excluir paciente", systemImage: "trash", role: .destructive) {
                         showDeleteAlert = true
                     }
                 }
+                
             }
         }
         .sheet(isPresented: $showingSurgeryForm) {
@@ -186,40 +205,46 @@ struct MetadataView: View {
                 HStack {
                     Text("Criado em")
                         .foregroundStyle(.secondary)
+                    Spacer()
                     Text(patient.createdAt.formatted(date: .abbreviated, time: .shortened))
                         .fontWeight(.semibold)
                 }
                 HStack {
                     Text("Criado por")
                         .foregroundStyle(.secondary)
+                    Spacer()
                     Text(patient.createdBy.name)
                         .fontWeight(.semibold)
-                }
-                if let updatedBy = patient.updatedBy {
-                    HStack {
-                        Text("Atualizado por")
-                            .foregroundStyle(.secondary)
-                        Text(updatedBy.name)
-                            .fontWeight(.semibold)
-                    }
                 }
                 if let updatedAt = patient.updatedAt {
                     HStack {
                         Text("Atualizado em")
                             .foregroundStyle(.secondary)
+                        Spacer()
                         Text(updatedAt.formatted(date: .abbreviated, time: .shortened))
                             .fontWeight(.semibold)
                     }
                 }
+                if let updatedBy = patient.updatedBy {
+                    HStack {
+                        Text("Atualizado por")
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text(updatedBy.name)
+                            .fontWeight(.semibold)
+                    }
+                }
                 HStack {
-                    Text("Últimas Atualização")
+                    Text("Última Atualização")
                         .foregroundStyle(.secondary)
+                    Spacer()
                     Text(patient.lastActivityAt.formatted(date: .abbreviated, time: .shortened))
                         .fontWeight(.semibold)
                 }
                 HStack {
                     Text("ID")
                         .foregroundStyle(.secondary)
+                    Spacer()
                     Text(patient.patientId)
                         .font(.caption)
                         .fontWeight(.semibold)
@@ -231,3 +256,31 @@ struct MetadataView: View {
     }
 }
 
+
+
+#Preview("Lista com samples") {
+    // Usa o mesmo usuário dos samples para que o filtro por userId funcione
+    let samples = Patient.samplePatients
+    let randomIndex = Int.random(in: 1...103)
+    let patient = samples[randomIndex]
+    let sampleUser = samples.first?.createdBy
+    let session = SessionManager()
+    session.currentUser = sampleUser
+
+    // Container SwiftData em memória e preload com samples
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Patient.self, User.self, configurations: config)
+    let context = container.mainContext
+
+    // Insere os samples apenas uma vez
+    if try! context.fetch(FetchDescriptor<Patient>()).isEmpty {
+        for p in samples { context.insert(p) }
+        try! context.save()
+    }
+
+    return NavigationStack {
+        PatientDetailsView(patient: patient)
+            .environment(session)
+    }
+    .modelContainer(container)
+}

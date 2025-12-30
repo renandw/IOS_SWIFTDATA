@@ -17,6 +17,7 @@ struct PatientFormView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: PatientFormViewModel
     @State private var isSaving = false
+    @State private var feedbackTrigger = false
     
     @FocusState private var isFocused: Bool
     
@@ -80,11 +81,20 @@ struct PatientFormView: View {
                     Text("Número SUS")
                         .font(.subheadline)
                         .fontWeight(.semibold)
+                    if viewModel.cns.isEmpty {
+                        Button {
+                            viewModel.cns = "000000000000000"
+                        } label: {
+                            Image(systemName: "slash.circle")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                     TextField("000 0000 0000 0000", text: Binding(
                         get: { viewModel.formatCNS(viewModel.cns) },
                         set: { newValue in
                             viewModel.cns = newValue.filter { $0.isNumber }
                         }
+                    
                     ))
                     .keyboardType(.numberPad)
                     .onChange(of: viewModel.cns) { _, newValue in
@@ -165,6 +175,7 @@ struct PatientFormView: View {
                             }
                         }
                         .disabled(!viewModel.isValid || isSaving)
+                        .sensoryFeedback(.success, trigger: viewModel.saveSuccess)
                     }
                 }
                 .sheet(isPresented: $viewModel.showDuplicateSheet) {

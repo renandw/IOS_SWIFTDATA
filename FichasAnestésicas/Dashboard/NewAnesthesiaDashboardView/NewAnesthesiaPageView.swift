@@ -34,6 +34,8 @@ struct NewAnesthesiaPageView: View {
     @State private var isSaving: Bool = false
     @State private var selectedPatient: Patient?
     
+    @State private var feedbackTrigger = false
+    
     let onFinished: (Anesthesia) -> Void
     
     init(
@@ -105,8 +107,10 @@ struct NewAnesthesiaPageView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(primaryButtonTitle, systemImage: primaryButtonIcon) {
                         handleNext()
+                        feedbackTrigger.toggle()
                     }
                     .disabled(!canGoForward || isSaving)
+                    .sensoryFeedback(.selection, trigger: feedbackTrigger)
                 }
             }
         }
