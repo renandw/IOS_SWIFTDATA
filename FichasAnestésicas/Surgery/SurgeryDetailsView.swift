@@ -316,17 +316,25 @@ struct SurgeryDetailsView: View {
                             AnesthesiaDetailsView(anesthesia: anesthesia)
                         } label: {
                             HStack {
-                                Spacer()
                                 Text("Detalhes da Ficha Anestésica")
-                                    .fontWeight(.bold)
-                                Spacer()
+                                    .fontWeight(.semibold)
                             }
                         }
                     }
                     if anesthesia.status == .finished {
                         HStack {
                             ShareLink(item: anesthesia.renderAnesthesiaPDF()) {
-                                Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
+                                HStack(alignment: .center) {
+                                    Spacer()
+                                    Image(systemName: "square.and.arrow.up")
+                                        .font(.system(size: 16, weight: .regular))
+                                        .frame(width: 20, height: 20)
+                                        .foregroundStyle(.purple)
+                                    Text("Exportar ficha anestésica")
+                                        .fontWeight(.semibold)
+                                        .foregroundStyle(.purple)
+                                    Spacer()
+                                }
                             }
                             .buttonStyle(.glass)
                         }
@@ -371,7 +379,17 @@ struct SurgeryDetailsView: View {
                     if let anesthesia = surgery.anesthesia,
                        preanesthesia.status == .finished {
                         ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
-                            Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
+                            HStack(alignment: .center) {
+                                Spacer()
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 16, weight: .regular))
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(.purple)
+                                Text("Exportar ficha avaliação pré-anestésica")
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(.purple)
+                                Spacer()
+                            }
                         }
                     }
                 } header: {
@@ -547,16 +565,19 @@ struct SurgeryMetadataView: View {
         try! context.save()
     }
 
-    // Escolhe um paciente aleatório e uma cirurgia aleatória desse paciente, ou de `surgeries` como fallback
-    let randomPatient = patients.randomElement()
-    // Tenta encontrar cirurgias pertencentes ao paciente aleatório
-    let surgeriesForRandomPatient = surgeries.filter { $0.patient.id == randomPatient?.id }
-    let surgeryWithAnesthesiaForPatient = surgeriesForRandomPatient.first { $0.anesthesia != nil }
-    let randomSurgery =
-        surgeryWithAnesthesiaForPatient
-        ?? surgeriesForRandomPatient.randomElement()
-        ?? surgeries.first { $0.anesthesia != nil }
-        ?? surgeries.randomElement()!
+    // Escolhe um paciente aleatório
+    let randomPatient = patients.randomElement()!
+
+    // Filtra apenas cirurgias do paciente aleatório que possuem anesthesia
+    let surgeriesWithAnesthesiaForPatient = surgeries.filter { $0.patient.id == randomPatient.id && $0.anesthesia != nil }
+
+    // Se o paciente não tiver cirurgias com anesthesia, tenta globalmente
+    let surgeriesWithAnesthesia = surgeries.filter { $0.anesthesia != nil }
+
+    // Escolhe uma cirurgia com anesthesia (primeiro do paciente, senão global)
+    guard let randomSurgery = (surgeriesWithAnesthesiaForPatient.randomElement() ?? surgeriesWithAnesthesia.randomElement()) else {
+        fatalError("Nenhuma cirurgia com anesthesia disponível nas amostras do preview.")
+    }
 
     return NavigationStack {
         SurgeryDetailsView(surgery: randomSurgery)
