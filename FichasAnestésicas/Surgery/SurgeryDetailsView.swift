@@ -190,8 +190,11 @@ struct SurgeryDetailsView: View {
                     PatientDetailsView(patient: surgery.patient)
                 } label: {
                     Image(systemName: surgery.patient.sex.sexImage)
+                        .font(.system(size: 16, weight: .regular))
+                        .frame(width: 20, height: 20)
                 }
                 .buttonStyle(.glass)
+                .tint(surgery.patient.sex.sexColor)
             }
             
         }
@@ -222,8 +225,11 @@ struct SurgeryDetailsView: View {
                     SurgeryMetadataView(surgery: surgery)
                 } label: {
                     Image(systemName: "info.circle")
+                        .font(.system(size: 16, weight: .regular))
+                        .frame(width: 20, height: 20)
                 }
                 .buttonStyle(.glass)
+                .tint(.green)
             }
         }
     }
@@ -271,8 +277,16 @@ struct SurgeryDetailsView: View {
                             }
                         }
                     } else {
-                        Button("Adicionar Valores") {
+                        Button {
                             showingFinancialForm = true
+                        } label: {
+                            HStack {
+                                Spacer()
+                                Text("Adicionar Dados Financeiros")
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.green)
+                                Spacer()
+                            }
                         }
                     }
                 } header: {
@@ -283,8 +297,11 @@ struct SurgeryDetailsView: View {
                             FinancialView(surgery: surgery)
                         } label: {
                             Image(systemName: "brazilianrealsign.circle")
+                                .font(.system(size: 16, weight: .regular))
+                                .frame(width: 20, height: 20)
                         }
                         .buttonStyle(.glass)
+                        .tint(.green)
                     }
                 }
             }
@@ -298,8 +315,12 @@ struct SurgeryDetailsView: View {
                         NavigationLink {
                             AnesthesiaDetailsView(anesthesia: anesthesia)
                         } label: {
-                            Text("Detalhes da Ficha Anestésica")
-                                .fontWeight(.bold)
+                            HStack {
+                                Spacer()
+                                Text("Detalhes da Ficha Anestésica")
+                                    .fontWeight(.bold)
+                                Spacer()
+                            }
                         }
                     }
                     if anesthesia.status == .finished {
@@ -316,8 +337,22 @@ struct SurgeryDetailsView: View {
                     }
                 }
             } else {
-                Button("Cadastrar Anestesia") {
-                    showingAnesthesiaForm = true
+                Section {
+                    Button {
+                        showingAnesthesiaForm = true
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Text("Iniciar Ficha Anestésica")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.purple)
+                            Spacer()
+                        }
+                    }
+                } header : {
+                    HStack {
+                        Text("Anestesia")
+                    }
                 }
             }
             if let preanesthesia = surgery.preanesthesia {
@@ -325,8 +360,12 @@ struct SurgeryDetailsView: View {
                     NavigationLink {
                         PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
                     } label: {
-                        Text("Detalhes da Avaliação Pré Anestesia")
-                            .fontWeight(.bold)
+                        HStack {
+                            Spacer()
+                            Text("Detalhes da Avaliação Pré Anestesia")
+                                .fontWeight(.bold)
+                            Spacer()
+                        }
                     }
 
                     if let anesthesia = surgery.anesthesia,
@@ -336,11 +375,23 @@ struct SurgeryDetailsView: View {
                         }
                     }
                 } header: {
-                    Text("Avaliação Pré Anestésica")
+                    Text("Avaliação Pré-Anestésica - APA")
                 }
             } else {
-                Button("Criar Avaliação Pré Anestésica") {
-                    presentNewForm()
+                Section {
+                    Button {
+                        presentNewForm()
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Text("Iniciar APA")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.purple)
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Text("Avaliação Pré Anestésica")
                 }
             }
         }
@@ -467,4 +518,49 @@ struct SurgeryMetadataView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
     }
+}
+
+#Preview("Lista com samples") {
+    let user = User.sampleUser
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
+    let financial = Financial.samples(surgeries: surgeries)
+    let anesthesia = Anesthesia.samples(surgeries: surgeries, user: user)
+
+    let session = SessionManager()
+    session.currentUser = user
+
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: User.self, Patient.self, Surgery.self,
+        configurations: config
+    )
+    let context = container.mainContext
+
+    // Preload uma única vez
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
+        financial.forEach { context.insert($0) }
+        anesthesia.forEach { context.insert($0) }
+        try! context.save()
+    }
+
+    // Escolhe um paciente aleatório e uma cirurgia aleatória desse paciente, ou de `surgeries` como fallback
+    let randomPatient = patients.randomElement()
+    // Tenta encontrar cirurgias pertencentes ao paciente aleatório
+    let surgeriesForRandomPatient = surgeries.filter { $0.patient.id == randomPatient?.id }
+    let surgeryWithAnesthesiaForPatient = surgeriesForRandomPatient.first { $0.anesthesia != nil }
+    let randomSurgery =
+        surgeryWithAnesthesiaForPatient
+        ?? surgeriesForRandomPatient.randomElement()
+        ?? surgeries.first { $0.anesthesia != nil }
+        ?? surgeries.randomElement()!
+
+    return NavigationStack {
+        SurgeryDetailsView(surgery: randomSurgery)
+            .environment(session)
+    }
+    .modelContainer(container)
 }
