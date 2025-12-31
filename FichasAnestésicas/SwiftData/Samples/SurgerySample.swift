@@ -1,35 +1,27 @@
-//
-//  SurgerySample.swift
-//  FichasAnestésicas
-//
-//  Created by Renan Wrobel on 29/12/25.
-//
+////
+////  SurgerySample.swift
+////  FichasAnestésicas
+////
+////  Created by Renan Wrobel on 29/12/25.
+////
 import Foundation
-// Sample Surgeries Array
+//// Sample Surgeries Array
 extension Surgery {
-    static var sampleSurgeries: [Surgery] {
-        let sampleUser = User(
-            userId: "56A8D8C6-3143-4D75-A90D-E4B57C40ADAC",
-            name: "Renan Dantas Wrobel",
-            crm: "4794-RO",
-            rqe: "2516",
-            phone: "(69) 98132-8798",
-            emailAddress: "renandw@me.com",
-            createdAt: createDate(day: 25, month: 11, year: 2025, hour: 10, minute: 29, second: 4),
-            updatedAt: createDate(day: 2, month: 12, year: 2025, hour: 22, minute: 45, second: 22)
-        )
-        let samplePatients = Patient.samplePatients
-        
-        return [
+    static func samples(
+        createdBy user: User,
+        patients: [Patient]
+    ) -> [Surgery] {
+
+        [
             Surgery(
                 surgeryId: "C2025-KYC1V",
                 date: createDate(day: 27, month: 12, year: 2025, hour: 20, minute: 31, second: 28),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 27, month: 12, year: 2025, hour: 20, minute: 34, second: 26),
                 updatedAt: createDate(day: 27, month: 12, year: 2025, hour: 20, minute: 34, second: 26),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 27, month: 12, year: 2025, hour: 20, minute: 36, second: 54),
-                insuranceName: "Sus",
+                insuranceName: "SUS",
                 insuranceNumber: "738976",
                 start: createDate(day: 27, month: 12, year: 2025, hour: 20, minute: 5, second: 28),
                 end: createDate(day: 27, month: 12, year: 2025, hour: 20, minute: 25, second: 2),
@@ -39,15 +31,16 @@ extension Surgery {
                 proposedProcedure: "Angioplastia de Coronárias",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[35]
+                patient: patients[35]
             ),
+
             Surgery(
                 surgeryId: "C2025-TQLG8",
                 date: createDate(day: 22, month: 12, year: 2025, hour: 8, minute: 21, second: 49),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 22, month: 12, year: 2025, hour: 8, minute: 22, second: 28),
                 updatedAt: createDate(day: 22, month: 12, year: 2025, hour: 9, minute: 39, second: 53),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 27, month: 12, year: 2025, hour: 8, minute: 50, second: 50),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -60,15 +53,15 @@ extension Surgery {
                 proposedProcedure: "Colecistectomia VLP",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[15]
+                patient: patients[15]
             ),
             Surgery(
                 surgeryId: "C2025-QP2KQ",
                 date: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 12, second: 44),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 13, second: 31),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 13, second: 31),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 15, second: 2),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -80,15 +73,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[33]
+                patient: patients[33]
             ),
             Surgery(
                 surgeryId: "C2025-2HH23",
                 date: createDate(day: 18, month: 12, year: 2025, hour: 7, minute: 59, second: 56),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 1, second: 0),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 1, second: 0),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 10, second: 52),
                 insuranceName: "Unimed",
                 insuranceNumber: "01068327003345003",
@@ -100,15 +93,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[101]
+                patient: patients[101]
             ),
             Surgery(
                 surgeryId: "C2025-CF7SC",
                 date: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 53, second: 18),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 55, second: 22),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 10, minute: 46, second: 36),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 10, minute: 46, second: 36),
                 insuranceName: "Geap",
                 insuranceNumber: "2001013692850018",
@@ -120,15 +113,15 @@ extension Surgery {
                 proposedProcedure: "Tratamento Doença Peyronie",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[77]
+                patient: patients[77]
             ),
             Surgery(
                 surgeryId: "C2025-IQVRC",
                 date: createDate(day: 16, month: 12, year: 2025, hour: 7, minute: 35, second: 11),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 16, month: 12, year: 2025, hour: 7, minute: 36, second: 31),
                 updatedAt: createDate(day: 16, month: 12, year: 2025, hour: 7, minute: 36, second: 31),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 16, month: 12, year: 2025, hour: 7, minute: 39, second: 6),
                 insuranceName: "Unimed",
                 insuranceNumber: "08650004618288014",
@@ -140,15 +133,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia ",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[99]
+                patient: patients[99]
             ),
             Surgery(
                 surgeryId: "C2025-4V7OO",
                 date: createDate(day: 15, month: 12, year: 2025, hour: 10, minute: 3, second: 29),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 15, month: 12, year: 2025, hour: 10, minute: 4, second: 35),
                 updatedAt: createDate(day: 15, month: 12, year: 2025, hour: 10, minute: 4, second: 35),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 15, month: 12, year: 2025, hour: 10, minute: 5, second: 48),
                 insuranceName: "Astir",
                 insuranceNumber: "227455",
@@ -160,15 +153,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[73]
+                patient: patients[73]
             ),
             Surgery(
                 surgeryId: "C2025-YQ92M",
                 date: createDate(day: 15, month: 12, year: 2025, hour: 7, minute: 30, second: 42),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 15, month: 12, year: 2025, hour: 7, minute: 31, second: 35),
                 updatedAt: createDate(day: 15, month: 12, year: 2025, hour: 7, minute: 31, second: 35),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 15, month: 12, year: 2025, hour: 7, minute: 43, second: 24),
                 insuranceName: "Astir",
                 insuranceNumber: "227455",
@@ -180,15 +173,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[73]
+                patient: patients[73]
             ),
             Surgery(
                 surgeryId: "C2025-V6QT6",
                 date: createDate(day: 13, month: 12, year: 2025, hour: 9, minute: 41, second: 8),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 13, month: 12, year: 2025, hour: 9, minute: 42, second: 28),
                 updatedAt: createDate(day: 16, month: 12, year: 2025, hour: 13, minute: 55, second: 27),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 16, month: 12, year: 2025, hour: 13, minute: 55, second: 27),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -200,15 +193,15 @@ extension Surgery {
                 proposedProcedure: "Ureteroureteroanastomose",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[20]
+                patient: patients[20]
             ),
             Surgery(
                 surgeryId: "C2025-QKY87",
                 date: createDate(day: 13, month: 12, year: 2025, hour: 8, minute: 6, second: 34),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 13, month: 12, year: 2025, hour: 8, minute: 8, second: 14),
                 updatedAt: createDate(day: 13, month: 12, year: 2025, hour: 8, minute: 8, second: 14),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 11, minute: 46, second: 36),
                 insuranceName: "Unimed",
                 insuranceNumber: "1069902005646009",
@@ -221,15 +214,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[31]
+                patient: patients[31]
             ),
             Surgery(
                 surgeryId: "C2025-KJYXG",
                 date: createDate(day: 12, month: 12, year: 2025, hour: 9, minute: 28, second: 53),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 12, month: 12, year: 2025, hour: 9, minute: 31, second: 55),
                 updatedAt: createDate(day: 12, month: 12, year: 2025, hour: 17, minute: 1, second: 16),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 25, month: 12, year: 2025, hour: 21, minute: 17, second: 40),
                 insuranceName: "Particular",
                 insuranceNumber: "1276005000",
@@ -242,15 +235,15 @@ extension Surgery {
                 proposedProcedure: "Transgenitalização",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[97]
+                patient: patients[97]
             ),
             Surgery(
                 surgeryId: "C2025-YV32D",
                 date: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 22, second: 47),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 23, second: 58),
                 updatedAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 23, second: 58),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 30, second: 25),
                 insuranceName: "Unimed",
                 insuranceNumber: "014629900007654004",
@@ -262,15 +255,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[100]
+                patient: patients[100]
             ),
             Surgery(
                 surgeryId: "C2025-V309E",
                 date: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 57, second: 11),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 11, month: 12, year: 2025, hour: 8, minute: 1, second: 27),
                 updatedAt: createDate(day: 11, month: 12, year: 2025, hour: 8, minute: 1, second: 27),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 11, month: 12, year: 2025, hour: 8, minute: 2, second: 16),
                 insuranceName: "Astir",
                 insuranceNumber: "0147079",
@@ -282,15 +275,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[46]
+                patient: patients[46]
             ),
             Surgery(
                 surgeryId: "C2025-I5SSG",
                 date: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 39, second: 23),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 40, second: 30),
                 updatedAt: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 40, second: 30),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 53, second: 34),
                 insuranceName: "Unimed",
                 insuranceNumber: "08650004444118011",
@@ -302,15 +295,15 @@ extension Surgery {
                 proposedProcedure: "Fistulectomia Perineal",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[72]
+                patient: patients[72]
             ),
             Surgery(
                 surgeryId: "C2025-JPC95",
                 date: createDate(day: 11, month: 12, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 43, second: 17),
                 updatedAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 43, second: 17),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 44, second: 3),
                 insuranceName: "Astir",
                 insuranceNumber: "0007234",
@@ -322,15 +315,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[27]
+                patient: patients[27]
             ),
             Surgery(
                 surgeryId: "C2025-BOKSC",
                 date: createDate(day: 10, month: 12, year: 2025, hour: 8, minute: 55, second: 57),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 10, month: 12, year: 2025, hour: 8, minute: 57, second: 19),
                 updatedAt: createDate(day: 10, month: 12, year: 2025, hour: 9, minute: 3, second: 15),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 14, month: 12, year: 2025, hour: 11, minute: 19, second: 49),
                 insuranceName: "Unimed",
                 insuranceNumber: "01069802071616116",
@@ -342,15 +335,69 @@ extension Surgery {
                 proposedProcedure: "Retirada de Duplo J",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[55]
+                patient: patients[55]
+            ),
+            Surgery(
+                surgeryId: "C2025-PTVQD",
+                date: createDate(day: 3, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
+                createdBy: user,
+                createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 48, second: 24),
+                updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 58, second: 39),
+                updatedBy: user,
+                lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 58, second: 39),
+                insuranceName: "Unimed",
+                insuranceNumber: "1067445000371010",
+                mainSurgeon: "Dr. Eliakim Massuqueto",
+                hospital: "Hospital 9 de Julho",
+                weight: 70.0,
+                proposedProcedure: "Uretroplastia",
+                statusRaw: "scheduled",
+                typeRaw: "convenio",
+                patient: patients[85]
+            ),
+            Surgery(
+                surgeryId: "C2025-AZTUU",
+                date: createDate(day: 13, month: 7, year: 2025, hour: 0, minute: 0, second: 0),
+                createdBy: user,
+                createdAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 24, second: 13),
+                updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 9, minute: 52, second: 1),
+                updatedBy: user,
+                lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 9, minute: 52, second: 1),
+                insuranceName: "Unimed",
+                insuranceNumber: "1067468000201106",
+                mainSurgeon: "Dr. Eliakim Massuqueto",
+                hospital: "Hospital 9 de Julho",
+                weight: 20.0,
+                proposedProcedure: "Postectomia",
+                statusRaw: "scheduled",
+                typeRaw: "convenio",
+                patient: patients[95]
+            ),
+            Surgery(
+                surgeryId: "C2025-VT2A5",
+                date: createDate(day: 12, month: 7, year: 2025, hour: 0, minute: 0, second: 0),
+                createdBy: user,
+                createdAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 26, second: 49),
+                updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 27, second: 40),
+                updatedBy: user,
+                lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 27, second: 40),
+                insuranceName: "Particular",
+                insuranceNumber: "-",
+                mainSurgeon: "Dr. Eliakim Massuqueto",
+                hospital: "Hospital 9 de Julho",
+                weight: 8.0,
+                proposedProcedure: "Postectomia",
+                statusRaw: "scheduled",
+                typeRaw: "convenio",
+                patient: patients[45]
             ),
             Surgery(
                 surgeryId: "C2025-KLC57",
                 date: createDate(day: 9, month: 12, year: 2025, hour: 8, minute: 0, second: 54),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 9, month: 12, year: 2025, hour: 8, minute: 3, second: 52),
                 updatedAt: createDate(day: 9, month: 12, year: 2025, hour: 8, minute: 32, second: 27),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 11, month: 12, year: 2025, hour: 19, minute: 20, second: 34),
                 insuranceName: "Fusex",
                 insuranceNumber: "05926708214",
@@ -363,15 +410,15 @@ extension Surgery {
                 proposedProcedure: "Fratura 4º Metacarpo MSE",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[49]
+                patient: patients[49]
             ),
             Surgery(
                 surgeryId: "C2025-V7FCT",
                 date: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 53, second: 42),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 54, second: 55),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 54, second: 55),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 55, second: 51),
                 insuranceName: "Astir",
                 insuranceNumber: "0006688",
@@ -383,15 +430,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia ",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[67]
+                patient: patients[67]
             ),
             Surgery(
                 surgeryId: "C2025-UBEXB",
                 date: createDate(day: 5, month: 12, year: 2025, hour: 9, minute: 7, second: 9),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 5, month: 12, year: 2025, hour: 9, minute: 8, second: 32),
                 updatedAt: createDate(day: 9, month: 12, year: 2025, hour: 12, minute: 47, second: 12),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 9, month: 12, year: 2025, hour: 12, minute: 47, second: 12),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -403,15 +450,15 @@ extension Surgery {
                 proposedProcedure: "Orquidopexia VLP, Postectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[89]
+                patient: patients[89]
             ),
             Surgery(
                 surgeryId: "C2025-TZ8QK",
                 date: createDate(day: 5, month: 12, year: 2025, hour: 7, minute: 35, second: 53),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 5, month: 12, year: 2025, hour: 7, minute: 36, second: 53),
                 updatedAt: createDate(day: 6, month: 12, year: 2025, hour: 7, minute: 33, second: 4),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 55, second: 59),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -423,15 +470,15 @@ extension Surgery {
                 proposedProcedure: "Fistulectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[87]
+                patient: patients[87]
             ),
             Surgery(
                 surgeryId: "C2025-4MP5C",
                 date: createDate(day: 3, month: 12, year: 2025, hour: 21, minute: 59, second: 54),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 4, month: 12, year: 2025, hour: 22, minute: 0, second: 22),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 53, second: 58),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 9, month: 12, year: 2025, hour: 15, minute: 58, second: 19),
                 insuranceName: "Bradesco",
                 insuranceNumber: "610581580001033",
@@ -444,15 +491,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[11]
+                patient: patients[11]
             ),
             Surgery(
                 surgeryId: "C2025-XKSL7",
                 date: createDate(day: 3, month: 12, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 59, second: 19),
                 updatedAt: createDate(day: 11, month: 12, year: 2025, hour: 9, minute: 31, second: 21),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 11, month: 12, year: 2025, hour: 9, minute: 31, second: 21),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -464,15 +511,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia ",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[91]
+                patient: patients[91]
             ),
             Surgery(
                 surgeryId: "C2025-K1LA3",
                 date: createDate(day: 3, month: 12, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 9, month: 12, year: 2025, hour: 15, minute: 55, second: 28),
                 updatedAt: createDate(day: 9, month: 12, year: 2025, hour: 15, minute: 55, second: 48),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 9, month: 12, year: 2025, hour: 15, minute: 57, second: 25),
                 insuranceName: "Bradesco",
                 insuranceNumber: "775244000094022",
@@ -485,15 +532,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia, Orquidopexia VLP, Herniorrafia Umbilical ",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[96]
+                patient: patients[96]
             ),
             Surgery(
                 surgeryId: "C2025-0J2B2",
                 date: createDate(day: 30, month: 11, year: 2025, hour: 22, minute: 27, second: 27),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 4, month: 12, year: 2025, hour: 22, minute: 28, second: 1),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 5, second: 30),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 5, second: 30),
                 insuranceName: "Unimed",
                 insuranceNumber: "01068421653887",
@@ -506,15 +553,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[62]
+                patient: patients[62]
             ),
             Surgery(
                 surgeryId: "C2025-X7DBB",
                 date: createDate(day: 30, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 39, second: 24),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 39, second: 50),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 41, second: 25),
                 insuranceName: "Bradesco",
                 insuranceNumber: "610528820001021",
@@ -527,15 +574,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[54]
+                patient: patients[54]
             ),
             Surgery(
                 surgeryId: "C2025-LLU1O",
                 date: createDate(day: 30, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 43, second: 34),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 1, second: 25),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 1, second: 25),
                 insuranceName: "Unimed",
                 insuranceNumber: "8350004584611004",
@@ -548,15 +595,15 @@ extension Surgery {
                 proposedProcedure: "Tratamento Doença de Peyronie",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[12]
+                patient: patients[12]
             ),
             Surgery(
                 surgeryId: "C2025-5828C",
                 date: createDate(day: 29, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 24, second: 31),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 24, second: 57),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 26, second: 17),
                 insuranceName: "Bradesco",
                 insuranceNumber: "843958400329004 ",
@@ -568,15 +615,15 @@ extension Surgery {
                 proposedProcedure: "Reitrada de Duplo J",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[43]
+                patient: patients[43]
             ),
             Surgery(
                 surgeryId: "C2025-NP68J",
                 date: createDate(day: 29, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 30, second: 23),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 30, second: 23),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 31, second: 32),
                 insuranceName: "Bradesco",
                 insuranceNumber: "610037850001036",
@@ -589,15 +636,15 @@ extension Surgery {
                 proposedProcedure: "Orquidopexia, Postectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[24]
+                patient: patients[24]
             ),
             Surgery(
                 surgeryId: "C2025-XWIOP",
                 date: createDate(day: 29, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 34, second: 40),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 6, second: 39),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 6, second: 39),
                 insuranceName: "Unimed",
                 insuranceNumber: "1069801000635110",
@@ -610,15 +657,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[1]
+                patient: patients[1]
             ),
             Surgery(
                 surgeryId: "C2025-SLZ5B",
                 date: createDate(day: 25, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 49, second: 21),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 58, second: 3),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 58, second: 3),
                 insuranceName: "Unimed",
                 insuranceNumber: "01607001000001003",
@@ -630,15 +677,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta, Colonoscopia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[23]
+                patient: patients[23]
             ),
             Surgery(
                 surgeryId: "C2025-VAL48",
                 date: createDate(day: 25, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 20, second: 14),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 58, second: 40),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 58, second: 40),
                 insuranceName: "Unimed",
                 insuranceNumber: "01060086000107007",
@@ -650,15 +697,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[88]
+                patient: patients[88]
             ),
             Surgery(
                 surgeryId: "C2025-788O5",
                 date: createDate(day: 24, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 11, minute: 38, second: 35),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 0, second: 26),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 0, second: 26),
                 insuranceName: "Unimed",
                 insuranceNumber: "3361200018780010",
@@ -671,15 +718,15 @@ extension Surgery {
                 proposedProcedure: "Gastroplastia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[63]
+                patient: patients[63]
             ),
             Surgery(
                 surgeryId: "C2025-FOQLA",
                 date: createDate(day: 24, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 11, minute: 46, second: 7),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 5, second: 32),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 5, second: 32),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -691,15 +738,15 @@ extension Surgery {
                 proposedProcedure: "Gastroplastia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[52]
+                patient: patients[52]
             ),
             Surgery(
                 surgeryId: "C2025-7VI5I",
                 date: createDate(day: 24, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 24, second: 34),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 26, second: 17),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 26, second: 17),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -711,15 +758,15 @@ extension Surgery {
                 proposedProcedure: "Colecistectomia VLP",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[25]
+                patient: patients[25]
             ),
             Surgery(
                 surgeryId: "C2025-95POR",
                 date: createDate(day: 24, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 38, second: 29),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 54, second: 56),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 54, second: 56),
                 insuranceName: "Bradesco",
                 insuranceNumber: "610215970001032",
@@ -732,15 +779,15 @@ extension Surgery {
                 proposedProcedure: "Colecistectomia VLP",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[70]
+                patient: patients[70]
             ),
             Surgery(
                 surgeryId: "C2025-F6D69",
                 date: createDate(day: 21, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 10, minute: 46, second: 18),
                 updatedAt: createDate(day: 15, month: 12, year: 2025, hour: 17, minute: 42, second: 7),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 15, month: 12, year: 2025, hour: 17, minute: 42, second: 7),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -752,15 +799,15 @@ extension Surgery {
                 proposedProcedure: "Retirada de balão gástrico",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[65]
+                patient: patients[65]
             ),
             Surgery(
                 surgeryId: "C2025-TLCON",
                 date: createDate(day: 21, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 10, minute: 50, second: 47),
                 updatedAt: createDate(day: 11, month: 12, year: 2025, hour: 9, minute: 21, second: 14),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 11, month: 12, year: 2025, hour: 9, minute: 21, second: 14),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -772,15 +819,15 @@ extension Surgery {
                 proposedProcedure: "Tratamento de Fístula Perianal",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[0]
+                patient: patients[0]
             ),
             Surgery(
                 surgeryId: "C2025-0B8A8",
                 date: createDate(day: 19, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 10, minute: 40, second: 26),
                 updatedAt: createDate(day: 15, month: 12, year: 2025, hour: 17, minute: 40, second: 58),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 15, month: 12, year: 2025, hour: 17, minute: 40, second: 58),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -792,15 +839,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta, Colonoscopia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[22]
+                patient: patients[22]
             ),
             Surgery(
                 surgeryId: "C2025-6ML2S",
                 date: createDate(day: 3, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 50, second: 27),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 17, second: 9),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 17, second: 9),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -812,15 +859,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia, Herniorrafia Umbilical, Orquidopexia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[102]
+                patient: patients[102]
             ),
             Surgery(
                 surgeryId: "C2025-6AAZZ",
                 date: createDate(day: 1, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 7, month: 12, year: 2025, hour: 20, minute: 2, second: 18),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 21, minute: 40, second: 48),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 21, minute: 40, second: 48),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -832,15 +879,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[6]
+                patient: patients[6]
             ),
             Surgery(
                 surgeryId: "C2025-74BSS",
                 date: createDate(day: 1, month: 11, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 7, month: 12, year: 2025, hour: 20, minute: 8, second: 55),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 17, second: 21),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 17, second: 21),
                 insuranceName: "Particular",
                 insuranceNumber: "0",
@@ -852,15 +899,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[94]
+                patient: patients[94]
             ),
             Surgery(
                 surgeryId: "C2025-DSB1S",
                 date: createDate(day: 31, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 33, second: 52),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 34, second: 10),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 34, second: 10),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -870,15 +917,15 @@ extension Surgery {
                 proposedProcedure: "Extração Dentária",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[56]
+                patient: patients[56]
             ),
             Surgery(
                 surgeryId: "C2025-8PLTE",
                 date: createDate(day: 29, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 13, minute: 58, second: 36),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 13, minute: 59, second: 9),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 13, minute: 59, second: 9),
                 insuranceName: "Astir",
                 insuranceNumber: "213861",
@@ -888,15 +935,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[18]
+                patient: patients[18]
             ),
             Surgery(
                 surgeryId: "C2025-VH96U",
                 date: createDate(day: 29, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 1, second: 29),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 2, second: 33),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 2, second: 33),
                 insuranceName: "Astir",
                 insuranceNumber: "216183",
@@ -906,15 +953,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[18]
+                patient: patients[18]
             ),
             Surgery(
                 surgeryId: "C2025-SRNX4",
                 date: createDate(day: 28, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 44, second: 27),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 44, second: 54),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 44, second: 54),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -924,15 +971,15 @@ extension Surgery {
                 proposedProcedure: "Fistulectomia Anal",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[48]
+                patient: patients[48]
             ),
             Surgery(
                 surgeryId: "C2025-QMN3D",
                 date: createDate(day: 28, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 5, second: 22),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 5, second: 54),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 5, second: 54),
                 insuranceName: "Astir",
                 insuranceNumber: "0235164",
@@ -942,15 +989,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[5]
+                patient: patients[5]
             ),
             Surgery(
                 surgeryId: "C2025-SCQCE",
                 date: createDate(day: 25, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 29, second: 22),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 40, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 40, second: 29),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -960,15 +1007,15 @@ extension Surgery {
                 proposedProcedure: "Retirada Duplo J",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[83]
+                patient: patients[83]
             ),
             Surgery(
                 surgeryId: "C2025-4SGNK",
                 date: createDate(day: 25, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 8, second: 56),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 2, second: 30),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 25, month: 12, year: 2025, hour: 19, minute: 19, second: 4),
                 insuranceName: "Unimed",
                 insuranceNumber: "09941751261186108",
@@ -978,15 +1025,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[28]
+                patient: patients[28]
             ),
             Surgery(
                 surgeryId: "C2025-J0K1H",
                 date: createDate(day: 24, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 11, second: 58),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 13, second: 56),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 13, second: 56),
                 insuranceName: "Unimed",
                 insuranceNumber: "00798677862053001",
@@ -996,15 +1043,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[40]
+                patient: patients[40]
             ),
             Surgery(
                 surgeryId: "C2025-5X372",
                 date: createDate(day: 22, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 47, second: 26),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 47, second: 44),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 47, second: 44),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1014,15 +1061,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia ",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[53]
+                patient: patients[53]
             ),
             Surgery(
                 surgeryId: "C2025-PVY0P",
                 date: createDate(day: 20, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 27, second: 3),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 27, second: 20),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 27, second: 20),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1032,15 +1079,15 @@ extension Surgery {
                 proposedProcedure: "Cistostomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[84]
+                patient: patients[84]
             ),
             Surgery(
                 surgeryId: "C2025-TL4AF",
                 date: createDate(day: 20, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 18, second: 58),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 19, second: 41),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 19, second: 41),
                 insuranceName: "Unimed",
                 insuranceNumber: "08650004475440012",
@@ -1050,15 +1097,15 @@ extension Surgery {
                 proposedProcedure: "Colecistectomia VLP",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[17]
+                patient: patients[17]
             ),
             Surgery(
                 surgeryId: "C2025-KV9GW",
                 date: createDate(day: 20, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 23, second: 14),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 24, second: 26),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 24, second: 26),
                 insuranceName: "Innova",
                 insuranceNumber: "2025060000780",
@@ -1068,15 +1115,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[21]
+                patient: patients[21]
             ),
             Surgery(
                 surgeryId: "C2025-S5PMA",
                 date: createDate(day: 20, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 27, second: 18),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 28, second: 1),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 28, second: 1),
                 insuranceName: "Astir",
                 insuranceNumber: "300210075",
@@ -1086,15 +1133,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[26]
+                patient: patients[26]
             ),
             Surgery(
                 surgeryId: "C2025-QFLGG",
                 date: createDate(day: 19, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 20, second: 33),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 20, second: 57),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 20, second: 57),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1104,15 +1151,15 @@ extension Surgery {
                 proposedProcedure: "Hipospádia Proximal",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[81]
+                patient: patients[81]
             ),
             Surgery(
                 surgeryId: "C2025-C8056",
                 date: createDate(day: 19, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 23, second: 18),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 23, second: 39),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 23, second: 39),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1122,15 +1169,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[60]
+                patient: patients[60]
             ),
             Surgery(
                 surgeryId: "C2025-IGMBQ",
                 date: createDate(day: 18, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 46, second: 39),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 57, second: 30),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 57, second: 30),
                 insuranceName: "Unimed",
                 insuranceNumber: "5454",
@@ -1141,15 +1188,15 @@ extension Surgery {
                 proposedProcedure: "Pieloplastia  Videolaparoscópica",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[55]
+                patient: patients[55]
             ),
             Surgery(
                 surgeryId: "C2025-E9QNK",
                 date: createDate(day: 16, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 8, minute: 55, second: 16),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 16, minute: 13, second: 21),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 16, minute: 13, second: 21),
                 insuranceName: "Fusex",
                 insuranceNumber: "822020000",
@@ -1159,15 +1206,15 @@ extension Surgery {
                 proposedProcedure: "Blefaroplastia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[16]
+                patient: patients[16]
             ),
             Surgery(
                 surgeryId: "C2025-VERMB",
                 date: createDate(day: 16, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 5, second: 36),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 6, second: 13),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 6, second: 13),
                 insuranceName: "Fusex",
                 insuranceNumber: "35926432600 ",
@@ -1177,15 +1224,15 @@ extension Surgery {
                 proposedProcedure: "Correção Estrabismo",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[61]
+                patient: patients[61]
             ),
             Surgery(
                 surgeryId: "C2025-OG33I",
                 date: createDate(day: 14, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 56, second: 54),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 57, second: 51),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 57, second: 51),
                 insuranceName: "Bradesco",
                 insuranceNumber: "775464037346000",
@@ -1195,15 +1242,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[36]
+                patient: patients[36]
             ),
             Surgery(
                 surgeryId: "C2025-F2VKV",
                 date: createDate(day: 14, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 15, minute: 0, second: 34),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 15, minute: 1, second: 12),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 15, minute: 1, second: 12),
                 insuranceName: "Astir",
                 insuranceNumber: "50210",
@@ -1213,15 +1260,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[3]
+                patient: patients[3]
             ),
             Surgery(
                 surgeryId: "C2025-OP0V6",
                 date: createDate(day: 8, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 15, second: 43),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 16, second: 3),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 26, month: 12, year: 2025, hour: 9, minute: 58, second: 58),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1231,15 +1278,15 @@ extension Surgery {
                 proposedProcedure: "Orquidopexia",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[78]
+                patient: patients[78]
             ),
             Surgery(
                 surgeryId: "C2025-1GKAB",
                 date: createDate(day: 7, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 40, second: 4),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 41, second: 30),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 41, second: 30),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1249,15 +1296,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia ",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[2]
+                patient: patients[2]
             ),
             Surgery(
                 surgeryId: "C2025-3TU5C",
                 date: createDate(day: 6, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 10, second: 46),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 11, second: 38),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 11, second: 38),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1267,15 +1314,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[80]
+                patient: patients[80]
             ),
             Surgery(
                 surgeryId: "C2025-GTCYY",
                 date: createDate(day: 4, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 50, second: 23),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 50, second: 49),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 50, second: 49),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1285,15 +1332,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia ",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[71]
+                patient: patients[71]
             ),
             Surgery(
                 surgeryId: "C2025-P1DFV",
                 date: createDate(day: 3, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 37, second: 1),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 37, second: 31),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 37, second: 31),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1303,15 +1350,15 @@ extension Surgery {
                 proposedProcedure: "Retirada de Balão Intragástrico",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[37]
+                patient: patients[37]
             ),
             Surgery(
                 surgeryId: "C2025-Y7UL8",
                 date: createDate(day: 1, month: 10, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 50, second: 45),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 52, second: 31),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 52, second: 31),
                 insuranceName: "Unimed",
                 insuranceNumber: "02716749000004001",
@@ -1321,15 +1368,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[50]
+                patient: patients[50]
             ),
             Surgery(
                 surgeryId: "C2025-UHODD",
                 date: createDate(day: 30, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 7, second: 55),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 8, second: 7),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 8, second: 7),
                 insuranceName: "Astir",
                 insuranceNumber: "0085901",
@@ -1339,15 +1386,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[58]
+                patient: patients[58]
             ),
             Surgery(
                 surgeryId: "C2025-EPFM3",
                 date: createDate(day: 29, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 10, second: 22),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 10, second: 37),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 10, second: 37),
                 insuranceName: "Unimed",
                 insuranceNumber: "08650004545509008",
@@ -1357,15 +1404,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[86]
+                patient: patients[86]
             ),
             Surgery(
                 surgeryId: "C2025-DKIA3",
                 date: createDate(day: 27, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 12, second: 39),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 13, second: 12),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 13, second: 12),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1375,15 +1422,15 @@ extension Surgery {
                 proposedProcedure: "Correção de Hidrocele",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[8]
+                patient: patients[8]
             ),
             Surgery(
                 surgeryId: "C2025-OU9XI",
                 date: createDate(day: 26, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 15, second: 39),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 15, second: 56),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 15, second: 56),
                 insuranceName: "Unimed",
                 insuranceNumber: "865000442154000",
@@ -1393,15 +1440,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta ",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[42]
+                patient: patients[42]
             ),
             Surgery(
                 surgeryId: "C2025-HVU1R",
                 date: createDate(day: 26, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 16, second: 48),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 22, second: 35),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 8, minute: 2, second: 9),
                 insuranceName: "Unimed",
                 insuranceNumber: "865000442154000",
@@ -1411,15 +1458,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[42]
+                patient: patients[42]
             ),
             Surgery(
                 surgeryId: "C2025-60O7V",
                 date: createDate(day: 24, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 49, second: 25),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 49, second: 45),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 49, second: 45),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1429,15 +1476,15 @@ extension Surgery {
                 proposedProcedure: "Retirada de Duplo J",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[51]
+                patient: patients[51]
             ),
             Surgery(
                 surgeryId: "C2025-0WK83",
                 date: createDate(day: 24, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 6, second: 4),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 56, second: 32),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 56, second: 32),
                 insuranceName: "Unimed",
                 insuranceNumber: "01067446000072615",
@@ -1448,15 +1495,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[34]
+                patient: patients[34]
             ),
             Surgery(
                 surgeryId: "C2025-B7WA3",
                 date: createDate(day: 24, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 9, second: 12),
                 updatedAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 9, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 26, month: 12, year: 2025, hour: 10, minute: 31, second: 20),
                 insuranceName: "Postal Saúde",
                 insuranceNumber: "0185783072010281",
@@ -1466,15 +1513,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[98]
+                patient: patients[98]
             ),
             Surgery(
                 surgeryId: "C2025-N3VVU",
                 date: createDate(day: 24, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 12, second: 7),
                 updatedAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 12, second: 19),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 12, second: 19),
                 insuranceName: "Geap",
                 insuranceNumber: "1301012476910059",
@@ -1484,15 +1531,15 @@ extension Surgery {
                 proposedProcedure: "Endoscopia Digestiva Alta",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[92]
+                patient: patients[92]
             ),
             Surgery(
                 surgeryId: "C2025-4YHQJ",
                 date: createDate(day: 23, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 14, second: 3),
                 updatedAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 15, second: 37),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 15, second: 37),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1502,15 +1549,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[68]
+                patient: patients[68]
             ),
             Surgery(
                 surgeryId: "C2025-7WVC8",
                 date: createDate(day: 23, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 17, second: 51),
                 updatedAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 18, second: 37),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 18, second: 37),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1520,15 +1567,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[66]
+                patient: patients[66]
             ),
             Surgery(
                 surgeryId: "C2025-FE65A",
                 date: createDate(day: 23, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 30, second: 5),
                 updatedAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 30, second: 26),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 22, month: 12, year: 2025, hour: 9, minute: 57, second: 44),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1540,15 +1587,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[74]
+                patient: patients[74]
             ),
             Surgery(
                 surgeryId: "C2025-TNR9K",
                 date: createDate(day: 23, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 37, second: 42),
                 updatedAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 38, second: 5),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 21, month: 12, year: 2025, hour: 11, minute: 6, second: 8),
                 insuranceName: "Geap",
                 insuranceNumber: "1401013809310087",
@@ -1560,15 +1607,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[32]
+                patient: patients[32]
             ),
             Surgery(
                 surgeryId: "C2025-SBZYA",
                 date: createDate(day: 22, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 32, second: 44),
                 updatedAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 32, second: 57),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 21, month: 12, year: 2025, hour: 21, minute: 12, second: 50),
                 insuranceName: "Bradesco",
                 insuranceNumber: "719669000019007",
@@ -1580,15 +1627,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "finished",
                 typeRaw: "convenio",
-                patient: samplePatients[76]
+                patient: patients[76]
             ),
             Surgery(
                 surgeryId: "C2025-G0U53",
                 date: createDate(day: 20, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 10, minute: 43, second: 55),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 44, second: 51),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 44, second: 51),
                 insuranceName: "Bradesco",
                 insuranceNumber: "880829700019023",
@@ -1599,15 +1646,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[59]
+                patient: patients[59]
             ),
             Surgery(
                 surgeryId: "C2025-MHFWM",
                 date: createDate(day: 20, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 45, second: 13),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 45, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 45, second: 29),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1618,15 +1665,15 @@ extension Surgery {
                 proposedProcedure: "Cesariana",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[82]
+                patient: patients[82]
             ),
             Surgery(
                 surgeryId: "C2025-FMF0K",
                 date: createDate(day: 20, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 19, second: 3),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 22, second: 0),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 22, second: 0),
                 insuranceName: "Unimed",
                 insuranceNumber: "1060015000854407",
@@ -1636,15 +1683,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[19]
+                patient: patients[19]
             ),
             Surgery(
                 surgeryId: "C2025-MZFAI",
                 date: createDate(day: 20, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 21, second: 19),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 21, second: 48),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 11, minute: 40, second: 30),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1655,15 +1702,15 @@ extension Surgery {
                 proposedProcedure: "Cesariana",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[93]
+                patient: patients[93]
             ),
             Surgery(
                 surgeryId: "C2025-YKYM5",
                 date: createDate(day: 20, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 25, second: 3),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 25, second: 41),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 9, minute: 32, second: 20),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1673,15 +1720,15 @@ extension Surgery {
                 proposedProcedure: "Implante Prótese Peniana",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[84]
+                patient: patients[84]
             ),
             Surgery(
                 surgeryId: "C2025-NSLCV",
                 date: createDate(day: 19, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 16, minute: 5, second: 33),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 16, minute: 7, second: 57),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 25, month: 12, year: 2025, hour: 15, minute: 12, second: 59),
                 insuranceName: "Saúde Caixa",
                 insuranceNumber: "0101425144030102",
@@ -1692,15 +1739,15 @@ extension Surgery {
                 proposedProcedure: "Pieloplastia Laparoscópica",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[75]
+                patient: patients[75]
             ),
             Surgery(
                 surgeryId: "C2025-I9AEL",
                 date: createDate(day: 19, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 35, second: 3),
                 updatedAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 59, second: 53),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 59, second: 53),
                 insuranceName: "Saúde Caixa",
                 insuranceNumber: "0101425144030102",
@@ -1710,15 +1757,15 @@ extension Surgery {
                 proposedProcedure: "Implante Cateter Central",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[75]
+                patient: patients[75]
             ),
             Surgery(
                 surgeryId: "C2025-LDJHO",
                 date: createDate(day: 19, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 38, second: 2),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 41, second: 7),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 41, second: 7),
                 insuranceName: "Unimed",
                 insuranceNumber: "0320000077148193",
@@ -1729,15 +1776,15 @@ extension Surgery {
                 proposedProcedure: "Vesicostomia e Reconstrução de Parede Abdominal",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[41]
+                patient: patients[41]
             ),
             Surgery(
                 surgeryId: "C2025-NU5YW",
                 date: createDate(day: 18, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 32, second: 59),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 33, second: 19),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 33, second: 19),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1747,15 +1794,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[90]
+                patient: patients[90]
             ),
             Surgery(
                 surgeryId: "C2025-XL78K",
                 date: createDate(day: 16, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 16, minute: 1, second: 2),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 16, minute: 1, second: 17),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 16, minute: 1, second: 17),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1766,15 +1813,15 @@ extension Surgery {
                 proposedProcedure: "Cesariana",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[4]
+                patient: patients[4]
             ),
             Surgery(
                 surgeryId: "C2025-YHR5I",
                 date: createDate(day: 13, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 55, second: 9),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 58, second: 44),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 26, month: 12, year: 2025, hour: 9, minute: 24, second: 7),
                 insuranceName: "Unimed",
                 insuranceNumber: "08650003320834027",
@@ -1786,15 +1833,15 @@ extension Surgery {
                 proposedProcedure: "Cesariana",
                 statusRaw: "inProgress",
                 typeRaw: "convenio",
-                patient: samplePatients[38]
+                patient: patients[38]
             ),
             Surgery(
                 surgeryId: "C2025-KCCA0",
                 date: createDate(day: 9, month: 9, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 46, second: 34),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 53, second: 20),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 53, second: 20),
                 insuranceName: "Unimed",
                 insuranceNumber: "1067418000079002",
@@ -1804,15 +1851,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[64]
+                patient: patients[64]
             ),
             Surgery(
                 surgeryId: "C2025-AV2P2",
                 date: createDate(day: 30, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 19, minute: 56, second: 36),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 6, second: 14),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 6, second: 14),
                 insuranceName: "Sulamerica",
                 insuranceNumber: "55788888474416990109",
@@ -1823,15 +1870,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[30]
+                patient: patients[30]
             ),
             Surgery(
                 surgeryId: "C2025-8ILVA",
                 date: createDate(day: 28, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 19, minute: 59, second: 11),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 52, second: 38),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 52, second: 38),
                 insuranceName: "Astir",
                 insuranceNumber: "290980",
@@ -1841,15 +1888,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[14]
+                patient: patients[14]
             ),
             Surgery(
                 surgeryId: "C2025-LUKPO",
                 date: createDate(day: 27, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 4, second: 53),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 22, minute: 29, second: 36),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 22, minute: 29, second: 36),
                 insuranceName: "Bradesco",
                 insuranceNumber: "772391046477031",
@@ -1860,15 +1907,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia, Herniorrafia Inguinal, Orquidopexia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[7]
+                patient: patients[7]
             ),
             Surgery(
                 surgeryId: "C2025-05BY3",
                 date: createDate(day: 23, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 10, second: 0),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 11, second: 19),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 11, second: 19),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1878,15 +1925,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia, Retirada Duplo J, Herniorrafia Umbilical",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[29]
+                patient: patients[29]
             ),
             Surgery(
                 surgeryId: "C2025-X7J55",
                 date: createDate(day: 21, month: 8, year: 2025, hour: 21, minute: 26, second: 24),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 27, second: 4),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 53, second: 0),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 53, second: 0),
                 insuranceName: "Astir",
                 insuranceNumber: "56766",
@@ -1896,15 +1943,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[57]
+                patient: patients[57]
             ),
             Surgery(
                 surgeryId: "C2025-L4XXM",
                 date: createDate(day: 21, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 12, second: 18),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 10, minute: 45, second: 58),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 10, minute: 45, second: 58),
                 insuranceName: "Geap",
                 insuranceNumber: "2001013692850018",
@@ -1914,15 +1961,15 @@ extension Surgery {
                 proposedProcedure: "Troca de Prótese Peniana",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[77]
+                patient: patients[77]
             ),
             Surgery(
                 surgeryId: "C2025-Q1QJY",
                 date: createDate(day: 21, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 23, second: 20),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 24, second: 22),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 24, second: 22),
                 insuranceName: "Unimed",
                 insuranceNumber: "3360088000480002",
@@ -1932,15 +1979,15 @@ extension Surgery {
                 proposedProcedure: "Hemorroidectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[79]
+                patient: patients[79]
             ),
             Surgery(
                 surgeryId: "C2025-TIWT8",
                 date: createDate(day: 17, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 29, second: 48),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 39, second: 49),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 39, second: 49),
                 insuranceName: "Bradesco",
                 insuranceNumber: "897827900019035",
@@ -1951,15 +1998,15 @@ extension Surgery {
                 proposedProcedure: "Osteossíntese de Tíbia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[9]
+                patient: patients[9]
             ),
             Surgery(
                 surgeryId: "C2025-ITLQH",
                 date: createDate(day: 17, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 37, second: 23),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 40, second: 2),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 40, second: 2),
                 insuranceName: "Bradesco",
                 insuranceNumber: "897827900019035",
@@ -1970,15 +2017,15 @@ extension Surgery {
                 proposedProcedure: "Reconstrução de Pálpebras",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[9]
+                patient: patients[9]
             ),
             Surgery(
                 surgeryId: "C2025-7NVZI",
                 date: createDate(day: 16, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 47, second: 33),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 47, second: 54),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 47, second: 54),
                 insuranceName: "Particular",
                 insuranceNumber: "-",
@@ -1988,15 +2035,15 @@ extension Surgery {
                 proposedProcedure: "Reimplante Ureteral",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[51]
+                patient: patients[51]
             ),
             Surgery(
                 surgeryId: "C2025-5L86D",
                 date: createDate(day: 13, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 57, second: 19),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 22, minute: 5, second: 37),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 22, minute: 5, second: 37),
                 insuranceName: "Bradesco",
                 insuranceNumber: "610620230001022",
@@ -2006,15 +2053,15 @@ extension Surgery {
                 proposedProcedure: "Ureterorrenolitotripsia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[47]
+                patient: patients[47]
             ),
             Surgery(
                 surgeryId: "C2025-2LFKO",
                 date: createDate(day: 13, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 27, second: 43),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 32, second: 3),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 32, second: 3),
                 insuranceName: "Unimed",
                 insuranceNumber: "1067415000148603",
@@ -2025,15 +2072,15 @@ extension Surgery {
                 proposedProcedure: "Postectomia, Herniorrafia inguinal, Orquidopexia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[39]
+                patient: patients[39]
             ),
             Surgery(
                 surgeryId: "C2025-FCEUT",
                 date: createDate(day: 13, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 35, second: 22),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 38, second: 27),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 38, second: 27),
                 insuranceName: "Unimed",
                 insuranceNumber: "0",
@@ -2043,15 +2090,15 @@ extension Surgery {
                 proposedProcedure: "Reconstrução Ligamento Cruzado Anterior",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[44]
+                patient: patients[44]
             ),
             Surgery(
                 surgeryId: "C2025-07Q9W",
                 date: createDate(day: 13, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 41, second: 38),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 42, second: 36),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 42, second: 36),
                 insuranceName: "Unimed",
                 insuranceNumber: "9700020009285282",
@@ -2061,15 +2108,15 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[10]
+                patient: patients[10]
             ),
             Surgery(
                 surgeryId: "C2025-BH7E4",
                 date: createDate(day: 12, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 45, second: 7),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 45, second: 17),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 45, second: 17),
                 insuranceName: "Astir",
                 insuranceNumber: "0157350",
@@ -2079,69 +2126,16 @@ extension Surgery {
                 proposedProcedure: "Colonoscopia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[13]
+                patient: patients[13]
             ),
-            Surgery(
-                surgeryId: "C2025-PTVQD",
-                date: createDate(day: 3, month: 8, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
-                createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 48, second: 24),
-                updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 58, second: 39),
-                updatedBy: sampleUser,
-                lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 58, second: 39),
-                insuranceName: "Unimed",
-                insuranceNumber: "1067445000371010",
-                mainSurgeon: "Dr. Eliakim Massuqueto",
-                hospital: "Hospital 9 de Julho",
-                weight: 70.0,
-                proposedProcedure: "Uretroplastia",
-                statusRaw: "scheduled",
-                typeRaw: "convenio",
-                patient: samplePatients[85]
-            ),
-            Surgery(
-                surgeryId: "C2025-AZTUU",
-                date: createDate(day: 13, month: 7, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
-                createdAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 24, second: 13),
-                updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 9, minute: 52, second: 1),
-                updatedBy: sampleUser,
-                lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 9, minute: 52, second: 1),
-                insuranceName: "Unimed",
-                insuranceNumber: "1067468000201106",
-                mainSurgeon: "Dr. Eliakim Massuqueto",
-                hospital: "Hospital 9 de Julho",
-                weight: 20.0,
-                proposedProcedure: "Postectomia",
-                statusRaw: "scheduled",
-                typeRaw: "convenio",
-                patient: samplePatients[95]
-            ),
-            Surgery(
-                surgeryId: "C2025-VT2A5",
-                date: createDate(day: 12, month: 7, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
-                createdAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 26, second: 49),
-                updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 27, second: 40),
-                updatedBy: sampleUser,
-                lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 27, second: 40),
-                insuranceName: "Particular",
-                insuranceNumber: "-",
-                mainSurgeon: "Dr. Eliakim Massuqueto",
-                hospital: "Hospital 9 de Julho",
-                weight: 8.0,
-                proposedProcedure: "Postectomia",
-                statusRaw: "scheduled",
-                typeRaw: "convenio",
-                patient: samplePatients[45]
-            ),
+            
             Surgery(
                 surgeryId: "C2025-LKU3L",
                 date: createDate(day: 12, month: 7, year: 2025, hour: 0, minute: 0, second: 0),
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 30, second: 18),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 17, minute: 5, second: 25),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 17, minute: 5, second: 25),
                 insuranceName: "Unimed",
                 insuranceNumber: "1067415000044107 ",
@@ -2151,13 +2145,10 @@ extension Surgery {
                 proposedProcedure: "Postectomia",
                 statusRaw: "scheduled",
                 typeRaw: "convenio",
-                patient: samplePatients[69]
+                patient: patients[69]
             )
         ]
     }
-
-    
-    
     private static func createDate(day: Int, month: Int, year: Int, hour: Int = 0, minute: Int = 0, second: Int = 0) -> Date {
         var components = DateComponents()
         components.day = day
@@ -2169,3 +2160,13 @@ extension Surgery {
         return Calendar.current.date(from: components) ?? Date()
     }
 }
+
+            
+            
+//        ]
+//    }
+//
+//    
+//    
+
+//}

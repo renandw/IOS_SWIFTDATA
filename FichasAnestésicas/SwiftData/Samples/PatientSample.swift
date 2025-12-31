@@ -7,30 +7,18 @@
 import Foundation
 
 extension Patient {
-    
-    static var samplePatients: [Patient] {
-        let sampleUser = User(
-            userId: "56A8D8C6-3143-4D75-A90D-E4B57C40ADAC",
-            name: "Renan Dantas Wrobel",
-            crm: "4794-RO",
-            rqe: "2516",
-            phone: "(69) 98132-8798",
-            emailAddress: "renandw@me.com",
-            createdAt: createDate(day: 25, month: 11, year: 2025, hour: 10, minute: 29, second: 4),
-            updatedAt: createDate(day: 2, month: 12, year: 2025, hour: 22, minute: 45, second: 22)
-        )
-        
-        return [
+    static func samples(createdBy user: User) -> [Patient] {
+         [
             Patient(
                 patientId: "77D7B61D-DC5D-4A53-B765-CEDE53FB09D9",
                 cns: "000000000000000",
                 name: "Ademar Gonçalves Ulhioa",
                 birthDate: createDate(day: 20, month: 10, year: 1960),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 10, minute: 49, second: 33),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 10, minute: 49, second: 33),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 11, month: 12, year: 2025, hour: 9, minute: 21, second: 14)
             ),
             Patient(
@@ -39,10 +27,10 @@ extension Patient {
                 name: "Alexandre Sérgio Gonçalves Bouez",
                 birthDate: createDate(day: 19, month: 11, year: 2015),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 32, second: 33),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 32, second: 33),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 6, second: 39)
             ),
             Patient(
@@ -51,10 +39,10 @@ extension Patient {
                 name: "Alyssa Gabrielly Lemos Ferreira",
                 birthDate: createDate(day: 13, month: 3, year: 2005),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 39, second: 6),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 39, second: 6),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 41, second: 30)
             ),
             Patient(
@@ -63,10 +51,10 @@ extension Patient {
                 name: "André Wallace Rodrigues Sanches",
                 birthDate: createDate(day: 9, month: 9, year: 1999),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 59, second: 27),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 59, second: 27),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 15, minute: 1, second: 12)
             ),
             Patient(
@@ -75,10 +63,10 @@ extension Patient {
                 name: "Andressa Eufrosino Banin",
                 birthDate: createDate(day: 18, month: 6, year: 1993),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 59, second: 34),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 59, second: 34),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 16, minute: 1, second: 17)
             ),
             Patient(
@@ -87,10 +75,10 @@ extension Patient {
                 name: "Arlene Maria Lima da Costa",
                 birthDate: createDate(day: 9, month: 11, year: 1961),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 4, second: 29),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 4, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 5, second: 54)
             ),
             Patient(
@@ -99,10 +87,10 @@ extension Patient {
                 name: "Auxiliadora Rodrigues Barbosa",
                 birthDate: createDate(day: 28, month: 8, year: 1963),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 7, month: 12, year: 2025, hour: 20, minute: 1, second: 29),
                 updatedAt: createDate(day: 7, month: 12, year: 2025, hour: 20, minute: 1, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 21, minute: 40, second: 48)
             ),
             Patient(
@@ -111,10 +99,10 @@ extension Patient {
                 name: "Benício Galvão Trindade Teixeira",
                 birthDate: createDate(day: 27, month: 9, year: 2021),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 0, second: 33),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 0, second: 33),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 22, minute: 29, second: 36)
             ),
             Patient(
@@ -123,10 +111,10 @@ extension Patient {
                 name: "Bento Raphael Ananias Delcaro",
                 birthDate: createDate(day: 19, month: 6, year: 2023),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 11, second: 29),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 11, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 13, second: 12)
             ),
             Patient(
@@ -135,10 +123,10 @@ extension Patient {
                 name: "Bernardo Gerhardt Feder",
                 birthDate: createDate(day: 25, month: 7, year: 2015),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 28, second: 35),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 28, second: 35),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 40, second: 2)
             ),
             Patient(
@@ -148,10 +136,10 @@ extension Patient {
                 name: "Caio Cesar Silva Cruz",
                 birthDate: createDate(day: 18, month: 2, year: 1989),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 40, second: 12),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 40, second: 12),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 42, second: 36)
             ),
             Patient(
@@ -160,10 +148,10 @@ extension Patient {
                 name: "Daniel Maia Marques Prioto",
                 birthDate: createDate(day: 28, month: 12, year: 2013),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 4, month: 12, year: 2025, hour: 21, minute: 59, second: 54),
                 updatedAt: createDate(day: 4, month: 12, year: 2025, hour: 21, minute: 59, second: 54),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 53, second: 58)
             ),
             Patient(
@@ -172,10 +160,10 @@ extension Patient {
                 name: "Delner do Carmo Azevedo",
                 birthDate: createDate(day: 3, month: 9, year: 1988),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 5, month: 12, year: 2025, hour: 14, minute: 31, second: 18),
                 updatedAt: createDate(day: 5, month: 12, year: 2025, hour: 14, minute: 31, second: 18),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 1, second: 25)
             ),
             Patient(
@@ -184,10 +172,10 @@ extension Patient {
                 name: "Deuzirene da Silva Granjeiro",
                 birthDate: createDate(day: 11, month: 3, year: 1973),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 43, second: 47),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 43, second: 47),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 45, second: 17)
             ),
             Patient(
@@ -196,10 +184,10 @@ extension Patient {
                 name: "Edcarlos Oliveira Araujo",
                 birthDate: createDate(day: 5, month: 3, year: 1977),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 19, minute: 58, second: 2),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 19, minute: 58, second: 2),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 52, second: 38)
             ),
             Patient(
@@ -208,10 +196,10 @@ extension Patient {
                 name: "Edenilce de Souza Silva",
                 birthDate: createDate(day: 2, month: 2, year: 1993),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 22, month: 12, year: 2025, hour: 8, minute: 21, second: 49),
                 updatedAt: createDate(day: 22, month: 12, year: 2025, hour: 8, minute: 21, second: 49),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 22, month: 12, year: 2025, hour: 9, minute: 39, second: 53)
             ),
             Patient(
@@ -220,10 +208,10 @@ extension Patient {
                 name: "Elcy da Silva Duarte",
                 birthDate: createDate(day: 28, month: 12, year: 1960),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 8, minute: 53, second: 25),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 8, minute: 53, second: 25),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 16, minute: 13, second: 21)
             ),
             Patient(
@@ -232,10 +220,10 @@ extension Patient {
                 name: "Eliane Aguiar da Silva Magalhães",
                 birthDate: createDate(day: 20, month: 3, year: 1973),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 16, second: 57),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 16, second: 57),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 19, second: 41)
             ),
             Patient(
@@ -244,10 +232,10 @@ extension Patient {
                 name: "Elias Fernandes de Oliveira",
                 birthDate: createDate(day: 24, month: 7, year: 1982),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 13, minute: 57, second: 29),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 13, minute: 57, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 2, second: 33)
             ),
             Patient(
@@ -256,10 +244,10 @@ extension Patient {
                 name: "Elissandra Brito",
                 birthDate: createDate(day: 16, month: 7, year: 1978),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 18, second: 10),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 18, second: 10),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 22, second: 0)
             ),
             Patient(
@@ -268,10 +256,10 @@ extension Patient {
                 name: "Emanuely dos Santos Leite",
                 birthDate: createDate(day: 7, month: 11, year: 2014),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 13, month: 12, year: 2025, hour: 9, minute: 38, second: 40),
                 updatedAt: createDate(day: 13, month: 12, year: 2025, hour: 9, minute: 38, second: 40),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 16, month: 12, year: 2025, hour: 13, minute: 55, second: 27)
             ),
             Patient(
@@ -280,10 +268,10 @@ extension Patient {
                 name: "Erika Freita Farias",
                 birthDate: createDate(day: 2, month: 7, year: 1993),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 22, second: 4),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 22, second: 4),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 24, second: 26)
             ),
             Patient(
@@ -292,10 +280,10 @@ extension Patient {
                 name: "Eudaldo Alves Pinheiro",
                 birthDate: createDate(day: 16, month: 2, year: 1964),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 10, minute: 38, second: 34),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 10, minute: 38, second: 34),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 15, month: 12, year: 2025, hour: 17, minute: 40, second: 58)
             ),
             Patient(
@@ -304,10 +292,10 @@ extension Patient {
                 name: "Eunice Coelho da Conceição",
                 birthDate: createDate(day: 7, month: 9, year: 1957),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 47, second: 48),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 47, second: 48),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 58, second: 3)
             ),
             Patient(
@@ -316,10 +304,10 @@ extension Patient {
                 name: "Filipe Lima Repizo",
                 birthDate: createDate(day: 12, month: 12, year: 2017),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 27, second: 29),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 27, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 30, second: 23)
             ),
             Patient(
@@ -328,10 +316,10 @@ extension Patient {
                 name: "Florinda Ferreira",
                 birthDate: createDate(day: 8, month: 3, year: 1953),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 23, second: 14),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 23, second: 14),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 26, second: 17)
             ),
             Patient(
@@ -340,10 +328,10 @@ extension Patient {
                 name: "Francisca Marta Souza Rabelo",
                 birthDate: createDate(day: 17, month: 9, year: 1974),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 26, second: 0),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 26, second: 0),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 28, second: 1)
             ),
             Patient(
@@ -352,10 +340,10 @@ extension Patient {
                 name: "Francisco Onofre da Silva",
                 birthDate: createDate(day: 5, month: 1, year: 1952),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 42, second: 20),
                 updatedAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 42, second: 20),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 43, second: 17)
             ),
             Patient(
@@ -364,10 +352,10 @@ extension Patient {
                 name: "Gabriel Paranguassu Fagundes Alves de Souza",
                 birthDate: createDate(day: 14, month: 8, year: 2017),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 7, second: 23),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 7, second: 23),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 2, second: 30)
             ),
             Patient(
@@ -376,10 +364,10 @@ extension Patient {
                 name: "Heitor Carvalho Lima",
                 birthDate: createDate(day: 25, month: 11, year: 2024),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 8, second: 22),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 8, second: 22),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 11, second: 19)
             ),
             Patient(
@@ -388,10 +376,10 @@ extension Patient {
                 name: "Heitor Lucas da Silva",
                 birthDate: createDate(day: 2, month: 4, year: 2018),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 19, minute: 54, second: 50),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 19, minute: 54, second: 50),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 20, minute: 6, second: 14)
             ),
             Patient(
@@ -400,10 +388,10 @@ extension Patient {
                 name: "Ícaro Bernardo Lemos Batista",
                 birthDate: createDate(day: 19, month: 4, year: 2019),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 13, month: 12, year: 2025, hour: 8, minute: 6, second: 34),
                 updatedAt: createDate(day: 14, month: 12, year: 2025, hour: 14, minute: 20, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 14, month: 12, year: 2025, hour: 14, minute: 20, second: 29)
             ),
             Patient(
@@ -412,10 +400,10 @@ extension Patient {
                 name: "Irene Firmino Dos Santos",
                 birthDate: createDate(day: 22, month: 3, year: 1968),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 35, second: 58),
                 updatedAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 35, second: 58),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 38, second: 5)
             ),
             Patient(
@@ -424,10 +412,10 @@ extension Patient {
                 name: "Irismar Marques de Carvalho Rodrigues",
                 birthDate: createDate(day: 30, month: 3, year: 1979),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 12, second: 44),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 12, second: 44),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 13, second: 31)
             ),
             Patient(
@@ -436,10 +424,10 @@ extension Patient {
                 name: "Isaac Sbarzi Campos",
                 birthDate: createDate(day: 24, month: 9, year: 2022),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 4, second: 41),
                 updatedAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 4, second: 41),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 56, second: 32)
             ),
             Patient(
@@ -448,10 +436,10 @@ extension Patient {
                 name: "Jacob Silva Goncçalves",
                 birthDate: createDate(day: 27, month: 9, year: 1977),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 27, month: 12, year: 2025, hour: 20, minute: 31, second: 28),
                 updatedAt: createDate(day: 27, month: 12, year: 2025, hour: 20, minute: 31, second: 28),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 27, month: 12, year: 2025, hour: 20, minute: 34, second: 26)
             ),
             Patient(
@@ -461,10 +449,10 @@ extension Patient {
                 name: "Jaqueline Gomes Assunção Souza",
                 birthDate: createDate(day: 7, month: 7, year: 1986),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 54, second: 20),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 54, second: 20),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 57, second: 51)
             ),
             Patient(
@@ -473,10 +461,10 @@ extension Patient {
                 name: "Jéssica Peixoto Cantanhede",
                 birthDate: createDate(day: 12, month: 6, year: 1980),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 36, second: 5),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 36, second: 5),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 37, second: 31)
             ),
             Patient(
@@ -485,10 +473,10 @@ extension Patient {
                 name: "Jéssica Vieira",
                 birthDate: createDate(day: 11, month: 11, year: 1993),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 54, second: 3),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 54, second: 3),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 58, second: 44)
             ),
             Patient(
@@ -497,10 +485,10 @@ extension Patient {
                 name: "João Lourenço Galdolfo Pauleti",
                 birthDate: createDate(day: 6, month: 9, year: 2022),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 26, second: 42),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 26, second: 42),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 32, second: 3)
             ),
             Patient(
@@ -509,10 +497,10 @@ extension Patient {
                 name: "João Lucas de Oliveira Teske",
                 birthDate: createDate(day: 2, month: 12, year: 2016),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 10, second: 13),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 10, second: 13),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 13, second: 56)
             ),
             Patient(
@@ -521,10 +509,10 @@ extension Patient {
                 name: "João Rafael Quelins",
                 birthDate: createDate(day: 23, month: 6, year: 2012),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 36, second: 15),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 41, second: 25),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 41, second: 25)
             ),
             Patient(
@@ -533,10 +521,10 @@ extension Patient {
                 name: "Joice Gomes Souza",
                 birthDate: createDate(day: 28, month: 2, year: 1984),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 14, second: 2),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 14, second: 2),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 22, second: 35)
             ),
             Patient(
@@ -545,10 +533,10 @@ extension Patient {
                 name: "Jonathan Villalba",
                 birthDate: createDate(day: 10, month: 5, year: 1985),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 23, second: 11),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 23, second: 11),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 24, second: 57)
             ),
             Patient(
@@ -557,10 +545,10 @@ extension Patient {
                 name: "José Airton Aguiar de Castro",
                 birthDate: createDate(day: 8, month: 11, year: 1961),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 33, second: 58),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 33, second: 58),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 38, second: 27)
             ),
             Patient(
@@ -569,10 +557,10 @@ extension Patient {
                 name: "José Antônio Felix Sampaio",
                 birthDate: createDate(day: 23, month: 11, year: 2024),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 25, second: 44),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 25, second: 44),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 27, second: 40)
             ),
             Patient(
@@ -581,10 +569,10 @@ extension Patient {
                 name: "José Carlos Flores de Oliveira",
                 birthDate: createDate(day: 31, month: 3, year: 1970),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 57, second: 11),
                 updatedAt: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 57, second: 11),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 11, month: 12, year: 2025, hour: 8, minute: 1, second: 27)
             ),
             Patient(
@@ -593,10 +581,10 @@ extension Patient {
                 name: "José Gabriel Oliveira Lara",
                 birthDate: createDate(day: 17, month: 11, year: 2024),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 55, second: 57),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 55, second: 57),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 22, minute: 5, second: 37)
             ),
             Patient(
@@ -605,10 +593,10 @@ extension Patient {
                 name: "Josué Marciel da Silva",
                 birthDate: createDate(day: 3, month: 5, year: 1989),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 43, second: 32),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 43, second: 32),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 44, second: 54)
             ),
             Patient(
@@ -617,10 +605,10 @@ extension Patient {
                 name: "Juan Karlos de Souza Gomes",
                 birthDate: createDate(day: 19, month: 7, year: 2006),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 9, month: 12, year: 2025, hour: 8, minute: 0, second: 54),
                 updatedAt: createDate(day: 9, month: 12, year: 2025, hour: 8, minute: 0, second: 54),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 9, month: 12, year: 2025, hour: 8, minute: 32, second: 27)
             ),
             Patient(
@@ -629,10 +617,10 @@ extension Patient {
                 name: "Jucelino Boveva",
                 birthDate: createDate(day: 2, month: 2, year: 1977),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 49, second: 29),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 49, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 14, minute: 52, second: 31)
             ),
             Patient(
@@ -641,10 +629,10 @@ extension Patient {
                 name: "Lavínia Borges de Lima",
                 birthDate: createDate(day: 1, month: 2, year: 2025),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 46, second: 14),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 46, second: 14),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 49, second: 45)
             ),
             Patient(
@@ -653,10 +641,10 @@ extension Patient {
                 name: "Leandro Marcelo Munhol Horbach",
                 birthDate: createDate(day: 18, month: 9, year: 1982),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 11, minute: 44, second: 16),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 11, minute: 44, second: 16),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 5, second: 32)
             ),
             Patient(
@@ -665,10 +653,10 @@ extension Patient {
                 name: "Lívia Souza Da Silva",
                 birthDate: createDate(day: 7, month: 11, year: 1983),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 46, second: 42),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 46, second: 42),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 47, second: 44)
             ),
             Patient(
@@ -677,10 +665,10 @@ extension Patient {
                 name: "Lorenzo Avello Correa de Souza",
                 birthDate: createDate(day: 17, month: 7, year: 2016),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 36, second: 45),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 36, second: 45),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 39, second: 50)
             ),
             Patient(
@@ -689,10 +677,10 @@ extension Patient {
                 name: "Lucas de Oliveira Schimer",
                 birthDate: createDate(day: 16, month: 3, year: 2018),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 10, month: 12, year: 2025, hour: 8, minute: 55, second: 57),
                 updatedAt: createDate(day: 10, month: 12, year: 2025, hour: 8, minute: 55, second: 57),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 57, second: 30)
             ),
             Patient(
@@ -701,10 +689,10 @@ extension Patient {
                 name: "Lucas Lauvers Muniz",
                 birthDate: createDate(day: 10, month: 10, year: 2011),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 32, second: 50),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 32, second: 50),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 34, second: 10)
             ),
             Patient(
@@ -713,10 +701,10 @@ extension Patient {
                 name: "Lucileia Alves da Rosa",
                 birthDate: createDate(day: 4, month: 4, year: 1973),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 25, second: 55),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 26, second: 18),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 53, second: 0)
             ),
             Patient(
@@ -725,10 +713,10 @@ extension Patient {
                 name: "Lucinete Honorato Silva Fernandes",
                 birthDate: createDate(day: 21, month: 6, year: 1971),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 6, second: 48),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 6, second: 48),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 8, second: 7)
             ),
             Patient(
@@ -737,10 +725,10 @@ extension Patient {
                 name: "Luis Roberto Nascimento",
                 birthDate: createDate(day: 25, month: 7, year: 2017),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 10, minute: 41, second: 28),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 10, minute: 41, second: 28),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 44, second: 51)
             ),
             Patient(
@@ -749,10 +737,10 @@ extension Patient {
                 name: "Luiz Fernando Aguiar Braz Da Silva",
                 birthDate: createDate(day: 10, month: 5, year: 2010),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 22, second: 14),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 22, second: 14),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 23, second: 39)
             ),
             Patient(
@@ -761,10 +749,10 @@ extension Patient {
                 name: "Luiz Henrique de Souza Prestes",
                 birthDate: createDate(day: 24, month: 7, year: 2000),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 4, second: 0),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 4, second: 0),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 6, second: 13)
             ),
             Patient(
@@ -773,10 +761,10 @@ extension Patient {
                 name: "Marcelo Augusto Silva Coutinho Morbec",
                 birthDate: createDate(day: 16, month: 1, year: 1984),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 4, month: 12, year: 2025, hour: 22, minute: 27, second: 27),
                 updatedAt: createDate(day: 4, month: 12, year: 2025, hour: 22, minute: 27, second: 27),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 5, second: 30)
             ),
             Patient(
@@ -785,10 +773,10 @@ extension Patient {
                 name: "Marcelo Maria Lopes",
                 birthDate: createDate(day: 4, month: 4, year: 1979),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 11, minute: 36, second: 32),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 11, minute: 36, second: 32),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 17, minute: 0, second: 26)
             ),
             Patient(
@@ -797,10 +785,10 @@ extension Patient {
                 name: "Marcelo Silva Pamplona",
                 birthDate: createDate(day: 22, month: 1, year: 1988),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 45, second: 40),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 52, second: 29),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 53, second: 20)
             ),
             Patient(
@@ -809,10 +797,10 @@ extension Patient {
                 name: "Marcos Antônio Alves Junior",
                 birthDate: createDate(day: 16, month: 5, year: 1984),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 10, minute: 44, second: 15),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 10, minute: 44, second: 15),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 15, month: 12, year: 2025, hour: 17, minute: 42, second: 7)
             ),
             Patient(
@@ -821,10 +809,10 @@ extension Patient {
                 name: "Maria de Nazaré Moreira de Melo",
                 birthDate: createDate(day: 23, month: 7, year: 1946),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 17, second: 13),
                 updatedAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 17, second: 13),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 18, second: 37)
             ),
             Patient(
@@ -833,10 +821,10 @@ extension Patient {
                 name: "Maria Nilda Barbosa da Rocha Lima",
                 birthDate: createDate(day: 10, month: 1, year: 1965),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 53, second: 42),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 53, second: 42),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 54, second: 55)
             ),
             Patient(
@@ -845,10 +833,10 @@ extension Patient {
                 name: "Mario Moreira Melo",
                 birthDate: createDate(day: 19, month: 7, year: 1978),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 13, second: 12),
                 updatedAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 13, second: 12),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 15, second: 37)
             ),
             Patient(
@@ -857,10 +845,10 @@ extension Patient {
                 name: "Miguel de Carvalho Maranhão",
                 birthDate: createDate(day: 10, month: 1, year: 2019),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 29, second: 4),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 29, second: 4),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 17, minute: 5, second: 25)
             ),
             Patient(
@@ -869,10 +857,10 @@ extension Patient {
                 name: "Moisés Araújo Cortes",
                 birthDate: createDate(day: 31, month: 10, year: 1984),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 35, second: 2),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 12, minute: 35, second: 2),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 54, second: 56)
             ),
             Patient(
@@ -881,10 +869,10 @@ extension Patient {
                 name: "Moisés Rangel Pereira",
                 birthDate: createDate(day: 7, month: 5, year: 1992),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 49, second: 23),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 49, second: 23),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 50, second: 49)
             ),
             Patient(
@@ -893,10 +881,10 @@ extension Patient {
                 name: "Mônica Henrique da Silva Cardoso",
                 birthDate: createDate(day: 7, month: 5, year: 1989),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 39, second: 23),
                 updatedAt: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 39, second: 23),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 11, month: 12, year: 2025, hour: 7, minute: 40, second: 30)
             ),
             Patient(
@@ -905,10 +893,10 @@ extension Patient {
                 name: "Mônica Xavier da Silva",
                 birthDate: createDate(day: 21, month: 10, year: 1979),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 15, month: 12, year: 2025, hour: 7, minute: 30, second: 42),
                 updatedAt: createDate(day: 15, month: 12, year: 2025, hour: 7, minute: 30, second: 42),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 15, month: 12, year: 2025, hour: 10, minute: 4, second: 35)
             ),
             Patient(
@@ -917,10 +905,10 @@ extension Patient {
                 name: "Natalino Napoleão da Silva",
                 birthDate: createDate(day: 25, month: 3, year: 1955),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 29, second: 27),
                 updatedAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 30, second: 49),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 30, second: 49)
             ),
             Patient(
@@ -929,10 +917,10 @@ extension Patient {
                 name: "Olivia Moura Barros",
                 birthDate: createDate(day: 6, month: 2, year: 2023),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 16, minute: 3, second: 22),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 16, minute: 3, second: 22),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 59, second: 53)
             ),
             Patient(
@@ -941,10 +929,10 @@ extension Patient {
                 name: "Osmar da Silva Cardoso",
                 birthDate: createDate(day: 9, month: 8, year: 1980),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 31, second: 38),
                 updatedAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 31, second: 38),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 21, month: 12, year: 2025, hour: 9, minute: 32, second: 57)
             ),
             Patient(
@@ -953,10 +941,10 @@ extension Patient {
                 name: "Paulo Franco da Silva",
                 birthDate: createDate(day: 21, month: 9, year: 1954),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 53, second: 18),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 53, second: 18),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 10, minute: 46, second: 36)
             ),
             Patient(
@@ -965,10 +953,10 @@ extension Patient {
                 name: "Pedro Henrique Soares Lima",
                 birthDate: createDate(day: 15, month: 11, year: 2024),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 14, second: 21),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 14, second: 21),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 16, second: 3)
             ),
             Patient(
@@ -977,10 +965,10 @@ extension Patient {
                 name: "Poliana Oliveira Bezerra",
                 birthDate: createDate(day: 11, month: 8, year: 1968),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 22, second: 20),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 22, second: 20),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 21, minute: 24, second: 22)
             ),
             Patient(
@@ -989,10 +977,10 @@ extension Patient {
                 name: "Ravi Cunha de Araújo",
                 birthDate: createDate(day: 4, month: 12, year: 2023),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 9, second: 7),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 9, second: 7),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 11, second: 38)
             ),
             Patient(
@@ -1001,10 +989,10 @@ extension Patient {
                 name: "Ravi Santiago Souza da Silva",
                 birthDate: createDate(day: 19, month: 3, year: 2025),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 19, second: 19),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 19, second: 19),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 20, second: 57)
             ),
             Patient(
@@ -1013,10 +1001,10 @@ extension Patient {
                 name: "Rayana Kauany Barbosa",
                 birthDate: createDate(day: 31, month: 10, year: 1995),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 43, second: 56),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 43, second: 56),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 45, second: 29)
             ),
             Patient(
@@ -1025,10 +1013,10 @@ extension Patient {
                 name: "Rebecca Victória Galvão Maia",
                 birthDate: createDate(day: 1, month: 1, year: 2025),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 28, second: 15),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 28, second: 15),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 40, second: 29)
             ),
             Patient(
@@ -1037,10 +1025,10 @@ extension Patient {
                 name: "Reginaldo Machado Martins",
                 birthDate: createDate(day: 11, month: 6, year: 1957),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 25, second: 46),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 9, minute: 25, second: 46),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 25, second: 41)
             ),
             Patient(
@@ -1049,10 +1037,10 @@ extension Patient {
                 name: "Robson de Souza Monteiro",
                 birthDate: createDate(day: 12, month: 8, year: 1954),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 46, second: 15),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 46, second: 15),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 8, minute: 58, second: 39)
             ),
             Patient(
@@ -1061,10 +1049,10 @@ extension Patient {
                 name: "Ronaldo Laborda dos Santos",
                 birthDate: createDate(day: 9, month: 8, year: 1983),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 9, second: 4),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 9, second: 14),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 10, second: 37)
             ),
             Patient(
@@ -1073,10 +1061,10 @@ extension Patient {
                 name: "Ronilson Rodrigues da Silva",
                 birthDate: createDate(day: 17, month: 9, year: 1991),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 5, month: 12, year: 2025, hour: 7, minute: 35, second: 53),
                 updatedAt: createDate(day: 5, month: 12, year: 2025, hour: 7, minute: 35, second: 53),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 6, month: 12, year: 2025, hour: 7, minute: 33, second: 4)
             ),
             Patient(
@@ -1085,10 +1073,10 @@ extension Patient {
                 name: "Sandro Ricardo Rocha dos Santos",
                 birthDate: createDate(day: 15, month: 12, year: 1972),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 12, second: 58),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 12, second: 58),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 23, month: 12, year: 2025, hour: 16, minute: 58, second: 40)
             ),
             Patient(
@@ -1097,10 +1085,10 @@ extension Patient {
                 name: "Santiago Santos Torres",
                 birthDate: createDate(day: 28, month: 8, year: 2023),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 5, month: 12, year: 2025, hour: 9, minute: 7, second: 9),
                 updatedAt: createDate(day: 5, month: 12, year: 2025, hour: 9, minute: 7, second: 9),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 9, month: 12, year: 2025, hour: 12, minute: 47, second: 12)
             ),
             Patient(
@@ -1109,10 +1097,10 @@ extension Patient {
                 name: "Sebastião Almeida Galdino Junior",
                 birthDate: createDate(day: 14, month: 12, year: 1986),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 32, second: 6),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 32, second: 6),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 17, minute: 33, second: 19)
             ),
             Patient(
@@ -1121,10 +1109,10 @@ extension Patient {
                 name: "Simone Nobre de Lima Carvalho",
                 birthDate: createDate(day: 3, month: 7, year: 1975),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 58, second: 30),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 22, minute: 58, second: 30),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 11, month: 12, year: 2025, hour: 9, minute: 31, second: 21)
             ),
             Patient(
@@ -1133,10 +1121,10 @@ extension Patient {
                 name: "Sonia Maria Alves Teixeira",
                 birthDate: createDate(day: 2, month: 6, year: 1962),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 10, second: 23),
                 updatedAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 10, second: 23),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 12, second: 19)
             ),
             Patient(
@@ -1145,10 +1133,10 @@ extension Patient {
                 name: "Stephane Lima Meireles",
                 birthDate: createDate(day: 8, month: 8, year: 1995),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 20, second: 30),
                 updatedAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 20, second: 30),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 22, minute: 21, second: 48)
             ),
             Patient(
@@ -1157,10 +1145,10 @@ extension Patient {
                 name: "Teophilo Alves de Souza Neto",
                 birthDate: createDate(day: 22, month: 4, year: 1983),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 7, month: 12, year: 2025, hour: 20, minute: 7, second: 32),
                 updatedAt: createDate(day: 7, month: 12, year: 2025, hour: 20, minute: 7, second: 32),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 17, second: 21)
             ),
             Patient(
@@ -1169,10 +1157,10 @@ extension Patient {
                 name: "Theo Honorato Michelin",
                 birthDate: createDate(day: 6, month: 3, year: 2015),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 22, second: 38),
                 updatedAt: createDate(day: 17, month: 12, year: 2025, hour: 22, minute: 22, second: 38),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 9, minute: 52, second: 1)
             ),
             Patient(
@@ -1181,10 +1169,10 @@ extension Patient {
                 name: "Theo Santiago Lobato Braga Gomes",
                 birthDate: createDate(day: 15, month: 4, year: 2025),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 9, month: 12, year: 2025, hour: 15, minute: 51, second: 53),
                 updatedAt: createDate(day: 9, month: 12, year: 2025, hour: 15, minute: 51, second: 53),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 9, month: 12, year: 2025, hour: 15, minute: 55, second: 48)
             ),
             Patient(
@@ -1193,10 +1181,10 @@ extension Patient {
                 name: "Valentina Franco Pereira",
                 birthDate: createDate(day: 14, month: 12, year: 1991),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 12, month: 12, year: 2025, hour: 9, minute: 28, second: 53),
                 updatedAt: createDate(day: 12, month: 12, year: 2025, hour: 9, minute: 28, second: 53),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 12, month: 12, year: 2025, hour: 17, minute: 1, second: 16)
             ),
             Patient(
@@ -1205,10 +1193,10 @@ extension Patient {
                 name: "Vanessa Daiana Rodrigues de Souza Ribeiro",
                 birthDate: createDate(day: 6, month: 5, year: 1988),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 7, second: 23),
                 updatedAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 7, second: 23),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 20, month: 12, year: 2025, hour: 23, minute: 9, second: 29)
             ),
             Patient(
@@ -1217,10 +1205,10 @@ extension Patient {
                 name: "Vanusa Ferreira de Souza",
                 birthDate: createDate(day: 5, month: 6, year: 1991),
                 sex: .female,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 16, month: 12, year: 2025, hour: 7, minute: 35, second: 11),
                 updatedAt: createDate(day: 16, month: 12, year: 2025, hour: 7, minute: 35, second: 11),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 16, month: 12, year: 2025, hour: 7, minute: 36, second: 31)
             ),
             Patient(
@@ -1229,10 +1217,10 @@ extension Patient {
                 name: "Victor Caio Alves Reis",
                 birthDate: createDate(day: 4, month: 9, year: 1999),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 22, second: 47),
                 updatedAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 22, second: 47),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 12, month: 12, year: 2025, hour: 7, minute: 23, second: 58)
             ),
             Patient(
@@ -1241,10 +1229,10 @@ extension Patient {
                 name: "Yuri Matheus Nery",
                 birthDate: createDate(day: 6, month: 2, year: 2003),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 18, month: 12, year: 2025, hour: 7, minute: 59, second: 56),
                 updatedAt: createDate(day: 18, month: 12, year: 2025, hour: 7, minute: 59, second: 56),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 18, month: 12, year: 2025, hour: 8, minute: 1, second: 0)
             ),
             Patient(
@@ -1253,10 +1241,10 @@ extension Patient {
                 name: "Zayan Braga Pinto",
                 birthDate: createDate(day: 20, month: 7, year: 2024),
                 sex: .male,
-                createdBy: sampleUser,
+                createdBy: user,
                 createdAt: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 48, second: 26),
                 updatedAt: createDate(day: 8, month: 12, year: 2025, hour: 7, minute: 48, second: 26),
-                updatedBy: sampleUser,
+                updatedBy: user,
                 lastActivityAt: createDate(day: 19, month: 12, year: 2025, hour: 15, minute: 17, second: 9)
             )
         ]

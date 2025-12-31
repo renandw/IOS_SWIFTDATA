@@ -259,24 +259,29 @@ struct MetadataView: View {
 
 
 #Preview("Lista com samples") {
-    // Usa o mesmo usuário dos samples para que o filtro por userId funcione
-    let samples = Patient.samplePatients
-    let randomIndex = Int.random(in: 1...103)
-    let patient = samples[randomIndex]
-    let sampleUser = samples.first?.createdBy
-    let session = SessionManager()
-    session.currentUser = sampleUser
+    let user = User.sampleUser
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
 
-    // Container SwiftData em memória e preload com samples
+    let session = SessionManager()
+    session.currentUser = user
+
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Patient.self, User.self, configurations: config)
+    let container = try! ModelContainer(
+        for: User.self, Patient.self, Surgery.self,
+        configurations: config
+    )
     let context = container.mainContext
 
-    // Insere os samples apenas uma vez
-    if try! context.fetch(FetchDescriptor<Patient>()).isEmpty {
-        for p in samples { context.insert(p) }
+    // Preload uma única vez
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
         try! context.save()
     }
+
+    let patient = patients.randomElement()!
 
     return NavigationStack {
         PatientDetailsView(patient: patient)
@@ -284,3 +289,4 @@ struct MetadataView: View {
     }
     .modelContainer(container)
 }
+

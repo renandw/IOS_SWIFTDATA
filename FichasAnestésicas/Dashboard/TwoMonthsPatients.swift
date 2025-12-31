@@ -40,12 +40,12 @@ struct TwoMonthsPatients: View {
                 previous: previousAll
             )
         } else {
-            let needle = trimmed.lowercased()
+            let needle = trimmed
             let currentFiltered = currentAll.filter { a in
-                a.surgery.patient.name.lowercased().contains(needle) == true
+                a.surgery.patient.name.localizedStandardContains(needle)
             }
             let previousFiltered = previousAll.filter { a in
-                a.surgery.patient.name.lowercased().contains(needle) == true
+                a.surgery.patient.name.localizedStandardContains(needle)
             }
             return (
                 current: currentFiltered,

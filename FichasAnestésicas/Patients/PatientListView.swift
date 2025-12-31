@@ -134,19 +134,23 @@ struct PatientListView: View {
 
 #Preview("Lista com samples") {
     // Usa o mesmo usuário dos samples para que o filtro por userId funcione
-    let samples = Patient.samplePatients
-    let sampleUser = samples.first?.createdBy
+    let user = User.sampleUser
+    let patients = Patient.samples(createdBy: user)
     let session = SessionManager()
-    session.currentUser = sampleUser
+    session.currentUser = user
 
     // Container SwiftData em memória e preload com samples
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Patient.self, User.self, configurations: config)
+    let container = try! ModelContainer(
+        for: User.self, Patient.self,
+        configurations: config
+    )
     let context = container.mainContext
 
     // Insere os samples apenas uma vez
-    if try! context.fetch(FetchDescriptor<Patient>()).isEmpty {
-        for p in samples { context.insert(p) }
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
         try! context.save()
     }
 
