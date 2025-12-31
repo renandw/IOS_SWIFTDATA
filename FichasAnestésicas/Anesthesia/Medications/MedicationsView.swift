@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum MedicationSheet: Identifiable {
     case create
@@ -188,5 +189,52 @@ struct MedicationsView: View {
             .tint(.blue)
         }
     }
+}
+
+#Preview("Medication • Para uso em Anesthesia DetailsView") {
+    let user = User.sampleUser
+
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
+    let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
+    let anesthesias = Anesthesia.samples(surgeries: surgeries, user: user)
+    let preanesthesias = PreAnesthesia.samples(
+        surgeries: surgeries,
+        shared: shared,
+        user: user
+    )
+
+    let session = SessionManager()
+    session.currentUser = user
+
+    let container = try! ModelContainer(
+        for: User.self,
+           Patient.self,
+           Surgery.self,
+           PreAnesthesia.self,
+        configurations: .init(isStoredInMemoryOnly: true)
+    )
+
+    let context = container.mainContext
+
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
+        preanesthesias.forEach { context.insert($0) }
+        try! context.save()
+    }
+
+    let anesthesia = anesthesias
+        .filter { $0.surgery.preanesthesia != nil }
+        .randomElement()!
+    
+    let pre = preanesthesias.randomElement()!
+
+    return NavigationStack {
+        MedicationsView(anesthesia: anesthesia)
+            .environment(session)
+    }
+    .modelContainer(container)
 }
 

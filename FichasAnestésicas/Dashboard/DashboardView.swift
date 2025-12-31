@@ -74,11 +74,6 @@ struct DashboardView: View {
                       .navigationBarTitleDisplayMode(.large)
                       .toolbar {
                           ToolbarItem(placement: .topBarLeading) {
-//                              NavigationLink {
-//                                  UserListView()
-//                              } label: {
-//                                  Label("Navegar para Lista de Usuários", systemImage: "gear")
-//                              }
                               NavigationLink{
                                   UserDetails(userId: user.userId)
                               } label: {
@@ -90,14 +85,16 @@ struct DashboardView: View {
                                   session.currentUser = nil
                               }
                           }
-//                          ToolbarItem(placement: .topBarTrailing) {
-//                              Button("Sobre", systemImage: "gearshape") {
-//                                  createSampleAnesthesiasExtension()
-//                                  createSampleAnesthesiaDescriptionExtension()
-//                                  createSampleMedicationEntryExtension()
-//                                  createSampleVitalSignEntryExtension()
-//                              }
-//                          }
+                          ToolbarItem(placement: .topBarTrailing) {
+                              
+                              Button("Gerar Shared Extension") {
+                                  do {
+                                      try generatePreAnesthesiaExtension(context: patientContext)
+                                  } catch {
+                                      print("Failed to generate PreAnesthesia extension:", error)
+                                  }
+                              }
+                          }
                       }
                       
                       
@@ -110,6 +107,10 @@ struct DashboardView: View {
           }
       }
     
+    
+    
+
+
     /// Returns a display-friendly version of a full name.
     /// If the name has more than 3 words, returns "first last"; otherwise, returns the original name.
     func displayName(name: String) -> String {
@@ -121,6 +122,164 @@ struct DashboardView: View {
         } else {
             return name
         }
+    }
+    
+    func swiftString(_ value: String?) -> String {
+        value.map { "\"\($0)\"" } ?? "nil"
+    }
+    func swiftBoolNonOptional(_ value: Bool?) -> String {
+        String(value ?? false)
+    }
+    func swiftStringArray(_ value: [String]?) -> String {
+        guard let value else { return "nil" }
+        return "[\(value.map { "\"\($0)\"" }.joined(separator: ", "))]"
+    }
+    func swiftRawEnum(_ value: String?) -> String {
+        value.map { "\"\($0)\"" } ?? "nil"
+    }
+    func swiftRawEnumArray(_ value: [String]?) -> String {
+        guard let value else { return "nil" }
+        return "[\(value.map { "\"\($0)\"" }.joined(separator: ", "))]"
+    }
+    func swiftEnum(_ rawValue: String?) -> String {
+        guard let rawValue else { return "nil" }
+        return ".\(rawValue)"
+    }
+    func swiftMallampatiArray(_ rawValues: [String]?) -> String {
+        let rawValues = rawValues ?? []
+        return "[\(rawValues.map { "MallampatiClassification.\($0)" }.joined(separator: ", "))]"
+    }
+    
+    func swiftRelation<T: AnyObject>(
+        _ object: T?,
+        in array: [T],
+        name: String
+    ) -> String {
+        guard let object,
+              let index = array.firstIndex(where: { $0 === object }) else {
+            return "nil"
+        }
+        return "\(name)[\(index)]"
+    }
+    func swiftStringArrayNonOptional(_ value: [String]?) -> String {
+        let value = value ?? []
+        return "[\(value.map { "\"\($0)\"" }.joined(separator: ", "))]"
+    }
+    
+    func generatePreAnesthesiaExtension(
+        context: ModelContext
+    ) throws {
+
+        let descriptor = FetchDescriptor<PreAnesthesia>(
+            sortBy: [SortDescriptor(\.createdAt)]
+        )
+
+        let entries = try context.fetch(descriptor)
+
+        let surgeries = Array(Set(entries.map(\.surgery)))
+        let sharedList = Array(Set(entries.compactMap(\.shared)))
+
+        print("""
+        extension PreAnesthesia {
+            static func samples(
+                surgeries: [Surgery],
+                shared: [SharedPreAndAnesthesia],
+                user: User
+            ) -> [PreAnesthesia] {
+                return [
+        """)
+
+        for entry in entries {
+
+            let surgeryIndex = surgeries.firstIndex { $0 === entry.surgery }!
+            let sharedValue = "surgeries[\(surgeryIndex)].shared"
+
+            print("""
+                    PreAnesthesia(
+                        preanesthesiaId: "\(entry.preanesthesiaId)",
+                        surgery: surgeries[\(surgeryIndex)],
+                        shared: \(sharedValue),
+                        createdBy: user,
+                        updatedBy: nil,
+                        createdAt: .now,
+                        updatedAt: nil,
+
+                        textField: \(swiftString(entry.textField)),
+
+                        statusRaw: \(swiftRawEnum(entry.statusRaw)),
+
+                        clearenceStatus: \(swiftEnum(entry.clearenceStatusRaw)),
+                        definitiveRecommendationForRevaluationStatusRaw: \(swiftEnum(entry.definitiveRecommendationForRevaluationStatusRaw?.first)),
+                        recommendationForRevaluationStatus: \(swiftEnum(entry.recommendationForRevaluationStatusRaw)),
+
+                        futherRecommendationForRevaluation: \(swiftStringArrayNonOptional(entry.futherRecommendationForRevaluation)),
+
+                        isPregnant: \(entry.isPregnant),
+                        isInfant: \(entry.isInfant),
+                        cardiacComorbities: \(entry.cardiacComorbities),
+                        respiratoryComorbities: \(entry.respiratoryComorbities),
+                        endocrineComorbities: \(entry.endocrineComorbities),
+                        gastrointestinalComorbities: \(entry.gastrointestinalComorbities),
+                        hematologicalComorbities: \(entry.hematologicalComorbities),
+                        imunologicalComorbities: \(swiftBoolNonOptional(entry.imunologicalComorbities)),
+                        musculoskeletalComorbities: \(entry.musculoskeletalComorbities),
+                        genitourologicalComorbities: \(entry.genitourologicalComorbities),
+                        gynecologicalComorbities: \(swiftBoolNonOptional(entry.gynecologicalComorbities)),
+                        androgenicalComorbities: \(swiftBoolNonOptional(entry.androgenicalComorbities)),
+                        neurologicalComorbities: \(entry.neurologicalComorbities),
+                        infectiousComorbities: \(swiftBoolNonOptional(entry.infectiousComorbities)),
+                        oncologicComorbities: \(swiftBoolNonOptional(entry.oncologicComorbities)),
+                        geneticSyndrome: \(entry.geneticSyndrome),
+                        healthyPatient: \(swiftBoolNonOptional(entry.healthyPatient)),
+                        hasAllergies: \(swiftBoolNonOptional(entry.hasAllergies)),
+
+                        surgeryHistory: \(swiftBoolNonOptional(entry.surgeryHistory)),
+                        anesthesiaHistory: \(swiftBoolNonOptional(entry.anesthesiaHistory)),
+
+                        pregnancyDetails: nil,
+                        infantDetails: nil,
+                        oncologyDetails: nil,
+                        cardiologyDetails: nil,
+                        respiratoryDetails: nil,
+                        endocrineDetails: nil,
+                        gastroIntestinalDetails: nil,
+                        hematologyDetails: nil,
+                        imunologyDetails: nil,
+                        musculoskeletalDetails: nil,
+                        genitoUrinaryDetails: nil,
+                        gynecologyDetails: nil,
+                        androgenyDetails: nil,
+                        neurologyDetails: nil,
+                        infectiousDetails: nil,
+                        geneticSyndromeDetails: nil,
+                        surgeryHistoricDetails: nil,
+                        anesthesiaHistoricDetails: nil,
+
+                        isPregnantAge: \(swiftString(entry.isPregnantAge)),
+                        difficultAirwayDetails: nil,
+                        socialHabitsAndEnvironmentDetailsText: \(swiftString(entry.socialHabitsAndEnvironmentDetailsText)),
+                        socialHabitsAndEnvironmentCustomDetails: \(swiftStringArray(entry.socialHabitsAndEnvironmentCustomDetails)),
+            
+                        apfelScoreDetails: \(swiftEnum(entry.apfelScoreDetailsRaw?.first)),
+                        mallampatiClassification: \(swiftMallampatiArray(entry.mallampatiClassificationRaw)),
+
+                        dailyMedications: \(swiftRawEnumArray(entry.dailyMedicationsRaw)),
+                        dailyMedicationsRawDetailsText: \(swiftString(entry.dailyMedicationsDetailsText)),
+                        dailyMedicationsRawCustomDetails: \(swiftStringArray(entry.dailyMedicationsCustomDetails)),
+                        allergiesMedicationsCustomDetails: \(swiftStringArray(entry.allergiesMedicationsCustomDetails)),
+                        laboratoryExams: nil,
+                        imagingExams: nil,
+                        customImagingExams: \(swiftStringArray(entry.customImagingExams)),
+                        physicalExaminationDetailsText: \(swiftString(entry.physicalExaminationDetailsText))
+                    ),
+            """)
+        }
+
+        print("""
+                ]
+            }
+        }
+        """)
     }
     
     // Função auxiliar para formatar datas

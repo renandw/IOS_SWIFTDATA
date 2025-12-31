@@ -1,13 +1,12 @@
 
 import SwiftUI
+import SwiftData
 
 struct IdentificationView: View {
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
     
     @Bindable var anesthesia: Anesthesia
-    let patient: Patient
-    let surgery: Surgery
     let ageContext: AgeContext
     
     @State private var showingAnesthesiaForm = false
@@ -35,7 +34,7 @@ struct IdentificationView: View {
                                 Text("\(anesthesia.surgery.patient.name),")
                                     .fontWeight(.bold)
                                 Text("\(ageContext.ageString(from: anesthesia.surgery.patient.birthDate)),")
-                                Text(patient.sex.sexStringDescription)
+                                Text(anesthesia.surgery.patient.sex.sexStringDescription)
                             }
                             HStack {
                                 Text("Nascimento: \(anesthesia.surgery.patient.birthDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year(.defaultDigits)),")
@@ -193,7 +192,7 @@ struct IdentificationView: View {
                                         
                                     }
                                     Spacer()
-                                    if let anesthesiaEnd = anesthesia.end, let surgeryEnd = surgery.end {
+                                    if let anesthesiaEnd = anesthesia.end, let surgeryEnd = anesthesia.surgery.end {
                                         VStack(alignment: .leading) {
                                             Text("Fim")
                                                 .font(.headline)
@@ -232,7 +231,7 @@ struct IdentificationView: View {
                                     Text("Cirurgia: \(anesthesia.surgery.start?.formatted(date: .abbreviated, time: .shortened) ?? "-" )")
                                     
                                 }
-                                if let anesthesiaEnd = anesthesia.end, let surgeryEnd = surgery.end {
+                                if let anesthesiaEnd = anesthesia.end, let surgeryEnd = anesthesia.surgery.end {
                                     VStack(alignment: .leading) {
                                         Text("Fim")
                                             .font(.headline)
@@ -260,7 +259,7 @@ struct IdentificationView: View {
             .sheet(isPresented: $showingAnesthesiaForm) {
                 if let currentUser = session.currentUser {
                     let viewModel = AnesthesiaFormViewModel(
-                        surgery: surgery,
+                        surgery: anesthesia.surgery,
                         user: currentUser,
                         context: modelContext,
                     )
@@ -272,7 +271,7 @@ struct IdentificationView: View {
                 let repository = SwiftDataSurgeryRepository(context: modelContext, currentUser: session.currentUser!)
                 let financialRepository = SwiftDataFinancialRepository(context: modelContext, currentUser: session.currentUser!)
                 let procedureRepository = SwiftDataCbhpmProcedureRepository(context: modelContext)
-                let viewModel = SurgeryFormViewModel(patient: patient, surgery: surgery, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
+                let viewModel = SurgeryFormViewModel(patient: anesthesia.surgery.patient, surgery: anesthesia.surgery, repository: repository, financialRepository: financialRepository, procedureRepository: procedureRepository, modelContext: modelContext)
                 SurgeryFormView(viewModel: viewModel, mode: .standalone)
             }
             
@@ -283,7 +282,7 @@ struct IdentificationView: View {
                         viewModel: PatientFormViewModel(
                             repository: repository,
                             currentUser: user,
-                            editingPatient: patient
+                            editingPatient: anesthesia.surgery.patient
                         ),
                         selectedPatient: $selectedPatient,
                         mode: .standalone
@@ -308,7 +307,7 @@ struct IdentificationView: View {
     private var topBarButtons: some View {
         HStack(spacing: 8) {
             Button(action: {
-                editingPatient = patient
+                editingPatient = anesthesia.surgery.patient
                 showingForm = true
             }) {
                 Image(systemName: "person.fill")
@@ -320,7 +319,7 @@ struct IdentificationView: View {
             .tint(.blue)
 
             Button(action: {
-                selectedSurgery = surgery
+                selectedSurgery = anesthesia.surgery
             }) {
                 Image(systemName: "stethoscope")
                     .font(.system(size: 16, weight: .regular))
@@ -333,13 +332,60 @@ struct IdentificationView: View {
             Button(action: {
                 showingAnesthesiaForm = true
             }) {
-                Image(systemName: surgery.anesthesia == nil ? "plus" : "syringe.fill")
+                Image(systemName: "syringe.fill")
                     .font(.system(size: 16, weight: .regular))
                     .frame(width: 20, height: 20)
             }
-            .accessibilityLabel(surgery.anesthesia == nil ? "Criar Anestesia" : "Editar Anestesia")
+            .accessibilityLabel("Editar Anestesia")
             .buttonStyle(.glass)
             .tint(.purple)
         }
     }
+}
+
+#Preview("Identification • Para uso em Anesthesia DetailsView") {
+    let user = User.sampleUser
+
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
+    let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
+    let anesthesias = Anesthesia.samples(surgeries: surgeries, user: user)
+    let preanesthesias = PreAnesthesia.samples(
+        surgeries: surgeries,
+        shared: shared,
+        user: user
+    )
+
+    let session = SessionManager()
+    session.currentUser = user
+
+    let container = try! ModelContainer(
+        for: User.self,
+           Patient.self,
+           Surgery.self,
+           PreAnesthesia.self,
+        configurations: .init(isStoredInMemoryOnly: true)
+    )
+
+    let context = container.mainContext
+
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
+        preanesthesias.forEach { context.insert($0) }
+        try! context.save()
+    }
+
+    let anesthesia = anesthesias
+        .filter { $0.surgery.preanesthesia != nil }
+        .randomElement()!
+    
+    let pre = preanesthesias.randomElement()!
+
+    return NavigationStack {
+        IdentificationView(anesthesia: anesthesia, ageContext: .inSurgery(anesthesia.surgery))
+            .environment(session)
+    }
+    .modelContainer(container)
 }

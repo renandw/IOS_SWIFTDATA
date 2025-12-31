@@ -184,7 +184,7 @@ struct SectionContent: View {
     var body: some View {
         switch section {
         case .identificationSection:
-            IdentificationView(anesthesia: anesthesia, patient: patient, surgery: surgery, ageContext: .inSurgery(surgery))
+            IdentificationView(anesthesia: anesthesia, ageContext: .inSurgery(anesthesia.surgery))
         case .apaSection:
             PreAnesthesiaView(anesthesia: anesthesia)
         case .medicationsSection:
@@ -203,3 +203,49 @@ struct SectionContent: View {
 
 //to-do : se anesthesia == nil -> navegar para dashboardview -> proteger subviews em sectioncontent
 
+#Preview("Anesthesia • completo") {
+    let user = User.sampleUser
+
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
+    let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
+    let anesthesias = Anesthesia.samples(surgeries: surgeries, user: user)
+    let preanesthesias = PreAnesthesia.samples(
+        surgeries: surgeries,
+        shared: shared,
+        user: user
+    )
+
+    let session = SessionManager()
+    session.currentUser = user
+
+    let container = try! ModelContainer(
+        for: User.self,
+           Patient.self,
+           Surgery.self,
+           PreAnesthesia.self,
+        configurations: .init(isStoredInMemoryOnly: true)
+    )
+
+    let context = container.mainContext
+
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
+        preanesthesias.forEach { context.insert($0) }
+        try! context.save()
+    }
+
+    let anesthesia = anesthesias
+        .filter { $0.surgery.preanesthesia != nil }
+        .randomElement()!
+    
+    let pre = preanesthesias.randomElement()!
+
+    return NavigationStack {
+        AnesthesiaDetailsView(anesthesia: anesthesia)
+            .environment(session)
+    }
+    .modelContainer(container)
+}

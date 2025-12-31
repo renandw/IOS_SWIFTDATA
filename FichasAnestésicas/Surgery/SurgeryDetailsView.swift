@@ -330,7 +330,7 @@ struct SurgeryDetailsView: View {
                                         .font(.system(size: 16, weight: .regular))
                                         .frame(width: 20, height: 20)
                                         .foregroundStyle(.purple)
-                                    Text("Exportar ficha anestésica")
+                                    Text("Exportar Ficha Anestésica")
                                         .fontWeight(.semibold)
                                         .foregroundStyle(.purple)
                                     Spacer()
@@ -385,7 +385,7 @@ struct SurgeryDetailsView: View {
                                     .font(.system(size: 16, weight: .regular))
                                     .frame(width: 20, height: 20)
                                     .foregroundStyle(.purple)
-                                Text("Exportar ficha avaliação pré-anestésica")
+                                Text("Exportar Avaliação Pré-Anestésica")
                                     .fontWeight(.semibold)
                                     .foregroundStyle(.purple)
                                 Spacer()
@@ -544,6 +544,9 @@ struct SurgeryMetadataView: View {
     let surgeries = Surgery.samples(createdBy: user, patients: patients)
     let financial = Financial.samples(surgeries: surgeries)
     let anesthesia = Anesthesia.samples(surgeries: surgeries, user: user)
+    let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
+    let preanesthesia = PreAnesthesia.samples(surgeries: surgeries, shared: shared, user: user)
+
 
     let session = SessionManager()
     session.currentUser = user
@@ -562,6 +565,7 @@ struct SurgeryMetadataView: View {
         surgeries.forEach { context.insert($0) }
         financial.forEach { context.insert($0) }
         anesthesia.forEach { context.insert($0) }
+        preanesthesia.forEach { context.insert($0) }
         try! context.save()
     }
 
