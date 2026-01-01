@@ -83,9 +83,20 @@ private struct VitalChartContentPrint: View {
     
     // Domínio X (tempo)
     private var xDomain: ClosedRange<Date>? {
-        guard let minT = data.map({ $0.time }).min(),
-              let maxT = data.map({ $0.time }).max() else { return nil }
+        // Collect all relevant times: data points + anesthesia/surgery events
+        var candidates: [Date] = data.map { $0.time }
+        if let aStart = anesthesia.start { candidates.append(aStart) }
+        if let aEnd = anesthesia.end { candidates.append(aEnd) }
+        if let sStart = anesthesia.surgery.start { candidates.append(sStart) }
+        if let sEnd = anesthesia.surgery.end { candidates.append(sEnd) }
+        guard let minT = candidates.min(), let maxT = candidates.max() else { return nil }
         return minT...maxT
+    }
+    
+    private func padded(_ range: ClosedRange<Date>, seconds: TimeInterval = 60) -> ClosedRange<Date> {
+        let lower = range.lowerBound.addingTimeInterval(-seconds)
+        let upper = range.upperBound.addingTimeInterval(seconds)
+        return lower...upper
     }
     
     var body: some View {
@@ -218,7 +229,21 @@ private struct VitalChartContentPrint: View {
                 }
             }
             .chartYScale(domain: yDomain)
-            .chartXScale(domain: xDomain ?? Date()...Date())
+            .chartXScale(domain: {
+                if let domain = xDomain { return padded(domain, seconds: 60) }
+                // Fallback: build a domain from anesthesia/surgery events if no data exists
+                var fallback: [Date] = []
+                if let aStart = anesthesia.start { fallback.append(aStart) }
+                if let aEnd = anesthesia.end { fallback.append(aEnd) }
+                if let sStart = anesthesia.surgery.start { fallback.append(sStart) }
+                if let sEnd = anesthesia.surgery.end { fallback.append(sEnd) }
+                if let minT = fallback.min(), let maxT = fallback.max() {
+                    return padded(minT...maxT, seconds: 60)
+                }
+                // Last resort to avoid a collapsed domain
+                let now = Date()
+                return (now.addingTimeInterval(-60))...(now.addingTimeInterval(60))
+            }())
             .chartXAxis {
                 AxisMarks(values: .automatic(desiredCount: 6)) { value in
                     AxisGridLine().foregroundStyle(Color.gray.opacity(0.3))
@@ -265,3 +290,4 @@ private struct LegendItemPrint: View {
         }
     }
 }
+

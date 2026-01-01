@@ -20,15 +20,17 @@ struct FinancialDashboardView: View {
                             .font(.title2)
                             .fontWeight(.bold)
                     }
+                    
                     Last12MonthsGraphView(
                         surgeries: surgeries
                     )
-                    MonthStatSection(
-                        surgeries: surgeries,
-                        filters: $filters,
-                        isFilterSheetPresented: $isFilterSheetPresented
-                    )
-                    
+                    if !surgeries.isEmpty{
+                        MonthStatSection(
+                            surgeries: surgeries,
+                            filters: $filters,
+                            isFilterSheetPresented: $isFilterSheetPresented
+                        )
+                    }
                 }
                 .padding()
                 .navigationTitle("Financeiro")
@@ -39,18 +41,20 @@ struct FinancialDashboardView: View {
         }
         .toolbar {
             ToolbarItem {
-                if filters.hasActiveFilters {
-                    Button {
-                        isFilterSheetPresented = true
-                    } label: {
-                        Label("Filtros", systemImage: "magnifyingglass")
-                    }
-                    .buttonStyle(.glassProminent)
-                } else {
-                    Button {
-                        isFilterSheetPresented = true
-                    } label: {
-                        Label("Filtros", systemImage: "magnifyingglass")
+                if !surgeries.isEmpty{
+                    if filters.hasActiveFilters {
+                        Button {
+                            isFilterSheetPresented = true
+                        } label: {
+                            Label("Filtros", systemImage: "magnifyingglass")
+                        }
+                        .buttonStyle(.glassProminent)
+                    } else {
+                        Button {
+                            isFilterSheetPresented = true
+                        } label: {
+                            Label("Filtros", systemImage: "magnifyingglass")
+                        }
                     }
                 }
             }
@@ -233,139 +237,139 @@ struct MonthStatSection: View {
                     Spacer()
                     Image(systemName: "chevron.right")
                 }
+                .padding()
                 
             }
             .buttonStyle(.glass)
             
-            Text("Cirurgias Particulares Pendentes: \(particularSurgeries.count)")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            
-            // MARK: valores particulares por cirurgião
-            LazyVGrid(
-                columns: [GridItem(.flexible()), GridItem(.flexible())],
-                spacing: 8
-            ) {
-                ForEach(surgeonCounts, id: \.key) { mainSurgeon, count in
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Image(systemName: "person.fill")
-                                .font(.title3)
-                                .foregroundStyle(.blue)
-                            Spacer()
-                            Text(mainSurgeon)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.primary)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Cirurgias")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                
-                                Text("\(count)")
+            if particularSurgeries.count > 0 {
+                Text("Cirurgias Particulares Pendentes: \(particularSurgeries.count)")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                // MARK: valores particulares por cirurgião
+                LazyVGrid(
+                    columns: [GridItem(.flexible()), GridItem(.flexible())],
+                    spacing: 8
+                ) {
+                    ForEach(surgeonCounts, id: \.key) { mainSurgeon, count in
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Image(systemName: "person.fill")
                                     .font(.title3)
-                                    .fontWeight(.bold)
+                                    .foregroundStyle(.blue)
+                                Spacer()
+                                Text(mainSurgeon)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
                                     .foregroundStyle(.primary)
                             }
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Receita")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                
-                                Text(formatCurrency(surgeonRevenue[mainSurgeon] ?? 0))
-                                    .font(.subheadline)
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(.primary)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Cirurgias")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    Text("\(count)")
+                                        .font(.title3)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.primary)
+                                }
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Receita")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    Text(formatCurrency(surgeonRevenue[mainSurgeon] ?? 0))
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.primary)
+                                }
                             }
                         }
-                    }
-                    .padding(12)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .glassEffect(in: .rect(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(isParticularSurgeonFilterActive(mainSurgeon) ? Color.blue : Color.clear, lineWidth: 2)
-                    )
-                    .scaleEffect(isParticularSurgeonFilterActive(mainSurgeon) ? 0.98 : 1.0)
-                    .animation(.easeInOut(duration: 0.15), value: isParticularSurgeonFilterActive(mainSurgeon))
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        toggleParticularSurgeonFilter(mainSurgeon)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .glassEffect(in: .rect(cornerRadius: 12))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(isParticularSurgeonFilterActive(mainSurgeon) ? Color.blue : Color.clear, lineWidth: 2)
+                        )
+                        .scaleEffect(isParticularSurgeonFilterActive(mainSurgeon) ? 0.98 : 1.0)
+                        .animation(.easeInOut(duration: 0.15), value: isParticularSurgeonFilterActive(mainSurgeon))
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            toggleParticularSurgeonFilter(mainSurgeon)
+                        }
                     }
                 }
             }
             
-            
-            Text("Cirurgias Convênio Pendentes: \(insuranceSurgeries.count)")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            
-            // MARK: valores por convênio
-            LazyVGrid(
-                columns: [GridItem(.flexible()), GridItem(.flexible())],
-                spacing: 8
-            ) {
-                ForEach(insuranceCounts, id: \.key) { insuranceName, count in
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Image(systemName: "building.2.fill")
-                                .font(.title3)
-                                .foregroundStyle(.blue)
-                            Spacer()
-                            Text(insuranceName)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.primary)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Cirurgias")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                
-                                Text("\(count)")
+            if insuranceSurgeries.count > 0 {
+                Text("Cirurgias Convênio Pendentes: \(insuranceSurgeries.count)")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                // MARK: valores por convênio
+                LazyVGrid(
+                    columns: [GridItem(.flexible()), GridItem(.flexible())],
+                    spacing: 8
+                ) {
+                    ForEach(insuranceCounts, id: \.key) { insuranceName, count in
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Image(systemName: "building.2.fill")
                                     .font(.title3)
-                                    .fontWeight(.bold)
+                                    .foregroundStyle(.blue)
+                                Spacer()
+                                Text(insuranceName)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
                                     .foregroundStyle(.primary)
                             }
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Receita")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                
-                                Text(formatCurrency(insuranceRevenue[insuranceName] ?? 0))
-                                    .font(.subheadline)
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(.primary)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Cirurgias")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    Text("\(count)")
+                                        .font(.title3)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.primary)
+                                }
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Receita")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    Text(formatCurrency(insuranceRevenue[insuranceName] ?? 0))
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.primary)
+                                }
                             }
                         }
-                    }
-                    .padding(12)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .glassEffect(in: .rect(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(isInsuranceFilterActive(insuranceName) ? Color.blue : Color.clear, lineWidth: 2)
-                    )
-                    .scaleEffect(isInsuranceFilterActive(insuranceName) ? 0.98 : 1.0)
-                    .animation(.easeInOut(duration: 0.15), value: isInsuranceFilterActive(insuranceName))
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        toggleInsuranceFilter(insuranceName)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .glassEffect(in: .rect(cornerRadius: 12))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(isInsuranceFilterActive(insuranceName) ? Color.blue : Color.clear, lineWidth: 2)
+                        )
+                        .scaleEffect(isInsuranceFilterActive(insuranceName) ? 0.98 : 1.0)
+                        .animation(.easeInOut(duration: 0.15), value: isInsuranceFilterActive(insuranceName))
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            toggleInsuranceFilter(insuranceName)
+                        }
                     }
                 }
             }
-            
             
             
             VStack(alignment: .leading, spacing: 16) {
@@ -504,7 +508,7 @@ struct MonthStatCard: View {
     }
 }
 
-#Preview {
+#Preview("MonthStatCard") {
     MonthStatCard(
         icon: "calendar",
         cardName: "Outubro de 2025",
@@ -518,4 +522,78 @@ struct MonthStatCard: View {
         ),
         iconColor: .green
     )
+}
+
+#Preview("FinancialDashboard") {
+    let user = User.sampleUser
+
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
+    let cbhpm = CbhpmProcedure.samples(surgeries: surgeries)
+    let financial = Financial.samples(surgeries: surgeries)
+    let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
+    let anesthesias = Anesthesia.samples(surgeries: surgeries, user: user)
+    let vitalSigns = VitalSignEntry.samples(anesthesias: anesthesias)
+    let medications = MedicationEntry.samples(anesthesias: anesthesias)
+    let preanesthesias = PreAnesthesia.samples(
+        surgeries: surgeries,
+        shared: shared,
+        user: user
+    )
+
+    let session = SessionManager()
+    session.currentUser = user
+
+    let container = try! ModelContainer(
+        for: User.self,
+           Patient.self,
+           Surgery.self,
+           PreAnesthesia.self,
+        configurations: .init(isStoredInMemoryOnly: true)
+    )
+
+    let context = container.mainContext
+
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
+        cbhpm.forEach { context.insert($0) }
+        financial.forEach { context.insert($0) }
+        preanesthesias.forEach { context.insert($0) }
+        vitalSigns.forEach{ context.insert($0) }
+        medications.forEach { context.insert($0) }
+        try! context.save()
+    }
+
+    let anesthesia = anesthesias
+        .filter { $0.surgery.preanesthesia != nil }
+        .randomElement()!
+    
+    let pre = preanesthesias.randomElement()!
+
+    return NavigationStack {
+        FinancialDashboardView(userId: user.userId, surgeries: surgeries)
+            .environment(session)
+    }
+    .modelContainer(container)
+}
+
+#Preview("Empty Surgeries") {
+    let user = User.sampleUser
+    let session = SessionManager()
+    session.currentUser = User.sampleUser
+    let container = try! ModelContainer(
+        for: User.self,
+           Patient.self,
+           Surgery.self,
+           PreAnesthesia.self,
+        configurations: .init(isStoredInMemoryOnly: true)
+    )
+
+    return NavigationStack {
+        FinancialDashboardView(userId: user.userId, surgeries: [])
+            .environment(session)
+    }
+    .modelContainer(container)
 }

@@ -132,14 +132,35 @@ struct PatientListView: View {
     }
 }
 
+#Preview("Lista vazia") {
+    let user = User.sampleUser
+    let session = SessionManager()
+    session.currentUser = user
+
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: User.self, Patient.self,
+        configurations: config
+    )
+    let context = container.mainContext
+    
+    // Insere apenas o usuário, SEM pacientes
+    context.insert(user)
+    try! context.save()
+
+    return NavigationStack {
+        PatientListView()
+            .environment(session)
+    }
+    .modelContainer(container)
+}
+
 #Preview("Lista com samples") {
-    // Usa o mesmo usuário dos samples para que o filtro por userId funcione
     let user = User.sampleUser
     let patients = Patient.samples(createdBy: user)
     let session = SessionManager()
     session.currentUser = user
 
-    // Container SwiftData em memória e preload com samples
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(
         for: User.self, Patient.self,
@@ -147,12 +168,9 @@ struct PatientListView: View {
     )
     let context = container.mainContext
 
-    // Insere os samples apenas uma vez
-    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
-        context.insert(user)
-        patients.forEach { context.insert($0) }
-        try! context.save()
-    }
+    context.insert(user)
+    patients.forEach { context.insert($0) }
+    try! context.save()
 
     return NavigationStack {
         PatientListView()

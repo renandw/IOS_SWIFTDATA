@@ -4,7 +4,7 @@
 //
 //  Created by Renan Wrobel on 29/10/25.
 //
-
+import SwiftData
 import SwiftUI
 
 struct PatientRowView: View {
@@ -63,6 +63,9 @@ struct PatientRowView: View {
                             .foregroundStyle(.secondary)
                         
                         Text("•")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.secondary)
                         
                         Text(patient.birthDate.formatted(date:.numeric, time: .omitted))
                             .font(.caption)
@@ -70,6 +73,9 @@ struct PatientRowView: View {
                             .foregroundStyle(.secondary)
                         
                         Text("•")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.secondary)
                         
                         Text(ageContext.ageString(from: patient.birthDate))
                             .font(.caption)
@@ -80,11 +86,14 @@ struct PatientRowView: View {
                     
                     if numberCnsContext == .needed {
                         HStack {
-                            Text("Cns:")
+                            Text("CNS:")
                                 .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .bold()
                             Text(patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true))
                                 .font(.caption)
-                                .foregroundStyle(patient.cns == "00000000000000" ? .orange : .primary)
+                                .foregroundStyle(patient.cns == "000000000000000" ? .red : .secondary)
+                                .bold()
                         }
                     }
                 }
@@ -95,3 +104,38 @@ struct PatientRowView: View {
     }
 }
 
+#Preview("Samples") {
+    let user = User.sampleUser
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
+
+    let session = SessionManager()
+    session.currentUser = user
+
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: User.self, Patient.self, Surgery.self,
+        configurations: config
+    )
+    let context = container.mainContext
+
+    // Preload uma única vez
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
+        try! context.save()
+    }
+
+    let patient = patients.randomElement()!
+
+    return NavigationStack {
+        PatientRowView(
+            patient: patient,
+            numberCnsContext: .needed,
+            ageContext: .outSurgery
+        )
+            .environment(session)
+    }
+    .modelContainer(container)
+}

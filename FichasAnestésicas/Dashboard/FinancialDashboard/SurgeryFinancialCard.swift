@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import SwiftData
 
 struct SurgeryFinancialCard: View {
     let surgery: Surgery
@@ -107,4 +108,56 @@ struct SurgeryFinancialCard: View {
         .padding()
         .glassEffect(in: .rect(cornerRadius: 12))
     }
+}
+
+#Preview("Lista com samples") {
+    let user = User.sampleUser
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
+    let financial = Financial.samples(surgeries: surgeries)
+    let anesthesia = Anesthesia.samples(surgeries: surgeries, user: user)
+    let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
+    let preanesthesia = PreAnesthesia.samples(surgeries: surgeries, shared: shared, user: user)
+
+
+    let session = SessionManager()
+    session.currentUser = user
+
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: User.self, Patient.self, Surgery.self,
+        configurations: config
+    )
+    let context = container.mainContext
+
+    // Preload uma única vez
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
+        financial.forEach { context.insert($0) }
+        anesthesia.forEach { context.insert($0) }
+        preanesthesia.forEach { context.insert($0) }
+        try! context.save()
+    }
+
+    // Escolhe um paciente aleatório
+    let randomPatient = patients.randomElement()!
+
+    // Filtra apenas cirurgias do paciente aleatório que possuem anesthesia
+    let surgeriesWithAnesthesiaForPatient = surgeries.filter { $0.patient.id == randomPatient.id && $0.anesthesia != nil }
+
+    // Se o paciente não tiver cirurgias com anesthesia, tenta globalmente
+    let surgeriesWithAnesthesia = surgeries.filter { $0.anesthesia != nil }
+
+    // Escolhe uma cirurgia com anesthesia (primeiro do paciente, senão global)
+    guard let randomSurgery = (surgeriesWithAnesthesiaForPatient.randomElement() ?? surgeriesWithAnesthesia.randomElement()) else {
+        fatalError("Nenhuma cirurgia com anesthesia disponível nas amostras do preview.")
+    }
+
+    return NavigationStack {
+        SurgeryFinancialCard(surgery: randomSurgery)
+            .environment(session)
+    }
+    .modelContainer(container)
 }

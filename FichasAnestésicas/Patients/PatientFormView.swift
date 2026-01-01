@@ -338,4 +338,3 @@ struct PatientDuplicateCard: View {
         .cornerRadius(12)
     }
 }
-
