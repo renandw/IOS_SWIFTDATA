@@ -45,109 +45,109 @@ struct Last12MonthsGraphView: View {
         let currentMonthValue = monthData.last?.scheduled ?? 0
         let currentMonthPaid = monthData.last?.received ?? 0
         
-        if !surgeries.isEmpty {
-            VStack(alignment: .leading) {
-                HStack() {
-                    Text("Último Semestre")
-                        .font(.headline)
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Spacer()
-                            VStack(alignment: .trailing) {
-                                Text(formatCurrency(currentMonthPaid))
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.green)
+        let showDataBranch = !surgeries.isEmpty && !showingAnesthesiaWizard
+        
+        Group {
+            if showDataBranch {
+                VStack(alignment: .leading) {
+                    HStack() {
+                        Text("Último Semestre")
+                            .font(.headline)
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    Text(formatCurrency(currentMonthPaid))
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.green)
+                                }
+                            }
+                            HStack{
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    Text(formatCurrency(currentMonthValue))
+                                        .font(.title3)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                            HStack {
+                                Spacer()
+                                Text("Mês atual")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
                         }
-                        HStack{
-                            Spacer()
-                            VStack(alignment: .trailing) {
-                                Text(formatCurrency(currentMonthValue))
-                                    .font(.title3)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.blue)
-                            }
+                    }
+                    Chart {
+                        ForEach(monthData) { data in
+                            BarMark(
+                                x: .value("Mês", data.month, unit: .month),
+                                y: .value("Recebido", data.scheduled)
+                            )
+                            .foregroundStyle(
+                                calendar.isDate(data.month, equalTo: now, toGranularity: .month)
+                                ? .blue
+                                : .blue.opacity(0.5)
+                            )
+                            .position(by: .value("Tipo", "Recebido"))
+
+                            BarMark(
+                                x: .value("Mês", data.month, unit: .month),
+                                y: .value("Pago", data.received)
+                            )
+                            .foregroundStyle(
+                                calendar.isDate(data.month, equalTo: now, toGranularity: .month)
+                                ? .green
+                                : .green.opacity(0.5)
+                            )
+                            .position(by: .value("Tipo", "Pago"))
+
                         }
-                        HStack {
-                            Spacer()
-                            Text("Mês atual")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                    }
+                    .chartXAxis {
+                        AxisMarks(values: .stride(by: .month)) { value in
+                            AxisGridLine()
+                            AxisTick()
+                            AxisValueLabel(format: .dateTime.month(.abbreviated))
                         }
                     }
-                }
-                Chart {
-                    ForEach(monthData) { data in
-                        BarMark(
-                            x: .value("Mês", data.month, unit: .month),
-                            y: .value("Recebido", data.scheduled)
-                        )
-                        .foregroundStyle(
-                            calendar.isDate(data.month, equalTo: now, toGranularity: .month)
-                            ? .blue
-                            : .blue.opacity(0.5)
-                        )
-                        .position(by: .value("Tipo", "Recebido"))
-                        
-                        BarMark(
-                            x: .value("Mês", data.month, unit: .month),
-                            y: .value("Pago", data.received)
-                        )
-                        .foregroundStyle(
-                            calendar.isDate(data.month, equalTo: now, toGranularity: .month)
-                            ? .green
-                            : .green.opacity(0.5)
-                        )
-                        .position(by: .value("Tipo", "Pago"))
-                        
+                    .chartYAxis {
+                        AxisMarks(position: .leading)
                     }
+                    .frame(height: 170)
+                    .padding(.top, 5)
                 }
-                .chartXAxis {
-                    AxisMarks(values: .stride(by: .month)) { value in
-                        AxisGridLine()
-                        AxisTick()
-                        AxisValueLabel(format: .dateTime.month(.abbreviated))
+                .padding()
+                .glassEffect(in: .rect(cornerRadius: 16))
+            } else {
+                VStack(alignment: .leading) {
+                    ContentUnavailableView {
+                        Label("Não há dados financeiros para exibir", systemImage: "chart.bar.xaxis")
+                    } actions: {
+                        Button("Nova Cirurgia / Anestesia") {
+                            showingAnesthesiaWizard = true
+                        }
                     }
+                    .buttonStyle(.borderedProminent)
+
                 }
-                .chartYAxis {
-                    AxisMarks(position: .leading)
+                .padding()
+                .glassEffect(in: .rect(cornerRadius: 16))
+            }
+        }
+        .sheet(isPresented: $showingAnesthesiaWizard) {
+            NewAnesthesiaPageView(
+                session: session,
+                modelContext: modelContext,
+                onFinished: { anesthesia in
+                    createdAnesthesia = anesthesia
                 }
-                .frame(height: 170)
-                .padding(.top, 5)
-            }
-            
-            .padding()
-            .glassEffect(in: .rect(cornerRadius: 16))
-        } else {
-            VStack(alignment: .leading) {
-                ContentUnavailableView {
-                    Label("Não há dados financeiros para exibir", systemImage: "chart.bar.xaxis")
-                } actions: {
-                    Button("Nova Cirurgia / Anestesia") {
-                        showingAnesthesiaWizard = true
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                
-            }
-            .padding()
-            .glassEffect(in: .rect(cornerRadius: 16))
-            .sheet(isPresented: $showingAnesthesiaWizard) {
-                NewAnesthesiaPageView(
-                    session: session,
-                    modelContext: modelContext,
-                    onFinished: { anesthesia in
-                        createdAnesthesia = anesthesia
-                        navigateToDetails = true
-                    }
-                )
-            }
-            .navigationDestination(isPresented: $navigateToDetails) {
-                if let anesthesia = createdAnesthesia {
-                    AnesthesiaDetailsView(anesthesia: anesthesia)
-                }
-            }
+            )
+        }
+        .navigationDestination(item: $createdAnesthesia) { anesthesia in
+            AnesthesiaDetailsView(anesthesia: anesthesia)
         }
         
     }
@@ -228,3 +228,4 @@ struct Last12MonthsGraphView: View {
     }
     .modelContainer(container)
 }
+
