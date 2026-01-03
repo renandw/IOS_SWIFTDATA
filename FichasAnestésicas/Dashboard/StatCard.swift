@@ -224,21 +224,21 @@ struct StatisticsSection: View {
                 }
                 .buttonStyle(.plain)
                 
-                Button(action: { onFinancialTapped?() }) {
-                    StatCard(
-                        icon: "banknote.fill",
-                        cardName: "Financeiro",
-                        title: "Neste mês",
-                        secondaryTitle: "Anterior",
-                        tertiaryTitle: "",
-                        value: String(formatCurrency(anesthesiaFinalSurgeryValueCurrentMonthCount)),
-                        secondaryValue: String(formatCurrency(anesthesiaFinalSurgeryValuePreviousMonthCount)),
-                        tertiaryValue: "",
-                        iconColor: .green
-                    )
-                    
-                }
-                .buttonStyle(.plain)
+//                Button(action: { onFinancialTapped?() }) {
+//                    StatCard(
+//                        icon: "banknote.fill",
+//                        cardName: "Financeiro",
+//                        title: "Neste mês",
+//                        secondaryTitle: "Anterior",
+//                        tertiaryTitle: "",
+//                        value: String(formatCurrency(anesthesiaFinalSurgeryValueCurrentMonthCount)),
+//                        secondaryValue: String(formatCurrency(anesthesiaFinalSurgeryValuePreviousMonthCount)),
+//                        tertiaryValue: "",
+//                        iconColor: .green
+//                    )
+//                    
+//                }
+//                .buttonStyle(.plain)
             }
         }
     }

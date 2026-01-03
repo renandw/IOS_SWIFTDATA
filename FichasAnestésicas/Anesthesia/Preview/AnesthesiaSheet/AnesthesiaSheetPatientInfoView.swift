@@ -15,7 +15,7 @@ struct AnesthesiaSheetPatientInfoView: View {
         let age = AgeContext.inSurgery(anesthesia.surgery).ageString(from: anesthesia.surgery.patient.birthDate)
         let sex = anesthesia.surgery.patient.sex.sexStringDescription
         let weight = "\(anesthesia.surgery.weight) kg"
-        let isSUS = anesthesia.surgery.type == .sus
+        let isSUS = anesthesia.surgery.type == .sus || anesthesia.surgery.insuranceName.lowercased().contains("sus")
         let label1 = isSUS ? "CNS" : "Convênio"
         let value1 = isSUS ? anesthesia.surgery.patient.cns.cnsFormatted(expectedLength: 15, digitsOnly: true) : anesthesia.surgery.insuranceName
         let label2 = isSUS ? "Prontuário" : "Carteirinha"
@@ -87,11 +87,6 @@ struct AnesthesiaSheetPatientInfoView: View {
                             .fixedSize(horizontal: false, vertical: true)
                             .foregroundColor(.black)
                     }
-
-//                    Spacer()
-//
-//                    Text("**Período:** \(start) → \(end)")
-//                        .font(.system(size: 10))
                 }
             }
             .padding(10)

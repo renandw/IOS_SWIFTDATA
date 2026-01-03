@@ -11,6 +11,13 @@ struct TwoMonthsAnesthesias: View {
     
     @State private var searchText: String = ""
     
+    @Environment(SessionManager.self) var session
+    @Environment(\.modelContext) private var modelContext
+    
+    @State private var showingAnesthesiaWizard = false
+    @State private var createdAnesthesia: Anesthesia?
+    @State private var navigateToDetails = false
+    
     var twoMonthsAnesthesias: [Anesthesia] {
         // Filtra anestesias entre o início do mês anterior e o fim do mês corrente
         let rangeStart = previousMonthBounds.start
@@ -48,14 +55,18 @@ struct TwoMonthsAnesthesias: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 12) {                
+            VStack(alignment: .leading, spacing: 12) {
                 if twoMonthsAnesthesias.isEmpty {
-                    ContentUnavailableView(
-                        "Nenhuma ficha anestésica",
-                        systemImage: "doc.text",
-                        description: Text("As fichas anestésicas criadas aparecerão aqui")
-                    )
+                    ContentUnavailableView {
+                        Label("Nenhuma Ficha Anestésica", systemImage: "doc.text")
+                    } actions: {
+                        Button("Nova Anestesia") {
+                            showingAnesthesiaWizard = true
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
                     .frame(height: 200)
+                    .glassEffect(in: .rect(cornerRadius: 16))
                 } else {
                     LazyVStack(alignment:.leading, spacing: 12) {
                         // Este mês
@@ -65,7 +76,7 @@ struct TwoMonthsAnesthesias: View {
                             let comps = Calendar.current.dateComponents([.year, .month], from: d)
                             return comps.year == currentMonth.year && comps.month == currentMonth.month
                         }
-
+                        
                         if !currentMonthItems.isEmpty {
                             Text("Este mês")
                                 .font(.headline)
@@ -76,7 +87,7 @@ struct TwoMonthsAnesthesias: View {
                                 }
                             }
                         }
-
+                        
                         // Mês anterior
                         let prevMonthStart = previousMonthBounds.start
                         let prevMonthComps = Calendar.current.dateComponents([.year, .month], from: prevMonthStart)
@@ -85,7 +96,7 @@ struct TwoMonthsAnesthesias: View {
                             let comps = Calendar.current.dateComponents([.year, .month], from: d)
                             return comps.year == prevMonthComps.year && comps.month == prevMonthComps.month
                         }
-
+                        
                         if !previousMonthItems.isEmpty {
                             Text("Mês anterior")
                                 .font(.headline)
@@ -112,6 +123,18 @@ struct TwoMonthsAnesthesias: View {
         .searchable(text: $searchText, placement: .toolbar, prompt: "Buscar pacientes, procedimentos, cirurgiões")
         .navigationTitle("Anestesias Recentes")
         .navigationBarTitleDisplayMode(.automatic)
+        .sheet(isPresented: $showingAnesthesiaWizard) {
+            NewAnesthesiaPageView(
+                session: session,
+                modelContext: modelContext,
+                onFinished: { anesthesia in
+                    createdAnesthesia = anesthesia
+                }
+            )
+        }
+        .navigationDestination(item: $createdAnesthesia) { anesthesia in
+            AnesthesiaDetailsView(anesthesia: anesthesia)
+        }
     }
     
     private var now: Date { Date() }

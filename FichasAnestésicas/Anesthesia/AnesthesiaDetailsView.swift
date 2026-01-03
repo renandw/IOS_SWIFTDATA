@@ -46,10 +46,16 @@ struct AnesthesiaDetailsView: View {
     @State private var activeSection: anesthesiaDetailsSection = .identificationSection
     @State private var customTitleBarButton: AnyView? = nil
     
+    @State private var showStartEndForm = false
+    
     private var canShowFinalizeButton: Bool {
         !anesthesia.medications.isEmpty &&
         !anesthesia.vitalSigns.isEmpty &&
         !(anesthesia.anesthesiaDescription?.veryEndDescriptionText?.isEmpty ?? true)
+    }
+    private var canShowClockButton: Bool {
+        anesthesia.end == nil &&
+        anesthesia.surgery.end == nil
     }
 
     private var canFinalize: Bool {
@@ -84,14 +90,40 @@ struct AnesthesiaDetailsView: View {
                 customTitleBarButton = pref?.view
             }
             .toolbar {
-                if canShowFinalizeButton {
+                if canShowFinalizeButton && !canShowClockButton {
                     ToolbarItem(placement: .confirmationAction) {
-                        Button(canFinalize ? "Concluir" : "Concluído") {
+                        Button {
                             if canFinalize { finalize() }
+                        } label: {
+                            if canFinalize {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.green)
+                            } else {
+                                Text("Concluído")
+                            }
+                        }
+                    }
+                } else if canShowClockButton {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button {
+                            showStartEndForm = true
+                        } label: {
+                            Image(systemName: "clock")
                         }
                     }
                 }
             }
+            .sheet(isPresented: $showStartEndForm) {
+                if let currentUser = session.currentUser {
+                    let viewModel = AnesthesiaFormViewModel(
+                        surgery: anesthesia.surgery,
+                        user: currentUser,
+                        context: modelContext,
+                    )
+                    AnesthesiaFormView(viewModel: viewModel, mode: .onlyTime)
+                }
+            }
+            
     }
     
     
@@ -243,8 +275,7 @@ struct SectionContent: View {
     let anesthesia = anesthesias
         .filter { $0.surgery.preanesthesia != nil }
         .randomElement()!
-    
-    let pre = preanesthesias.randomElement()!
+
 
     return NavigationStack {
         AnesthesiaDetailsView(anesthesia: anesthesia)

@@ -59,7 +59,7 @@ struct TwoMonthsPatients: View {
         
         List {
             if g.current.isEmpty && g.previous.isEmpty {
-                ContentUnavailableView("Nenhum Paciente", systemImage: "person")
+                ContentUnavailableView("Nenhum Paciente com Anestesia Recente", systemImage: "person")
             } else {
                 if !g.current.isEmpty {
                     Section("Este mês") {
@@ -75,7 +75,7 @@ struct TwoMonthsPatients: View {
             }
             
             Section {
-                NavigationLink("Todos os pacientes") {
+                NavigationLink("Todos os pacientes no banco de dados") {
                     PatientListView()
                 }
             }

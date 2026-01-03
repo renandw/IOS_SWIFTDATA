@@ -198,6 +198,7 @@ struct MedicationsView: View {
     let surgeries = Surgery.samples(createdBy: user, patients: patients)
     let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
     let anesthesias = Anesthesia.samples(surgeries: surgeries, user: user)
+    let medications = MedicationEntry.samples(anesthesias: anesthesias)
     let preanesthesias = PreAnesthesia.samples(
         surgeries: surgeries,
         shared: shared,
@@ -221,6 +222,7 @@ struct MedicationsView: View {
         context.insert(user)
         patients.forEach { context.insert($0) }
         surgeries.forEach { context.insert($0) }
+        medications.forEach { context.insert($0) }
         preanesthesias.forEach { context.insert($0) }
         try! context.save()
     }
@@ -228,8 +230,6 @@ struct MedicationsView: View {
     let anesthesia = anesthesias
         .filter { $0.surgery.preanesthesia != nil }
         .randomElement()!
-    
-    let pre = preanesthesias.randomElement()!
 
     return NavigationStack {
         MedicationsView(anesthesia: anesthesia)

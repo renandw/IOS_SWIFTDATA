@@ -78,8 +78,7 @@ struct AnesthesiaSheetView: View {
     let anesthesia = anesthesias
         .filter { $0.surgery.preanesthesia != nil }
         .randomElement()!
-    
-    let pre = preanesthesias.randomElement()!
+
 
     return NavigationStack {
         AnesthesiaSheetView(anesthesia: anesthesia)

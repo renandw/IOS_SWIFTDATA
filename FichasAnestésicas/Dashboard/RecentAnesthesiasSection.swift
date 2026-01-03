@@ -23,11 +23,12 @@ struct RecentAnesthesiasSection: View {
             
             if recentAnesthesias.isEmpty {
                 ContentUnavailableView(
-                    "Nenhuma ficha anestésica",
+                    "Nenhuma Ficha Anestésica",
                     systemImage: "doc.text",
-                    description: Text("As fichas anestésicas criadas aparecerão aqui")
+                    description: Text("As anestesias criadas aparecerão aqui")
                 )
                 .frame(height: 200)
+                .glassEffect(in: .rect(cornerRadius: 16))
             } else {
                 LazyVStack(spacing: 8) {
                     ForEach(recentAnesthesias) { anesthesia in

@@ -380,8 +380,6 @@ struct IdentificationView: View {
     let anesthesia = anesthesias
         .filter { $0.surgery.preanesthesia != nil }
         .randomElement()!
-    
-    let pre = preanesthesias.randomElement()!
 
     return NavigationStack {
         IdentificationView(anesthesia: anesthesia, ageContext: .inSurgery(anesthesia.surgery))

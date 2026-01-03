@@ -5,6 +5,7 @@ struct AnesthesiaFormView: View {
     enum Mode {
         case standalone   // usado como tela isolada
         case wizard       // usado dentro do fluxo NewAnesthesiaView
+        case onlyTime
     }
 
     @Bindable var viewModel: AnesthesiaFormViewModel
@@ -22,141 +23,16 @@ struct AnesthesiaFormView: View {
             standaloneBody
         case .wizard:
             wizardBody
+        case .onlyTime:
+            onlyTimeBody
         }
+    
     }
 
     // Conteúdo básico do formulário (seções)
     private var formContent: some View {
         Form {
-            // Período da Cirurgia (independente da anestesia)
-            Section{
-                HStack {
-                    Text("Anestesia")
-                    Spacer()
-                    HStack{
-                        DateTimePickerSheetButton(
-                            date: $viewModel.start,
-                            title: "Início da anestesia",
-                            placeholder: "Selecionar"
-                        )
-                        if viewModel.start != nil {
-                            Button(role: .destructive) {
-                                viewModel.start = nil
-                            } label: {
-                                Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel("Limpar início da anestesia")
-                        }
-                    }
-                }
-
-                HStack {
-                    Text("Cirurgia")
-                    
-                    Spacer()
-                
-                    HStack{
-                        DateTimePickerSheetButton(
-                            date: $viewModel.surgeryStart,
-                            title: "Início da cirurgia",
-                            placeholder: "Selecionar"
-                        )
-                        
-                        if viewModel.surgeryStart != nil {
-                            Button(role: .destructive) {
-                                viewModel.surgeryStart = nil
-                            } label: {
-                                Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel("Limpar início da cirurgia")
-                        }
-                    }
-                }
-            } header: {
-                VStack(alignment: .leading){
-                    Text("Início do Procedimento")
-                    VStack(alignment: .leading) {
-                        if let e = viewModel.anesthesiaStartError {
-                            Text(e)
-                                .font(.footnote)
-                                .foregroundStyle(.red)
-                        }
-                        if let e = viewModel.surgeryStartError {
-                            Text(e)
-                                .font(.footnote)
-                                .foregroundStyle(.red)
-                        }
-                    }
-                }
-            }
-
-        
-            if viewModel.anesthesia != nil {
-                Section {
-                    HStack {
-                        Text("Cirurgia")
-                        Spacer()
-                        HStack {
-                            DateTimePickerSheetButton(
-                                date: $viewModel.surgeryEnd,
-                                title: "Fim da cirurgia",
-                                placeholder: "Selecionar"
-                            )
-                            
-                            if viewModel.surgeryEnd != nil {
-                                Button(role: .destructive) {
-                                    viewModel.surgeryEnd = nil
-                                } label: {
-                                    Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityLabel("Limpar fim da cirurgia")
-                            }
-                        }
-                    }
-                    
-                    
-                        HStack {
-                            Text("Anestesia")
-                            Spacer()
-                            HStack {
-                                DateTimePickerSheetButton(
-                                    date: $viewModel.end,
-                                    title: "Fim da anestesia",
-                                    placeholder: "Selecionar"
-                                )
-                                
-                                if viewModel.end != nil {
-                                    Button(role: .destructive) {
-                                        viewModel.end = nil
-                                    } label: {
-                                        Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
-                                    }
-                                    .buttonStyle(.plain)
-                                    .accessibilityLabel("Limpar fim da anestesia")
-                                }
-                            }
-                        }
-                    } header: {
-                        VStack(alignment: .leading) {
-                            Text("Fim do Procedimento")
-                            VStack(alignment: .leading) {
-                                if let e = viewModel.surgeryEndError {
-                                    Text(e)
-                                        .font(.footnote)
-                                        .foregroundStyle(.red)
-                                }
-                                if let e = viewModel.anesthesiaEndError {
-                                    Text(e)
-                                        .font(.footnote)
-                                        .foregroundStyle(.red)
-                                }
-                            }
-                    }
-                }
-            }
+            onlyTimeFormContent
 
             Section {
                 NavigationLink {
@@ -242,6 +118,141 @@ struct AnesthesiaFormView: View {
             }
         }
     }
+    
+    private var onlyTimeFormContent: some View {
+        Group {
+            // Período da Cirurgia (independente da anestesia)
+            Section{
+                HStack {
+                    Text("Anestesia")
+                    Spacer()
+                    HStack{
+                        DateTimePickerSheetButton(
+                            date: $viewModel.start,
+                            title: "Início da anestesia",
+                            placeholder: "Selecionar"
+                        )
+                        if viewModel.start != nil {
+                            Button(role: .destructive) {
+                                viewModel.start = nil
+                            } label: {
+                                Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar início da anestesia")
+                        }
+                    }
+                }
+                
+                HStack {
+                    Text("Cirurgia")
+                    
+                    Spacer()
+                    
+                    HStack{
+                        DateTimePickerSheetButton(
+                            date: $viewModel.surgeryStart,
+                            title: "Início da cirurgia",
+                            placeholder: "Selecionar"
+                        )
+                        
+                        if viewModel.surgeryStart != nil {
+                            Button(role: .destructive) {
+                                viewModel.surgeryStart = nil
+                            } label: {
+                                Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar início da cirurgia")
+                        }
+                    }
+                }
+            } header: {
+                VStack(alignment: .leading){
+                    Text("Início do Procedimento")
+                    VStack(alignment: .leading) {
+                        if let e = viewModel.anesthesiaStartError {
+                            Text(e)
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                        }
+                        if let e = viewModel.surgeryStartError {
+                            Text(e)
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                        }
+                    }
+                }
+            }
+            
+            
+            if viewModel.anesthesia != nil {
+                Section {
+                    HStack {
+                        Text("Cirurgia")
+                        Spacer()
+                        HStack {
+                            DateTimePickerSheetButton(
+                                date: $viewModel.surgeryEnd,
+                                title: "Fim da cirurgia",
+                                placeholder: "Selecionar"
+                            )
+                            
+                            if viewModel.surgeryEnd != nil {
+                                Button(role: .destructive) {
+                                    viewModel.surgeryEnd = nil
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("Limpar fim da cirurgia")
+                            }
+                        }
+                    }
+                    
+                    
+                    HStack {
+                        Text("Anestesia")
+                        Spacer()
+                        HStack {
+                            DateTimePickerSheetButton(
+                                date: $viewModel.end,
+                                title: "Fim da anestesia",
+                                placeholder: "Selecionar"
+                            )
+                            
+                            if viewModel.end != nil {
+                                Button(role: .destructive) {
+                                    viewModel.end = nil
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("Limpar fim da anestesia")
+                            }
+                        }
+                    }
+                } header: {
+                    VStack(alignment: .leading) {
+                        Text("Fim do Procedimento")
+                        VStack(alignment: .leading) {
+                            if let e = viewModel.surgeryEndError {
+                                Text(e)
+                                    .font(.footnote)
+                                    .foregroundStyle(.red)
+                            }
+                            if let e = viewModel.anesthesiaEndError {
+                                Text(e)
+                                    .font(.footnote)
+                                    .foregroundStyle(.red)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 
     // Form com validações reativas compartilhadas entre modos
     private var baseForm: some View {
@@ -277,6 +288,28 @@ struct AnesthesiaFormView: View {
                 viewModel.validatePosition()
             }
     }
+    
+    private var onlyTime: some View {
+        onlyTimeFormContent
+            .onChange(of: viewModel.start) { _, _ in
+                viewModel.touched["anesthesiaStart"] = true
+                viewModel.validateAnesthesiaStart()
+                viewModel.updateSuggestionsForStart()  // ← Adicionar
+            }
+            .onChange(of: viewModel.end) { _, _ in
+                viewModel.touched["anesthesiaEnd"] = true
+                viewModel.validateAnesthesiaEnd()
+                viewModel.updateSuggestionsForEnd()  // ← Adicionar
+            }
+            .onChange(of: viewModel.surgeryStart) { _, _ in
+                viewModel.touched["surgeryStart"] = true
+                viewModel.validateSurgeryStart()
+            }
+            .onChange(of: viewModel.surgeryEnd) { _, _ in
+                viewModel.touched["surgeryEnd"] = true
+                viewModel.validateSurgeryEnd()
+            }
+    }
 
     // Modo standalone: com NavigationStack, título e toolbar (Excluir / Salvar)
     private var standaloneBody: some View {
@@ -307,6 +340,24 @@ struct AnesthesiaFormView: View {
     // Modo wizard: apenas o formulário, sem NavigationStack nem toolbar própria
     private var wizardBody: some View {
             baseForm
+    }
+    
+    private var onlyTimeBody: some View {
+        NavigationStack {
+            onlyTime
+                .navigationTitle(viewModel.anesthesia == nil ? "Nova Anestesia" : "Editar Anestesia")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Salvar", systemImage: "checkmark") {
+                            if viewModel.save() {
+                                dismiss()
+                            }
+                        }
+                        .disabled(!viewModel.isFormValid)
+                    }
+                }
+        }
     }
 }
 

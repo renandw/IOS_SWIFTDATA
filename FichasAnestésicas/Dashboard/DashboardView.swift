@@ -104,6 +104,7 @@ struct DashboardView: View {
               
           } else {
               ContentUnavailableView("Sem usuário", systemImage: "person.crop.circle.badge.exclam")
+                  
           }
       }
     
@@ -456,17 +457,7 @@ struct QuickActionCard: View {
 
     let patients = Patient.samples(createdBy: user)
     let surgeries = Surgery.samples(createdBy: user, patients: patients)
-    let cbhpm = CbhpmProcedure.samples(surgeries: surgeries)
-    let financial = Financial.samples(surgeries: surgeries)
-    let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
     let anesthesias = Anesthesia.samples(surgeries: surgeries, user: user)
-    let vitalSigns = VitalSignEntry.samples(anesthesias: anesthesias)
-    let medications = MedicationEntry.samples(anesthesias: anesthesias)
-    let preanesthesias = PreAnesthesia.samples(
-        surgeries: surgeries,
-        shared: shared,
-        user: user
-    )
 
     let session = SessionManager()
     session.currentUser = user
@@ -485,19 +476,13 @@ struct QuickActionCard: View {
         context.insert(user)
         patients.forEach { context.insert($0) }
         surgeries.forEach { context.insert($0) }
-        cbhpm.forEach { context.insert($0) }
-        financial.forEach { context.insert($0) }
-        preanesthesias.forEach { context.insert($0) }
-        vitalSigns.forEach{ context.insert($0) }
-        medications.forEach { context.insert($0) }
+
         try! context.save()
     }
 
     let anesthesia = anesthesias
         .filter { $0.surgery.preanesthesia != nil }
         .randomElement()!
-    
-    let pre = preanesthesias.randomElement()!
 
     return NavigationStack {
         DashboardView(userId: user.userId)
