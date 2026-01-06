@@ -72,22 +72,31 @@ struct CbhpmSearchView: View {
                             HStack {
                                 VStack(alignment: .leading) {
                                     HStack(alignment: .bottom) {
-                                        Text("Código:")
-                                            .font(.subheadline)
-                                            .fontWeight(.semibold)
-                                        Text("\(code.codigo)")
-                                            .font(.subheadline)
-                                            .foregroundStyle(.primary)
+                                        HStack {
+                                            Text("Código:")
+                                                .font(.subheadline)
+                                            Text("\(code.codigo)")
+                                                .font(.subheadline)
+                                                .fontWeight(.bold)
+                                                .foregroundStyle(.primary)
+                                        }
+                                        Spacer()
+                                        HStack {
+                                            Text("Porte:")
+                                                .font(.subheadline)
+                                            Text("\(code.porte_anestesico)")
+                                                .font(.subheadline)
+                                                .fontWeight(.semibold)
+                                        }
                                     }
+                                    
                                     VStack(alignment: .leading) {
                                         Text(code.procedimento)
-                                            .font(.subheadline)
+                                            .font(.caption)
+                                            .fontWeight(.semibold)
                                             .fixedSize(horizontal: false, vertical: true)
                                             .lineLimit(nil)
                                     }
-                                    Text("Porte Anestésico: \(code.porte_anestesico)")
-                                        .font(.subheadline)
-                                        .fontWeight(.semibold)
                                 }
                             }
                         }
@@ -150,55 +159,82 @@ struct ProcedureCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            VStack {
+            HStack {
+                Button(action: onRemove) {
+                    Image(systemName: "minus.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.red)
+                }
+                .buttonStyle(.borderless)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Código: \(code.codigo)")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    
-                    Text(code.procedimento)
-                        .font(.subheadline)
+                    Text("\(count)x")
+                        .font(.headline)
                         .foregroundStyle(.primary)
-                    
-                    Text("Porte Anestésico: \(code.porte_anestesico)")
-                        .font(.subheadline)
+                        .frame(minWidth: 30)
+                    HStack {
+                        Text("Porte Anestésico: \(code.porte_anestesico)")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        Text("\(code.codigo)")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                    }
+                    Text(code.procedimento)
+                        .font(.caption2)
                         .foregroundStyle(.primary)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
+                Button(action: onAdd) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.blue)
+                }
                 Spacer()
                 VStack(alignment: .trailing) {
-                    HStack(spacing: 12) {
-                        Button(action: onRemove) {
-                            Image(systemName: "minus.circle.fill")
-                                .font(.title3)
-                                .foregroundStyle(.red)
-                        }
-                        .buttonStyle(.borderless)
+                    HStack(spacing: 4) {
+                    
                         
-                        Text("×\(count)")
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                            .frame(minWidth: 30)
-                        
-                        Button(action: onAdd) {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title3)
-                                .foregroundStyle(.blue)
-                        }
-                        .buttonStyle(.borderless)
                     }
                 }
             }
+            .buttonStyle(.borderless)
+            .padding(2)
+            .background(.ultraThinMaterial)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding()
+        //.padding()
         .background(Color(.systemGray6))
         .cornerRadius(12)
     }
 }
+
+#if DEBUG
+private extension CbhpmCode {
+    static var previewSample: CbhpmCode {
+        // If CbhpmCode has a memberwise init, this will compile; otherwise adjust as needed
+        CbhpmCode(
+            codigo: "3.12.06.19-0",
+            procedimento: "Plástica – retalho cutâneo à distância",
+            porte_anestesico: "5"
+        )
+    }
+}
+#endif
 
 #Preview {
     NavigationStack{
         CbhpmSearchView(selectedProcedures: .constant([]))
     }
 }
+
+//#Preview("ProcedureCard") {
+//    ProcedureCard(
+//        code: .previewSample,
+//        count: 2,
+//        onAdd: {},
+//        onRemove: {}
+//    )
+//    .padding()
+//}
+

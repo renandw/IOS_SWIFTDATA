@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SurgeryDetailsView: View {
     @Bindable var surgery: Surgery
+    
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -185,6 +186,7 @@ struct SurgeryDetailsView: View {
         } header : {
             HStack{
                 Text("Dados do Paciente")
+                    .foregroundStyle(.green)
                 Spacer()
                 NavigationLink {
                     PatientDetailsView(patient: surgery.patient)
@@ -215,11 +217,51 @@ struct SurgeryDetailsView: View {
                 Text(surgery.hospital)
                     .fontWeight(.semibold)
             }
+            HStack {
+                Text("Códigos")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text("\(surgery.cbhpmProcedures?.count ?? 0)")
+                    .fontWeight(.semibold)
+            }
+            if let cbhpmProcedures = surgery.cbhpmProcedures, !cbhpmProcedures.isEmpty {
+                ForEach(Array(cbhpmProcedures.sorted(by: { $0.port > $1.port }).enumerated()), id: \.offset) { _, item in
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Porte Anestésico:")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                            Text(item.port)
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Text(item.code)
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                        }
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 8)
+                        .background(.ultraThinMaterial)
+                        HStack(alignment: .top, spacing: 6) {
+                            Text(item.procedure)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(8)
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(in: Capsule())
+                }
+            }
         } header: {
             HStack{
                 Text("Cirurgia")
+                    .foregroundStyle(.green)
                 Text("-")
+                    .foregroundStyle(.green)
                 Text(surgery.date.formatted(date: .abbreviated, time: .omitted))
+                    .foregroundStyle(.green)
                 Spacer()
                 NavigationLink {
                     SurgeryMetadataView(surgery: surgery)
@@ -234,7 +276,7 @@ struct SurgeryDetailsView: View {
         }
     }
     private var medicalTeamSection: some View {
-        Section("Equipe Médica"){
+        Section {
             HStack{
                 Text("Anestesiologista")
                     .foregroundStyle(.secondary)
@@ -259,6 +301,11 @@ struct SurgeryDetailsView: View {
                             .fontWeight(.semibold)
                     }
                 }
+            }
+        } header: {
+            HStack {
+                Text("Equipe Médica")
+                    .foregroundStyle(.green)
             }
         }
     }
@@ -292,6 +339,7 @@ struct SurgeryDetailsView: View {
                 } header: {
                     HStack {
                         Text("Dados Financeiros")
+                            .foregroundStyle(.green)
                         Spacer()
                         NavigationLink {
                             FinancialView(surgery: surgery)
@@ -342,6 +390,7 @@ struct SurgeryDetailsView: View {
                 } header : {
                     HStack {
                         Text("Anestesia")
+                            .foregroundStyle(.purple)
                     }
                 }
             } else {
@@ -360,6 +409,7 @@ struct SurgeryDetailsView: View {
                 } header : {
                     HStack {
                         Text("Anestesia")
+                            .foregroundStyle(.purple)
                     }
                 }
             }
@@ -394,6 +444,7 @@ struct SurgeryDetailsView: View {
                     }
                 } header: {
                     Text("Avaliação Pré-Anestésica - APA")
+                        .foregroundStyle(.purple)
                 }
             } else {
                 Section {
@@ -409,7 +460,8 @@ struct SurgeryDetailsView: View {
                         }
                     }
                 } header: {
-                    Text("Avaliação Pré Anestésica")
+                    Text("Avaliação Pré-Anestésica - APA")
+                        .foregroundStyle(.purple)
                 }
             }
         }
@@ -542,6 +594,7 @@ struct SurgeryMetadataView: View {
     let user = User.sampleUser
     let patients = Patient.samples(createdBy: user)
     let surgeries = Surgery.samples(createdBy: user, patients: patients)
+    let cbhpm = CbhpmProcedure.samples(surgeries: surgeries)
     let financial = Financial.samples(surgeries: surgeries)
     let anesthesia = Anesthesia.samples(surgeries: surgeries, user: user)
     let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
@@ -564,6 +617,7 @@ struct SurgeryMetadataView: View {
         patients.forEach { context.insert($0) }
         surgeries.forEach { context.insert($0) }
         financial.forEach { context.insert($0) }
+        cbhpm.forEach { context.insert($0) }
         anesthesia.forEach { context.insert($0) }
         preanesthesia.forEach { context.insert($0) }
         try! context.save()
