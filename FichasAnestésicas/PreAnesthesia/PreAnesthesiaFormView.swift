@@ -357,9 +357,6 @@ struct RecommendationForRevaluationStatusView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-//                Menu("Opções", systemImage: "gear") {
-//                    Button("Selecionar tudo") { selection = recommendations }
-//                    Button("Limpar seleção", role: .destructive) { selection.removeAll() }
                 Button("Salvar alterações", systemImage: "checkmark") {
                     dismiss()
                 }
