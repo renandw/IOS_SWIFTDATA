@@ -83,7 +83,7 @@ struct NewPreAnesthesiaPageView: View {
                         .onChange(of: selectedPatient) { _, patient in
                             if patient != nil {
                                 // Patient foi selecionado da sheet de duplicatas
-                                checkScheduledSurgeriesAndAdvance(with: patient!)
+                                checkWithouPreAnesthesiaSurgeriesAndAdvance(with: patient!)
                             }
                         }
                     case .selectOrCreateSurgery:
@@ -231,10 +231,10 @@ struct NewPreAnesthesiaPageView: View {
         // garante que o wizard sempre tenha o paciente resolvido (novo ou existente)
         selectedPatient = patient
         
-        checkScheduledSurgeriesAndAdvance(with: patient)
+        checkWithouPreAnesthesiaSurgeriesAndAdvance(with: patient)
     }
     
-    private func checkScheduledSurgeriesAndAdvance(with patient: Patient) {
+    private func checkWithouPreAnesthesiaSurgeriesAndAdvance(with patient: Patient) {
         guard let currentUser = session.currentUser else { return }
         
         let surgeryRepo = SwiftDataSurgeryRepository(context: modelContext, currentUser: currentUser)
