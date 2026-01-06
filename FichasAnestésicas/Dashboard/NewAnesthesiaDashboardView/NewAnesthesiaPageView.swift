@@ -12,6 +12,7 @@ struct NewAnesthesiaPageView: View {
     
     enum Step {
         case patient
+        case selectOrCreateSurgery
         case surgery
         case anesthesia
     }
@@ -29,6 +30,8 @@ struct NewAnesthesiaPageView: View {
     @State private var surgeryViewModel: SurgeryFormViewModel?
     @State private var anesthesiaViewModel: AnesthesiaFormViewModel?
     
+    @State private var scheduledSurgeries: [Surgery] = []
+    @State private var selectedSurgery: Surgery?  // Para quando usuário selecionar uma existente
     
     @State private var currentStep: Step = .patient
     @State private var isSaving: Bool = false
@@ -73,9 +76,21 @@ struct NewAnesthesiaPageView: View {
                         .onChange(of: selectedPatient) { _, patient in
                             if patient != nil {
                                 // Patient foi selecionado da sheet de duplicatas
-                                createSurgeryViewModelAndAdvance(with: patient!)
+                                checkScheduledSurgeriesAndAdvance(with: patient!)
                             }
                         }
+                    case .selectOrCreateSurgery:
+                            ScheduledSurgerySelectionView(
+                                surgeries: scheduledSurgeries,
+                                onSelectSurgery: { surgery in
+                                    selectedSurgery = surgery
+                                    advanceToAnesthesia(with: surgery)
+                                },
+                                onCreateNew: {
+                                    guard let patient = selectedPatient else { return }
+                                    createSurgeryViewModelAndAdvance(with: patient)
+                                }
+                            )
                     case .surgery:
                         if let surgeryViewModel {
                             SurgeryFormView(
@@ -121,6 +136,7 @@ struct NewAnesthesiaPageView: View {
     private var titleForCurrentStep: String {
         switch currentStep {
         case .patient: return "Informar Paciente"
+        case .selectOrCreateSurgery: return "Selecionar Cirurgia"
         case .surgery: return "Nova Cirurgia"
         case .anesthesia: return "Nova Anestesia"
         }
@@ -141,6 +157,8 @@ struct NewAnesthesiaPageView: View {
         switch currentStep {
         case .patient:
             return patientViewModel.isValid
+        case .selectOrCreateSurgery:
+                return false
         case .surgery:
             return surgeryViewModel?.isValid ?? false
         case .anesthesia:
@@ -154,8 +172,15 @@ struct NewAnesthesiaPageView: View {
         switch currentStep {
         case .patient:
             break
-        case .surgery:
+        case .selectOrCreateSurgery:  // 👈 NOVO
             currentStep = .patient
+        case .surgery:
+            // 👇 AJUSTE: pode voltar para seleção OU paciente
+            if !scheduledSurgeries.isEmpty {
+                currentStep = .selectOrCreateSurgery
+            } else {
+                currentStep = .patient
+            }
         case .anesthesia:
             currentStep = .surgery
         }
@@ -165,6 +190,8 @@ struct NewAnesthesiaPageView: View {
         switch currentStep {
         case .patient:
             savePatientAndAdvance()
+        case .selectOrCreateSurgery:
+            break  // 👈 Navegação pelos botões internos
         case .surgery:
             saveSurgeryAndAdvance()
         case .anesthesia:
@@ -198,22 +225,43 @@ struct NewAnesthesiaPageView: View {
         // garante que o wizard sempre tenha o paciente resolvido (novo ou existente)
         selectedPatient = patient
         
-        // Criar SurgeryViewModel
+        checkScheduledSurgeriesAndAdvance(with: patient)
+    }
+    
+    private func checkScheduledSurgeriesAndAdvance(with patient: Patient) {
         guard let currentUser = session.currentUser else { return }
         
         let surgeryRepo = SwiftDataSurgeryRepository(context: modelContext, currentUser: currentUser)
-        let financialRepo = SwiftDataFinancialRepository(context: modelContext, currentUser: currentUser)
-        let procedureRepo = SwiftDataCbhpmProcedureRepository(context: modelContext)
         
-        surgeryViewModel = SurgeryFormViewModel(
-            patient: patient,
-            repository: surgeryRepo,
-            financialRepository: financialRepo,
-            procedureRepository: procedureRepo,
-            modelContext: modelContext
+        do {
+            scheduledSurgeries = try surgeryRepo.getScheduledForPatient(patient)
+            print("🔍 DEBUG: Encontradas \(scheduledSurgeries.count) cirurgias agendadas")
+            scheduledSurgeries.forEach { print("  - \($0.surgeryId): \($0.statusRaw)") }
+        } catch {
+            print("❌ Erro ao buscar: \(error)")
+            scheduledSurgeries = []
+        }
+        
+        if scheduledSurgeries.isEmpty {
+            print("➡️ Nenhuma agendada, vai criar nova")
+            createSurgeryViewModelAndAdvance(with: patient)
+        } else {
+            print("📋 Mostrando lista de \(scheduledSurgeries.count) cirurgias")
+            currentStep = .selectOrCreateSurgery
+        }
+    }
+    
+    private func advanceToAnesthesia(with surgery: Surgery) {
+        guard let currentUser = session.currentUser else { return }
+        
+        // Cria o AnesthesiaViewModel direto com a surgery selecionada
+        anesthesiaViewModel = AnesthesiaFormViewModel(
+            surgery: surgery,
+            user: currentUser,
+            context: modelContext
         )
         
-        currentStep = .surgery
+        currentStep = .anesthesia
     }
     
     private func createSurgeryViewModelAndAdvance(with patient: Patient) {

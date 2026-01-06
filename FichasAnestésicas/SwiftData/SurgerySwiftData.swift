@@ -23,7 +23,7 @@ final class Surgery {
     var weight: Double
     var proposedProcedure: String
     var completeProcedure: String?
-    private var statusRaw: String
+    var statusRaw: String
     var status: Status {
             get { Status(rawValue: statusRaw)! }
             set { statusRaw = newValue.rawValue }
