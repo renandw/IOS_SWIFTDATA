@@ -166,7 +166,7 @@ struct ContentView: View {
                         .environment(\.showSignature, $showSignature)
                 }
             }
-            .navigationTitle("Previsualização")
+            .navigationTitle("Visualização")
             .navigationBarTitleDisplayMode(.inline)
         }
         .preference(
@@ -174,7 +174,7 @@ struct ContentView: View {
             value: CustomTopBarButtonPreference(
                 id: "Document.preview.topbar.buttons",
                 view: AnyView(topBarButtons),
-                token: "Document.preview.topbar.buttons.v1.\(selectedTab).\(anesthesia.surgery.preanesthesia?.preanesthesiaId ?? "none")"
+                token: "Document.preview.topbar.buttons.v1.\(selectedTab).\(anesthesia.surgery.preanesthesia?.preanesthesiaId ?? "none").\(anesthesia.status?.rawValue ?? "none")"
             )
         )
     }

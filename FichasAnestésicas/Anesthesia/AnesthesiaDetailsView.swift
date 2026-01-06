@@ -39,7 +39,7 @@ enum anesthesiaDetailsSection: Int, CaseIterable, Hashable {
 
 struct AnesthesiaDetailsView: View {
     @Bindable var anesthesia: Anesthesia
-    
+    @Environment(\.dismiss) private var dismiss
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
     
@@ -57,12 +57,12 @@ struct AnesthesiaDetailsView: View {
         anesthesia.end == nil &&
         anesthesia.surgery.end == nil
     }
-
+    
     private var canFinalize: Bool {
         anesthesia.status != .finished &&
         anesthesia.surgery.status != .finished
     }
-
+    
     private func finalize() {
         guard let user = session.currentUser else { return }
         let repository = SwiftDataAnesthesiaRepository(context: modelContext)
@@ -77,7 +77,7 @@ struct AnesthesiaDetailsView: View {
             // TODO: mostrar alerta
         }
     }
-
+    
     var body: some View {
         contentSectionView
             .safeAreaInset(edge: .top) {
@@ -120,11 +120,19 @@ struct AnesthesiaDetailsView: View {
                         user: currentUser,
                         context: modelContext,
                     )
+//                    viewModel.onDelete = {
+//                        dismiss()
+//                    }
                     AnesthesiaFormView(viewModel: viewModel, mode: .onlyTime)
                 }
             }
-            
+            .onChange(of: anesthesia.isDeleted) { _, isDeleted in
+                if isDeleted {
+                    dismiss()
+                }
+            }
     }
+    
     
     
     private var pickerSection: some View {

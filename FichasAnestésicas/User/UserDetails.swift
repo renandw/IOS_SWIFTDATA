@@ -86,11 +86,14 @@ struct UserDetails: View {
             .navigationTitle(user.name.isEmpty ? "Detalhes do Usuário" : user.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Editar", systemImage: "pencil") { showingEdit = true }
-                }
-                ToolbarItem(placement: .destructiveAction) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("Excluir", systemImage: "trash") { showingDeleteConfirm = true }
+                        .tint(.red)
+                }
+                ToolbarSpacer(.fixed, placement: .topBarTrailing)
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Editar", systemImage: "pencil") { showingEdit = true }
+                        .tint(.blue)
                 }
             }
             .sheet(isPresented: $showingEdit) {
@@ -126,7 +129,6 @@ private struct LabeledValueRow: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             Text(title)
-                
                 .foregroundStyle(.secondary)
             Spacer(minLength: 16)
             Text(value)
@@ -164,23 +166,57 @@ private struct CountCard: View {
     }
 }
 
-#Preview("User Details") {
-    // Create an in-memory model container and a sample user for preview
-    let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: User.self, configurations: configuration)
-    let context = ModelContext(container)
+#Preview("UserDetails") {
+    let user = User.sampleUser
 
-    let sample = User(userId: UUID().uuidString,
-                      name: "Renan Dantas Wrobel",
-                      crm: "4794-SP",
-                      rqe: "2516",
-                      phone: "(69) 98132-8798",
-                      emailAddress: "renandw@me.com",
-                      createdAt: .now.addingTimeInterval(-86400 * 20),
-                      updatedAt: .now)
-    context.insert(sample)
-    try? context.save()
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
+    let cbhpm = CbhpmProcedure.samples(surgeries: surgeries)
+    let financial = Financial.samples(surgeries: surgeries)
+    let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
+    let anesthesias = Anesthesia.samples(surgeries: surgeries, user: user)
+    let vitalSigns = VitalSignEntry.samples(anesthesias: anesthesias)
+    let medications = MedicationEntry.samples(anesthesias: anesthesias)
+    let preanesthesias = PreAnesthesia.samples(
+        surgeries: surgeries,
+        shared: shared,
+        user: user
+    )
 
-    return NavigationStack { UserDetails(userId: sample.userId) }
-        .modelContainer(container)
+    let session = SessionManager()
+    session.currentUser = user
+
+    let container = try! ModelContainer(
+        for: User.self,
+           Patient.self,
+           Surgery.self,
+           PreAnesthesia.self,
+        configurations: .init(isStoredInMemoryOnly: true)
+    )
+
+    let context = container.mainContext
+
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
+        cbhpm.forEach { context.insert($0) }
+        financial.forEach { context.insert($0) }
+        preanesthesias.forEach { context.insert($0) }
+        vitalSigns.forEach{ context.insert($0) }
+        medications.forEach { context.insert($0) }
+        try! context.save()
+    }
+
+    let anesthesia = anesthesias
+        .filter { $0.surgery.preanesthesia != nil }
+        .randomElement()!
+
+
+    return NavigationStack {
+        UserDetails(userId: user.userId)
+            .environment(session)
+    }
+    .modelContainer(container)
 }
+

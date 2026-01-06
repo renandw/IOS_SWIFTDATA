@@ -5,6 +5,7 @@ import SwiftData
 struct IdentificationView: View {
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     
     @Bindable var anesthesia: Anesthesia
     let ageContext: AgeContext
@@ -261,8 +262,9 @@ struct IdentificationView: View {
                     let viewModel = AnesthesiaFormViewModel(
                         surgery: anesthesia.surgery,
                         user: currentUser,
-                        context: modelContext,
+                        context: modelContext
                     )
+                    let _ = { viewModel.onDelete = { dismiss() } }()
                     AnesthesiaFormView(viewModel: viewModel, mode: .standalone)
                 }
             }

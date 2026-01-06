@@ -30,98 +30,137 @@ struct UserFormView: View {
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Name", text: $viewModel.name)
-                    .textInputAutocapitalization(.words)
-                    .onChange(of: viewModel.name) { _, newValue in
-                        // Do not rewrite the text while typing to preserve spaces/cursor
-                        viewModel.nameError = viewModel.validateName(newValue) ? nil : "Informe nome e sobrenome."
+                Section {
+                    HStack {
+                        Text("Nome")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        TextField("John Appleseed", text: $viewModel.name)
+                            .textInputAutocapitalization(.words)
+                            .multilineTextAlignment(.trailing)
+                            .onChange(of: viewModel.name) { _, newValue in
+                                // Do not rewrite the text while typing to preserve spaces/cursor
+                                viewModel.nameError = viewModel.validateName(newValue) ? nil : "Informe nome e sobrenome."
+                            }
                     }
-                if let nameError = viewModel.nameError {
-                    Text(nameError).font(.footnote).foregroundStyle(.red)
-                }
-                TextField("CRM", text: $viewModel.crm)
-                    .textInputAutocapitalization(.characters)
-                    .onChange(of: viewModel.crm) { _, newValue in
-                        // Allow user to type freely, but normalize lightweight aspects only
-                        // 1) Uppercase letters
-                        var normalized = newValue.uppercased()
-                        // 2) Keep only letters, digits, and hyphen
-                        normalized = normalized.filter { $0.isNumber || ($0 >= "A" && $0 <= "Z") || $0 == "-" }
-                        // 3) Ensure at most a single hyphen (keep first, drop the rest)
-                        if normalized.filter({ $0 == "-" }).count > 1 {
-                            var seenHyphen = false
-                            normalized = normalized.reduce(into: "") { acc, ch in
-                                if ch == "-" {
-                                    if !seenHyphen { acc.append(ch); seenHyphen = true }
+                        if let nameError = viewModel.nameError {
+                            Text(nameError).font(.footnote).foregroundStyle(.red)
+                        }
+                    
+                    HStack {
+                        Text("CRM-UF")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        TextField("9999-RO", text: $viewModel.crm)
+                            .textInputAutocapitalization(.characters)
+                            .multilineTextAlignment(.trailing)
+                            .onChange(of: viewModel.crm) { _, newValue in
+                                // Allow user to type freely, but normalize lightweight aspects only
+                                // 1) Uppercase letters
+                                var normalized = newValue.uppercased()
+                                // 2) Keep only letters, digits, and hyphen
+                                normalized = normalized.filter { $0.isNumber || ($0 >= "A" && $0 <= "Z") || $0 == "-" }
+                                // 3) Ensure at most a single hyphen (keep first, drop the rest)
+                                if normalized.filter({ $0 == "-" }).count > 1 {
+                                    var seenHyphen = false
+                                    normalized = normalized.reduce(into: "") { acc, ch in
+                                        if ch == "-" {
+                                            if !seenHyphen { acc.append(ch); seenHyphen = true }
+                                        } else {
+                                            acc.append(ch)
+                                        }
+                                    }
+                                }
+                                // Do not force split/merge around the hyphen while typing; let the user position the cursor
+                                if normalized != viewModel.crm {
+                                    viewModel.crm = normalized
+                                }
+                                // Validate current value without forcing a rewrite
+                                viewModel.crmError = viewModel.validateCRM(viewModel.crm) ? nil : "Formato: números-UF (ex: 1234-RO)"
+                            }
+                            .onSubmit {
+                                // On submit, apply the stricter formatting numbers-UF with up to 2 letters
+                                let finalized = formatCRM(viewModel.crm)
+                                if finalized != viewModel.crm {
+                                    viewModel.crm = finalized
+                                }
+                                viewModel.crmError = viewModel.validateCRM(viewModel.crm) ? nil : "Formato: números-UF (ex: 1234-RO)"
+                            }
+                    }
+                        if let crmError = viewModel.crmError {
+                            Text(crmError).font(.footnote).foregroundStyle(.red)
+                        }
+                    
+                    HStack {
+                        Text("RQE")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        TextField("3487", text: $viewModel.rqe)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("e-mail")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        TextField("john@me.com", text: $viewModel.emailAddress)
+                            .multilineTextAlignment(.trailing)
+                            .keyboardType(.emailAddress)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                            .onChange(of: viewModel.emailAddress) { _, newValue in
+                                let normalized = newValue
+                                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                                    .lowercased()
+                                if normalized != viewModel.emailAddress {
+                                    viewModel.emailAddress = normalized
+                                }
+                                if normalized.hasSuffix(".com") || normalized.hasSuffix(".com.br") {
+                                    viewModel.emailError = viewModel.validateEmail(normalized) ? nil : "Email inválido (.com ou .com.br)"
+                                } else if normalized.isEmpty {
+                                    viewModel.emailError = nil
                                 } else {
-                                    acc.append(ch)
+                                    viewModel.emailError = nil
                                 }
                             }
-                        }
-                        // Do not force split/merge around the hyphen while typing; let the user position the cursor
-                        if normalized != viewModel.crm {
-                            viewModel.crm = normalized
-                        }
-                        // Validate current value without forcing a rewrite
-                        viewModel.crmError = viewModel.validateCRM(viewModel.crm) ? nil : "Formato: numeros-UF (ex: 12345-SP)"
                     }
-                    .onSubmit {
-                        // On submit, apply the stricter formatting numbers-UF with up to 2 letters
-                        let finalized = formatCRM(viewModel.crm)
-                        if finalized != viewModel.crm {
-                            viewModel.crm = finalized
+                        if let emailError = viewModel.emailError {
+                            Text(emailError).font(.footnote).foregroundStyle(.red)
                         }
-                        viewModel.crmError = viewModel.validateCRM(viewModel.crm) ? nil : "Formato: numeros-UF (ex: 12345-SP)"
+                    
+                    HStack {
+                        Text("Telefone")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        TextField("(69) 98765-4321", text: $viewModel.phone)
+                            .multilineTextAlignment(.trailing)
+                            .keyboardType(.numberPad)
+                            .onChange(of: viewModel.phone) { _, newValue in
+                                let formatted = formatPhone(newValue)
+                                if formatted != viewModel.phone {
+                                    viewModel.phone = formatted
+                                }
+                                viewModel.phoneError = viewModel.validatePhone(viewModel.phone) ? nil : "Formato: (XX) XXXXX-XXXX"
+                            }
                     }
-                if let crmError = viewModel.crmError {
-                    Text(crmError).font(.footnote).foregroundStyle(.red)
-                }
-                TextField("RQE", text: $viewModel.rqe)
-                TextField("Email", text: $viewModel.emailAddress)
-                    .keyboardType(.emailAddress)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .onChange(of: viewModel.emailAddress) { _, newValue in
-                        let normalized = newValue
-                            .trimmingCharacters(in: .whitespacesAndNewlines)
-                            .lowercased()
-                        if normalized != viewModel.emailAddress {
-                            viewModel.emailAddress = normalized
+                        if let phoneError = viewModel.phoneError {
+                            Text(phoneError).font(.footnote).foregroundStyle(.red)
                         }
-                        if normalized.hasSuffix(".com") || normalized.hasSuffix(".com.br") {
-                            viewModel.emailError = viewModel.validateEmail(normalized) ? nil : "Email inválido (.com ou .com.br)"
-                        } else if normalized.isEmpty {
-                            viewModel.emailError = nil
-                        } else {
-                            viewModel.emailError = nil
-                        }
+                    
+                } header : {
+                    HStack {
+                        Image(systemName: userToEdit != nil
+                            ? "person.crop.rectangle.fill"
+                            : "person.crop.rectangle.badge.plus.fill"
+                        )
+                        Text("Dados do Médico")
                     }
-                if let emailError = viewModel.emailError {
-                    Text(emailError).font(.footnote).foregroundStyle(.red)
-                }
-                TextField("Telefone", text: $viewModel.phone)
-                    .keyboardType(.numberPad)
-                    .onChange(of: viewModel.phone) { _, newValue in
-                        let formatted = formatPhone(newValue)
-                        if formatted != viewModel.phone {
-                            viewModel.phone = formatted
-                        }
-                        viewModel.phoneError = viewModel.validatePhone(viewModel.phone) ? nil : "Formato: (XX) XXXXX-XXXX"
-                    }
-                if let phoneError = viewModel.phoneError {
-                    Text(phoneError).font(.footnote).foregroundStyle(.red)
                 }
             }
-            .navigationTitle(userToEdit == nil ? "Novo Usuário" : "Editar Usuário")
+            .navigationTitle(userToEdit == nil ? "Novo Anestesista" : "Editar Anestesista")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") {
-                        dismiss()
-                    }
-                }
-                
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Salvar") {
+                    Button("Salvar", systemImage: "checkmark") {
                         viewModel.save()
                         if viewModel.saveError == nil {
                             dismiss()

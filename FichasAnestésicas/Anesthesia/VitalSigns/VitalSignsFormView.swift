@@ -23,28 +23,41 @@ struct VitalSignsFormView: View {
         Form {
             if viewModel.isNew && viewModel.anesthesiaEnd == nil {
                 Section("Preenchimento automático") {
-                    Text("Gerar uma série de registros automaticamente, com pequenas variações dos sinais vitais dentro de faixas normais.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-
-                    HStack {
-                        Text("Duração")
-                        Spacer()
-                        TextField("min", value: $seriesDurationMinutes, format: .number)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
+                    VStack(spacing: 20) {
+                        HStack {
+                            Text("Duração")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            Spacer()
+                            TextField("min", value: $seriesDurationMinutes, format: .number)
+                                .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
+                            if seriesDurationMinutes != nil {
+                                Text("min")
+                                    .foregroundStyle(.secondary)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                            }
+                            
+                        }
+                        Text("Gerar registros automaticamente com pequenas variações dos sinais vitais dentro de faixas normais.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+//                        Text("Quando em branco, será usada a diferença entre início e fim da anestesia (quando disponível).")
+//                            .font(.footnote)
+//                            .foregroundStyle(.secondary)
                     }
-
-                    Text("Quando em branco, será usada a diferença entre início e fim da anestesia (quando disponível).")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
                 }
             }
             Section {
                 if viewModel.isNew {
                     HStack {
-                        Button("Paciente Saudável") {
+                        Button {
                             viewModel.healthyPatient()
+                        } label : {
+                            Text("Paciente Saudável")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
                         }
                     }
                 }
@@ -54,6 +67,8 @@ struct VitalSignsFormView: View {
             Section {
                 HStack {
                     Text("Horário")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                     Spacer()
                     DateTimePickerSheetButton(
                         date: Binding<Date?>(
@@ -81,28 +96,34 @@ struct VitalSignsFormView: View {
                         "Extrassístoles",
                         "Ritmo Nodal"
                     ]
-                    Picker("Ritmo", selection: $viewModel.rhythm) {
-                        ForEach(rhythmOptions, id: \.self) { r in
-                            Text(r).tag(String?.some(r))
+                    LabeledContent {
+                        Picker("", selection: $viewModel.rhythm) {
+                            ForEach(rhythmOptions, id: \.self) { r in
+                                Text(r).tag(String?.some(r))
+                            }
                         }
+                        .pickerStyle(.menu)
+                    } label: {
+                        Text("Ritmo")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                     }
-                    .pickerStyle(.menu)
                 }
                 if let error = viewModel.errorRhythm { Text(error).foregroundStyle(.red).font(.footnote) }
                 
                 HStack {
                     Text("FC")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                     Spacer()
                     TextField("bpm", value: $viewModel.fc, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
                         .focused($fcFieldFocused)
-                        .onChange(of: fcFieldFocused) { isFocused in
-                            if isFocused {
-                                // Campo ganhou foco: marca como tocado para habilitar validação
+                        .onChange(of: fcFieldFocused, initial: false) { oldValue, newValue in
+                            if newValue {
                                 viewModel.markFcTouched()
                             } else {
-                                // Campo perdeu foco: força validação do valor atual (inclusive em branco)
                                 viewModel.validateFc()
                             }
                         }
@@ -111,13 +132,15 @@ struct VitalSignsFormView: View {
 
                 HStack {
                     Text("SpO₂")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                     Spacer()
                     TextField("%", value: $viewModel.spo2, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
                         .focused($spo2FieldFocused)
-                        .onChange(of: spo2FieldFocused) {isFocused in
-                            if isFocused {
+                        .onChange(of: spo2FieldFocused, initial: false) { oldValue, newValue in
+                            if newValue {
                                 viewModel.markSpo2Touched()
                             } else {
                                 viewModel.validateSpo2()
@@ -128,13 +151,15 @@ struct VitalSignsFormView: View {
 
                 HStack {
                     Text("PAS")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                     Spacer()
                     TextField("mmHg", value: $viewModel.paS, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
                         .focused($paSFieldFocused)
-                        .onChange(of: paSFieldFocused) { isFocused in
-                            if isFocused {
+                        .onChange(of: paSFieldFocused, initial: false) { oldValue, newValue in
+                            if newValue {
                                 viewModel.markPaSTouched()
                             } else {
                                 viewModel.validatePa()
@@ -145,13 +170,15 @@ struct VitalSignsFormView: View {
 
                 HStack {
                     Text("PAD")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                     Spacer()
                     TextField("mmHg", value: $viewModel.paD, format: .number)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
                         .focused($paDFieldFocused)
-                        .onChange(of: paDFieldFocused) { isFocused in
-                            if isFocused {
+                        .onChange(of: paDFieldFocused, initial: false) { oldValue, newValue in
+                            if newValue {
                                 viewModel.markPaDTouched()
                             } else {
                                 viewModel.validatePa()
@@ -163,6 +190,8 @@ struct VitalSignsFormView: View {
                 
                 HStack {
                     Text("EtCo2")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                     Spacer()
                     TextField("mmHg", value: $viewModel.etco2, format: .number)
                         .keyboardType(.decimalPad)
@@ -176,6 +205,8 @@ struct VitalSignsFormView: View {
                     // Ventilação
                     HStack {
                         Text("FiO₂")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("%", value: $viewModel.fio2, format: .number)
                             .keyboardType(.decimalPad)
@@ -185,6 +216,8 @@ struct VitalSignsFormView: View {
 
                     HStack {
                         Text("PEEP")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("cmH₂O", value: $viewModel.peep, format: .number)
                             .keyboardType(.decimalPad)
@@ -194,6 +227,8 @@ struct VitalSignsFormView: View {
 
                     HStack {
                         Text("Volume Corrente")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("mL", value: $viewModel.volumeCorrente, format: .number)
                             .keyboardType(.decimalPad)
@@ -204,6 +239,8 @@ struct VitalSignsFormView: View {
                     // Metabólico e balanço
                     HStack {
                         Text("Glicemia")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("mg/dL", value: $viewModel.glicemia, format: .number)
                             .keyboardType(.decimalPad)
@@ -214,6 +251,8 @@ struct VitalSignsFormView: View {
                     }
                     HStack {
                         Text("Lactato")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("mmol/L", value: $viewModel.lactato, format: .number)
                             .keyboardType(.decimalPad)
@@ -224,6 +263,8 @@ struct VitalSignsFormView: View {
                     }
                     HStack {
                         Text("Temperatura")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("°C", value: $viewModel.temperatura, format: .number)
                             .keyboardType(.decimalPad)
@@ -234,6 +275,8 @@ struct VitalSignsFormView: View {
                     }
                     HStack {
                         Text("Diurese")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("mL", value: $viewModel.diurese, format: .number)
                             .keyboardType(.decimalPad)
@@ -244,6 +287,8 @@ struct VitalSignsFormView: View {
                     }
                     HStack {
                         Text("Sangramento")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("mL", value: $viewModel.sangramento, format: .number)
                             .keyboardType(.decimalPad)
@@ -254,6 +299,8 @@ struct VitalSignsFormView: View {
                     }
                     HStack {
                         Text("PVC")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("mmHg", value: $viewModel.pvc, format: .number)
                             .keyboardType(.decimalPad)
@@ -264,6 +311,8 @@ struct VitalSignsFormView: View {
                     }
                     HStack {
                         Text("Débito Cardíaco")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("L/min", value: $viewModel.debitCardiaco, format: .number)
                             .keyboardType(.decimalPad)
@@ -275,6 +324,8 @@ struct VitalSignsFormView: View {
                     // Monitorização avançada
                     HStack {
                         Text("BIS")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("", value: $viewModel.bis, format: .number)
                             .keyboardType(.decimalPad)
@@ -285,6 +336,8 @@ struct VitalSignsFormView: View {
                     }
                     HStack {
                         Text("TOF")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("%", value: $viewModel.tof, format: .number)
                             .keyboardType(.decimalPad)
@@ -295,6 +348,8 @@ struct VitalSignsFormView: View {
                     }
                     HStack {
                         Text("Pupilas")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
                         Spacer()
                         TextField("", text: Binding<String>(
                             get: { viewModel.pupilas ?? "" },
@@ -306,33 +361,33 @@ struct VitalSignsFormView: View {
                     }
                 } label: {
                     Text("Ventilação, Hídrico e Metabólico")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                 }
             }
         }
-        .navigationTitle(viewModel.isNew ? "Novo registro" : "Editar registro")
+        .navigationTitle(viewModel.isNew ? "Registrar Sinais Vitais" : "Editar registro")
         .navigationBarTitleDisplayMode(.inline)
         
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 if viewModel.isNew {
                     Button("Criar Registro", systemImage: "plus") {
-                        do { try viewModel.createCurrent(); dismiss() } catch { /* handle error UI */ }
+                        do {
+                            try viewModel.createCurrent(); dismiss()
+                        } catch {
+                            /* handle error UI */
+                        }
                     }
+                    .tint(.blue)
                 } else {
                     Button("Atualizar registro", systemImage: "checkmark.arrow.trianglehead.clockwise") {
                         do { try viewModel.updateCurrent(); dismiss() } catch { /* handle error UI */ }
                     }
+                    .tint(.blue)
                 }
             }
-            if !viewModel.isNew {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(role: .destructive) {
-                        do { try viewModel.deleteCurrent(); dismiss() } catch { /* handle error UI */ }
-                    } label: {
-                        Image(systemName: "trash")
-                    }
-                }
-            }
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
             if viewModel.isNew && viewModel.anesthesiaEnd != nil || viewModel.isNew && seriesDurationMinutes != nil {
                 ToolbarItem(placement: .topBarTrailing){
                     Button {
@@ -344,11 +399,22 @@ struct VitalSignsFormView: View {
                     } label: {
                         Label("Gerar série", systemImage: "sparkles")
                     }
+                    .tint(.blue)
                 }
             }
+            if !viewModel.isNew {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(role: .destructive) {
+                        do { try viewModel.deleteCurrent(); dismiss() } catch { /* handle error UI */ }
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                }
+            }
+            
         }
-        .onChange(of: viewModel.shouldDismissAfterGenerateSeries) { shouldDismiss in
-            if shouldDismiss {
+        .onChange(of: viewModel.shouldDismissAfterGenerateSeries) { oldValue, newValue in
+            if newValue {
                 dismiss()
             }
         }

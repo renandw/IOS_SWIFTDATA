@@ -41,7 +41,10 @@ struct MedicationsFormView: View {
                                         viewModel.runValidations()
                                     }
                             } label: {
-                                Label("Medicação", systemImage: "pills")
+                                Text("Medicação")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                
                             }
                             if let e = viewModel.nameError {
                                 Text(e)
@@ -64,13 +67,19 @@ struct MedicationsFormView: View {
                         }
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            Picker("Categoria", selection: Binding(
-                                get: { viewModel.category ?? .opioide },
-                                set: { viewModel.category = $0 }
-                            )) {
-                                ForEach(MedicationCategory.allCases, id: \.self) { c in
-                                    Text(c.rawValue).tag(c)
+                            LabeledContent {
+                                Picker("", selection: Binding(
+                                    get: { viewModel.category ?? .opioide },
+                                    set: { viewModel.category = $0 }
+                                )) {
+                                    ForEach(MedicationCategory.allCases, id: \.self) { c in
+                                        Text(c.rawValue).tag(c)
+                                    }
                                 }
+                            } label: {
+                                Text("Categoria")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
                             }
                             .onChange(of: viewModel.category, initial: false) { _, _ in
                                 viewModel.dismissSuggestions()
@@ -85,13 +94,19 @@ struct MedicationsFormView: View {
                         }
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            Picker("Via", selection: Binding(
-                                get: { viewModel.via ?? .EV },
-                                set: { viewModel.via = $0 }
-                            )) {
-                                ForEach(AdministrationRoute.allCases, id: \.self) { r in
-                                    Text(r.label).tag(r)
+                            LabeledContent {
+                                Picker("", selection: Binding(
+                                    get: { viewModel.via ?? .EV },
+                                    set: { viewModel.via = $0 }
+                                )) {
+                                    ForEach(AdministrationRoute.allCases, id: \.self) { r in
+                                        Text(r.label).tag(r)
+                                    }
                                 }
+                            } label: {
+                                Text("Via")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
                             }
                             .onChange(of: viewModel.via, initial: false) { _, _ in
                                 viewModel.dismissSuggestions()
@@ -105,7 +120,7 @@ struct MedicationsFormView: View {
                             }
                         }
                         VStack(alignment: .leading, spacing: 4) {
-                            LabeledContent("Dose") {
+                            LabeledContent {
                                 TextField("(ex.: 150mg)", text: $viewModel.dose)
                                     .multilineTextAlignment(.trailing)
                                     .autocorrectionDisabled()
@@ -113,6 +128,11 @@ struct MedicationsFormView: View {
                                     .onChange(of: viewModel.dose, initial: false) { _, _ in
                                         viewModel.runValidations()
                                     }
+                            } label: {
+                                Text("Dose")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                
                             }
                             if let e = viewModel.doseError {
                                 Text(e)
@@ -123,6 +143,8 @@ struct MedicationsFormView: View {
 
                         HStack {
                             Text("Administração")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
                             Spacer()
                             DateTimePickerSheetButton(
                                 date: Binding<Date?>(
@@ -140,7 +162,10 @@ struct MedicationsFormView: View {
                             )
                         }
                     } header: {
-                        Text("Medicação")
+                        HStack {
+                            Image(systemName: "pills.fill")
+                            Text("Medicação")
+                        }
                     } footer: {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Doses, surgeridas automaticamente, para peso: \(String(format: "%.1f", viewModel.patientWeight)) kg")
@@ -196,8 +221,14 @@ struct MedicationsFormView: View {
                     }
                     Section {
                         List(MedicationsHelper.medicationPresets, id: \.id) { preset in
-                            NavigationLink(preset.name) {
+                            NavigationLink {
                                 MedicationPresetGroupView(preset: preset, viewModel: viewModel)
+                            } label: {
+                                HStack {
+                                    Text(preset.name)
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                }
                             }
                         }
                     } header: {
@@ -259,6 +290,8 @@ struct MedicationPresetGroupView: View {
             Section {
                 HStack {
                     Text("Horário")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                     Spacer()
                     DateTimePickerSheetButton(
                         date: Binding<Date?>(
@@ -277,6 +310,7 @@ struct MedicationPresetGroupView: View {
             Section(footer:
                 Text("Medicações podem ser alteradas individualmente quando adicionadas")
                     .font(.footnote)
+                    .fontWeight(.bold)
                     .foregroundStyle(.secondary)
             ) {
                 ForEach(items) { item in
@@ -286,6 +320,8 @@ struct MedicationPresetGroupView: View {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(item.name)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
                                 HStack(spacing: 6) {
                                     Text(item.category.rawValue)
                                     Text("•")

@@ -19,6 +19,8 @@ private struct Validator {
 
 @Observable
 final class AnesthesiaFormViewModel {
+    var onDelete: (() -> Void)?
+    
     var anesthesia: Anesthesia?
     var isEditing = false
     var errorMessage: String?
@@ -185,9 +187,11 @@ final class AnesthesiaFormViewModel {
         saveSuccess = false
         do {
             try repository.delete(anesthesia: anesthesia, from: surgery)
+            onDelete?()
         } catch {
             errorMessage = "Erro ao deletar anestesia: \(error.localizedDescription)"
         }
+        
     }
     
     func runValidations() {
