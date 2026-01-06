@@ -19,6 +19,7 @@ protocol SurgeryRepository {
     func get(by id: String) throws -> Surgery?
     func getAllForPatient(_ patient: Patient) throws -> [Surgery]
     func getScheduledForPatient(_ patient: Patient) throws -> [Surgery]
+    func getWithoutPreAnesthesiaForPatient(_ patient: Patient) throws -> [Surgery]
 }
 
 @MainActor
@@ -100,6 +101,17 @@ final class SwiftDataSurgeryRepository: SurgeryRepository {
                 predicate: #Predicate {
                     $0.patient.patientId == patientId &&
                     $0.statusRaw == "scheduled"
+                }
+            )
+        )
+    }
+    func getWithoutPreAnesthesiaForPatient(_ patient: Patient) throws -> [Surgery] {
+        let patientId = patient.patientId
+        return try context.fetch(
+            FetchDescriptor<Surgery>(
+                predicate: #Predicate {
+                    $0.patient.patientId == patientId &&
+                    $0.preanesthesia == nil
                 }
             )
         )

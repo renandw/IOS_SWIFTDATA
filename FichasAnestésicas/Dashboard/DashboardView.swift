@@ -299,8 +299,11 @@ struct QuickActionsSection: View {
     var onFinancial: () -> Void = {}
     
     @State private var showingAnesthesiaWizard = false
+    @State private var showingPreAnesthesiaWizard = false
     @State private var createdAnesthesia: Anesthesia?
+    @State private var createdPreAnesthesia: PreAnesthesia?
     @State private var navigateToDetails = false
+    @State private var navigateToPreDetails = false
     @State private var showComingSoonAlert = false
     
     @Environment(SessionManager.self) private var session
@@ -330,7 +333,7 @@ struct QuickActionsSection: View {
                     startPoint: .leading,
                     endPoint: .trailing
                 ),
-                onTap: { showComingSoonAlert = true }
+                onTap: { showingPreAnesthesiaWizard = true }
             )
             
             QuickActionCard(
@@ -398,9 +401,24 @@ struct QuickActionsSection: View {
                 }
             )
         }
+        .sheet(isPresented: $showingPreAnesthesiaWizard) {
+            NewPreAnesthesiaPageView(
+                session: session,
+                modelContext: modelContext,
+                onFinished: { preanesthesia in
+                    createdPreAnesthesia = preanesthesia
+                    navigateToPreDetails = true
+                }
+            )
+        }
         .navigationDestination(isPresented: $navigateToDetails) {
             if let anesthesia = createdAnesthesia {
                 AnesthesiaDetailsView(anesthesia: anesthesia)
+            }
+        }
+        .navigationDestination(isPresented: $navigateToPreDetails) {
+            if let preanesthesia = createdPreAnesthesia {
+                PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
             }
         }
         .padding(.bottom, 16)

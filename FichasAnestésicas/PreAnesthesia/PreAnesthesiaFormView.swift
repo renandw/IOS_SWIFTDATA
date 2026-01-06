@@ -9,8 +9,13 @@ import SwiftUI
 import Observation   // para @Bindable
 
 struct PreAnesthesiaFormView: View {
+    enum Mode {
+        case standalone
+        case wizard
+    }
     @Environment(\.dismiss) private var dismiss
     @Bindable var viewModel: PreAnesthesiaViewModel
+    var mode: Mode = .standalone
     @State private var isMonitoringSheetPresented: Bool = false
     @State private var isAdmissionSheetPresented: Bool = false
     @State private var isTechniquesSheetPresented: Bool = false
@@ -18,241 +23,256 @@ struct PreAnesthesiaFormView: View {
     @State private var newCustomMonitoring: String = ""
     @State private var newComplications: String = ""
     
-    init(viewModel: PreAnesthesiaViewModel) {
+    init(
+        viewModel: PreAnesthesiaViewModel,
+        mode: Mode = .standalone
+    ) {
         self.viewModel = viewModel
+        self.mode = mode
     }
     
     var body: some View {
+        switch mode {
+        case .standalone:
+            standaloneBody
+        case .wizard:
+            wizardBody
+        }
+    }
+
+    private var standaloneBody: some View {
         NavigationStack {
-            Form {
-                Section {
-                    clearenceStatusPicker
-                    if [.unable, .reevaluate, .able].contains(viewModel.clearence.clearenceStatus) {
-                        NavigationLink {
-                            RecommendationForRevaluationStatusView(
-                                selection: Binding(
-                                    get: { viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? [] },
-                                    set: { newArray in
-                                        viewModel.clearence.definitiveRecommendationForRevaluationStatus = newArray.isEmpty ? nil : newArray
-                                    }
-                                ),
-                                viewModel: viewModel
-                            )
-                        } label: {
-                            HStack {
-                                Text("Selecionar Recomendações")
-                                Spacer()
-                                let items = viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? []
-                                let subtitle = items.isEmpty ? "Nenhuma" : items.map(\.displayName).joined(separator: ", ")
-                                Text(subtitle)
-                                    .foregroundStyle(.secondary)
-                                    .multilineTextAlignment(.trailing)
+            formContent
+                .navigationTitle("Avaliação Pré-Anestésica")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Salvar", systemImage: "checkmark") {
+                            do {
+                                viewModel.finishStatus()
+                                try viewModel.save()
+                                dismiss()
+                            } catch {
+                                print("Erro ao salvar AnesthesiaDescriptionEntry: \(error)")
                             }
                         }
                     }
-                } header: {
-                    Text("Parecer da Avaliação")
-                }
-                Section {
-                    NavigationLink {
-                        ComorbitiesFormView(
-                            viewModel: viewModel
-                        )
-                    } label : {
-                        HStack {
-                            Text("Selecionar Comorbidades")
-                            Spacer()
-                            
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Paciente Hígido", systemImage: "sparkle.text.clipboard.fill") {
+                            viewModel.clearence.applyHealthyPatient()
+                            viewModel.comorbities.applyHealthyPatient()
+                            viewModel.labsAndImage.applyHealthyPatient()
+                            viewModel.medicationAndAllergies.applyHealthyPatient()
+                            viewModel.physicalExamination.applyPatientHealthy()
+                            viewModel.airway.applyHealthyPatient()
                         }
                     }
-                } header: {
-                    Text("Comorbidades")
-                }
-                Section {
-                    NavigationLink {
-                        SurgeryHistoryTypeFormView(
-                            viewModel: viewModel
-                        )
-                    } label : {
-                        HStack {
-                            Text("Cirurgias Prévias")
-                            Spacer()
-                            
-                        }
-                    }
-                    if viewModel.surgeryHistory.surgeryHistory {
-                        
-                        NavigationLink {
-                            AnesthesiaHistoryTypeFormView(
-                                viewModel: viewModel
-                            )
-                        } label : {
-                            HStack {
-                                Text("Complicações Anestésicas")
-                                Spacer()
-                                
-                            }
-                        }
-                    }
-                    NavigationLink {
-                        ApfelScoreFormView(
-                            viewModel: viewModel
-                        )
-                    } label : {
-                        HStack {
-                            Text("Fatores de Risco NVPO")
-                            Spacer()
-                            
-                        }
-                    }
-                } header: {
-                    Text("Histórico Cirúrgico-Anestésico")
-                }
- 
-                Section {
-                    NavigationLink {
-                        SocialHabitsAndEnvironmentFormView(
-                            viewModel: viewModel
-                        )
-                    } label : {
-                        HStack {
-                            Text("Hábitos e Ambiente")
-                            Spacer()
-                            
-                        }
-                    }
-                } header: {
-                    Text("Hábitos e Ambiente")
-                }
-
-                Section {
-                    NavigationLink {
-                        PhysicalExaminationFormView(viewModel: viewModel)
-                    } label: {
-                        HStack {
-                            Text("Exame Físico")
-                            Spacer()
-                        }
-                    }
-                    NavigationLink {
-                        AirwaySectionView(
-                            viewModel: viewModel,
-                        )
-                    } label : {
-                        HStack {
-                            Text("Avaliação Via Aérea")
-                            Spacer()
-                            
-                        }
-                    }
-                    NavigationLink {
-                        MedicationsAndAllergiesFormView(
-                            viewModel: viewModel,
-                            selection: Binding(
-                                get: { viewModel.medicationAndAllergies.dailyMedications ?? [] },
-                                set: { newArray in
-                                    viewModel.medicationAndAllergies.dailyMedications = newArray.isEmpty ? nil : newArray
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Excluir", systemImage: "trash") {
+                            do {
+                                try viewModel.delete()
+                                DispatchQueue.main.async {
+                                    dismiss()
                                 }
-                            )
-                        )
-                    } label: {
-                        HStack {
-                            Text("Medicamentos e Alergias")
-                            Spacer()
+                            } catch {
+                                print("Erro ao excluir AnesthesiaDescriptionEntry: \(error)")
+                            }
                         }
                     }
-                    
-                    NavigationLink {
-                        LabsAndImageExamsFormView(viewModel: viewModel)
-                    } label: {
-                        HStack {
-                            Text("Exames laboratoriais e de imagem")
-                            Spacer()
-                        }
-                    }
-                }header: {
-                    Text("Exame Físico e Complementares")
                 }
+        }
+    }
 
-                Section {
+    private var wizardBody: some View {
+        formContent
+    }
+
+    private var formContent: some View {
+        Form {
+            Section {
+                clearenceStatusPicker
+                if [.unable, .reevaluate, .able].contains(viewModel.clearence.clearenceStatus) {
                     NavigationLink {
-                        AnesthesiaTechniquePickerView(
-                            selection: $viewModel.techniques,
-                            mmssBlocks: $viewModel.mmssBlocks,
-                            mmiiBlocks: $viewModel.mmiiBlocks,
-                            abdominalBlocks: $viewModel.abdominalBlocks
+                        RecommendationForRevaluationStatusView(
+                            selection: Binding(
+                                get: { viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? [] },
+                                set: { newArray in
+                                    viewModel.clearence.definitiveRecommendationForRevaluationStatus = newArray.isEmpty ? nil : newArray
+                                }
+                            ),
+                            viewModel: viewModel
                         )
                     } label: {
                         HStack {
-                            Text("Selecionar técnicas")
+                            Text("Selecionar Recomendações")
                             Spacer()
-                            Text(viewModel.techniques.isEmpty
-                                 ? "Nenhuma"
-                                 : techniquesDisplayText)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.trailing)
-                        }
-                    }
-                    NavigationLink {
-                        ASAPickerView(selection: $viewModel.asa)
-                    } label: {
-                        HStack {
-                            Text("Classificação ASA")
-                            Spacer()
-                            Text(viewModel.asa?.rawValue ?? "Nenhuma")
+                            let items = viewModel.clearence.definitiveRecommendationForRevaluationStatus ?? []
+                            let subtitle = items.isEmpty ? "Nenhuma" : items.map(\.displayName).joined(separator: ", ")
+                            Text(subtitle)
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.trailing)
                         }
                     }
-                } header: {
+                }
+            } header: {
+                Text("Parecer da Avaliação")
+            }
+            Section {
+                NavigationLink {
+                    ComorbitiesFormView(
+                        viewModel: viewModel
+                    )
+                } label : {
                     HStack {
-                        Text("Técnicas Anestésicas e Classificação ASA")
+                        Text("Selecionar Comorbidades")
+                        Spacer()
+                        
                     }
                 }
+            } header: {
+                Text("Comorbidades")
             }
-            .navigationTitle("Avaliação Pré-Anestésica")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Salvar", systemImage: "checkmark") {
-                        do {
-                            viewModel.finishStatus()
-                            try viewModel.save()
+            Section {
+                NavigationLink {
+                    SurgeryHistoryTypeFormView(
+                        viewModel: viewModel
+                    )
+                } label : {
+                    HStack {
+                        Text("Cirurgias Prévias")
+                        Spacer()
+                        
+                    }
+                }
+                if viewModel.surgeryHistory.surgeryHistory {
+                    
+                    NavigationLink {
+                        AnesthesiaHistoryTypeFormView(
+                            viewModel: viewModel
+                        )
+                    } label : {
+                        HStack {
+                            Text("Complicações Anestésicas")
+                            Spacer()
                             
-                            dismiss()
-                        }
-                        catch {
-                            print("Erro ao salvar AnesthesiaDescriptionEntry: \(error)")
                         }
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Paciente Hígido", systemImage: "sparkle.text.clipboard.fill") {
-                        viewModel.clearence.applyHealthyPatient()
-                        viewModel.comorbities.applyHealthyPatient()
-                        viewModel.labsAndImage.applyHealthyPatient()
-                        viewModel.medicationAndAllergies.applyHealthyPatient()
-                        viewModel.physicalExamination.applyPatientHealthy()
-                        viewModel.airway.applyHealthyPatient()
+                NavigationLink {
+                    ApfelScoreFormView(
+                        viewModel: viewModel
+                    )
+                } label : {
+                    HStack {
+                        Text("Fatores de Risco NVPO")
+                        Spacer()
+                        
                     }
                 }
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Excluir", systemImage: "trash") {
-                        do {
-                            try viewModel.delete()
-                            DispatchQueue.main.async {
-                                dismiss()
+            } header: {
+                Text("Histórico Cirúrgico-Anestésico")
+            }
+
+            Section {
+                NavigationLink {
+                    SocialHabitsAndEnvironmentFormView(
+                        viewModel: viewModel
+                    )
+                } label : {
+                    HStack {
+                        Text("Hábitos e Ambiente")
+                        Spacer()
+                        
+                    }
+                }
+            } header: {
+                Text("Hábitos e Ambiente")
+            }
+
+            Section {
+                NavigationLink {
+                    PhysicalExaminationFormView(viewModel: viewModel)
+                } label: {
+                    HStack {
+                        Text("Exame Físico")
+                        Spacer()
+                    }
+                }
+                NavigationLink {
+                    AirwaySectionView(
+                        viewModel: viewModel,
+                    )
+                } label : {
+                    HStack {
+                        Text("Avaliação Via Aérea")
+                        Spacer()
+                        
+                    }
+                }
+                NavigationLink {
+                    MedicationsAndAllergiesFormView(
+                        viewModel: viewModel,
+                        selection: Binding(
+                            get: { viewModel.medicationAndAllergies.dailyMedications ?? [] },
+                            set: { newArray in
+                                viewModel.medicationAndAllergies.dailyMedications = newArray.isEmpty ? nil : newArray
                             }
-                        }
-                        catch {
-                            print("Erro ao excluir AnesthesiaDescriptionEntry: \(error)")
-                        }
+                        )
+                    )
+                } label: {
+                    HStack {
+                        Text("Medicamentos e Alergias")
+                        Spacer()
                     }
+                }
+                
+                NavigationLink {
+                    LabsAndImageExamsFormView(viewModel: viewModel)
+                } label: {
+                    HStack {
+                        Text("Exames laboratoriais e de imagem")
+                        Spacer()
+                    }
+                }
+            }header: {
+                Text("Exame Físico e Complementares")
+            }
+
+            Section {
+                NavigationLink {
+                    AnesthesiaTechniquePickerView(
+                        selection: $viewModel.techniques,
+                        mmssBlocks: $viewModel.mmssBlocks,
+                        mmiiBlocks: $viewModel.mmiiBlocks,
+                        abdominalBlocks: $viewModel.abdominalBlocks
+                    )
+                } label: {
+                    HStack {
+                        Text("Selecionar técnicas")
+                        Spacer()
+                        Text(viewModel.techniques.isEmpty
+                             ? "Nenhuma"
+                             : techniquesDisplayText)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.trailing)
+                    }
+                }
+                NavigationLink {
+                    ASAPickerView(selection: $viewModel.asa)
+                } label: {
+                    HStack {
+                        Text("Classificação ASA")
+                        Spacer()
+                        Text(viewModel.asa?.rawValue ?? "Nenhuma")
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.trailing)
+                    }
+                }
+            } header: {
+                HStack {
+                    Text("Técnicas Anestésicas e Classificação ASA")
                 }
             }
-        }
-        .sheet(isPresented: $isMonitoringSheetPresented) {
-            Text("Vamos ver se funciona")
         }
     }
     
@@ -372,5 +392,6 @@ struct RecommendationForRevaluationStatusView: View {
             selection.append(kind)
         }
     }
+    
 }
 

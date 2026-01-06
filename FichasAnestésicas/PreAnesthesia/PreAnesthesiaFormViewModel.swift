@@ -48,6 +48,19 @@ final class PreAnesthesiaViewModel: Identifiable {
     var labsAndImage = LabsAndImageExamsSectionViewModel()
     var physicalExamination = PhysicalExaminationSectionViewModel()
     
+    var isFormValid: Bool {
+        clearence.canSave &&
+        comorbities.canSave &&
+        airway.canSave &&
+        surgeryHistory.canSave &&
+        medicationAndAllergies.canSave &&
+        physicalExamination.canSave
+    }
+    
+    var resolvedPreAnesthesia: PreAnesthesia {
+        preanesthesia
+    }
+    
     // MARK: init para edit
     init(
         preanesthesia: PreAnesthesia,
@@ -63,6 +76,8 @@ final class PreAnesthesiaViewModel: Identifiable {
         self.status = preanesthesia.status ?? .inProgress
         surgeryHistory.socialHabitsVM = socialHabitsAndEnvironment
         socialHabitsAndEnvironment.surgeryHistoryVM = surgeryHistory
+        
+
         
         clearence.load(from: preanesthesia)
         comorbities.load(from: preanesthesia, patientSex: patientSex, patientAge: patientAge)
@@ -151,23 +166,21 @@ final class PreAnesthesiaViewModel: Identifiable {
     
     func apply(to p: PreAnesthesia) {
         p.textField = textField
-        p.status = status
-        
-        let shared = sharedRepo.ensure(for: p.surgery)  // ← "p.surgery"
+
+        let shared = sharedRepo.ensure(for: p.surgery)
         try? sharedRepo.update(shared, techniques: techniques, asa: asa)
-        
     }
     
     func finishStatus() {
-        if comorbities.canSave &&
+        if clearence.canSave &&
+            comorbities.canSave &&
             airway.canSave &&
-            clearence.canSave &&
             surgeryHistory.canSave &&
             medicationAndAllergies.canSave &&
             physicalExamination.canSave {
-            status = .finished
+            preanesthesia.status = .finished
         } else {
-            status = .inProgress
+            preanesthesia.status = .inProgress
         }
     }
 }
