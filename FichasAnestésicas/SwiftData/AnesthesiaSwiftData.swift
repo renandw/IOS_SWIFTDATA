@@ -174,8 +174,13 @@ final class AnesthesiaDescriptionEntry {
     var periduralPositionRaw: String?
     var periduralPosition: SpinalAndEpiduralPosition? { get { periduralPositionRaw.flatMap(SpinalAndEpiduralPosition.init(rawValue:)) } set { periduralPositionRaw = newValue?.rawValue } }
     
+    var doublePeridural: Bool?
+    
     var periduralLevelRaw: String?
     var periduralLevel: SpinalAndEpiduralLevel? { get { periduralLevelRaw.flatMap(SpinalAndEpiduralLevel.init(rawValue:)) } set { periduralLevelRaw = newValue?.rawValue } }
+    
+    var periduralLevel2Raw: String?
+    var periduralLevel2: SpinalAndEpiduralLevel? { get { periduralLevel2Raw.flatMap(SpinalAndEpiduralLevel.init(rawValue:)) } set { periduralLevel2Raw = newValue?.rawValue } }
     
     var periduralNeedleRaw: String?
     var periduralNeedle: SpinalAndEpiduralNeedle? { get { periduralNeedleRaw.flatMap(SpinalAndEpiduralNeedle.init(rawValue:)) } set { periduralNeedleRaw = newValue?.rawValue } }
@@ -282,7 +287,9 @@ final class AnesthesiaDescriptionEntry {
         sedationOxygenSupply: SedationOxygenSupplyKind? = nil,
         
         periduralPosition: SpinalAndEpiduralPosition? = nil,
+        doublePeridural: Bool = false,
         periduralLevel: SpinalAndEpiduralLevel? = nil,
+        periduralLevel2: SpinalAndEpiduralLevel? = nil,
         periduralNeedle: SpinalAndEpiduralNeedle? = nil,
         periduralNeedleGauge: SpinalAndEpiduralGaugeKind? = nil,
         periduralTechnique: PeriduralTechniqueKind? = nil,
@@ -359,7 +366,9 @@ final class AnesthesiaDescriptionEntry {
         self.sedationOxygenSupplyRaw = sedationOxygenSupply?.rawValue
         
         self.periduralPositionRaw = periduralPosition?.rawValue
+        self.doublePeridural = doublePeridural
         self.periduralLevelRaw = periduralLevel?.rawValue
+        self.periduralLevel2Raw = periduralLevel?.rawValue
         self.periduralNeedleRaw = periduralNeedle?.rawValue
         self.periduralNeedleGaugeRaw = periduralNeedleGauge?.rawValue
         self.periduralTechniqueRaw = periduralTechnique?.rawValue

@@ -76,9 +76,12 @@ struct StatCard: View {
 
 struct StatisticsSection: View {
     let anesthesias: [Anesthesia]
+    let preanesthesias: [PreAnesthesia]
+    let surgeries: [Surgery]
     var onPatientsTapped: (() -> Void)? = nil
     var onAnesthesiasTapped: (() -> Void)? = nil
     var onFinancialTapped: (() -> Void)? = nil
+    var onSurgeryTapped: (() -> Void)? = nil
 
     private var now: Date { Date() }
 
@@ -134,6 +137,46 @@ struct StatisticsSection: View {
         }
         .count
     }
+    
+    private var surgeryCurrentMonthCount: Int {
+        let (start, end) = monthBounds
+        return surgeries.filter { surgery in
+            surgery.date >= start && surgery.date <= end
+        }
+        .count
+    }
+    
+    private var surgeryPreviousMonthCount: Int {
+        let (start, end) = previousMonthBounds
+        return surgeries.filter { surgery in
+            surgery.date >= start && surgery.date <= end
+        }
+        .count
+    }
+    
+    private var surgeryTotalCount: Int {
+        surgeries.count
+    }
+    
+    private var preAnesthesiaCurrentMonthCount: Int {
+        let (start, end) = monthBounds
+        return preanesthesias.filter { preanesthesias in
+            preanesthesias.surgery.date >= start && preanesthesias.surgery.date <= end
+        }
+        .count
+    }
+    
+    private var preAnesthesiaPreviousMonthCount: Int {
+        let (start, end) = previousMonthBounds
+        return preanesthesias.filter { preanesthesia in
+            preanesthesia.surgery.date >= start && preanesthesia.surgery.date <= end
+        }
+        .count
+    }
+    
+    private var preAnesthesiaTotalCount: Int {
+        preanesthesias.count
+    }
 
     private var patientTotalCount: Int {
         anesthesias
@@ -145,6 +188,7 @@ struct StatisticsSection: View {
     private var anesthesiaTotalCount: Int {
         anesthesias.count
     }
+    
     
     
     private var anesthesiaFinalSurgeryValueCurrentMonthCount: Double {
@@ -224,21 +268,37 @@ struct StatisticsSection: View {
                 }
                 .buttonStyle(.plain)
                 
-//                Button(action: { onFinancialTapped?() }) {
-//                    StatCard(
-//                        icon: "banknote.fill",
-//                        cardName: "Financeiro",
-//                        title: "Neste mês",
-//                        secondaryTitle: "Anterior",
-//                        tertiaryTitle: "",
-//                        value: String(formatCurrency(anesthesiaFinalSurgeryValueCurrentMonthCount)),
-//                        secondaryValue: String(formatCurrency(anesthesiaFinalSurgeryValuePreviousMonthCount)),
-//                        tertiaryValue: "",
-//                        iconColor: .green
-//                    )
-//                    
-//                }
-//                .buttonStyle(.plain)
+                Button(action: { onSurgeryTapped?() }) {
+                    StatCard(
+                        icon: "cross.fill",
+                        cardName: "Cirurgias",
+                        title: "Neste mês",
+                        secondaryTitle: "Anterior",
+                        tertiaryTitle: "Total",
+                        value: String(surgeryCurrentMonthCount),
+                        secondaryValue: String(surgeryPreviousMonthCount),
+                        tertiaryValue: String(surgeryTotalCount),
+                        iconColor: .green
+                    )
+                    
+                }
+                .buttonStyle(.plain)
+                
+                Button(action: { onFinancialTapped?() }) {
+                    StatCard(
+                        icon: "stethoscope",
+                        cardName: "Pré-Anestesias",
+                        title: "Neste mês",
+                        secondaryTitle: "Anterior",
+                        tertiaryTitle: "Total",
+                        value: String(preAnesthesiaCurrentMonthCount),
+                        secondaryValue: String(preAnesthesiaPreviousMonthCount),
+                        tertiaryValue: String(preAnesthesiaTotalCount),
+                        iconColor: .purple
+                    )
+                    
+                }
+                .buttonStyle(.plain)
             }
         }
     }

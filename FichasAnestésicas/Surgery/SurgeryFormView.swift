@@ -53,7 +53,8 @@ struct SurgeryFormView: View {
                         title: "Data da Cirurgia",
                         placeholder: "Selecionar",
                         minDate: nil,
-                        maxDate: Date(),
+                        maxDate: nil,
+                        //maxDate: Date(), - era isso aqui pra poder selecionar datas futuras obviamente
                         compactInRow: true
                     )
                 }

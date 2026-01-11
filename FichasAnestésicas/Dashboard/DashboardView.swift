@@ -15,11 +15,13 @@ struct DashboardView: View {
     @Query(sort:\Patient.name) var patients: [Patient]
     @Query(sort: \Surgery.date, order: .reverse) var surgeries: [Surgery]
     @Query(sort: \Anesthesia.start, order: .reverse) var anesthesias: [Anesthesia]
+    @Query(sort: \PreAnesthesia.createdAt, order: .reverse) var preanesthesias: [PreAnesthesia]
     @Environment(\.modelContext) private var patientContext
     @State private var navigateToPatients = false
     @State private var navigateToFinancialDashboard = false
     @State private var navigateToTwoMonthPatients = false
     @State private var navigateToTwoMonthAnesthesia = false
+    @State private var navigateToTwoMonthSurgery = false
     
     
     
@@ -37,6 +39,10 @@ struct DashboardView: View {
             filter: #Predicate<Anesthesia> { $0.createdBy.userId == userId },
             sort: [SortDescriptor(\.start, order: .reverse)]
         )
+        _preanesthesias = Query(
+            filter: #Predicate<PreAnesthesia> { $0.createdBy.userId == userId },
+            sort: [SortDescriptor(\.createdAt, order: .reverse)]
+        )
     }
 
       var body: some View {
@@ -52,7 +58,15 @@ struct DashboardView: View {
                           )
 
                           
-                          StatisticsSection(anesthesias: anesthesias, onPatientsTapped: { navigateToTwoMonthPatients = true }, onAnesthesiasTapped : {navigateToTwoMonthAnesthesia = true}, onFinancialTapped: {navigateToFinancialDashboard = true})
+                          StatisticsSection(
+                            anesthesias: anesthesias,
+                            preanesthesias: preanesthesias,
+                            surgeries: surgeries,
+                            onPatientsTapped: { navigateToTwoMonthPatients = true },
+                            onAnesthesiasTapped : {navigateToTwoMonthAnesthesia = true},
+                            onFinancialTapped: {navigateToFinancialDashboard = true},
+                            onSurgeryTapped: {navigateToTwoMonthSurgery = true}
+                          )
                           RecentAnesthesiasSection(anesthesias: anesthesias)
 
                       }
@@ -67,6 +81,9 @@ struct DashboardView: View {
                       }
                       .navigationDestination(isPresented: $navigateToFinancialDashboard) {
                           FinancialDashboardView(userId: user.userId, surgeries: surgeries)
+                      }
+                      .navigationDestination(isPresented: $navigateToTwoMonthSurgery) {
+                          TwoMonthsSurgeries(surgeries: surgeries)
                       }
                       .padding()
                       .navigationTitle("Olá, \(displayName(name: user.name))")

@@ -48,7 +48,9 @@ final class TechniquesSectionViewModel {
 
     // Peridural
     var periduralPosition: SpinalAndEpiduralPosition?
+    var doublePeridural = false {didSet {doublePeriduralVisibility() } }
     var periduralLevel: SpinalAndEpiduralLevel?
+    var periduralLevel2: SpinalAndEpiduralLevel?
     var periduralNeedle: SpinalAndEpiduralNeedle?
     var periduralNeedleGauge: SpinalAndEpiduralGaugeKind?
     var periduralTechnique: PeriduralTechniqueKind?
@@ -105,7 +107,10 @@ final class TechniquesSectionViewModel {
 
         // Peridural
         periduralPosition = e.periduralPosition
+        doublePeridural = e.doublePeridural ?? false
         periduralLevel = e.periduralLevel
+        periduralLevel2 = e.periduralLevel2
+
         periduralNeedle = e.periduralNeedle
         periduralNeedleGauge = e.periduralNeedleGauge
         periduralTechnique = e.periduralTechnique
@@ -155,7 +160,9 @@ final class TechniquesSectionViewModel {
 
         // Peridural
         e.periduralPosition = periduralPosition
+        e.doublePeridural = doublePeridural
         e.periduralLevel = periduralLevel
+        e.periduralLevel2 = periduralLevel2
         e.periduralNeedle = periduralNeedle
         e.periduralNeedleGauge = periduralNeedleGauge
         e.periduralTechnique = periduralTechnique
@@ -351,6 +358,12 @@ final class TechniquesSectionViewModel {
         periduralNeedleGauge = nil
     }
     
+    func doublePeriduralVisibility(){
+        if doublePeridural == false {
+            periduralLevel2 = nil
+        }
+    }
+    
     // PeripheralBlockAnesthesia
     
     func applyPeripheralBlockAnesthesiaSuggestion(){
@@ -509,6 +522,10 @@ final class TechniquesSectionViewModel {
         
         if let periduralLevel = periduralLevel?.reportDisplayName {
             parts.append(periduralLevel)
+        }
+        
+        if let periduralLevel2 = periduralLevel2?.reportDisplayName {
+            parts.append(periduralLevel2)
         }
         
         if let periduralNeedleGauge = periduralNeedleGauge?.DisplayName {

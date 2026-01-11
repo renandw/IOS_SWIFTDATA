@@ -18,6 +18,10 @@ struct PeriduralAnesthesiaSectionView: View {
               Section {
                   periduralAnesthesiaPositionPicker
                   needlePicker
+                  doublePeridural
+                  if viewModel.techniques.doublePeridural {
+                      levelPicker2
+                  }
                   levelPicker
                   gaugePicker
                   cateterFixationField
@@ -74,6 +78,15 @@ struct PeriduralAnesthesiaSectionView: View {
             }
         }
     }
+    private var levelPicker2: some View {
+        Picker("Nível", selection: $viewModel.techniques.periduralLevel2) {
+            Text("Não informado").tag(nil as SpinalAndEpiduralLevel?)
+            ForEach(SpinalAndEpiduralLevel.allCases, id: \.self) { (kind: SpinalAndEpiduralLevel) in
+                Text(kind.DisplayName)
+                    .tag(Optional(kind))
+            }
+        }
+    }
     
     private let periduralAllowedGaugeKindsForRaqui: [SpinalAndEpiduralGaugeKind] = [
         .g16, .g17, .g18, .g20, .g22
@@ -85,6 +98,12 @@ struct PeriduralAnesthesiaSectionView: View {
                 Text(kind.DisplayName)
                     .tag(Optional(kind))
             }
+        }
+    }
+    private var doublePeridural: some View {
+        HStack {
+            Text("Dupla Peridural")
+            Toggle("", isOn: $viewModel.techniques.doublePeridural)
         }
     }
     private var techniquePicker: some View {
