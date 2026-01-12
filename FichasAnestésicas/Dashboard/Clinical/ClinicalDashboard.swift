@@ -80,7 +80,8 @@ struct ClinicalDashboardView: View {
                             .fontWeight(.bold)
                     }
                     ASAGraphView(
-                        patients: filteredPatients
+                        patients: filteredPatients,
+                        filters: filters
                     )
                     .padding()
                     .glassEffect(in: .rect(cornerRadius: 12))
@@ -130,11 +131,28 @@ struct ClinicalDashboardView: View {
 
 struct ASAGraphView: View {
     let patients: [Patient]
+    let filters: ClinicalFilters
     
     @Environment(SessionManager.self) var session
     
     private var asaDistribution: [(asa: ASAClassification, count: Int, percentage: Double)] {
-        let asaValues = patients.flatMap { $0.surgeries ?? [] }.compactMap { $0.shared?.asa }
+        let allSurgeries = patients.flatMap { $0.surgeries ?? [] }
+        let filteredSurgeries = allSurgeries.filter { surgery in
+            let matchesPatient = filters.patient.isEmpty || surgery.patient.name.localizedCaseInsensitiveContains(filters.patient)
+            let matchesSex = filters.sex == nil || surgery.patient.sex == filters.sex
+            let matchesASA = filters.asa == nil || surgery.shared?.asa == filters.asa
+            let matchesWeight = filters.weight == nil || surgery.weight == filters.weight
+            let matchesHospital = filters.hospital.isEmpty || surgery.hospital.localizedCaseInsensitiveContains(filters.hospital)
+            let matchesProcedure = filters.procedure.isEmpty || surgery.proposedProcedure.localizedCaseInsensitiveContains(filters.procedure)
+            let matchesSurgeon = filters.surgeon.isEmpty || surgery.mainSurgeon.localizedCaseInsensitiveContains(filters.surgeon)
+            let matchesInsurance = filters.insurance.isEmpty || surgery.insuranceName.localizedCaseInsensitiveContains(filters.insurance)
+            let matchesDateRange = !filters.useDateFilter || (surgery.date >= filters.startDate && surgery.date <= filters.endDate)
+            let matchesPaid = filters.paid == nil || surgery.financial?.paid == filters.paid
+            
+            return matchesPatient && matchesSex && matchesASA && matchesWeight && matchesHospital && matchesProcedure && matchesSurgeon && matchesInsurance && matchesDateRange && matchesPaid
+        }
+        
+        let asaValues = filteredSurgeries.compactMap { $0.shared?.asa }
         guard !asaValues.isEmpty else { return [] }
         
         let total = Double(asaValues.count)
