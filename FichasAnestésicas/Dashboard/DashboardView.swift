@@ -19,6 +19,7 @@ struct DashboardView: View {
     @Environment(\.modelContext) private var patientContext
     @State private var navigateToPatients = false
     @State private var navigateToFinancialDashboard = false
+    @State private var navigateToClinicalDashboard = false
     @State private var navigateToTwoMonthPatients = false
     @State private var navigateToTwoMonthAnesthesia = false
     @State private var navigateToTwoMonthSurgery = false
@@ -54,7 +55,8 @@ struct DashboardView: View {
                           QuickActionsSection(
                               onNewAnesthesia: {},
                               onMyPatients: { navigateToPatients = true },
-                              onFinancial: {navigateToFinancialDashboard = true}
+                              onFinancial: {navigateToFinancialDashboard = true},
+                              onClinical: {navigateToClinicalDashboard = true}
                           )
 
                           
@@ -81,6 +83,9 @@ struct DashboardView: View {
                       }
                       .navigationDestination(isPresented: $navigateToFinancialDashboard) {
                           FinancialDashboardView(userId: user.userId, surgeries: surgeries)
+                      }
+                      .navigationDestination(isPresented: $navigateToClinicalDashboard) {
+                          ClinicalDashboardView(userId: user.userId, patients: patients)
                       }
                       .navigationDestination(isPresented: $navigateToTwoMonthSurgery) {
                           TwoMonthsSurgeries(surgeries: surgeries)
@@ -314,6 +319,7 @@ struct QuickActionsSection: View {
     var onNewAnesthesia: () -> Void = {}
     var onMyPatients: () -> Void = {}
     var onFinancial: () -> Void = {}
+    var onClinical: () -> Void = {}
     
     @State private var showingAnesthesiaWizard = false
     @State private var showingPreAnesthesiaWizard = false
@@ -361,7 +367,7 @@ struct QuickActionsSection: View {
                     startPoint: .trailing,
                     endPoint: .leading
                 ),
-                onTap: { showComingSoonAlert = true }
+                onTap: onClinical
             )
             
 //            QuickActionCard(

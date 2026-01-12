@@ -21,7 +21,7 @@ protocol PatientRepository {
     func delete(_ patient: Patient) throws
     func get(by id: UUID) throws -> Patient?
     func checkForDuplicates(_ patient: Patient) throws -> DuplicateStatus
-    func getAll() throws -> [Patient]
+    func getAll(for user: User) throws -> [Patient]
 }
 
 @MainActor
@@ -65,7 +65,7 @@ final class SwiftDataPatientRepository: PatientRepository {
     }
     
     func checkForDuplicates(_ patient: Patient) throws -> DuplicateStatus {
-        let allPatients = try getAll()
+        let allPatients = try getAll(for: currentUser)
         
         // Helper para verificar se CNS é placeholder
         let isPlaceholder = { (cns: String) -> Bool in
@@ -152,7 +152,14 @@ final class SwiftDataPatientRepository: PatientRepository {
         return dist[a1.count][a2.count]
     }
 
-    func getAll() throws -> [Patient] {
-        try context.fetch(FetchDescriptor<Patient>())
+    func getAll(for user: User) throws -> [Patient] {
+        let id = user.userId
+        return try context.fetch(
+            FetchDescriptor<Patient>(
+                predicate: #Predicate { $0.createdBy.userId == id }
+            )
+        )
     }
+
+
 }

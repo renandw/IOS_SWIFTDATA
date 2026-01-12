@@ -48,8 +48,8 @@ struct TwoMonthsSurgeries: View {
         }
 
         return searched.sorted { (a, b) in
-            let da = a.start ?? .distantPast
-            let db = b.start ?? .distantPast
+            let da = a.start ?? a.date
+            let db = b.start ?? b.date
             return da > db
         }
     }
@@ -60,10 +60,6 @@ struct TwoMonthsSurgeries: View {
                 if twoMonthsSurgeries.isEmpty {
                     ContentUnavailableView {
                         Label("Nenhuma Cirurgia", systemImage: "doc.text")
-                    } actions: {
-//                        Button("Nova Anestesia") {
-//                            showingAnesthesiaWizard = true
-//                        }
                     }
                     .buttonStyle(.borderedProminent)
                     .frame(height: 200)
@@ -106,13 +102,6 @@ struct TwoMonthsSurgeries: View {
                                 }
                             }
                         }
-//                        NavigationLink(destination: AllAnesthesias(anesthesias: anesthesias)) {
-//                            Label("Navegar para Todas as Anestesias", systemImage: "wallet.pass.fill")
-//                                .font(.body)
-//                                .fontWeight(.semibold)
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                        }
-//                        .buttonStyle(.glassProminent)
                     }
                 }
             }
@@ -122,18 +111,6 @@ struct TwoMonthsSurgeries: View {
         .searchable(text: $searchText, placement: .toolbar, prompt: "Buscar pacientes, procedimentos, cirurgiões")
         .navigationTitle("Cirurgias Recentes")
         .navigationBarTitleDisplayMode(.automatic)
-//        .sheet(isPresented: $showingAnesthesiaWizard) {
-//            NewAnesthesiaPageView(
-//                session: session,
-//                modelContext: modelContext,
-//                onFinished: { anesthesia in
-//                    createdAnesthesia = anesthesia
-//                }
-//            )
-//        }
-//        .navigationDestination(item: $createdAnesthesia) { anesthesia in
-//            AnesthesiaDetailsView(anesthesia: anesthesia)
-//        }
     }
     
     private var now: Date { Date() }
@@ -200,6 +177,30 @@ struct RecentSurgeryCard: View {
                 .foregroundColor(.secondary)
                 
                 Divider()
+                
+                if surgery.anesthesia?.status == .finished || surgery.preanesthesia?.status == .finished {
+                    HStack {
+                        if surgery.anesthesia?.status == .finished {
+                            ShareLink(item: surgery.anesthesia!.renderAnesthesiaPDF()) {
+                                Label("Ficha Anestésica", systemImage: "square.and.arrow.up.fill")
+                            }
+                            .font(.caption)
+                            .buttonStyle(.glass)
+                            .tint(.blue)
+                        }
+                        
+                        Spacer()
+                        
+                        if surgery.preanesthesia?.status == .finished {
+                            ShareLink(item: surgery.anesthesia!.renderPreAnesthesiaPDF()) {
+                                Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
+                            }
+                            .font(.caption)
+                            .buttonStyle(.glass)
+                            .tint(.blue)
+                        }
+                    }
+                }
                 
             }
             .frame(maxWidth: .infinity, alignment: .leading)
