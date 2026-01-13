@@ -106,6 +106,19 @@ public enum AnesthesiaTechniqueKind: String, Codable, CaseIterable {
     case anestesiaLocal = "Local"
     
     var displayName: String { rawValue }
+    
+    var color: Color {
+        switch self {
+        case .geralBalanceada: return .blue
+        case .geralVenosaTotal: return .red
+        case .geralInalatoria: return .yellow
+        case .raquianestesia: return .green
+        case .peridural: return .purple
+        case .sedacao: return .orange
+        case .bloqueioPeriferico: return .gray
+        case .anestesiaLocal: return .pink
+        }
+    }
 }
 
 enum BloqueioPeriferico: String, Codable, CaseIterable {

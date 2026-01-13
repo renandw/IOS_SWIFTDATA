@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import SwiftData
 
 struct TwoMonthsSurgeries: View {
     let surgeries: [Surgery]
@@ -102,6 +103,13 @@ struct TwoMonthsSurgeries: View {
                                 }
                             }
                         }
+                        NavigationLink(destination: AllSurgeries(surgeries: surgeries)) {
+                            Label("Navegar para Todas as Cirurgias", systemImage: "wallet.pass.fill")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .buttonStyle(.glassProminent)
                     }
                 }
             }
@@ -191,8 +199,9 @@ struct RecentSurgeryCard: View {
                         
                         Spacer()
                         
-                        if surgery.preanesthesia?.status == .finished {
-                            ShareLink(item: surgery.anesthesia!.renderPreAnesthesiaPDF()) {
+                        if let pre = surgery.preanesthesia, pre.status == .finished,
+                           let ane = surgery.anesthesia {
+                            ShareLink(item: ane.renderPreAnesthesiaPDF()) {
                                 Label("Ficha APA", systemImage: "square.and.arrow.up.fill")
                             }
                             .font(.caption)
@@ -211,3 +220,58 @@ struct RecentSurgeryCard: View {
         .buttonStyle(.plain)
     }
 }
+
+#Preview("Lista com samples") {
+    let user = User.sampleUser
+    let patients = Patient.samples(createdBy: user)
+    let surgeries = Surgery.samples(createdBy: user, patients: patients)
+    let cbhpm = CbhpmProcedure.samples(surgeries: surgeries)
+    let financial = Financial.samples(surgeries: surgeries)
+    let anesthesia = Anesthesia.samples(surgeries: surgeries, user: user)
+    let shared = SharedPreAndAnesthesia.samples(surgeries: surgeries)
+    let preanesthesia = PreAnesthesia.samples(surgeries: surgeries, shared: shared, user: user)
+
+
+    let session = SessionManager()
+    session.currentUser = user
+
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: User.self, Patient.self, Surgery.self,
+        configurations: config
+    )
+    let context = container.mainContext
+
+    // Preload uma única vez
+    if try! context.fetch(FetchDescriptor<User>()).isEmpty {
+        context.insert(user)
+        patients.forEach { context.insert($0) }
+        surgeries.forEach { context.insert($0) }
+        financial.forEach { context.insert($0) }
+        cbhpm.forEach { context.insert($0) }
+        anesthesia.forEach { context.insert($0) }
+        preanesthesia.forEach { context.insert($0) }
+        try! context.save()
+    }
+
+    // Escolhe um paciente aleatório
+    let randomPatient = patients.randomElement()!
+
+    // Filtra apenas cirurgias do paciente aleatório que possuem anesthesia
+    let surgeriesWithAnesthesiaForPatient = surgeries.filter { $0.patient.id == randomPatient.id && $0.anesthesia != nil }
+
+    // Se o paciente não tiver cirurgias com anesthesia, tenta globalmente
+    let surgeriesWithAnesthesia = surgeries.filter { $0.anesthesia != nil }
+
+    // Escolhe uma cirurgia com anesthesia (primeiro do paciente, senão global)
+    guard let randomSurgery = (surgeriesWithAnesthesiaForPatient.randomElement() ?? surgeriesWithAnesthesia.randomElement()) else {
+        fatalError("Nenhuma cirurgia com anesthesia disponível nas amostras do preview.")
+    }
+
+    return NavigationStack {
+        RecentSurgeryCard(surgery: randomSurgery)
+            .environment(session)
+    }
+    .modelContainer(container)
+}
+
