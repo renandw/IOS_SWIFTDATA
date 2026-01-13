@@ -80,13 +80,19 @@ struct ClinicalDashboardView: View {
                             .fontWeight(.bold)
                     }
                     ASAGraphView(
-                        patients: filteredPatients,
+                        surgeries: patients.flatMap { $0.surgeries ?? [] },
                         filters: filters
                     )
                     .padding()
                     .glassEffect(in: .rect(cornerRadius: 12))
                     SexGraphView(
                         patients: filteredPatients
+                    )
+                    .padding()
+                    .glassEffect(in: .rect(cornerRadius: 12))
+                    InsuranceGraphView(
+                        surgeries: patients.flatMap { $0.surgeries ?? [] },
+                        filters: filters
                     )
                     .padding()
                     .glassEffect(in: .rect(cornerRadius: 12))
@@ -130,14 +136,13 @@ struct ClinicalDashboardView: View {
 }
 
 struct ASAGraphView: View {
-    let patients: [Patient]
+    let surgeries: [Surgery]
     let filters: ClinicalFilters
     
     @Environment(SessionManager.self) var session
     
-    private var asaDistribution: [(asa: ASAClassification, count: Int, percentage: Double)] {
-        let allSurgeries = patients.flatMap { $0.surgeries ?? [] }
-        let filteredSurgeries = allSurgeries.filter { surgery in
+    private var filteredSurgeries: [Surgery] {
+        surgeries.filter { surgery in
             let matchesPatient = filters.patient.isEmpty || surgery.patient.name.localizedCaseInsensitiveContains(filters.patient)
             let matchesSex = filters.sex == nil || surgery.patient.sex == filters.sex
             let matchesASA = filters.asa == nil || surgery.shared?.asa == filters.asa
@@ -151,7 +156,9 @@ struct ASAGraphView: View {
             
             return matchesPatient && matchesSex && matchesASA && matchesWeight && matchesHospital && matchesProcedure && matchesSurgeon && matchesInsurance && matchesDateRange && matchesPaid
         }
-        
+    }
+    
+    private var asaDistribution: [(asa: ASAClassification, count: Int, percentage: Double)] {
         let asaValues = filteredSurgeries.compactMap { $0.shared?.asa }
         guard !asaValues.isEmpty else { return [] }
         
@@ -175,39 +182,55 @@ struct ASAGraphView: View {
                     description: Text("Nenhuma classificação ASA registrada")
                 )
             } else {
-                Chart(asaDistribution, id: \.asa) { item in
-                    SectorMark(
-                        angle: .value("Count", item.count),
-                        innerRadius: .ratio(0.5),
-                        angularInset: 1.5
-                    )
-                    .cornerRadius(5)
-                    .foregroundStyle(item.asa.tintColor)
-                }
-                .frame(height: 150)
-                
-                // Legenda
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(asaDistribution, id: \.asa) { item in
-                        HStack {
-                            Circle()
-                                .fill(item.asa.tintColor)
-                                .frame(width: 12, height: 12)
-                            
-                            Text(item.asa.displayName)
-                                .font(.subheadline)
-                            
-                            Spacer()
-                            
-                            Text("\(item.count) (\(item.percentage, specifier: "%.1f")%)")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                HStack {
+                    Chart(asaDistribution, id: \.asa) { item in
+                        SectorMark(
+                            angle: .value("Count", item.count),
+                            innerRadius: .ratio(0.5),
+                            angularInset: 1.5
+                        )
+                        .cornerRadius(5)
+                        .foregroundStyle(item.asa.tintColor)
+                    }
+                    .frame(height: 100)
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(asaDistribution, id: \.asa) { item in
+                            NavigationLink(
+                                destination: SurgeryListView(
+                                    title: item.asa.displayName,
+                                    surgeries: filteredSurgeries
+                                        .filter { $0.shared?.asa == item.asa }
+                                        .sorted { $0.date > $1.date }
+                                )
+                            ) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack(alignment: .center) {
+                                        Circle()
+                                            .fill(item.asa.tintColor)
+                                            .frame(width: 12, height: 12)
+                                        
+                                        Text(item.asa.displayName)
+                                            .font(.subheadline)
+                                            .bold()
+                                        Image(systemName: "chevron.right.circle")
+                                            .font(.caption)
+                                            .foregroundStyle(.blue)
+                                        
+                                        Spacer()
+                                    }
+                                    Text("\(item.count) (\(item.percentage, specifier: "%.1f")%)")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(12)
                 }
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(12)
             }
         }
         .padding()
@@ -243,39 +266,177 @@ struct SexGraphView: View {
                     description: Text("Nenhum paciente registrado")
                 )
             } else {
-                Chart(sexDistribution, id: \.sex) { item in
-                    SectorMark(
-                        angle: .value("Count", item.count),
-                        innerRadius: .ratio(0.5),
-                        angularInset: 1.5
-                    )
-                    .cornerRadius(5)
-                    .foregroundStyle(item.sex.sexColor)
-                }
-                .frame(height: 150)
-                
-                // Legenda
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(sexDistribution, id: \.sex) { item in
-                        HStack {
-                            Image(systemName: item.sex.sexImage)
-                                .foregroundStyle(item.sex.sexColor)
-                                .frame(width: 20)
-                            
-                            Text(item.sex.sexStringDescription)
-                                .font(.subheadline)
-                            
-                            Spacer()
-                            
-                            Text("\(item.count) (\(item.percentage, specifier: "%.1f")%)")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                HStack {
+                    Chart(sexDistribution, id: \.sex) { item in
+                        SectorMark(
+                            angle: .value("Count", item.count),
+                            innerRadius: .ratio(0.5),
+                            angularInset: 1.5
+                        )
+                        .cornerRadius(5)
+                        .foregroundStyle(item.sex.sexColor)
+                    }
+                    .frame(height: 100)
+                    
+                    // Legenda
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(sexDistribution, id: \.sex) { item in
+                            NavigationLink(
+                                destination: ListView(
+                                    title: "Sexo \(item.sex.sexStringDescription)",
+                                    patients: patients
+                                        .filter { $0.sex == item.sex }
+                                        .sorted { $0.name < $1.name }
+                                )
+                            ) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack {
+                                        Image(systemName: item.sex.sexImage)
+                                            .foregroundStyle(item.sex.sexColor)
+                                            .frame(width: 20)
+                                        Text(item.sex.sexStringDescription)
+                                            .font(.subheadline)
+                                            .bold()
+                                        Image(systemName: "chevron.right.circle")
+                                            .font(.caption)
+                                            .foregroundStyle(.blue)
+                                        Spacer()
+                                    }
+                                    
+                                    Text("\(item.count) (\(item.percentage, specifier: "%.1f")%)")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                                
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(12)
                 }
-                .padding()
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(12)
+            }
+        }
+        .padding()
+    }
+}
+
+struct InsuranceGraphView: View {
+    let surgeries: [Surgery]
+    let filters: ClinicalFilters
+    
+    @Environment(SessionManager.self) var session
+    
+    private enum InsuranceKind: String, CaseIterable, Hashable {
+        case particular = "Particular"
+        case convenio = "Convênio"
+        
+        var color: Color {
+            switch self {
+            case .particular: return .green
+            case .convenio: return .orange
+            }
+        }
+    }
+    
+    private var filteredSurgeries: [Surgery] {
+        surgeries.filter { surgery in
+            let matchesPatient = filters.patient.isEmpty || surgery.patient.name.localizedCaseInsensitiveContains(filters.patient)
+            let matchesSex = filters.sex == nil || surgery.patient.sex == filters.sex
+            let matchesASA = filters.asa == nil || surgery.shared?.asa == filters.asa
+            let matchesWeight = filters.weight == nil || surgery.weight == filters.weight
+            let matchesHospital = filters.hospital.isEmpty || surgery.hospital.localizedCaseInsensitiveContains(filters.hospital)
+            let matchesProcedure = filters.procedure.isEmpty || surgery.proposedProcedure.localizedCaseInsensitiveContains(filters.procedure)
+            let matchesSurgeon = filters.surgeon.isEmpty || surgery.mainSurgeon.localizedCaseInsensitiveContains(filters.surgeon)
+            let matchesInsurance = filters.insurance.isEmpty || surgery.insuranceName.localizedCaseInsensitiveContains(filters.insurance)
+            let matchesDateRange = !filters.useDateFilter || (surgery.date >= filters.startDate && surgery.date <= filters.endDate)
+            let matchesPaid = filters.paid == nil || surgery.financial?.paid == filters.paid
+            
+            return matchesPatient && matchesSex && matchesASA && matchesWeight && matchesHospital && matchesProcedure && matchesSurgeon && matchesInsurance && matchesDateRange && matchesPaid
+        }
+    }
+    
+    private var insuranceDistribution: [(kind: InsuranceKind, count: Int, percentage: Double)] {
+        let kinds: [InsuranceKind] = filteredSurgeries.map { surgery in
+            let name = surgery.insuranceName.trimmingCharacters(in: .whitespacesAndNewlines)
+            return name.localizedCaseInsensitiveCompare("particular") == .orderedSame ? .particular : .convenio
+        }
+        
+        guard !kinds.isEmpty else { return [] }
+        
+        let total = Double(kinds.count)
+        let grouped = Dictionary(grouping: kinds, by: { $0 })
+        
+        return grouped.map { (kind: $0.key, count: $0.value.count, percentage: Double($0.value.count) / total * 100) }
+            .sorted { $0.kind.rawValue < $1.kind.rawValue }
+    }
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Distribuição por Convênio")
+                .font(.title2)
+                .bold()
+            
+            if insuranceDistribution.isEmpty {
+                ContentUnavailableView(
+                    "Sem dados",
+                    systemImage: "chart.pie",
+                    description: Text("Nenhuma cirurgia com informação de pagamento")
+                )
+            } else {
+                HStack {
+                    Chart(insuranceDistribution, id: \.kind) { item in
+                        SectorMark(
+                            angle: .value("Count", item.count),
+                            innerRadius: .ratio(0.5),
+                            angularInset: 1.5
+                        )
+                        .cornerRadius(5)
+                        .foregroundStyle(item.kind.color)
+                    }
+                    .frame(height: 100)
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(insuranceDistribution, id: \.kind) { item in
+                            NavigationLink(
+                                destination: SurgeryListView(
+                                    title: item.kind.rawValue,
+                                    surgeries: filteredSurgeries
+                                        .filter { surgery in
+                                            let name = surgery.insuranceName.trimmingCharacters(in: .whitespacesAndNewlines)
+                                            let surgeryKind: InsuranceKind = name.localizedCaseInsensitiveCompare("particular") == .orderedSame ? .particular : .convenio
+                                            return surgeryKind == item.kind
+                                        }
+                                        .sorted { $0.date > $1.date }
+                                )
+                            ) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack {
+                                        Circle()
+                                            .fill(item.kind.color)
+                                            .frame(width: 12, height: 12)
+                                        
+                                        Text(item.kind.rawValue)
+                                            .font(.subheadline)
+                                            .bold()
+                                        Image(systemName: "chevron.right.circle")
+                                            .font(.caption)
+                                            .foregroundStyle(.blue)
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    Text("\(item.count) (\(item.percentage, specifier: "%.1f")%)")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(12)
+                }
             }
         }
         .padding()
@@ -335,3 +496,4 @@ struct SexGraphView: View {
     }
     .modelContainer(container)
 }
+
