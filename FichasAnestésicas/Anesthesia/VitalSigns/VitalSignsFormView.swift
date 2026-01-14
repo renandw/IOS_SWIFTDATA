@@ -392,6 +392,7 @@ struct VitalSignsFormView: View {
                 ToolbarItem(placement: .topBarTrailing){
                     Button {
                         do {
+                            viewModel.healthyPatient()
                             try viewModel.generateSeries(durationMinutes: seriesDurationMinutes)
                         } catch {
                             // TODO: apresentar erro ao usuário (SeriesGenerationError ou outro)

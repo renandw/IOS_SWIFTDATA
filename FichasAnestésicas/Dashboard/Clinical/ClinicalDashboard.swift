@@ -173,6 +173,7 @@ struct ClinicalDashboardView: View {
     let container = try! ModelContainer(
         for: User.self,
            Patient.self,
+        Anesthesia.self,
            Surgery.self,
            PreAnesthesia.self,
         configurations: .init(isStoredInMemoryOnly: true)
@@ -184,6 +185,7 @@ struct ClinicalDashboardView: View {
         context.insert(user)
         patients.forEach { context.insert($0) }
         surgeries.forEach { context.insert($0) }
+        anesthesias.forEach { context.insert($0) }
         cbhpm.forEach { context.insert($0) }
         financial.forEach { context.insert($0) }
         preanesthesias.forEach { context.insert($0) }
