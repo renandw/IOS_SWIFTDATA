@@ -69,7 +69,7 @@ struct SurgeryFormView: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .frame(maxWidth: 200)
+                    .frame(maxWidth: 180)
                 }
                 
                 if viewModel.type == .sus {
@@ -87,17 +87,18 @@ struct SurgeryFormView: View {
                         TextField("Prontuário", text: $viewModel.insuranceNumber)
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
-                    }
-                    if !viewModel.insuranceNumber.isEmpty {
-                        Button {
-                            viewModel.insuranceNumber = ""
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.secondary)
+                        if !viewModel.insuranceNumber.isEmpty {
+                            Button {
+                                viewModel.insuranceNumber = ""
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Limpar Carteirinha")
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel("Limpar Carteirinha")
                     }
+                    
                 } else if viewModel.type == .convenio {
                     InsuranceField(insuranceName: $viewModel.insuranceName)
                     

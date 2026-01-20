@@ -175,10 +175,15 @@ struct SurgeryDetailsView: View {
                         .fontWeight(.semibold)
                 }
             } else if surgery.insuranceName != "Particular" {
-                HStack {
+                HStack(spacing: 8){
                     Text("Carteirinha")
                         .foregroundStyle(.secondary)
                     Spacer()
+                    Button {
+                        UIPasteboard.general.string = surgery.insuranceNumber
+                    } label: {
+                        Image(systemName: "doc.on.doc")
+                    }
                     Text(surgery.insuranceNumber)
                         .fontWeight(.semibold)
                 }
@@ -239,19 +244,19 @@ struct SurgeryDetailsView: View {
                                 .font(.caption)
                                 .fontWeight(.semibold)
                         }
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 8)
-                        .background(.ultraThinMaterial)
+//                        .padding(.horizontal, 6)
+//                        .padding(.vertical, 8)
+//                        .background(.ultraThinMaterial)
                         HStack(alignment: .top, spacing: 6) {
                             Text(item.procedure)
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
                         }
-                        .padding(8)
+                        .padding(.vertical, 2)
                     }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(in: Capsule())
+//                    .padding(.horizontal, 10)
+//                    .padding(.vertical, 6)
+
                 }
             }
         } header: {

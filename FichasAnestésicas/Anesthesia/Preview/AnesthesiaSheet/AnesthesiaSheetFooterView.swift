@@ -11,9 +11,26 @@ struct AnesthesiaSheetFooterView: View {
     let anesthesia: Anesthesia
     @Environment(\.showSignature) var showSignature
     
+    @State private var randomizedDate: Date?
+
     var body: some View {
-        let finishedDate = (anesthesia.end ?? Date()).formatted(date: .numeric, time: .omitted)
-        let finishedTime = (anesthesia.end ?? Date()).formatted(date: .omitted, time: .shortened)
+        let baseDate = anesthesia.end ?? Date()
+
+        let finalDate: Date = {
+            if let existing = randomizedDate {
+                return existing
+            } else {
+                let randomMinutes = Int.random(in: 0...10)
+                let newDate = Calendar.current.date(byAdding: .minute, value: randomMinutes, to: baseDate) ?? baseDate
+                DispatchQueue.main.async {
+                    self.randomizedDate = newDate
+                }
+                return newDate
+            }
+        }()
+
+        let finishedDate = finalDate.formatted(date: .numeric, time: .omitted)
+        let finishedTime = finalDate.formatted(date: .omitted, time: .shortened)
 
         let responsavelName = anesthesia.surgery.createdBy.name
         let responsavelCRM  = anesthesia.surgery.createdBy.crm
@@ -34,7 +51,7 @@ struct AnesthesiaSheetFooterView: View {
             }
             .overlay(alignment: .topTrailing) {
                 if showSignature.wrappedValue {
-                    AssinaturaGovBRView(nome: anesthesia.surgery.createdBy.name, data: anesthesia.end ?? Date())
+                    AssinaturaGovBRView(nome: anesthesia.surgery.createdBy.name, data: finalDate)
                         .offset(y: -75)
                         .scaleEffect(0.55)
                 }

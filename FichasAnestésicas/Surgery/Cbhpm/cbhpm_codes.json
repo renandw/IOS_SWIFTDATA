@@ -5346,12 +5346,12 @@
   },
   {
     "codigo": "3.07.30.12-0",
-    "procedimento": "Terapia por ondas de choque extracorpórea em partes moles –",
+    "procedimento": "Terapia por ondas de choque extracorpórea em partes moles – acompanhamento 1a aplicação",
     "porte_anestesico": "0"
   },
   {
     "codigo": "3.07.30.13-9",
-    "procedimento": "Terapia por ondas de choque extracorpórea em partes moles –",
+    "procedimento": "Terapia por ondas de choque extracorpórea em partes moles – acompanhamento reaplicações",
     "porte_anestesico": "0"
   },
   {
@@ -5476,7 +5476,7 @@
   },
   {
     "codigo": "3.07.32.01-8",
-    "procedimento": "Curetagem ou ressecção em bloco de tumor com reconstrução e",
+    "procedimento": "Curetagem ou ressecção em bloco de tumor com reconstrução e enxerto vascularizado",
     "porte_anestesico": "5"
   },
   {
@@ -5490,18 +5490,13 @@
     "porte_anestesico": "5"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "81"
-  },
-  {
     "codigo": "3.07.32.05-0",
-    "procedimento": "Terapia por ondas de choque extracorpórea em partes ósseas –",
+    "procedimento": "Terapia por ondas de choque extracorpórea em partes ósseas – acompanhamento 1a reaplicação",
     "porte_anestesico": "0"
   },
   {
     "codigo": "3.07.32.06-9",
-    "procedimento": "Terapia por ondas de choque extracorpórea em partes ósseas –",
+    "procedimento": "Terapia por ondas de choque extracorpórea em partes ósseas – acompanhamento reaplicações",
     "porte_anestesico": "0"
   },
   {
@@ -5541,12 +5536,12 @@
   },
   {
     "codigo": "3.07.33.08-1",
-    "procedimento": "Fratura com redução e/ou estabilização da superfície articular – um",
+    "procedimento": "Fratura com redução e/ou estabilização da superfície articular – um compartimento",
     "porte_anestesico": "5"
   },
   {
     "codigo": "3.07.33.10-3",
-    "procedimento": "Instabilidade femoro-patelar, release lateral da patela,",
+    "procedimento": "Instabilidade femoro-patelar, release lateral da patela, retencionamento, reforço ou reconstrução do ligamento patelo-femoral medial  ",
     "porte_anestesico": "6"
   },
   {
@@ -5561,7 +5556,7 @@
   },
   {
     "codigo": "3.07.33.07-3",
-    "procedimento": "Reconstrução, retencionamento ou reforço do ligamento cruzado",
+    "procedimento": "Reconstrução, retencionamento ou reforço do ligamento cruzado anterior ou posterior",
     "porte_anestesico": "6"
   },
   {
@@ -5671,7 +5666,7 @@
   },
   {
     "codigo": "3.07.36.04-8",
-    "procedimento": "Osteocondroplastia – estabilização, ressecção e/ou plastia",
+    "procedimento": "Osteocondroplastia – estabilização, ressecção e/ou plastia (enxertia)",
     "porte_anestesico": "5"
   },
   {
@@ -5701,12 +5696,12 @@
   },
   {
     "codigo": "3.07.37.04-4",
-    "procedimento": "Osteocondroplastia – estabilização, ressecção e/ou plastia",
+    "procedimento": "Osteocondroplastia – estabilização, ressecção e/ou plastia (enxertia)",
     "porte_anestesico": "6"
   },
   {
     "codigo": "3.07.37.05-2",
-    "procedimento": "Reconstrução, retencionamento ou reforço de ligamento ou reparo",
+    "procedimento": "Reconstrução, retencionamento ou reforço de ligamento ou reparo de cartilagem triangular",
     "porte_anestesico": "5"
   },
   {
