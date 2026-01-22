@@ -74,6 +74,7 @@ struct UserSelectionView: View {
     }
 }
 
+
 #Preview {
     let session = SessionManager()
     return UserSelectionView()
