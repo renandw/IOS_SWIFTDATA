@@ -18,10 +18,12 @@ struct NewAnesthesiaPageView: View {
     }
     
     @Environment(\.dismiss) private var dismiss
+    // Removed @Environment(SyncManager.self) var syncManager
     
     // Recebidos no init
     private let session: SessionManager
     private let modelContext: ModelContext
+    private let syncManager: SyncManager
     
     // Apenas o patientViewModel é criado no init
     @StateObject private var patientViewModel: PatientFormViewModel
@@ -44,17 +46,25 @@ struct NewAnesthesiaPageView: View {
     init(
         session: SessionManager,
         modelContext: ModelContext,
+        syncManager: SyncManager,
         onFinished: @escaping (Anesthesia) -> Void
     ) {
         self.session = session
         self.modelContext = modelContext
+        self.syncManager = syncManager
         self.onFinished = onFinished
         
         guard let currentUser = session.currentUser else {
             fatalError("User required for NewAnesthesiaPageView")
         }
         
-        let patientRepo = SwiftDataPatientRepository(context: modelContext, currentUser: currentUser)
+        
+        let patientRepo = SwiftDataPatientRepository(
+            context: modelContext,
+            currentUser: currentUser,
+            syncManager: self.syncManager
+        )
+        
         _patientViewModel = StateObject(wrappedValue: PatientFormViewModel(
             repository: patientRepo,
             currentUser: currentUser

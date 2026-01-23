@@ -11,16 +11,22 @@ import SwiftData
 @main
 struct FichasAnestesicasApp: App {
     @State private var session = SessionManager()
+    @State private var syncManager = SyncManager()
     
     var body: some Scene {
         WindowGroup {
             RootView()
         }
         .environment(session)
-        .modelContainer(for: [User.self, Patient.self, Surgery.self, CbhpmProcedure.self, Financial.self])
+        .environment(syncManager)
+        .modelContainer(for: [
+            User.self,
+            Patient.self,
+            Surgery.self,
+            CbhpmProcedure.self,
+            Financial.self,
+            OutboxOperation.self
+        ])
     }
-//    init() {
-//        print(URL.applicationSupportDirectory.path(percentEncoded: false))
-//    }
+
 }
- 

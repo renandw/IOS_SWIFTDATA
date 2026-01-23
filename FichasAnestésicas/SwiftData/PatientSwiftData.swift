@@ -16,7 +16,7 @@ final class Patient {
     var birthDate: Date
 
     // Sexo armazenado como rawValue para flexibilidade de migração
-    private var sexRaw: String
+    var sexRaw: String
     var sex: Sex {
         get { Sex(rawValue: sexRaw) ?? .male }
         set { sexRaw = newValue.rawValue }
@@ -28,7 +28,7 @@ final class Patient {
     @Relationship var updatedBy: User?
     var lastActivityAt: Date
     @Relationship(deleteRule: .cascade, inverse: \Surgery.patient) var surgeries: [Surgery]?
-    
+    var lastSyncedAt: Date?
     
     init(
         patientId: String,
@@ -40,7 +40,8 @@ final class Patient {
         createdAt: Date = .now,
         updatedAt: Date? = nil,
         updatedBy: User? = nil,
-        lastActivityAt: Date = .now
+        lastActivityAt: Date = .now,
+        lastSyncedAt: Date? = nil
     ) {
         self.patientId = patientId
         self.cns = cns
@@ -53,6 +54,7 @@ final class Patient {
         self.updatedBy = updatedBy
         self.lastActivityAt = lastActivityAt
         self.surgeries = nil
+        self.lastSyncedAt = lastSyncedAt
     }
 
     init(
@@ -65,7 +67,8 @@ final class Patient {
         createdAt: Date = .now,
         updatedAt: Date? = nil,
         updatedBy: User? = nil,
-        lastActivityAt: Date = .now
+        lastActivityAt: Date = .now,
+        lastSyncedAt: Date? = nil
     ) {
         self.patientId = patientId
         self.cns = cns
@@ -78,6 +81,7 @@ final class Patient {
         self.updatedBy = updatedBy
         self.lastActivityAt = lastActivityAt
         self.surgeries = nil
+        self.lastSyncedAt = lastSyncedAt
     }
 }
 

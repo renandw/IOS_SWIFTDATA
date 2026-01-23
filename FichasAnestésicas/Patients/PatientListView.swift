@@ -3,6 +3,7 @@ import SwiftData
 
 struct PatientListView: View {
     @Environment(SessionManager.self) var session
+    @Environment(SyncManager.self) var syncManager
     @Environment(\.modelContext) private var patientContext
     @Query(sort: \Patient.name) private var patient: [Patient]
     
@@ -82,7 +83,11 @@ struct PatientListView: View {
         .navigationTitle("Pacientes")
         .sheet(isPresented: $showingForm) {
             if let user = session.currentUser {
-                let repository = SwiftDataPatientRepository(context: patientContext, currentUser: user)
+                let repository = SwiftDataPatientRepository(
+                    context: patientContext,
+                    currentUser: user,
+                    syncManager: syncManager
+                )
                 PatientFormView(
                     viewModel: PatientFormViewModel(
                         repository: repository,
@@ -120,7 +125,11 @@ struct PatientListView: View {
     }
     private func handleDelete(at indexSet: IndexSet) {
         guard let user = session.currentUser else { return }
-        let repository = SwiftDataPatientRepository(context: patientContext, currentUser: user)
+        let repository = SwiftDataPatientRepository(
+            context: patientContext,
+            currentUser: user,
+            syncManager: syncManager
+        )
         for index in indexSet {
             let p = filteredPatients[index]
             do {
@@ -178,4 +187,3 @@ struct PatientListView: View {
     }
     .modelContainer(container)
 }
-

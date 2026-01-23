@@ -31,6 +31,7 @@ class SessionManager {
         } else {
             // Usuário salvo não existe mais → limpa o registro
             storedUserID = nil
+            UserDefaults.standard.removeObject(forKey: "authToken")
         }
     }
 
@@ -40,5 +41,7 @@ class SessionManager {
         currentUser = nil
         // Remove o ID persistido
         storedUserID = nil
+        // Remove o token JWT salvo
+        UserDefaults.standard.removeObject(forKey: "authToken")
     }
 }

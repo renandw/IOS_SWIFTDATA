@@ -29,6 +29,16 @@
 		C083D3DB2EA6A160000B164E /* FichasAnestésicasUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FichasAnestésicasUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C09FABC22F22667C006F1778 /* Exceptions for "FichasAnestésicasTests" folder in "FichasAnestésicasTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"FichasAneste-sicasTests-Info.plist",
+			);
+			target = C083D3D02EA6A160000B164E /* FichasAnestésicasTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C083D3C62EA6A15E000B164E /* FichasAnestésicas */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -37,6 +47,9 @@
 		};
 		C083D3D42EA6A160000B164E /* FichasAnestésicasTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C09FABC22F22667C006F1778 /* Exceptions for "FichasAnestésicasTests" folder in "FichasAnestésicasTests" target */,
+			);
 			path = "FichasAnestésicasTests";
 			sourceTree = "<group>";
 		};
@@ -405,6 +418,7 @@
 				DEVELOPMENT_TEAM = P3H36HM5WT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FichasAneste-sicas-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Fichas Anestésicas";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -442,6 +456,7 @@
 				DEVELOPMENT_TEAM = P3H36HM5WT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FichasAneste-sicas-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Fichas Anestésicas";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -477,6 +492,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P3H36HM5WT;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FichasAneste-sicasTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "home.FichasAneste-sicasTests";
@@ -499,6 +515,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P3H36HM5WT;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FichasAneste-sicasTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "home.FichasAneste-sicasTests";

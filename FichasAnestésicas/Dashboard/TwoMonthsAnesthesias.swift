@@ -13,6 +13,7 @@ struct TwoMonthsAnesthesias: View {
     
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
+    @Environment(SyncManager.self) var syncManager
     
     @State private var showingAnesthesiaWizard = false
     @State private var createdAnesthesia: Anesthesia?
@@ -127,6 +128,7 @@ struct TwoMonthsAnesthesias: View {
             NewAnesthesiaPageView(
                 session: session,
                 modelContext: modelContext,
+                syncManager: syncManager,
                 onFinished: { anesthesia in
                     createdAnesthesia = anesthesia
                 }

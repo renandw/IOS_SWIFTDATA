@@ -8,6 +8,7 @@ struct PatientDetailsView: View {
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(SyncManager.self) var syncManager
     
     @State private var showingSurgeryForm = false
     @State private var selectedSurgery: Surgery?
@@ -161,7 +162,11 @@ struct PatientDetailsView: View {
         }
         .sheet(isPresented: $showingPatientForm) {
             if let user = session.currentUser {
-                let repository = SwiftDataPatientRepository(context: modelContext, currentUser: user)
+                let repository = SwiftDataPatientRepository(
+                    context: modelContext,
+                    currentUser: user,
+                    syncManager: syncManager
+                )
                 PatientFormView(
                     viewModel: PatientFormViewModel(
                         repository: repository,
@@ -177,7 +182,11 @@ struct PatientDetailsView: View {
             Button("Cancelar", role: .cancel) { }
             Button("Excluir", role: .destructive) {
                 guard let user = session.currentUser else { return }
-                let repository = SwiftDataPatientRepository(context: modelContext, currentUser: user)
+                let repository = SwiftDataPatientRepository(
+                    context: modelContext,
+                    currentUser: user,
+                    syncManager: syncManager
+                )
                 do {
                     try repository.delete(patient)
                     dismiss()
@@ -249,6 +258,14 @@ struct MetadataView: View {
                         .font(.caption)
                         .fontWeight(.semibold)
                 }
+                HStack {
+                    Text("Última Sincronização")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(patient.lastSyncedAt?.formatted(date: .abbreviated, time: .shortened) ?? "Nunca")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                }
             }
             .navigationTitle(patient.name)
             .navigationBarTitleDisplayMode(.inline)
@@ -264,6 +281,7 @@ struct MetadataView: View {
     let surgeries = Surgery.samples(createdBy: user, patients: patients)
 
     let session = SessionManager()
+    let syncManager = SyncManager()
     session.currentUser = user
 
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
@@ -286,6 +304,7 @@ struct MetadataView: View {
     return NavigationStack {
         PatientDetailsView(patient: patient)
             .environment(session)
+            .environment(syncManager)
     }
     .modelContainer(container)
 }

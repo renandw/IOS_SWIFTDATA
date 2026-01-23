@@ -15,6 +15,7 @@
 import SwiftUI
 import SwiftData
 
+
 struct NewPreAnesthesiaPageView: View {
     
     enum Step {
@@ -27,6 +28,7 @@ struct NewPreAnesthesiaPageView: View {
     @Environment(\.dismiss) private var dismiss
     
     // Recebidos no init
+    private let syncManager: SyncManager
     private let session: SessionManager
     private let modelContext: ModelContext
     
@@ -49,10 +51,12 @@ struct NewPreAnesthesiaPageView: View {
     let onFinished: (PreAnesthesia) -> Void
     
     init(
+        syncManager: SyncManager,
         session: SessionManager,
         modelContext: ModelContext,
         onFinished: @escaping (PreAnesthesia) -> Void
     ) {
+        self.syncManager = syncManager
         self.session = session
         self.modelContext = modelContext
         self.onFinished = onFinished
@@ -60,8 +64,12 @@ struct NewPreAnesthesiaPageView: View {
         guard let currentUser = session.currentUser else {
             fatalError("User required for NewAnesthesiaPageView")
         }
-        
-        let patientRepo = SwiftDataPatientRepository(context: modelContext, currentUser: currentUser)
+
+        let patientRepo = SwiftDataPatientRepository(
+            context: modelContext,
+            currentUser: currentUser,
+            syncManager: self.syncManager
+        )
         _patientViewModel = StateObject(wrappedValue: PatientFormViewModel(
             repository: patientRepo,
             currentUser: currentUser
@@ -341,3 +349,4 @@ struct NewPreAnesthesiaPageView: View {
         dismiss()
     }
 }
+

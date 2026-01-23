@@ -6,6 +6,7 @@ struct IdentificationView: View {
     @Environment(SessionManager.self) var session
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(SyncManager.self) var syncManager
     
     @Bindable var anesthesia: Anesthesia
     let ageContext: AgeContext
@@ -279,7 +280,11 @@ struct IdentificationView: View {
             
             .sheet(isPresented: $showingForm) {
                 if let user = session.currentUser {
-                    let repository = SwiftDataPatientRepository(context: modelContext, currentUser: user)
+                    let repository = SwiftDataPatientRepository(
+                        context: modelContext,
+                        currentUser: user,
+                        syncManager: syncManager
+                    )
                     PatientFormView(
                         viewModel: PatientFormViewModel(
                             repository: repository,

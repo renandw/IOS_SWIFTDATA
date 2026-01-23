@@ -12,6 +12,7 @@ struct DashboardView: View {
     let userId: String
     
     @Environment(SessionManager.self) var session
+    @Environment(SyncManager.self) var syncManager
     @Query(sort:\Patient.name) var patients: [Patient]
     @Query(sort: \Surgery.date, order: .reverse) var surgeries: [Surgery]
     @Query(sort: \Anesthesia.start, order: .reverse) var anesthesias: [Anesthesia]
@@ -23,6 +24,7 @@ struct DashboardView: View {
     @State private var navigateToTwoMonthPatients = false
     @State private var navigateToTwoMonthAnesthesia = false
     @State private var navigateToTwoMonthSurgery = false
+    @State private var migrationStatus: String?
     
     
     
@@ -51,7 +53,25 @@ struct DashboardView: View {
               NavigationStack {
                   ScrollView {
                       VStack {
-                          
+                          // MARK: - Migração temporária (SwiftData → Servidor)
+                          VStack(spacing: 8) {
+                              Button("Migrar pacientes para o servidor") {
+                                  Task {
+                                      await migratePatientsToServer()
+                                  }
+                              }
+                              .buttonStyle(.borderedProminent)
+                              
+                              Button("Forçar Sync") {
+                                  Task { await syncManager.sync(context: patientContext) }
+                              }
+
+                              if let migrationStatus {
+                                  Text(migrationStatus)
+                                      .font(.footnote)
+                              }
+                          }
+
                           QuickActionsSection(
                               onNewAnesthesia: {},
                               onMyPatients: { navigateToPatients = true },
@@ -59,7 +79,6 @@ struct DashboardView: View {
                               onClinical: {navigateToClinicalDashboard = true}
                           )
 
-                          
                           StatisticsSection(
                             anesthesias: anesthesias,
                             preanesthesias: preanesthesias,
@@ -104,7 +123,10 @@ struct DashboardView: View {
                           }
                           ToolbarItem(placement: .topBarLeading) {
                               Button("Encerrar Sessão", systemImage: "rectangle.portrait.and.arrow.right") {
-                                  session.currentUser = nil
+                                  Task {
+                                      await syncManager.sync(context: patientContext)
+                                      session.logout()
+                                  }
                               }
                           }
 //                          ToolbarItem(placement: .topBarTrailing) {
@@ -312,6 +334,50 @@ struct DashboardView: View {
         formatter.locale = Locale(identifier: "pt_BR")
         return formatter.string(from: date)
     }
+    // MARK: - Migração de pacientes
+    @MainActor
+    private func migratePatientsToServer() async {
+        migrationStatus = nil
+
+        do {
+            let descriptor = FetchDescriptor<Patient>(
+                predicate: #Predicate { $0.createdBy.userId == userId }
+            )
+            let localPatients = try patientContext.fetch(descriptor)
+
+            var ok = 0
+            var failed = 0
+
+            for p in localPatients {
+                do {
+                    print("➡️ Migrando paciente")
+                    print("patientId:", p.patientId)
+                    print("cns:", p.cns)
+                    print("name:", p.name)
+                    print("birthDate:", p.birthDate)
+                    print("sex:", p.sex.rawValue)
+                    print("token:", UserDefaults.standard.string(forKey: "authToken") ?? "NIL")
+                    try await APIService.shared.createPatient(
+                        .init(
+                            patientId: p.patientId,
+                            cns: p.cns,
+                            name: p.name,
+                            birthDate: p.birthDate,
+                            sex: p.sex.rawValue
+                        )
+                    )
+                    ok += 1
+                } catch {
+                    print("❌ ERRO ao migrar paciente \(p.patientId):", error)
+                    failed += 1
+                }
+            }
+
+            migrationStatus = "Migração concluída. OK: \(ok) | Falhou: \(failed)"
+        } catch {
+            migrationStatus = error.localizedDescription
+        }
+    }
 }
 
 // MARK: - Quick Actions Section
@@ -331,6 +397,7 @@ struct QuickActionsSection: View {
     
     @Environment(SessionManager.self) private var session
     @Environment(\.modelContext) private var modelContext
+    @Environment(SyncManager.self) var syncManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -418,6 +485,7 @@ struct QuickActionsSection: View {
             NewAnesthesiaPageView(
                 session: session,
                 modelContext: modelContext,
+                syncManager: syncManager,
                 onFinished: { anesthesia in
                     createdAnesthesia = anesthesia
                     navigateToDetails = true
@@ -426,7 +494,7 @@ struct QuickActionsSection: View {
         }
         .sheet(isPresented: $showingPreAnesthesiaWizard) {
             NewPreAnesthesiaPageView(
-                session: session,
+                syncManager: syncManager, session: session,
                 modelContext: modelContext,
                 onFinished: { preanesthesia in
                     createdPreAnesthesia = preanesthesia

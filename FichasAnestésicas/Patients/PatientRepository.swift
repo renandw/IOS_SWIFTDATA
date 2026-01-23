@@ -28,10 +28,18 @@ protocol PatientRepository {
 final class SwiftDataPatientRepository: PatientRepository {
     private let context: ModelContext
     private let currentUser: User
+    private let syncManager: SyncManager
 
-    init(context: ModelContext, currentUser: User) {
+    private let encoder: JSONEncoder = {
+        let e = JSONEncoder()
+        e.dateEncodingStrategy = .iso8601
+        return e
+    }()
+
+    init(context: ModelContext, currentUser: User, syncManager: SyncManager) {
         self.context = context
         self.currentUser = currentUser
+        self.syncManager = syncManager // ✅
     }
 
     func create(_ patient: Patient) throws {
@@ -39,20 +47,74 @@ final class SwiftDataPatientRepository: PatientRepository {
         patient.updatedAt = .now
         patient.lastActivityAt = .now
         patient.updatedBy = currentUser
+        patient.lastSyncedAt = nil
+
         context.insert(patient)
+
+        // Outbox CREATE
+        let request = PatientCreateRequest(
+            patientId: patient.patientId,
+            cns: patient.cns,
+            name: patient.name,
+            birthDate: patient.birthDate,
+            sex: patient.sex.rawValue
+        )
+
+        let payload = try encoder.encode(request)
+        let op = OutboxOperation(
+            type: .createPatient,
+            entityId: patient.patientId,
+            payloadJSON: payload
+        )
+        context.insert(op)
+
         try context.save()
+        triggerSync()
     }
 
     func update(_ patient: Patient) throws {
         patient.updatedAt = .now
         patient.lastActivityAt = .now
         patient.updatedBy = currentUser
+
+        // Outbox UPDATE (full snapshot for now)
+        struct UpdatePayload: Codable {
+            let cns: String
+            let name: String
+            let birthDate: Date
+            let sex: String
+        }
+
+        let payloadStruct = UpdatePayload(
+            cns: patient.cns,
+            name: patient.name,
+            birthDate: patient.birthDate,
+            sex: patient.sex.rawValue
+        )
+
+        let payload = try encoder.encode(payloadStruct)
+        let op = OutboxOperation(
+            type: .updatePatient,
+            entityId: patient.patientId,
+            payloadJSON: payload
+        )
+        context.insert(op)
+
         try context.save()
+        triggerSync()
     }
 
     func delete(_ patient: Patient) throws {
+        let op = OutboxOperation(
+            type: .deletePatient,
+            entityId: patient.patientId,
+            payloadJSON: nil
+        )
+        context.insert(op)
+
         context.delete(patient)
         try context.save()
+        triggerSync()
     }
 
     func get(by id: UUID) throws -> Patient? {
@@ -150,6 +212,12 @@ final class SwiftDataPatientRepository: PatientRepository {
         }
         
         return dist[a1.count][a2.count]
+    }
+    
+    private func triggerSync() {
+        Task { [context, syncManager] in
+            await syncManager.sync(context: context)
+        }
     }
 
     func getAll(for user: User) throws -> [Patient] {
