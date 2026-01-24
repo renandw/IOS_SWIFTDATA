@@ -47,3 +47,39 @@ extension Anesthesia {
         return s.components(separatedBy: invalid).joined().trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
+
+
+extension SRPA {
+    @MainActor
+    func renderSRPAPDF() -> URL {
+        renderPDF(
+            content: SRPASheetView(srpa: self),
+            filename: "Ficha Anestésica - \(surgery.patient.name) - \(surgery.surgeryId)"
+        )
+    }
+
+    @MainActor
+    private func renderPDF<Content: View>(content: Content, filename: String) -> URL {
+        let renderer = ImageRenderer(content: content)
+        renderer.scale = 3.0
+        
+        let sanitized = sanitizeFilename(filename)
+        let url = URL.documentsDirectory.appending(path: "\(sanitized).pdf")
+        
+        renderer.render { size, context in
+            var box = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            guard let pdf = CGContext(url as CFURL, mediaBox: &box, nil) else { return }
+            pdf.beginPDFPage(nil)
+            context(pdf)
+            pdf.endPDFPage()
+            pdf.closePDF()
+        }
+        
+        return url
+    }
+    @MainActor
+    private func sanitizeFilename(_ s: String) -> String {
+        let invalid = CharacterSet(charactersIn: "/\\?%*|\"<>:")
+        return s.components(separatedBy: invalid).joined().trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}

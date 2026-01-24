@@ -157,6 +157,22 @@ struct MedicationPreset: Identifiable, Codable, Equatable, Hashable {
         lhs.name == rhs.name && lhs.medications == rhs.medications
     }
 }
+struct SRPAMedicationPreset: Identifiable, Codable, Equatable, Hashable {
+    let id = UUID()
+    let name: String
+    let medications: [SRPAMedicationPresetItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case name, medications
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
+    
+    static func == (lhs: SRPAMedicationPreset, rhs: SRPAMedicationPreset) -> Bool {
+        lhs.name == rhs.name && lhs.medications == rhs.medications
+    }
+}
 
 struct MedicationPresetItem: Identifiable, Codable, Equatable {
     let id = UUID()
@@ -174,6 +190,40 @@ struct MedicationPresetItem: Identifiable, Codable, Equatable {
         MedicationEntry(
             medicationId: id,
             anesthesia: anesthesia,
+            categoryRaw: category.rawValue,
+            viaRaw: via.rawValue,
+            dose: adjustedDose(for: weight),
+            name: name,
+            timestamp: date
+        )
+    }
+    
+    func adjustedDose(for weight: Double) -> String {
+        if weight >= MedicationsHelper.adultThresholdKg {
+            return self.dose  // Usa dose do preset
+        } else {
+            let calculated = MedicationsHelper.getWeightBasedDose(medication: self.name, weight: weight)
+            return calculated.isEmpty ? self.dose : calculated
+        }
+    }
+}
+
+struct SRPAMedicationPresetItem: Identifiable, Codable, Equatable {
+    let id = UUID()
+    let name: String
+    let dose: String
+    let category: MedicationCategory
+    let via: AdministrationRoute
+    
+    
+
+    func srpaMakeEntry(for srpa: SRPA,
+                   at date: Date = .init(),
+                   weight: Double,
+                   id: String = UUID().uuidString) -> SRPAMedicationEntry {
+        SRPAMedicationEntry(
+            srpaMedicationId: id,
+            srpa: srpa,
             categoryRaw: category.rawValue,
             viaRaw: via.rawValue,
             dose: adjustedDose(for: weight),

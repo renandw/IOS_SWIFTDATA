@@ -1,0 +1,321 @@
+//
+//  VitalSignsView.swift
+//  FichasAnestésicas
+//
+//  Created by Renan Wrobel on 23/01/26.
+//
+
+
+//
+//  VitalSigns.swift
+//  FichasAnestésicas
+//
+//  Created by Renan Wrobel on 16/11/25.
+//
+
+import SwiftUI
+
+struct SRPAVitalSignsView: View {
+    @Environment(SessionManager.self) var session
+    @Environment(\.modelContext) private var modelContext
+    
+    
+    @Bindable var srpa: SRPA
+    @State private var showingSRPAVitalSignsFormCreate = false
+    @State private var selectedEntry: SRPAVitalSignEntry? = nil
+    
+    @State private var showingChart = false
+    
+    var body: some View {
+        
+        Group {
+            if srpa.vitalSigns.isEmpty {
+                ContentUnavailableView(
+                    "Não há registro de sinais vitais para esta anestesia.",
+                    systemImage: "waveform.path.ecg.rectangle.fill",
+                    description: Text("Visualize aqui o registro durante a anestesia.")
+                )
+                .overlay(
+                    VStack {
+                        Spacer()
+                        Button(action: {
+                            showingSRPAVitalSignsFormCreate = true
+                                                selectedEntry = nil
+                        }) {
+                            Label("Adicionar Sinais Vitais", systemImage: "plus")
+                        }
+                        .buttonStyle(.glass)
+                        .tint(.blue)
+                        .padding()
+                    }
+                )
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        ForEach(srpa.vitalSigns) { vitalSign in
+                            HStack(alignment: .center) {
+                                HStack {
+                                    Text(vitalSign.timestamp.formatted(date: .omitted, time: .shortened))
+                                        .font(.headline)
+                                        .fontWeight(.bold)
+                                }
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                        
+                                    HStack {
+                                        
+                                        if (vitalSign.rhythm) != nil{
+                                            HStack {
+                                                Text("Ritmo:")
+                                                    .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
+                                                Text("\(displayOrNoStringRecord(vitalSign.rhythm))")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        if vitalSign.fc != nil {
+                                            HStack {
+                                                Text("FC:")
+                                                    .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.fc, decimals: 0, suffix: "bpm"))")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                    }
+                                    
+                                    HStack {
+                                        
+                                        if vitalSign.spo2 != nil {
+                                            HStack {
+                                                Text("SpO₂:")
+                                                    .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.spo2, decimals: 1, suffix: "%"))")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        
+                                        
+                                        
+                                        if vitalSign.paS != nil || vitalSign.paD != nil {
+                                            HStack(alignment: .bottom) {
+                                                Text("PA:")
+                                                    .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.paS, decimals: 0, suffix: "")) / \(displayOrNoRecord(vitalSign.paD, decimals: 0, suffix: "mmHg"))")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.primary)
+                                                if vitalSign.pam != nil{
+                                                    Text("(\(displayOrNoRecord(vitalSign.pam, decimals: 0, suffix: "")))")
+                                                        .font(.caption)
+                                                        .fontWeight(.bold)
+                                                        .foregroundColor(.secondary)
+                                                }
+                                                
+                                            }
+                                        }
+                                    }
+                                    
+                                    HStack {
+                                        
+                                        
+                                        if (vitalSign.etco2) != nil{
+                                            HStack(alignment: .bottom) {
+                                                Text("ETCO₂:")
+                                                .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.etco2, decimals: 0, suffix: "mmHg"))")
+                                                .font(.subheadline)
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        if (vitalSign.volumeCorrente) != nil{
+                                            HStack(alignment: .bottom) {
+                                                Text("VC:")
+                                                .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.volumeCorrente, decimals: 0, suffix: "mL"))")
+                                                .font(.subheadline)
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        
+                                    }
+                                    HStack {
+                                        if vitalSign.bis != nil {
+                                           HStack(alignment: .bottom) {
+                                                Text("BIS:")
+                                                .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.bis, decimals: 1, suffix: "bis"))")
+                                                .font(.subheadline)
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        if vitalSign.pvc != nil {
+                                            HStack(alignment: .bottom) {
+                                                Text("PVC:")
+                                                .font(.caption)
+                                                    .fontWeight(.bold)
+                                                    .foregroundColor(.secondary)
+                                                Text("\(displayOrNoRecord(vitalSign.pvc, decimals: 1, suffix: "mmHg"))")
+                                                .font(.subheadline)
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                                .multilineTextAlignment(.trailing)
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .glassEffect(.regular.interactive())
+                            .onTapGesture {
+                                selectedEntry = vitalSign
+                            }
+                            
+                        }
+                    }
+                    .padding(.horizontal)
+                    Spacer()
+                }
+                
+            }
+        }
+            .sheet(item: $selectedEntry) { entry in
+                if let user = session.currentUser {
+                    let repo: SRPAVitalSignsEntryRepository = SwiftDataSRPAVitalSignsEntryRepository(context: modelContext)
+                    let vm = SRPAVitalSignsFormViewModel(
+                        repo: repo,
+                        srpa: srpa,
+                        user: user,
+                        context: modelContext,
+                        existingEntry: entry
+                    )
+                    NavigationStack { SRPAVitalSignsFormView(viewModel: vm) }
+                } else {
+                    NavigationStack { Text("Dependências indisponíveis para abrir o formulário.") }
+                }
+            }
+            .sheet(isPresented: $showingSRPAVitalSignsFormCreate) {
+                if let user = session.currentUser {
+                    let repo: SRPAVitalSignsEntryRepository = SwiftDataSRPAVitalSignsEntryRepository(context: modelContext)
+                    let vm = SRPAVitalSignsFormViewModel(
+                        repo: repo,
+                        srpa: srpa,
+                        user: user,
+                        context: modelContext
+                    )
+                    NavigationStack { SRPAVitalSignsFormView(viewModel: vm) }
+                } else {
+                    NavigationStack { Text("Dependências indisponíveis para abrir o formulário.") }
+                }
+            }
+        
+            // .sheet(isPresented: $showingChart) {
+            //     VitalChartSheet(srp: anesthesia)
+            // }
+        
+            .preference(
+                key: SRPACustomTopBarButtonPreferenceKey.self,
+                value: SRPACustomTopBarButtonPreference(
+                    id: "VitalSignsView.topbar.buttons",
+                    view: AnyView(topBarButtons),
+                    token: "VitalSignsView.topbar.buttons.v\(srpa.vitalSigns.count)"
+                )
+            )
+        
+    }
+    
+    
+    private var topBarButtons: some View {
+        HStack(spacing: 8) {
+            
+            if !srpa.vitalSigns.isEmpty {
+                Text("\(srpa.vitalSigns.count)")
+                    .font(.system(size: 16, weight: .bold))
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .glassEffect(.regular.interactive())
+                    .clipShape(Capsule())
+            }
+
+//            if !srpa.vitalSigns.isEmpty {
+//                Button(action: {
+//                    showingChart = true
+//                
+//                }) {
+//                    Image(systemName: "chart.xyaxis.line")
+//                        .font(.system(size: 16, weight: .regular))
+//                        .frame(width: 20, height: 20)
+//                }
+//                .accessibilityLabel("Ver Gráfico")
+//                .buttonStyle(.glass)
+//                .tint(.blue)
+//            }
+            
+            Spacer()
+            
+            if !srpa.vitalSigns.isEmpty {
+                Button(action: {
+                    if let currentUser = session.currentUser {
+                        let repo: SRPAVitalSignsEntryRepository = SwiftDataSRPAVitalSignsEntryRepository(context: modelContext)
+                        try? repo.deleteAll(for: srpa, by: currentUser)
+                    } else {
+                        srpa.vitalSigns.removeAll()
+                    }
+                }) {
+                    Image(systemName: "trash")
+                        .font(.system(size: 16, weight: .regular))
+                        .frame(width: 20, height: 20)
+                }
+                .accessibilityLabel("Apagar Registros")
+                .buttonStyle(.glass)
+                .tint(.red)
+            }
+            
+            
+            Button(action: {
+                selectedEntry = nil
+                showingSRPAVitalSignsFormCreate = true
+            }) {
+                Image(systemName: "plus")
+                    .font(.system(size: 16, weight: .regular))
+                    .frame(width: 20, height: 20)
+            }
+            .accessibilityLabel("Adicionar Registro")
+            .buttonStyle(.glass)
+            .tint(.blue)
+        }
+    }
+    
+    
+    func displayOrNoRecord(_ value: Double?, decimals: Int = 0, suffix: String? = nil, noRecord: String = "não há registro") -> String {
+        guard let value else { return noRecord }
+        let formatted = String(format: "%.\(decimals)f", value)
+        if let suffix, !suffix.isEmpty {
+            return "\(formatted) \(suffix)"
+        } else {
+            return formatted
+        }
+    }
+    
+    func displayOrNoStringRecord(_ value: String?, noRecord: String = "não há registro") -> String {
+        guard let value else { return noRecord }
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? noRecord : trimmed
+    }
+}
+

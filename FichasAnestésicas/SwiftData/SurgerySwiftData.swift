@@ -38,6 +38,7 @@ final class Surgery {
     @Relationship var patient: Patient
     @Relationship(deleteRule: .cascade, inverse: \Financial.surgery) var financial: Financial?
     @Relationship(deleteRule: .cascade, inverse: \Anesthesia.surgery) var anesthesia: Anesthesia?
+    @Relationship(deleteRule: .cascade, inverse: \SRPA.surgery) var srpa: SRPA?
     @Relationship(deleteRule: .cascade, inverse: \PreAnesthesia.surgery) var preanesthesia: PreAnesthesia?
     @Relationship(deleteRule: .cascade) var shared: SharedPreAndAnesthesia?
     

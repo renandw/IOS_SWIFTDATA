@@ -19,6 +19,7 @@ struct SurgeryDetailsView: View {
     
     @State private var showingFinancialForm = false
     @State private var showingAnesthesiaForm = false
+    @State private var showingSRPAForm = false
     
     @State private var isPresentingForm = false
     @State private var formViewModel: PreAnesthesiaViewModel?
@@ -86,6 +87,20 @@ struct SurgeryDetailsView: View {
                 AnesthesiaFormView(viewModel: viewModel, mode: .standalone)
             }
         }
+        .sheet(isPresented: $showingSRPAForm) {
+            if let currentUser = session.currentUser {
+                let sharedRepo = SwiftDataSharedPreAndAnesthesiaRepository(context: modelContext)
+                let viewModel = SRPAFormViewModel(
+                    surgery: surgery,
+                    user: currentUser,
+                    context: modelContext,
+                    sharedRepo: sharedRepo
+                    
+                )
+                SRPAFormView(viewModel: viewModel, mode: .standalone)
+            }
+        }
+
         .sheet(item: $formViewModel) { vm in
             PreAnesthesiaFormView(viewModel: vm)
         }
@@ -362,6 +377,57 @@ struct SurgeryDetailsView: View {
     }
     private var anesthesiaSection: some View {
         Group {
+            if let preanesthesia = surgery.preanesthesia {
+                Section {
+                    NavigationLink {
+                        PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Text("Detalhes da Avaliação Pré Anestesia")
+                                .fontWeight(.bold)
+                            Spacer()
+                        }
+                    }
+
+                    if let anesthesia = surgery.anesthesia,
+                       preanesthesia.status == .finished {
+                        ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
+                            HStack(alignment: .center) {
+                                Spacer()
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 16, weight: .regular))
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(.purple)
+                                Text("Exportar Avaliação Pré-Anestésica")
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(.purple)
+                                Spacer()
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Avaliação Pré-Anestésica - APA")
+                        .foregroundStyle(.purple)
+                }
+            } else {
+                Section {
+                    Button {
+                        presentNewForm()
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Text("Iniciar APA")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.purple)
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Text("Avaliação Pré-Anestésica - APA")
+                        .foregroundStyle(.purple)
+                }
+            }
             if let anesthesia = surgery.anesthesia {
                 Section {
                     HStack {
@@ -418,62 +484,67 @@ struct SurgeryDetailsView: View {
                     }
                 }
             }
-            if let preanesthesia = surgery.preanesthesia {
+            if let srpa = surgery.srpa {
                 Section {
-                    NavigationLink {
-                        PreAnesthesiaForSurgeryView(preanesthesia: preanesthesia)
-                    } label: {
-                        HStack {
-                            Spacer()
-                            Text("Detalhes da Avaliação Pré Anestesia")
-                                .fontWeight(.bold)
-                            Spacer()
-                        }
-                    }
-
-                    if let anesthesia = surgery.anesthesia,
-                       preanesthesia.status == .finished {
-                        ShareLink(item: anesthesia.renderPreAnesthesiaPDF()) {
-                            HStack(alignment: .center) {
-                                Spacer()
-                                Image(systemName: "square.and.arrow.up")
-                                    .font(.system(size: 16, weight: .regular))
-                                    .frame(width: 20, height: 20)
-                                    .foregroundStyle(.purple)
-                                Text("Exportar Avaliação Pré-Anestésica")
+                    HStack {
+                        NavigationLink {
+                            SRPADetailsView(srpa: srpa)
+                        } label: {
+                            HStack {
+                                Text("Detalhes da Ficha SRPA")
                                     .fontWeight(.semibold)
-                                    .foregroundStyle(.purple)
-                                Spacer()
                             }
                         }
                     }
-                } header: {
-                    Text("Avaliação Pré-Anestésica - APA")
-                        .foregroundStyle(.purple)
+                    if srpa.status == .finished {
+                        HStack {
+                            ShareLink(item: srpa.renderSRPAPDF()) {
+                                HStack(alignment: .center) {
+                                    Spacer()
+                                    Image(systemName: "square.and.arrow.up")
+                                        .font(.system(size: 16, weight: .regular))
+                                        .frame(width: 20, height: 20)
+                                        .foregroundStyle(.purple)
+                                    Text("Exportar Ficha Anestésica")
+                                        .fontWeight(.semibold)
+                                        .foregroundStyle(.purple)
+                                    Spacer()
+                                }
+                            }
+                            .buttonStyle(.glass)
+                        }
+                    }
+                } header : {
+                    HStack {
+                        Text("SRPA")
+                            .foregroundStyle(.purple)
+                    }
                 }
             } else {
                 Section {
                     Button {
-                        presentNewForm()
+                        showingSRPAForm = true
                     } label: {
                         HStack {
                             Spacer()
-                            Text("Iniciar APA")
+                            Text("Iniciar SRPA")
                                 .fontWeight(.bold)
                                 .foregroundStyle(.purple)
                             Spacer()
                         }
                     }
-                } header: {
-                    Text("Avaliação Pré-Anestésica - APA")
-                        .foregroundStyle(.purple)
+                } header : {
+                    HStack {
+                        Text("SRPA")
+                            .foregroundStyle(.purple)
+                    }
                 }
             }
+            
         }
     }
     
     private func presentNewForm() {
-        // Ajuste a forma de obter o usuário conforme a API real do seu SessionManager
         if let user = session.currentUser {
             let repo = SwiftDataPreAnesthesiaRepository(context: modelContext)
             let sharedRepo = SwiftDataSharedPreAndAnesthesiaRepository(context: modelContext)

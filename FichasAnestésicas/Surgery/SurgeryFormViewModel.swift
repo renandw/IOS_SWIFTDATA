@@ -41,6 +41,7 @@ final class SurgeryFormViewModel {
     var weight: Double?
     var proposedProcedure: String
     
+    
     // Campos opcionais
     var start: Date?
     var end: Date?
