@@ -305,12 +305,12 @@ struct SRPAFormView: View {
             .onChange(of: viewModel.srpaStart) { _, _ in
                 viewModel.touched["srpaStart"] = true
                 viewModel.validateSRPAStart()
-                viewModel.updateSuggestionsForStart()  // ← Adicionar
+                //viewModel.updateSuggestionsForStart()  // ← Adicionar
             }
             .onChange(of: viewModel.srpaEnd) { _, _ in
                 viewModel.touched["srpaEnd"] = true
                 viewModel.validateSRPAEnd()
-                viewModel.updateSuggestionsForEnd()  // ← Adicionar
+                //viewModel.updateSuggestionsForEnd()  // ← Adicionar
             }
                 
             .onChange(of: viewModel.techniques) { _, _ in
@@ -328,12 +328,12 @@ struct SRPAFormView: View {
             .onChange(of: viewModel.srpaStart) { _, _ in
                 viewModel.touched["srpaStart"] = true
                 viewModel.validateSRPAStart()
-                viewModel.updateSuggestionsForStart()  // ← Adicionar
+                //viewModel.updateSuggestionsForStart()  // ← Adicionar
             }
             .onChange(of: viewModel.srpaEnd) { _, _ in
-                viewModel.touched["SRPAEnd"] = true
+                viewModel.touched["srpaEnd"] = true
                 viewModel.validateSRPAEnd()
-                viewModel.updateSuggestionsForEnd()  // ← Adicionar
+                //viewModel.updateSuggestionsForEnd()  // ← Adicionar
             }
     }
     
@@ -398,10 +398,9 @@ struct SRPAFormView: View {
                                 dismiss()
                             }
                         }
-                        .disabled(!viewModel.isFormValid)
+                        .disabled((viewModel.descriptionText ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
                 }
         }
     }
 }
-

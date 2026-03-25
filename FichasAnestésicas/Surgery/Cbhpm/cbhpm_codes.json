@@ -315,11 +315,6 @@
     "porte_anestesico": "4"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "45"
-  },
-  {
     "codigo": "3.01.01.57-3",
     "procedimento": "Extensos ferimentos, cicatrizes ou tumores – exérese e rotação de",
     "porte_anestesico": "4"
@@ -483,11 +478,6 @@
     "codigo": "3.01.01.95-6",
     "procedimento": "Unha (enxerto) – tratamento cirúrgico",
     "porte_anestesico": "2"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "47"
   },
   {
     "codigo": "3.02.01.01-2",
@@ -830,11 +820,6 @@
     "porte_anestesico": "1"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "49"
-  },
-  {
     "codigo": "3.02.06.12-0",
     "procedimento": "Laringectomia parcial",
     "porte_anestesico": "5"
@@ -1115,11 +1100,6 @@
     "porte_anestesico": "5"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "51"
-  },
-  {
     "codigo": "3.02.10.02-0",
     "procedimento": "Correção de tumores, cicatrizes ou ferimentos com o auxílio de",
     "porte_anestesico": "5"
@@ -1383,11 +1363,6 @@
     "codigo": "3.02.15.09-9",
     "procedimento": "Tratamento cirúrgico da osteomielite de crânio",
     "porte_anestesico": "4"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "53"
   },
   {
     "codigo": "3.03.01.01-7",
@@ -1725,11 +1700,6 @@
     "porte_anestesico": "4"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "55"
-  },
-  {
     "codigo": "3.03.06.01-9",
     "procedimento": "Capsulotomia YAG ou cirúrgica",
     "porte_anestesico": "3"
@@ -2005,11 +1975,6 @@
     "porte_anestesico": "5"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "57"
-  },
-  {
     "codigo": "3.03.12.09-4",
     "procedimento": "Retinopexia pneumática",
     "porte_anestesico": "3"
@@ -2228,11 +2193,6 @@
     "codigo": "3.04.03.15-4",
     "procedimento": "Timpanotomia para tubo de ventilação – unilateral",
     "porte_anestesico": "2"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "59"
   },
   {
     "codigo": "3.04.04.01-0",
@@ -2458,11 +2418,6 @@
     "codigo": "3.05.01.28-8",
     "procedimento": "Polipectomia – unilateral",
     "porte_anestesico": "2"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "61"
   },
   {
     "codigo": "3.05.01.29-6",
@@ -2728,11 +2683,6 @@
     "codigo": "3.05.02.27-6",
     "procedimento": "Sinusotomia frontal via externa",
     "porte_anestesico": "2"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "63"
   },
   {
     "codigo": "3.06.01.22-3",
@@ -3040,11 +2990,6 @@
     "porte_anestesico": "3"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "65"
-  },
-  {
     "codigo": "3.07.01.01-5",
     "procedimento": "Abdominal ou hipogástrico",
     "porte_anestesico": "6"
@@ -3350,11 +3295,6 @@
     "porte_anestesico": "7"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "67"
-  },
-  {
     "codigo": "3.07.05.07-0",
     "procedimento": "Autotransplante de três retalhos, um cutâneo separado,",
     "porte_anestesico": "7"
@@ -3618,11 +3558,6 @@
     "codigo": "3.07.15.06-7",
     "procedimento": "Cordotomia – mielotomia",
     "porte_anestesico": "6"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "69"
   },
   {
     "codigo": "3.07.15.07-5",
@@ -3928,11 +3863,6 @@
     "codigo": "3.07.19.06-2",
     "procedimento": "Desarticulação ao nível do cotovelo – tratamento cirúrgico",
     "porte_anestesico": "3"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "71"
   },
   {
     "codigo": "3.07.19.08-9",
@@ -4255,11 +4185,6 @@
     "porte_anestesico": "1"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "73"
-  },
-  {
     "codigo": "3.07.22.25-0",
     "procedimento": "Dedo colo de cisne – tratamento cirúrgico",
     "porte_anestesico": "2"
@@ -4555,11 +4480,6 @@
     "porte_anestesico": "5"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "75"
-  },
-  {
     "codigo": "3.07.23.01-9",
     "procedimento": "Biópsia cirúrgica de cintura pélvica",
     "porte_anestesico": "1"
@@ -4843,11 +4763,6 @@
     "codigo": "3.07.26.07-7",
     "procedimento": "Epifisites e tendinites – tratamento cirúrgico",
     "porte_anestesico": "3"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "77"
   },
   {
     "codigo": "3.07.26.10-7",
@@ -5140,11 +5055,6 @@
     "porte_anestesico": "2"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "79"
-  },
-  {
     "codigo": "3.07.29.04-1",
     "procedimento": "Artrodese de tarso e/ou médio pé – tratamento cirúrgico",
     "porte_anestesico": "3"
@@ -5273,6 +5183,11 @@
     "codigo": "3.07.29.31-9",
     "procedimento": "Tratamento cirúrgico de linfedema ao nível do pé",
     "porte_anestesico": "3"
+  },
+  {
+    "codigo": "3.01.01.71-9",
+    "procedimento": "Retalho muscular ou miocutâneo",
+    "porte_anestesico": "4"
   },
   {
     "codigo": "3.07.29.32-7",
@@ -5745,11 +5660,6 @@
     "porte_anestesico": "7"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "83"
-  },
-  {
     "codigo": "3.08.01.01-0",
     "procedimento": "Colocação de órtese traqueal, traqueobrônquica ou brônquica, por",
     "porte_anestesico": "4"
@@ -5908,11 +5818,6 @@
     "codigo": "3.08.03.08-0",
     "procedimento": "Lobectomia pulmonar",
     "porte_anestesico": "4"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "85"
   },
   {
     "codigo": "3.08.03.21-7",
@@ -6228,11 +6133,6 @@
     "codigo": "3.08.06.04-6",
     "procedimento": "Implante de marca-passo diafragmático definitivo",
     "porte_anestesico": "5"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "87"
   },
   {
     "codigo": "3.09.01.01-4",
@@ -6570,11 +6470,6 @@
     "porte_anestesico": "5"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "89"
-  },
-  {
     "codigo": "3.09.06.30-0",
     "procedimento": "Ponte fêmoro-femoral cruzada",
     "porte_anestesico": "4"
@@ -6830,11 +6725,6 @@
     "porte_anestesico": "4"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "91"
-  },
-  {
     "codigo": "3.09.10.09-9",
     "procedimento": "Exploração vascular em traumas de outros segmentos",
     "porte_anestesico": "5"
@@ -7060,11 +6950,6 @@
     "porte_anestesico": "4"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "93"
-  },
-  {
     "codigo": "3.09.13.14-4",
     "procedimento": "Confecção de fístula AV para hemodiálise",
     "porte_anestesico": "2"
@@ -7225,11 +7110,6 @@
     "porte_anestesico": "5"
   },
   {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "95"
-  },
-  {
     "codigo": "3.09.16.01-1",
     "procedimento": "Hipotermia profunda com ou sem parada circulatória total",
     "porte_anestesico": "6"
@@ -7293,11 +7173,6 @@
     "codigo": "3.09.18.06-5",
     "procedimento": "Punção transeptal com introdução de cateter multipolar nas",
     "porte_anestesico": "5"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "97"
   },
   {
     "codigo": "3.10.01.01-7",
@@ -7448,11 +7323,6 @@
     "codigo": "3.10.01.32-7",
     "procedimento": "Tratamento cirúrgico das varizes esofágicas por",
     "porte_anestesico": "6"
-  },
-  {
-    "codigo": "Classificação",
-    "procedimento": "Brasileira Hierarquizada de Procedimentos Médicos –",
-    "porte_anestesico": "99"
   },
   {
     "codigo": "3.10.01.23-8",

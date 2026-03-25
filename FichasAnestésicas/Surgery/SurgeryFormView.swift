@@ -13,17 +13,31 @@ struct SurgeryFormView: View {
         case standalone   // usado como sheet/fluxo isolado
         case wizard       // usado dentro do fluxo NewAnesthesiaView
     }
+    
+    private enum Field: Hashable {
+        case insuranceName
+        case insuranceNumber
+        case hospital
+        case proposedProcedure
+        case mainSurgeon
+        case auxiliarySurgeonInput
+    }
+    
+    private enum Destination: Hashable {
+        case cbhpmSearch
+    }
+
     @Environment(\.dismiss) private var dismiss
     @Environment(SessionManager.self) var session
     @Bindable var viewModel: SurgeryFormViewModel
     
-    @FocusState private var isFocusedMS: Bool
-    @FocusState private var isFocusedH: Bool
+    @FocusState private var focusedField: Field?
     @State private var newAuxSurgeon: String = ""
-    @FocusState private var isFocusedAuxInput: Bool
     
     @State private var isSaving = false
     @State private var showInsuranceSuggestions: Bool = false
+    @State private var navigationPath: [Destination] = []
+    @State private var showCbhpmSearch = false
     // Modo de funcionamento da view (padrão mantém comportamento atual)
     var mode: Mode = .standalone
 
@@ -79,6 +93,11 @@ struct SurgeryFormView: View {
                             .fontWeight(.semibold)
                         TextField("SUS", text: $viewModel.insuranceName)
                             .multilineTextAlignment(.trailing)
+                            .submitLabel(.next)
+                            .focused($focusedField, equals: .insuranceName)
+                            .onSubmit {
+                                focusedField = .insuranceNumber
+                            }
                     }
                     HStack(alignment: .center){
                         Text("Prontuário")
@@ -87,6 +106,11 @@ struct SurgeryFormView: View {
                         TextField("Prontuário", text: $viewModel.insuranceNumber)
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
+                            .submitLabel(.next)
+                            .focused($focusedField, equals: .insuranceNumber)
+                            .onSubmit {
+                                focusedField = .hospital
+                            }
                         if !viewModel.insuranceNumber.isEmpty {
                             Button {
                                 viewModel.insuranceNumber = ""
@@ -100,7 +124,32 @@ struct SurgeryFormView: View {
                     }
                     
                 } else if viewModel.type == .convenio {
-                    InsuranceField(insuranceName: $viewModel.insuranceName)
+                    let insuranceList = [
+                        "Particular",
+                        "Unimed",
+                        "Bradesco",
+                        "Astir",
+                        "Geap",
+                        "Amil",
+                        "Select",
+                        "Sulamerica",
+                        "Assefaz",
+                        "Capesesp",
+                        "Cassi",
+                        "Funsa",
+                        "Fusex",
+                        "Ipam",
+                        "Life",
+                        "Saúde Caixa",
+                        "Innova"]
+                    EditRowWithOptions(
+                        label: "Convênio",
+                        value: $viewModel.insuranceName,
+                        options: insuranceList,
+                        )
+                    
+                    
+                    //InsuranceField(insuranceName: $viewModel.insuranceName)
                     
                     if viewModel.insuranceName.lowercased() != "particular" {
                         HStack(alignment: .center){
@@ -110,6 +159,11 @@ struct SurgeryFormView: View {
                             TextField("Carteirinha", text: $viewModel.insuranceNumber)
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
+                                .submitLabel(.next)
+                                .focused($focusedField, equals: .insuranceNumber)
+                                .onSubmit {
+                                    focusedField = .hospital
+                                }
                             if !viewModel.insuranceNumber.isEmpty {
                                 Button {
                                     viewModel.insuranceNumber = ""
@@ -150,31 +204,59 @@ struct SurgeryFormView: View {
             // MARK: - Dados da Cirurgia
             Section("Dados da Cirurgia") {
                 
-                HStack(alignment: .center){
-                    Text("Hospital")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    TextField("Hospital", text: $viewModel.hospital)
-                        .multilineTextAlignment(.trailing)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.words)
-                        .focused($isFocusedH)
-                        .onChange(of: isFocusedH) { _, focused in
-                            if !focused {
-                                viewModel.hospital = viewModel.formatName(viewModel.hospital)
-                            }
-                        }
-                    if !viewModel.hospital.isEmpty {
-                        Button {
-                            viewModel.hospital = ""
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.secondary)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel("Limpar Hospital")
+                let hospitais = [
+                    "Hospital 9 de Julho",
+                    "Hospital Unimed",
+                    "Igeron",
+                    "Hospital Samar",
+                    "Hospital Central",
+                    "Hospital das Clínicas",
+                    "Hospital Prontocordis",
+                    "Instituto do Coração",
+                    
+                    
+                ]
+                EditRowWithOptions(
+                    label: "Hospital",
+                    value: $viewModel.hospital,
+                    options: hospitais
+                )
+                .focused($focusedField, equals: .hospital)
+                .submitLabel(.next)
+                .onSubmit {
+                    focusedField = .proposedProcedure
+                }
+                .onChange(of: focusedField) { _, field in
+                    if field != .hospital {
+                        viewModel.hospital = viewModel.formatName(viewModel.hospital)
                     }
                 }
+                
+//                HStack(alignment: .center){
+//                    Text("Hospital")
+//                        .font(.subheadline)
+//                        .fontWeight(.semibold)
+//                    TextField("Hospital", text: $viewModel.hospital)
+//                        .multilineTextAlignment(.trailing)
+//                        .autocorrectionDisabled()
+//                        .textInputAutocapitalization(.words)
+//                        .focused($isFocusedH)
+//                        .onChange(of: isFocusedH) { _, focused in
+//                            if !focused {
+//                                viewModel.hospital = viewModel.formatName(viewModel.hospital)
+//                            }
+//                        }
+//                    if !viewModel.hospital.isEmpty {
+//                        Button {
+//                            viewModel.hospital = ""
+//                        } label: {
+//                            Image(systemName: "xmark.circle.fill")
+//                                .foregroundStyle(.secondary)
+//                        }
+//                        .buttonStyle(.plain)
+//                        .accessibilityLabel("Limpar Hospital")
+//                    }
+//                }
                 HStack {
                     Text("Peso do Paciente")
                         .font(.subheadline)
@@ -205,6 +287,11 @@ struct SurgeryFormView: View {
                     TextField("Cirurgia", text: $viewModel.proposedProcedure)
                         .multilineTextAlignment(.trailing)
                         .autocorrectionDisabled()
+                        .submitLabel(.next)
+                        .focused($focusedField, equals: .proposedProcedure)
+                        .onSubmit {
+                            focusedField = .mainSurgeon
+                        }
                     if !viewModel.proposedProcedure.isEmpty {
                         Button {
                             viewModel.proposedProcedure = ""
@@ -220,10 +307,8 @@ struct SurgeryFormView: View {
             
             // MARK: - Procedimentos CBHPM
             Section("Procedimentos CBHPM") {
-                NavigationLink {
-                    CbhpmSearchView(selectedProcedures: $viewModel.selectedProcedures)
-                        .navigationTitle("Selecionar Procedimentos")
-                        .navigationBarTitleDisplayMode(.inline)
+                Button {
+                    openCbhpmSearch()
                 } label: {
                     HStack {
                         Text("Procedimentos")
@@ -250,9 +335,13 @@ struct SurgeryFormView: View {
                         .multilineTextAlignment(.trailing)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.words)
-                        .focused($isFocusedMS)
-                        .onChange(of: isFocusedMS) { _, focused in
-                            if !focused {
+                        .focused($focusedField, equals: .mainSurgeon)
+                        .submitLabel(.next)
+                        .onSubmit {
+                            focusedField = .auxiliarySurgeonInput
+                        }
+                        .onChange(of: focusedField) { _, field in
+                            if field != .mainSurgeon {
                                 viewModel.mainSurgeon = viewModel.formatName(viewModel.mainSurgeon)
                             }
                         }
@@ -278,24 +367,15 @@ struct SurgeryFormView: View {
                                 .multilineTextAlignment(.trailing)
                                 .textInputAutocapitalization(.words)
                                 .autocorrectionDisabled()
-                                .focused($isFocusedAuxInput)
+                                .focused($focusedField, equals: .auxiliarySurgeonInput)
+                                .submitLabel(.go)
                                 .onSubmit {
-                                    let trimmed = viewModel.formatName(newAuxSurgeon.trimmingCharacters(in: .whitespacesAndNewlines))
-                                    guard !trimmed.isEmpty else { return }
-                                    var list = viewModel.auxiliarySurgeons ?? []
-                                    list.append(trimmed)
-                                    viewModel.auxiliarySurgeons = list
-                                    newAuxSurgeon = ""
+                                    addAuxiliarySurgeon()
                                 }
                             if !newAuxSurgeon.isEmpty {
                                 Button {
-                                    let trimmed = viewModel.formatName(newAuxSurgeon.trimmingCharacters(in: .whitespacesAndNewlines))
-                                    guard !trimmed.isEmpty else { return }
-                                    var list = viewModel.auxiliarySurgeons ?? []
-                                    list.append(trimmed)
-                                    viewModel.auxiliarySurgeons = list
-                                    newAuxSurgeon = ""
-                                    isFocusedAuxInput = true
+                                    addAuxiliarySurgeon()
+                                    focusedField = .auxiliarySurgeonInput
                                 } label: {
                                     Image(systemName: "plus.circle.fill")
                                         .foregroundStyle(.tint)
@@ -337,7 +417,7 @@ struct SurgeryFormView: View {
 
     // Modo standalone: com NavigationStack próprio e toolbar (Cancelar/Salvar)
     private var standaloneBody: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             formContent
                 .onChange(of: viewModel.type) { oldValue, newValue in
                     if newValue == .sus {
@@ -355,20 +435,17 @@ struct SurgeryFormView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Salvar", systemImage: "checkmark") {
-                            Task {
-                                guard let currentUser = session.currentUser else {
-                                    return
-                                }
-                                isSaving = true
-                                try? viewModel.save(currentUser: currentUser)
-                                isSaving = false
-                                
-                                if viewModel.saveSuccess {
-                                    dismiss()
-                                }
-                            }
+                            Task { await submit() }
                         }
                         .disabled(!viewModel.isValid || isSaving)
+                    }
+                }
+                .navigationDestination(for: Destination.self) { destination in
+                    switch destination {
+                    case .cbhpmSearch:
+                        CbhpmSearchView(selectedProcedures: $viewModel.selectedProcedures)
+                            .navigationTitle("Selecionar Procedimentos")
+                            .navigationBarTitleDisplayMode(.inline)
                     }
                 }
         }
@@ -384,6 +461,51 @@ struct SurgeryFormView: View {
                     viewModel.insuranceName = ""
                 }
             }
+            .navigationDestination(for: Destination.self) { destination in
+                switch destination {
+                case .cbhpmSearch:
+                    CbhpmSearchView(selectedProcedures: $viewModel.selectedProcedures)
+                        .navigationTitle("Selecionar Procedimentos")
+                        .navigationBarTitleDisplayMode(.inline)
+                }
+            }
+            .navigationDestination(isPresented: $showCbhpmSearch) {
+                CbhpmSearchView(selectedProcedures: $viewModel.selectedProcedures)
+                    .navigationTitle("Selecionar Procedimentos")
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+    }
+    
+    @MainActor
+    private func submit() async {
+        focusedField = nil
+        guard let currentUser = session.currentUser else {
+            return
+        }
+        isSaving = true
+        try? viewModel.save(currentUser: currentUser)
+        isSaving = false
+        
+        if viewModel.saveSuccess {
+            dismiss()
+        }
+    }
+    
+    private func addAuxiliarySurgeon() {
+        let trimmed = viewModel.formatName(newAuxSurgeon.trimmingCharacters(in: .whitespacesAndNewlines))
+        guard !trimmed.isEmpty else { return }
+        var list = viewModel.auxiliarySurgeons ?? []
+        list.append(trimmed)
+        viewModel.auxiliarySurgeons = list
+        newAuxSurgeon = ""
+    }
+    
+    private func openCbhpmSearch() {
+        focusedField = nil
+        if mode == .standalone {
+            navigationPath.append(.cbhpmSearch)
+        } else {
+            showCbhpmSearch = true
+        }
     }
 }
-

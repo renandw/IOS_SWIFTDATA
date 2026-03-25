@@ -27,7 +27,7 @@ struct SRPASheetDescriptionView: View {
                 Rectangle()
                     .fill(Color.blue)
                     .frame(width: 4)
-                Text("DESCRIÇÃO ANESTÉSICA")
+                Text("DETALHES SRPA")
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(.gray)
                     .padding(.horizontal, 8)
