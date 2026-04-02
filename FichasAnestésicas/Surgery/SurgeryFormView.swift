@@ -24,7 +24,7 @@ struct SurgeryFormView: View {
     }
     
     private enum Destination: Hashable {
-        case cbhpmSearch
+        case cbhpmSummary
     }
 
     @Environment(\.dismiss) private var dismiss
@@ -37,7 +37,7 @@ struct SurgeryFormView: View {
     @State private var isSaving = false
     @State private var showInsuranceSuggestions: Bool = false
     @State private var navigationPath: [Destination] = []
-    @State private var showCbhpmSearch = false
+    @State private var showCbhpmSummary = false
     // Modo de funcionamento da view (padrão mantém comportamento atual)
     var mode: Mode = .standalone
 
@@ -130,6 +130,7 @@ struct SurgeryFormView: View {
                         "Bradesco",
                         "Astir",
                         "Geap",
+                        "Sesau",
                         "Amil",
                         "Select",
                         "Sulamerica",
@@ -147,10 +148,7 @@ struct SurgeryFormView: View {
                         value: $viewModel.insuranceName,
                         options: insuranceList,
                         )
-                    
-                    
-                    //InsuranceField(insuranceName: $viewModel.insuranceName)
-                    
+
                     if viewModel.insuranceName.lowercased() != "particular" {
                         HStack(alignment: .center){
                             Text("Carteirinha")
@@ -308,7 +306,7 @@ struct SurgeryFormView: View {
             // MARK: - Procedimentos CBHPM
             Section("Procedimentos CBHPM") {
                 Button {
-                    openCbhpmSearch()
+                    openCbhpmSummary()
                 } label: {
                     HStack {
                         Text("Procedimentos")
@@ -442,10 +440,8 @@ struct SurgeryFormView: View {
                 }
                 .navigationDestination(for: Destination.self) { destination in
                     switch destination {
-                    case .cbhpmSearch:
-                        CbhpmSearchView(selectedProcedures: $viewModel.selectedProcedures)
-                            .navigationTitle("Selecionar Procedimentos")
-                            .navigationBarTitleDisplayMode(.inline)
+                    case .cbhpmSummary:
+                        CBHPMSummaryView(selectedProcedures: $viewModel.selectedProcedures)
                     }
                 }
         }
@@ -463,16 +459,12 @@ struct SurgeryFormView: View {
             }
             .navigationDestination(for: Destination.self) { destination in
                 switch destination {
-                case .cbhpmSearch:
-                    CbhpmSearchView(selectedProcedures: $viewModel.selectedProcedures)
-                        .navigationTitle("Selecionar Procedimentos")
-                        .navigationBarTitleDisplayMode(.inline)
+                case .cbhpmSummary:
+                    CBHPMSummaryView(selectedProcedures: $viewModel.selectedProcedures)
                 }
             }
-            .navigationDestination(isPresented: $showCbhpmSearch) {
-                CbhpmSearchView(selectedProcedures: $viewModel.selectedProcedures)
-                    .navigationTitle("Selecionar Procedimentos")
-                    .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(isPresented: $showCbhpmSummary) {
+                CBHPMSummaryView(selectedProcedures: $viewModel.selectedProcedures)
             }
     }
     
@@ -500,12 +492,12 @@ struct SurgeryFormView: View {
         newAuxSurgeon = ""
     }
     
-    private func openCbhpmSearch() {
+    private func openCbhpmSummary() {
         focusedField = nil
         if mode == .standalone {
-            navigationPath.append(.cbhpmSearch)
+            navigationPath.append(.cbhpmSummary)
         } else {
-            showCbhpmSearch = true
+            showCbhpmSummary = true
         }
     }
 }

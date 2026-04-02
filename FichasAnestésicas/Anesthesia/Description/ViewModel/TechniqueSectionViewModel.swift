@@ -546,7 +546,7 @@ final class TechniquesSectionViewModel {
         let partAssepsia = "assepsia e antissepsia de mãos e de dorso do paciente, punção única de espaço peridural via paramediana"
         parts.insert(partAssepsia, at: min(1, parts.count))
 
-        return "Peridural: \(parts.joined(separator: ", ")),sem presença de sangue e sem acidentes de punção.Após injeção de dose teste com adrenalina. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores."
+        return "Peridural: \(parts.joined(separator: ", ")), sem presença de sangue e sem acidentes de punção.Após injeção de dose teste com adrenalina. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores."
     }
     
     func generateTechniquePeripheralBlockAnesthesiaText(patientAge: Int) -> String {
@@ -575,7 +575,7 @@ final class TechniquesSectionViewModel {
         }
         
         guard !parts.isEmpty else { return "" }
-        return "Bloqueios de nervos periféricos: assepsia e antissepsia de mãos e do paciente \(parts.joined(separator: ", ")),sem presença de sangue e sem acidentes de punção.Após injeção de dose teste com adrenalina. Infusão de medicações descritas na seção de medicações. Testo bloqueio com estímulos térmicos e motores. "
+        return "Bloqueios de nervos periféricos: assepsia e antissepsia de mãos e do paciente \(parts.joined(separator: ", ")). Infusão de medicações descritas na seção de medicações - sempre após aspirações negativas para sangue. Testo bloqueio com estímulos térmicos e motores. "
         
     }
     

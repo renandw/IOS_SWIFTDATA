@@ -278,6 +278,8 @@ class MedicationsHelper {
         "haloperidol": "2.5mg",
         "tenoxicam": "20mg",
         "propofol": "120mg",
+        "droperidol": "1.5mg",
+        "nilperidol": "0.25mcg + 1.5mg",
         "fentanil": "150mcg",
         "rocuronio": "50mg",
         "morfina": "6mg",
@@ -360,6 +362,10 @@ class MedicationsHelper {
             return "\(Int(weight * 0.9))mcg"
         case "diazepam":
             return "\(Int(round(weight * 0.1)))mg"
+        case "droperidol":
+            return "\(Int(round(weight * 0.01)))mg"
+        case "nilperidol":
+            return "\(Int(round(weight * 0.2)))mcg + \(Int(round(weight * 0.01)))mg"
         case "haloperidol":
             return "2.5mg"
         case "cisatracurio":
@@ -426,7 +432,7 @@ class MedicationsHelper {
         let name = normalizeMedicationString(medicationName)
         
         // Anestésicos endovenosos
-        if name.contains("propofol") || name.contains("etomidato") || name.contains("cetamina") {
+        if name.contains("propofol") || name.contains("etomidato") || name.contains("cetamina") || name.contains("droperidol") || name.contains("nilperidol"){
             return .EV
         }
         
@@ -671,7 +677,6 @@ class MedicationsHelper {
         // Antieméticos
         MedicationCatalogItem(name: "Ondansetrona", category: .antiemético),
         MedicationCatalogItem(name: "Dexametasona", category: .corticoide),
-        MedicationCatalogItem(name: "Droperidol", category: .antiemético),
         MedicationCatalogItem(name: "Metoclopramida", category: .antiemético),
         MedicationCatalogItem(name: "Dimenidrinato", category: .antiemético),
         MedicationCatalogItem(name: "Escopolamina", category: .antiemético),
@@ -698,6 +703,8 @@ class MedicationsHelper {
         
         // Miscelânia
         MedicationCatalogItem(name: "Clonidina", category: .alfa2Agonista),
+        MedicationCatalogItem(name: "Droperidol", category: .neuroléptico),
+        MedicationCatalogItem(name: "Nilperidol", category: .neuroléptico),
         MedicationCatalogItem(name: "Ocitocina", category: .hormonal),
         MedicationCatalogItem(name: "Flumazenil", category: .reversor),
         MedicationCatalogItem(name: "Naloxona", category: .reversor),

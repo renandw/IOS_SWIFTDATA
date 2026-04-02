@@ -23,7 +23,7 @@ struct EditRowWithOptions: View {
     
     var body: some View {
         Button {
-            searchText = value
+            searchText = ""
             showingPicker = true
         } label: {
             HStack {
@@ -79,7 +79,10 @@ struct EditRowWithOptions: View {
                                         .foregroundStyle(.blue)
                                 }
                             }
+                            .contentShape(.rect)
                         }
+                        
+                        .buttonStyle(.plain)
                     }
                 }
                 .searchable(text: $searchText, prompt: "Buscar ou adicionar")
@@ -94,6 +97,27 @@ struct EditRowWithOptions: View {
                 }
             }
             .presentationDetents([.medium, .large])
+        }
+    }
+}
+
+#Preview {
+    @Previewable @State var insurance = "Destiny"
+
+    Form{
+        Section {
+            EditRowWithOptions(
+                label: "Convênio",
+                value: $insurance,
+                options: [
+                    "Particular",
+                    "Unimed",
+                    "Bradesco",
+                    "Amil",
+                    "Sulamerica",
+                    "Saúde Caixa"
+                ]
+            )
         }
     }
 }
