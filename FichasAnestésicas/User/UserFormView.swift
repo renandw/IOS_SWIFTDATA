@@ -1,12 +1,14 @@
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct UserFormView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
     @StateObject private var viewModel: UserFormViewModel
-    
+    @State private var showingFilePicker = false
+
     private let userToEdit: User?
     
     init(user: User? = nil, repository: UserRepository) {
@@ -156,6 +158,37 @@ struct UserFormView: View {
                         Text("Dados do Médico")
                     }
                 }
+
+                Section {
+                    if let data = viewModel.signatureImageData,
+                       let uiImage = UIImage(data: data) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxHeight: 100)
+                        Button("Remover assinatura", role: .destructive) {
+                            viewModel.signatureImageData = nil
+                        }
+                    } else {
+                        Button("Importar assinatura (.png)") {
+                            showingFilePicker = true
+                        }
+                    }
+                } header: {
+                    HStack {
+                        Image(systemName: "signature")
+                        Text("Assinatura")
+                    }
+                }
+            }
+            .fileImporter(
+                isPresented: $showingFilePicker,
+                allowedContentTypes: [UTType.png]
+            ) { result in
+                guard case .success(let url) = result else { return }
+                let accessing = url.startAccessingSecurityScopedResource()
+                defer { if accessing { url.stopAccessingSecurityScopedResource() } }
+                viewModel.signatureImageData = try? Data(contentsOf: url)
             }
             .navigationTitle(userToEdit == nil ? "Novo Anestesista" : "Editar Anestesista")
             .toolbar {

@@ -34,9 +34,18 @@ struct AnesthesiaSheetFooterView: View {
             }
             .overlay(alignment: .topTrailing) {
                 if showSignature.wrappedValue {
-                    AssinaturaGovBRView(nome: responsavelName, data: anesthesia.end ?? Date())
-                        .offset(y: -75)
-                        .scaleEffect(0.55)
+                    if let data = anesthesia.surgery.createdBy.signatureImageData,
+                       let uiImage = UIImage(data: data) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 162, height: 50)
+                            .offset(y: -54)
+                    } else {
+                        AssinaturaGovBRView(nome: responsavelName, data: anesthesia.end ?? Date())
+                            .offset(y: -75)
+                            .scaleEffect(0.55)
+                    }
                 }
             }
         }

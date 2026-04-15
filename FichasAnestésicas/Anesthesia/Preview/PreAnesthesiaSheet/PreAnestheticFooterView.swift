@@ -29,9 +29,18 @@ struct PreAnestheticFooterView: View {
                 }
                 .overlay(alignment: .topTrailing) {
                     if showSignature.wrappedValue {
-                        AssinaturaGovBRView(nome: anesthesia.surgery.createdBy.name, data: anesthesia.surgery.lastActivityAt)
-                            .offset(y: -75)
-                            .scaleEffect(0.55)
+                        if let data = anesthesia.surgery.createdBy.signatureImageData,
+                           let uiImage = UIImage(data: data) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 162, height: 50)
+                                .offset(y: -54)
+                        } else {
+                            AssinaturaGovBRView(nome: anesthesia.surgery.createdBy.name, data: anesthesia.surgery.lastActivityAt)
+                                .offset(y: -75)
+                                .scaleEffect(0.55)
+                        }
                     }
                 }
             }

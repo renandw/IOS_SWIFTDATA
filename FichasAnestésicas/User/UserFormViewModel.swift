@@ -15,6 +15,7 @@ final class UserFormViewModel: ObservableObject {
     @Published var emailAddress: String = ""
     @Published var phone: String = ""
     @Published var rqe: String = ""
+    @Published var signatureImageData: Data? = nil
 
     // Validation errors
     @Published var nameError: String? = nil
@@ -35,6 +36,7 @@ final class UserFormViewModel: ObservableObject {
             self.rqe = user.rqe ?? ""
             self.emailAddress = user.emailAddress
             self.phone = user.phone ?? ""
+            self.signatureImageData = user.signatureImageData
         }
     }
 
@@ -61,6 +63,7 @@ final class UserFormViewModel: ObservableObject {
                 user.rqe = rqe
                 user.emailAddress = emailAddress
                 user.phone = phone
+                user.signatureImageData = signatureImageData
                 try repository.update(user)
             } else {
                 let newUser = User(userId: UUID().uuidString,
@@ -69,6 +72,7 @@ final class UserFormViewModel: ObservableObject {
                                    rqe: rqe,
                                    phone: phone,
                                    emailAddress: emailAddress,
+                                   signatureImageData: signatureImageData,
                                    createdAt: .now)
                 try repository.create(newUser)
                 self.editingUser = newUser

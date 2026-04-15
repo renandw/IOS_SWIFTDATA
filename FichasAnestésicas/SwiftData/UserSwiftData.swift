@@ -15,16 +15,18 @@ final class User {
     @Relationship(deleteRule: .cascade, inverse: \Patient.createdBy)
     var createdPatients: [Patient] = []
     
+    var signatureImageData: Data?
     var createdAt: Date
     var updatedAt: Date?
 
-    init(userId: String, name: String, crm: String, rqe: String? = nil, phone: String? = nil, emailAddress: String, createdAt: Date, updatedAt: Date? = nil) {
+    init(userId: String, name: String, crm: String, rqe: String? = nil, phone: String? = nil, emailAddress: String, signatureImageData: Data? = nil, createdAt: Date, updatedAt: Date? = nil) {
         self.userId = userId
         self.name = name
         self.crm = crm
         self.rqe = rqe
         self.phone = phone
         self.emailAddress = emailAddress
+        self.signatureImageData = signatureImageData
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
