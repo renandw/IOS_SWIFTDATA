@@ -110,6 +110,16 @@ struct LabsAndImageExamsFormView: View {
                     .frame(width: 80)
                 Text("g/dL")
             }
+
+            HStack {
+                Text("Plaquetas")
+                Spacer()
+                TextField("x10³/µL", value: $viewModel.labsAndImage.platelets, format: .number)
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 80)
+                Text("x10³/µL")
+            }
             
             HStack {
                 Text("Ureia")
@@ -304,4 +314,3 @@ struct ImagingExamFindingsView: View {
         )
     }
 }
-

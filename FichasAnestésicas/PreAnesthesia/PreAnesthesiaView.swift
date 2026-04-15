@@ -926,13 +926,14 @@ struct PreAnesthesiaView: View {
                 // EXAMES LABORATORIAIS
                 let labs = preanesthesia?.laboratoryExams
                 let hasHemoglobin = labs?.hemoglobin != nil
+                let hasPlatelets = labs?.platelets != nil
                 let hasUrea = labs?.urea != nil
                 let hasCreatinine = labs?.creatinine != nil
                 let hasSodium = labs?.sodium != nil
                 let hasPotassium = labs?.potassium != nil
                 let hasInr = labs?.inr != nil
                 let hasGlucose = labs?.glucose != nil
-                let hasAnyLabExam = hasHemoglobin || hasUrea || hasCreatinine || hasSodium || hasPotassium || hasInr || hasGlucose
+                let hasAnyLabExam = hasHemoglobin || hasPlatelets || hasUrea || hasCreatinine || hasSodium || hasPotassium || hasInr || hasGlucose
                 
                 if !hasAnyLabExam {
                     Text("Sem exames laboratoriais registrados")
@@ -948,6 +949,16 @@ struct PreAnesthesiaView: View {
                                     Text("Hemoglobina:")
                                         .font(.subheadline)
                                     Text("\(String(format: "%.1f", hemoglobin)) g/dL")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                }
+                            }
+
+                            if let platelets = labs?.platelets {
+                                HStack {
+                                    Text("Plaquetas:")
+                                        .font(.subheadline)
+                                    Text("\(String(format: "%.0f", platelets)) x10³/µL")
                                         .font(.subheadline)
                                         .fontWeight(.medium)
                                 }

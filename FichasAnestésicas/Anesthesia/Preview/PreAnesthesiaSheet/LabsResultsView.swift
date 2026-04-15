@@ -14,13 +14,14 @@ struct LabsResultsView: View {
         let labs = anesthesia.surgery.preanesthesia?.laboratoryExams
         let hasHemoglobin = labs?.hemoglobin != nil
         let hasHematocrit = labs?.hct != nil
+        let hasPlatelets = labs?.platelets != nil
         let hasUrea = labs?.urea != nil
         let hasCreatinine = labs?.creatinine != nil
         let hasSodium = labs?.sodium != nil
         let hasPotassium = labs?.potassium != nil
         let hasInr = labs?.inr != nil
         let hasGlucose = labs?.glucose != nil
-        let hasAnyLabExam = hasHemoglobin || hasHematocrit || hasUrea || hasCreatinine || hasSodium || hasPotassium || hasInr || hasGlucose
+        let hasAnyLabExam = hasHemoglobin || hasHematocrit || hasPlatelets || hasUrea || hasCreatinine || hasSodium || hasPotassium || hasInr || hasGlucose
 
         return AnyView(
             VStack(spacing: 0) {
@@ -61,7 +62,8 @@ struct LabsResultsView: View {
                             
                             let labItems: [String] = [
                                 labs?.hemoglobin.map { "Hb: \(String(format: "%.1f", $0)) g/dL" },
-                                labs?.hemoglobin.map { "Ht: \(String(format: "%.1f", $0)) g/dL" },
+                                labs?.hct.map { "Ht: \(String(format: "%.1f", $0)) g/dL" },
+                                labs?.platelets.map { "Plaquetas: \(String(format: "%.0f", $0)) x10³/µL" },
                                 labs?.urea.map { "Ur: \(String(format: "%.0f", $0)) mg/dL" },
                                 labs?.creatinine.map { "Cr: \(String(format: "%.2f", $0)) mg/dL" },
                                 labs?.sodium.map { "Na: \(String(format: "%.0f", $0)) mEq/L" },
@@ -166,4 +168,3 @@ struct LabsResultsView: View {
         )
     }
 }
-

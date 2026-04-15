@@ -88,6 +88,7 @@ public enum CardiologicComorbities: String, Codable, CaseIterable {
     case hypercholesterolemia
     case hypertension
     case isquemicCardiopathy
+    case dac
     case arryhtmia
     case valvopathy
     case heartFailure
@@ -100,6 +101,7 @@ public enum CardiologicComorbities: String, Codable, CaseIterable {
         case .hypercholesterolemia:      "Dislipidemia"
         case .hypertension:              "HAS"
         case .isquemicCardiopathy:       "Miocardiopatia Isquêmica"
+        case .dac:                       "Doença Arterial Coronariana"
         case .arryhtmia:                 "Arritmia"
         case .valvopathy:                "Valvopatia"
         case .heartFailure:              "Insuficiência Cardíaca"
@@ -112,6 +114,7 @@ public enum CardiologicComorbities: String, Codable, CaseIterable {
         switch self {
         case .hypercholesterolemia:      "Dislipidemia"
         case .hypertension:              "Hipertensão Arterial Sistêmica"
+        case .dac:                       "Doença Arterial Coronariana"
         case .isquemicCardiopathy:       "Miocardiopatia Isquêmica"
         case .arryhtmia:                 "Arritmia"
         case .valvopathy:                "Valvopatia"
@@ -585,6 +588,7 @@ public enum SocialHabitsAndEnvironment: String, Codable, CaseIterable {
     case alcoholConsumption
     case drugUse
     case tobaccoUse
+    case previousTobaccoUse
     case tobaccoExposure
     case sedentaryLifestyle         // Sedentarismo
     case airPollutionExposure       // Exposição à poluição
@@ -596,6 +600,7 @@ public enum SocialHabitsAndEnvironment: String, Codable, CaseIterable {
         case .alcoholConsumption:       "Consumo de Álcool"
         case .drugUse:                  "Uso de Drogas"
         case .tobaccoUse:               "Tabagismo"
+        case .previousTobaccoUse:       "Ex-Tabagista"
         case .tobaccoExposure:          "Tabagismo Passivo"
         case .sedentaryLifestyle:       "Sedentarismo"
         case .airPollutionExposure:     "Exposição à Poluição"
@@ -607,6 +612,7 @@ public enum SocialHabitsAndEnvironment: String, Codable, CaseIterable {
         case .alcoholConsumption:       "consumo de bebidas alcóolicas"
         case .drugUse:                  "uso de drogas ilícitas"
         case .tobaccoUse:               "hábito de tabagismo"
+        case .previousTobaccoUse:       "histórico de tabagismo prévio"
         case .tobaccoExposure:          "exposição passiva frequente ao tabagismo"
         case .sedentaryLifestyle:       "não pratica atividades físicas"
         case .airPollutionExposure:     "exposição importante à ambientes poluídos"
@@ -736,6 +742,7 @@ public enum DailyMedications: String, Codable, CaseIterable {
 struct LaboratoryExams: Codable {
     var hemoglobin: Double?
     var hct: Double?
+    var platelets: Double?
     var urea: Double?
     var creatinine: Double?
     var sodium: Double?

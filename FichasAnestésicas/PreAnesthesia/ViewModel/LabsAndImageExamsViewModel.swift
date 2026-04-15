@@ -14,6 +14,7 @@ final class LabsAndImageExamsSectionViewModel {
     // Laboratory Exams
     var hemoglobin: Double?
     var hct: Double?
+    var platelets: Double?
     var urea: Double?
     var creatinine: Double?
     var sodium: Double?
@@ -29,6 +30,7 @@ final class LabsAndImageExamsSectionViewModel {
         // Load laboratory exams
         hemoglobin = e.laboratoryExams?.hemoglobin
         hct        = e.laboratoryExams?.hct
+        platelets  = e.laboratoryExams?.platelets
         urea       = e.laboratoryExams?.urea
         creatinine = e.laboratoryExams?.creatinine
         sodium     = e.laboratoryExams?.sodium
@@ -47,6 +49,7 @@ final class LabsAndImageExamsSectionViewModel {
         e.laboratoryExams = LaboratoryExams(
             hemoglobin: hemoglobin,
             hct: hct,
+            platelets: platelets,
             urea: urea,
             creatinine: creatinine,
             sodium: sodium,
@@ -96,6 +99,7 @@ final class LabsAndImageExamsSectionViewModel {
     func applyHealthyPatient() {
         hemoglobin = Double.random(in: 11.3...13.9)
         hct = Double.random(in: 39.0...46.0)
+        platelets = Double(Int.random(in: 150...450))
         urea = Double.random(in: 18.0...40.0)
         creatinine = Double.random(in: 0.7...1.1)
         sodium = Double(Int.random(in: 135...145))
