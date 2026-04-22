@@ -19,10 +19,15 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
     
     
     func load(from e: PreAnesthesia, patientSex: Sex) {
+        syncing = true
         socialHabitsAndEnvironmentDetails = e.socialHabitsAndEnvironmentDetails ?? []
         socialHabitsAndEnvironmentCustomDetails = e.socialHabitsAndEnvironmentCustomDetails ?? []
         socialHabitsAndEnvironmentDetailsText = e.socialHabitsAndEnvironmentDetailsText
         apfelScoreDetails = e.apfelScoreDetails ?? []
+        syncing = false
+
+        // Re-apply classical Apfel smoking rule at load time.
+        syncSocialToApfel()
         
         ifFemaleApply(patientSex: patientSex)
     }
@@ -55,11 +60,11 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
         var apfel = apfelScoreDetails ?? []
 
         if social.contains(.tobaccoUse) {
-            if !apfel.contains(.tobaccoUse) {
-                apfel.append(.tobaccoUse)
-            }
+            apfel.removeAll { $0 == .nonTobaccoUse }
         } else {
-            apfel.removeAll { $0 == .tobaccoUse }
+            if !apfel.contains(.nonTobaccoUse) {
+                apfel.append(.nonTobaccoUse)
+            }
         }
 
         // Write back
@@ -75,11 +80,7 @@ final class SocialHabitsAndEnvironmentSectionViewModel {
         var social = socialHabitsAndEnvironmentDetails ?? []
         let apfel = apfelScoreDetails ?? []
 
-        if apfel.contains(.tobaccoUse) {
-            if !social.contains(.tobaccoUse) {
-                social.append(.tobaccoUse)
-            }
-        } else {
+        if apfel.contains(.nonTobaccoUse) {
             social.removeAll { $0 == .tobaccoUse }
         }
 

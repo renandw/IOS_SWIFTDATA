@@ -106,7 +106,14 @@ final class PreAnesthesia {
     
     var apfelScoreDetailsRaw: [String]?
     var apfelScoreDetails: [ApfelScore]? {
-        get { apfelScoreDetailsRaw?.compactMap(ApfelScore.init(rawValue:))}
+        get {
+            apfelScoreDetailsRaw?.compactMap { rawValue in
+                // Legacy cleanup: old data persisted "tobaccoUse" as Apfel factor.
+                // In the classical Apfel model this does not map to "nonTobaccoUse".
+                guard rawValue != "tobaccoUse" else { return nil }
+                return ApfelScore(rawValue: rawValue)
+            }
+        }
         set { apfelScoreDetailsRaw = newValue?.map { $0.rawValue}}
     }
     

@@ -621,7 +621,7 @@ public enum SocialHabitsAndEnvironment: String, Codable, CaseIterable {
 }
 
 enum ApfelScore: String, Codable, CaseIterable {
-    case tobaccoUse
+    case nonTobaccoUse
     case femaleSex
     case historyPONV
     case historyMotionSickness
@@ -631,7 +631,7 @@ enum ApfelScore: String, Codable, CaseIterable {
         switch self {
             // Substâncias
         case .femaleSex:                "Feminino"
-        case .tobaccoUse:               "Tabagismo"
+        case .nonTobaccoUse:            "Não tabagista"
         case .historyPONV:              "História de NVPO"
         case .historyMotionSickness:    "Cinetose"
         case .postoperativeOpioids:     "Uso de opióide"
@@ -641,7 +641,7 @@ enum ApfelScore: String, Codable, CaseIterable {
         switch self {
             // Substâncias
         case .femaleSex:                "sexo feminino"
-        case .tobaccoUse:               "hábito de tabagismo"
+        case .nonTobaccoUse:            "não tabagista"
         case .historyPONV:              "história prévia de NVPO"
         case .historyMotionSickness:    "condição de cinetose"
         case .postoperativeOpioids:     "uso de opióides no período perioperatório"
@@ -653,8 +653,6 @@ enum ApfelScore: String, Codable, CaseIterable {
 extension SocialHabitsAndEnvironment {
     func toApfelScore() -> ApfelScore? {
         switch self {
-        case .tobaccoUse:
-            return .tobaccoUse
         default:
             return nil
         }
@@ -664,8 +662,6 @@ extension SocialHabitsAndEnvironment {
 extension ApfelScore {
     func toSocialHabits() -> SocialHabitsAndEnvironment? {
         switch self {
-        case .tobaccoUse:
-            return .tobaccoUse
         default:
             return nil
         }
