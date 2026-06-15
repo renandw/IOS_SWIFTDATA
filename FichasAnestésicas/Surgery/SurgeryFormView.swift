@@ -302,7 +302,7 @@ struct SurgeryFormView: View {
                     }
                 }
             }
-            
+            ///
             // MARK: - Procedimentos CBHPM
             Section("Procedimentos CBHPM") {
                 Button {
